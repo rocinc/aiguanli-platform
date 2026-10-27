@@ -1,0 +1,11 @@
+---
+fa:
+  js:
+    avatars:
+      empty_file_error: لطفاً یک عکس معتبر بارگذاری کنید (jpg، png، gif)
+      error_image_too_large: عکس بیش از اندازه بزرگ است.
+      label_choose_avatar: انتخاب آواتار از فایل
+      uploading_avatar: بارگذاری آواتار شما.
+      wrong_file_format: فرمت های jpg، png و gif مجاز هستند.
+    button_update: به روز رسانی
+    label_preview: نمایش

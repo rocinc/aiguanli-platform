@@ -1,0 +1,11 @@
+---
+bg:
+  js:
+    avatars:
+      empty_file_error: Моля вдигайте валидни образи (jpg, png, gif)
+      error_image_too_large: Картинката е твърде голяма.
+      label_choose_avatar: Изберете аватар от файл
+      uploading_avatar: Качете вашия аватар.
+      wrong_file_format: Разрешени формати са jpg, png, gif
+    button_update: Обнови
+    label_preview: Предварителен преглед

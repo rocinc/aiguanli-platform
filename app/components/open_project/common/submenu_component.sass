@@ -1,0 +1,102 @@
+.op-submenu
+  height: 100%
+  display: flex
+  flex-direction: column
+
+  &--search
+    position: sticky
+    top: 0
+    z-index: 1
+    background: var(--main-menu-bg-color)
+    padding: 4px 0
+    color: var(--main-menu-font-color)
+    display: flex
+    flex-direction: column
+    row-gap: 16px
+
+    input::placeholder,
+    .FormControl-input-leadingVisual
+      color: color-mix(in srgb, var(--main-menu-font-color) 80%, white)
+
+  &--search-input
+    // Overriding the defult input styles, because of the default dark background of the sidebar
+    color: var(--main-menu-font-color) !important
+    border-color: var(--borderColor-muted) !important
+
+  &--body
+    flex-grow: 1
+    overflow: auto
+    @include styled-scroll-bar
+
+    &:only-child
+      padding-bottom: 10px
+
+  &--footer
+    display: grid
+    text-align: center
+    padding: 1rem
+
+    @supports (-webkit-touch-callout: none)
+      padding: 1rem 1rem 5rem
+
+  &--title
+    display: flex
+    justify-content: space-between
+    background: transparent
+    color: var(--main-menu-font-color)
+    border: 1px solid transparent
+    border-radius: var(--borderRadius-medium)
+    padding: 8px var(--main-menu-x-spacing) 8px var(--main-menu-x-spacing)
+    margin-top: 12px
+    margin-bottom: 2px
+    font-size: 12px
+    cursor: pointer
+    width: 100%
+    font-weight: var(--base-text-weight-semibold, 600)
+
+    &:hover
+      background: var(--control-transparent-bgColor-hover)
+      color: var(--main-menu-font-color)
+      border-color: var(--main-menu-hover-border-color)
+
+  &--items
+    list-style: none
+
+    &_collapsed
+      display: none
+
+  &--item
+    margin-bottom: 2px !important
+
+  &--item-action
+    display: flex
+    align-items: center
+    color: var(--main-menu-font-color)
+    padding: 8px 12px 8px 32px
+
+    &:hover
+      background: var(--control-transparent-bgColor-hover)
+      color: var(--main-menu-font-color)
+
+    &_active
+      background: var(--main-menu-bg-selected-background)
+      color: var(--main-menu-selected-font-color)
+
+    &_active-child
+      background: var(--main-menu-bg-selected-background)
+      color: var(--main-menu-selected-font-color)
+
+    &_with_icon
+      padding-left: 12px
+
+  &--item-icon
+    margin-right: var(--main-menu-x-spacing)
+
+  &--item-title
+    flex-grow: 1
+    display: inline-block
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    line-height: 30px
+    text-decoration: none

@@ -1,0 +1,40 @@
+// The line beside a date being changed (03 §3.5 渠道 2).
+.assistant-date-aside
+  display: flex
+  gap: var(--base-size-8)
+  align-items: flex-start
+  margin-top: var(--base-size-12)
+  padding: var(--base-size-8) var(--base-size-12)
+  border-radius: var(--borderRadius-medium)
+  border: var(--borderWidth-thin) solid var(--borderColor-default)
+  background: var(--bgColor-muted)
+  color: var(--fgColor-default)
+  font-size: var(--text-body-size-small)
+  line-height: var(--text-body-lineHeight-small)
+  overflow-wrap: anywhere
+
+  &--mark
+    flex-shrink: 0
+    margin-top: 3px
+
+  &--lines
+    margin: 0
+    padding: 0
+    list-style: none
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+    min-width: 0
+
+  &--warning
+    display: flex
+    gap: var(--base-size-4)
+    align-items: flex-start
+
+    .octicon
+      flex-shrink: 0
+      margin-top: 3px
+
+@media (forced-colors: active)
+  .assistant-date-aside
+    border: 1px solid CanvasText

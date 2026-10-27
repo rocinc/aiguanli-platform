@@ -1,0 +1,142 @@
+/*-- copyright
+ * OpenProject is an open source project management software.
+ * Copyright (C) the OpenProject GmbH
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 3.
+ *
+ * OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+ * Copyright (C) 2006-2013 Jean-Philippe Lang
+ * Copyright (C) 2010-2013 the ChiliProject Team
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * See COPYRIGHT and LICENSE files for more details.  ++
+ */
+
+
+// use CSS4 variables for easier theming
+:root {
+  --primary-button-color: #1F883D;
+  --primary-button-color--major1: #197032;
+  --primary-button-color--minor1: #d2e7d8;
+  --primary-button-color--minor2: #a5cfb1;
+  --primary-button-color--dark-mode: #238636;
+
+  --control-checked-color: var(--accent-color);
+  --control-checked-color--major1: var(--accent-color--major1);
+  --control-checked-color--major2: var(--accent-color--major2);
+  --control-checked-color--minor1: var(--accent-color--minor1);
+
+  /**
+   * The 100vh bug on iOS is a well known issue that will not be addressed.
+   * Using 100vh will not work correctly whenever the bottom toolbar of ios safari is open.
+   * To address the issue, we need to watch the screen height change events and rely on the
+   * window.innerHeight, instead of using 100vh.
+   * See more: https://medium.com/quick-code/100vh-problem-with-ios-safari-92ab23c852a8
+   */
+
+  --app-height: 100vh;
+  --body-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --body-font-size: var(--text-body-size-medium);
+
+  --gray: #EAEAEA;
+  --gray-light: #F8F8F8;
+  --gray-lighter: #E9E9E9;
+  --light-gray: #CCCCCC;
+  --body-background: #FFFFFF;
+  --body-font-color: #333333;
+  --base-line-height: 1.5;
+  --base-text-weight-bold: 600;
+  --secondary-color: #bfbfbf;
+  --accent-color: #1A67A3;
+  --accent-color--major1: #155282;
+  --accent-color--major2: #103e62;
+  --accent-color--minor1: #d1e1ed;
+  --accent-color--minor2: #a3c2da;
+  --accent-color--dark-mode: #4493f8;
+  --font-color-on-primary: #FFFFFF;
+  --list-side-margin: 40px;
+  --header-height: 55px;
+  --header-bg-color: #1A67A3;
+  --header-border-bottom-color: #155282;
+  --header-border-bottom-width: 0;
+  --header-item-font-size: 14px;
+  --header-item-font-color: #FFFFFF;
+  --header-item-font-hover-color: #FFFFFF;
+  --main-menu-toggler-top-spacing: 18px;
+  --main-menu-toggler-z-index: 550;
+  --main-menu-width: 280px;
+  --main-menu-x-spacing: 12px;
+  --main-menu-folded-width: 0px;
+  --main-menu-border-color: #EAEAEA;
+  --main-menu-border-width: 1px;
+  --main-menu-item-height: 36px;
+  --main-menu-bg-color: #FFFFFF;
+  --main-menu-bg-selected-background: #175A8E;
+  --main-menu-font-color: var(--body-font-color);
+  --main-menu-resizer-color: var(--main-menu-border-color);
+  --main-menu-selected-font-color: var(--main-menu-font-color);
+  --main-menu-font-size: 14px;
+  --main-menu-hover-border-color: transparent;
+  --main-menu-bg-selected-border: transparent;
+  --breadcrumb-height: 40px;
+  --breadcrumb-font-size: 12px;
+  --breadcrumb-font-color: lighten(var(--body-font-color), 20);
+  --content-icon-color: var(--accent-color);
+  --content-form-input-hover-border: 1px solid #888888;
+  --content-form-error-color: #9E2A1C;
+  --drop-down-selected-bg-color: #E7E7E7;
+  --drop-down-hover-bg-color: #EFEFEF;
+  --wiki-default-font-size: var(--body-font-size);
+  --user-avatar-border-radius: 50%;
+  --button--font-color: #222222;
+  --button--background-color: var(--gray-light);
+  --button--background-hover-color: #ededed;
+  --button--active-border-color: #cacaca;
+  --button--primary-background-color: var(--primary-button-color);
+  --button--primary-background-hover-color: var(--primary-button-color--major1);
+  --button--primary-background-active-color: var(--primary-button-color--major1);
+  --button--primary-background-disabled-color: var(--primary-button-color--minor2);
+  --button--primary-border-color: var(--button--primary-background-color);
+  --button--primary-border-disabled-color: var(--primary-button-color--minor2);
+  --button--primary-font-color: var(--font-color-on-primary);
+  --generic-table--header-font-size: 0.875rem;
+  --generic-table--header-height: 45px;
+  --generic-table--footer-height: 34px;
+  --timeline--type-fallback-color: rgba(150, 150, 150, 0.8);
+  --table-timeline--row-height: 40px;
+  --status-selector-bg-color: #F99601;
+  --status-selector-border-color: transparent;
+  --warn:#C92A2A;
+  --avatar-border-color: transparent;
+  --list-item-hover--border-color: transparent;
+  --list-item-hover--color: var(--accent-color);
+  --link-text-decoration: none;
+  --select-arrow-bg-color-url: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  --split-screen-width: 430px;
+  --full-view-split-right-width: 430px;
+  --gantt-split-width: 50%;
+  --enterprise-upsell-color: #CE4C00;
+  --enterprise-upsell-text-color: #CE4C00;
+
+  --box-list-item-bg-color: var(--body-background);
+  --box-list-item-bg-hover-color: #f6f8fa;
+  --box-list-item-border-color: #d1d9e0;
+  --box-list-item-selected-bg-color: hsl(from #d1f0ff h calc(s - 30) calc(l + 2));
+  --box-list-item-selected-bg-hover-color: #d1f0ff;
+  --box-list-item-selected-border-color: #54aeff66;
+  --box-list-item-pressed-border-color: #0969da;
+}

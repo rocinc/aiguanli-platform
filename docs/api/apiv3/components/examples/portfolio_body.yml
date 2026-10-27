@@ -1,0 +1,15 @@
+# Example: Portfolio request payload
+---
+value:
+  name: 'Portfolio example'
+  statusExplanation:
+    raw: Everything **fine**
+  description:
+    raw: Lorem **ipsum** dolor sit amet
+  customField123: 123
+  customComment123: Because it is 123!
+  _links:
+    parent:
+      href: "/api/v3/portfolios/123"
+    customField456:
+      href: "/api/v3/portfolios/315"

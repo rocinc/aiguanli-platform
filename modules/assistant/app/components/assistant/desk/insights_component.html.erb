@@ -1,0 +1,142 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<div class="assistant-desk-insights" data-test-selector="assistant-insights">
+  <section class="assistant-desk-insights--section" aria-labelledby="assistant-insights-window">
+    <h2 id="assistant-insights-window" class="assistant-section--title"><%= t("assistant.insights.window") %></h2>
+    <% if new_here? %>
+      <p class="assistant-desk--quiet" data-test-selector="assistant-insights-new"><%= t("assistant.insights.new_here") %></p>
+    <% else %>
+      <p class="assistant-desk-insights--headline" data-test-selector="assistant-insights-headline"><%= headline %></p>
+      <div data-test-selector="assistant-insights-candour">
+        <p class="assistant-desk-insights--headline"><%= candour_line %></p>
+        <% if candour_note %>
+          <p class="assistant-desk--muted assistant-desk-insights--note"><%= candour_note %></p>
+        <% end %>
+      </div>
+      <ul class="assistant-desk-insights--figures">
+        <% figures.each do |line| %>
+          <li><%= line %></li>
+        <% end %>
+      </ul>
+      <ul class="assistant-desk-insights--figures assistant-desk--muted" data-test-selector="assistant-insights-left-alone">
+        <% left_alone.each do |line| %>
+          <li><%= line %></li>
+        <% end %>
+      </ul>
+
+      <details class="assistant-desk-insights--more" data-test-selector="assistant-insights-missed">
+        <summary class="assistant-card--basis-summary">
+          <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-card--chevron", "aria-hidden": true)) %>
+          <%= t("assistant.insights.missed.title", count: missed.size) %>
+        </summary>
+        <% if missed.empty? %>
+          <p class="assistant-desk--quiet"><%= t("assistant.insights.missed.none_body") %></p>
+        <% else %>
+          <ul class="assistant-desk-insights--list">
+            <% missed.each do |entry| %>
+              <li>
+                <%= t("assistant.insights.quoted", text: entry.title) %>
+                <span class="assistant-desk--muted">· <%= missed_due(entry) %></span>
+                <% if entry.label %>
+                  <span class="assistant-desk--muted">·</span> <%= link_to(entry.label, entry.url, data: { turbo_frame: "_top" }) %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </details>
+
+      <details class="assistant-desk-insights--more" data-test-selector="assistant-insights-candour-how">
+        <summary class="assistant-card--basis-summary">
+          <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-card--chevron", "aria-hidden": true)) %>
+          <%= t("assistant.insights.candour.title") %>
+        </summary>
+        <p class="assistant-desk--quiet"><%= candour_how %></p>
+      </details>
+
+      <details class="assistant-desk-insights--more" data-test-selector="assistant-insights-rules">
+        <summary class="assistant-card--basis-summary">
+          <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-card--chevron", "aria-hidden": true)) %>
+          <%= t("assistant.insights.by_rule") %>
+        </summary>
+        <% if rules.empty? %>
+          <p class="assistant-desk--quiet"><%= t("assistant.insights.by_rule_none") %></p>
+        <% else %>
+          <ul class="assistant-desk-insights--list">
+            <% rules.each do |rule| %>
+              <li>
+                <span><%= rule_name(rule.key) %></span>
+                <span class="assistant-desk--muted">· <%= rule_line(rule) %></span>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </details>
+
+      <details class="assistant-desk-insights--more" data-test-selector="assistant-insights-muted">
+        <summary class="assistant-card--basis-summary">
+          <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-card--chevron", "aria-hidden": true)) %>
+          <%= t("assistant.insights.muted_rules") %>
+        </summary>
+        <% if muted_rules.empty? %>
+          <p class="assistant-desk--quiet"><%= t("assistant.insights.muted_none") %></p>
+        <% else %>
+          <ul class="assistant-desk-insights--list">
+            <% muted_rules.each do |key| %>
+              <li>
+                <span><%= rule_name(key) %></span>
+                <span class="assistant-desk--muted">· <%= rule_what(key) %></span>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </details>
+
+      <details class="assistant-desk-insights--more" data-test-selector="assistant-insights-wrong">
+        <summary class="assistant-card--basis-summary">
+          <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-card--chevron", "aria-hidden": true)) %>
+          <%= t("assistant.insights.wrong_title", count: scorecard.wrong_count) %>
+        </summary>
+        <% if scorecard.wrong_count.zero? %>
+          <p class="assistant-desk--quiet"><%= t("assistant.insights.wrong_none") %></p>
+        <% else %>
+          <ul class="assistant-desk-insights--list">
+            <% wrong.each do |entry| %>
+              <li>
+                <%= entry.url ? link_to(t("assistant.insights.quoted", text: entry.text), entry.url, data: { turbo_frame: "_top" }) : t("assistant.insights.quoted", text: entry.text) %>
+                <span class="assistant-desk--muted">· <%= wrong_line(entry) %></span>
+              </li>
+            <% end %>
+          </ul>
+          <% if scorecard.wrong_hidden.positive? %>
+            <p class="assistant-desk--quiet"><%= t("assistant.insights.wrong_hidden", count: scorecard.wrong_hidden) %></p>
+          <% end %>
+        <% end %>
+      </details>
+    <% end %>
+  </section>
+
+  <section class="assistant-desk-insights--section" aria-labelledby="assistant-insights-held" data-test-selector="assistant-insights-held">
+    <h2 id="assistant-insights-held" class="assistant-section--title"><%= t("assistant.insights.held_title") %></h2>
+    <% if held.empty? %>
+      <p class="assistant-desk--quiet"><%= quiet("assistant.insights.held_none", first_week: false) %></p>
+    <% else %>
+      <ul class="assistant-desk-insights--list">
+        <% held.each do |entry| %>
+          <li>
+            <%= entry.url ? link_to(entry.label, entry.url, data: { turbo_frame: "_top" }) : entry.label %>
+            <span class="assistant-desk--muted">· <%= held_reason(entry) %> · <%= held_time(entry) %></span>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </section>
+</div>

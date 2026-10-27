@@ -1,0 +1,25 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<% icon = render(Primer::Beta::Octicon.new(icon: :"sparkle-fill", size: :small, color: :muted, "aria-hidden": true)) %>
+<% if holding? %>
+  <p class="assistant-answer" role="status" data-test-selector="assistant-answer-holding"><%= icon %> <span><%= headline %></span></p>
+<% elsif rest.present? %>
+  <details class="assistant-answer" data-test-selector="assistant-answer">
+    <summary class="assistant-answer--summary"><%= icon %> <span><%= headline %></span></summary>
+    <div class="assistant-answer--rest op-uc-container"><%= rest_html %></div>
+    <% if conversation_id %>
+      <%= render(Primer::Beta::Button.new(type: :button, size: :small, scheme: :invisible,
+                                          data: { assistant_panel_open: true, assistant_conversation: conversation_id })) { t("assistant.signal.open_conversation") } %>
+    <% end %>
+  </details>
+<% else %>
+  <p class="assistant-answer" data-test-selector="assistant-answer"><%= icon %> <span><%= headline %></span></p>
+<% end %>

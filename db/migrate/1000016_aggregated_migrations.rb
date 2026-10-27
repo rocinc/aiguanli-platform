@@ -1,0 +1,171 @@
+# frozen_string_literal: true
+
+# -- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+# ++
+
+Dir[Rails.root.join("db/migrate/tables/*.rb").to_s].each { |file| require file }
+Dir[Rails.root.join("db/migrate/extensions/*.rb").to_s].each { |file| require file }
+require Rails.root.join("db/migrate/migration_utils/squashed_migration").to_s
+
+# This migration aggregates a set of former migrations
+class AggregatedMigrations < SquashedMigration
+  extensions Extensions::BtreeGist,
+             Extensions::PgTrgm,
+             Extensions::Unaccent,
+             Extensions::VersionNameCollation
+
+  tables Tables::Projects,
+         Tables::Colors,
+         Tables::Types,
+         Tables::Statuses,
+         Tables::WorkPackages,
+         Tables::Users,
+         Tables::GroupUsers,
+         Tables::Categories,
+         Tables::Relations,
+         Tables::WorkPackageHierarchies,
+         Tables::Sessions,
+         Tables::Announcements,
+         Tables::Attachments,
+         Tables::LdapAuthSources,
+         Tables::Forums,
+         Tables::Messages,
+         Tables::CustomFieldSections,
+         Tables::CustomFields,
+         Tables::CustomFieldsProjects,
+         Tables::CustomFieldsTypes,
+         Tables::CustomOptions,
+         Tables::CustomValues,
+         Tables::Changesets,
+         Tables::ChangesetsWorkPackages,
+         Tables::Journals,
+         Tables::WorkPackageJournals,
+         Tables::ProjectJournals,
+         Tables::MessageJournals,
+         Tables::NewsJournals,
+         Tables::WikiPageJournals,
+         Tables::ChangesetJournals,
+         Tables::AttachmentJournals,
+         Tables::AttachableJournals,
+         Tables::CustomizableJournals,
+         Tables::Comments,
+         Tables::Changes,
+         Tables::Repositories,
+         Tables::Enumerations,
+         Tables::Roles,
+         Tables::RolePermissions,
+         Tables::MemberRoles,
+         Tables::Members,
+         Tables::News,
+         Tables::ProjectsTypes,
+         Tables::Queries,
+         Tables::Settings,
+         Tables::Tokens,
+         Tables::UserPreferences,
+         Tables::UserPasswords,
+         Tables::Versions,
+         Tables::Watchers,
+         Tables::WikiPages,
+         Tables::WikiRedirects,
+         Tables::Wikis,
+         Tables::Workflows,
+         Tables::Exports,
+         Tables::MenuItems,
+         Tables::CustomStyles,
+         Tables::DesignColors,
+         Tables::EnterpriseTokens,
+         Tables::EnabledModules,
+         Tables::AttributeHelpTexts,
+         Tables::CustomActions,
+         Tables::CustomActionsProjects,
+         Tables::CustomActionsRoles,
+         Tables::CustomActionsStatuses,
+         Tables::CustomActionsTypes,
+         Tables::OAuthApplications,
+         Tables::OAuthAccessGrants,
+         Tables::OAuthAccessTokens,
+         Tables::OrderedWorkPackages,
+         Tables::Notifications,
+         Tables::NotificationSettings,
+         Tables::Views,
+         Tables::OAuthClients,
+         Tables::OAuthClientTokens,
+         Tables::NonWorkingDays,
+         Tables::PaperTrailAudits,
+         Tables::ProjectCustomFieldProjectMappings,
+         Tables::ProjectQueries,
+         Tables::GoodJobs,
+         Tables::GoodJobProcesses,
+         Tables::GoodJobSettings,
+         Tables::GoodJobBatches,
+         Tables::GoodJobExecutions,
+         Tables::Favorites,
+         Tables::EmojiReactions,
+         Tables::AuthProviders,
+         Tables::RemoteIdentities,
+         Tables::HierarchicalItems,
+         Tables::HierarchicalItemHierarchies,
+         Tables::ProjectPhaseDefinitions,
+         Tables::ProjectPhases,
+         Tables::Reminders,
+         Tables::ReminderNotifications,
+         Tables::ProjectPhaseJournals,
+         Tables::ServiceAccountAssociations,
+         Tables::ExportSettings
+
+  squashed_migrations *%w[
+    1000015_aggregated_migrations
+    20241030154245_create_project_life_cycles
+    20241119131205_create_reminders
+    20241120095318_update_scheduling_mode_and_lags
+    20241121094113_migrate_cost_settings_to_regular_settings
+    20241121113638_create_reminder_notifications
+    20241125161226_unique_index_on_project_life_cycle_steps
+    20241126111225_add_project_life_cycle_step_roles
+    20241127161228_grant_select_project_life_cycle_permission
+    20241129135602_populate_manage_own_reminders_permission
+    20241211152749_introduce_patterns_to_types
+    20241217190533_add_uniqueness_index_to_project_life_cycle_step_definitions_name
+    20250102161733_adds_position_cache_to_hierarchy_items
+    20250108100511_remove_incorrect_manage_own_reminders_permission
+    20250114162956_create_project_life_cycle_step_journals
+    20250117105334_remove_manage_own_reminders_permission
+    20250128164217_remove_is_default_for_time_entry_activities
+    20250210163523_add_export_templates_to_type
+    20250213193012_fix_typo_in_settings_user_format_value
+    20250214162601_add_project_life_cycle_step_date_indices
+    20250220123358_add_polymorphic_auth_source_and_integration_to_remote_identities
+    20250226134521_add_restricted_to_journals
+    20250227161653_populate_comments_with_restricted_visibility_permissions
+    20250324133701_create_service_account_associations
+    20250324161229_merge_lifecycle_steps
+    20250326151553_export_settings
+    20250327071204_add_dismissed_enterprise_banners_to_user_preference
+    20250402083709_change_remote_identities_foreign_key_indices
+  ]
+end

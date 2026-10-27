@@ -1,0 +1,53 @@
+@if (canAdd || canReference) {
+  @if (mode === 'inactive') {
+    <tr
+      class="wp-inline-create-button-row hide-when-print"
+      >
+      <td
+        [attr.colspan]="colspan"
+        class="wp-inline-create-button-td"
+        >
+        @if (canAdd) {
+          <button
+            type="button"
+            class="spot-link"
+            [class.wp-inline-create--split-link]="hasReferenceClass"
+            [opAutofocus]="focus"
+            (click)="handleAddRowClick()"
+            [attr.aria-label]="text.create"
+            aria-haspopup="true"
+            data-test-selector="op-wp-inline-create"
+            >
+            <svg plus-icon size="small" />
+            <span [textContent]="text.create"></span>
+          </button>
+        }
+        @if (canReference) {
+          <button
+            type="button"
+            class="spot-link wp-inline-create--split-link"
+            (click)="handleReferenceClick()"
+            [attr.aria-label]="text.create"
+            aria-haspopup="true"
+            data-test-selector="op-wp-inline-create-reference"
+            >
+            <svg link-icon size="small"></svg>
+            <span [textContent]="text.reference"></span>
+          </button>
+        }
+      </td>
+    </tr>
+  }
+  @if (hasReferenceClass && mode === 'reference') {
+    <tr
+      class="wp-inline-create-button-row hide-when-print"
+      >
+      <td
+        [attr.colspan]="colspan"
+        class="wp-inline-reference-row-td -no-highlighting"
+        >
+        <ng-container *ngComponentOutlet="referenceClass; injector: injector" />
+      </td>
+    </tr>
+  }
+}

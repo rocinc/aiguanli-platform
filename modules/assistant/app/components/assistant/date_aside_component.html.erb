@@ -1,0 +1,34 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%# Queued after the date picker's own announcement (delay 500), which it would otherwise cut off. %>
+<%= render(OpTurbo::StreamComponent.new(action: :liveRegion, message: announcement, politeness: "polite", delay: "900", target: nil)) %>
+<%= content_tag(
+      :div,
+      class: "assistant-date-aside",
+      role: "note",
+      "aria-label": t("assistant.date_aside.label", name:),
+      data: { test_selector: "assistant-date-aside" }
+    ) do %>
+  <%= render(Primer::Beta::Octicon.new(icon: :"sparkle-fill", size: :xsmall, color: :muted, classes: "assistant-date-aside--mark")) %>
+  <ul class="assistant-date-aside--lines">
+    <% if shift_line %>
+      <li><%= content_tag(:span, shift_line, title: shift_titles) %></li>
+    <% end %>
+    <% warning_lines.each do |line| %>
+      <li class="assistant-date-aside--warning">
+        <span><%= line %></span>
+      </li>
+    <% end %>
+    <% quiet_slip_lines.each do |line| %>
+      <li><%= line %></li>
+    <% end %>
+  </ul>
+<% end %>

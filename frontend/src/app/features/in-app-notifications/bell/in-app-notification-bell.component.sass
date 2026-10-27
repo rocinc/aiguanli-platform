@@ -1,0 +1,19 @@
+@import "helpers"
+
+.op-ian-bell
+  position: relative
+
+  &--indicator
+    @include indicator-bubble
+    position: absolute
+    top: 12px
+    right: 0
+    background: var(--display-red-bgColor-emphasis)
+
+    &_max
+      height: 12px
+      line-height: 12px
+      width: 12px
+      right: 8px
+      top: 15px
+      padding: 0

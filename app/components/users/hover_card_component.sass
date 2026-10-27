@@ -1,0 +1,24 @@
+// Correct the z-index of the regular hover card container so that it is above the dropdown of user auto completers
+.spot-modal-overlay:has(.op-user-hover-card)
+  z-index: 9600
+
+// On the project list page, there is a bug when a hover card is invoked within the share dialog. The global spot
+// modal overlay will darken the background while the hover card is active, since it's semi-transparent bg shading is
+// added on top of the other dialog background shaders. We don't want an additional spot modal background here,
+// so we disable it for this edge case.
+.controller-projects.action-index, .controller-meetings.action-show
+  .spot-modal-overlay:not(:has(.op-user-hover-card))
+    background: transparent
+
+.op-user-hover-card
+  gap: 1rem
+  overflow: hidden
+
+  &--info
+    gap: 0.5rem
+
+    &--name, &--email
+      @include text-shortener()
+
+  &--group-list, &--department
+    gap: 0.5rem

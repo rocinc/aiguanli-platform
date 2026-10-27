@@ -1,0 +1,26 @@
+---
+fr:
+  plugin_openproject_recaptcha:
+    description: Ce module ajoute des vérifications ReCaptcha lors de la connexion.
+    name: ReCaptcha OpenProject
+  recaptcha:
+    button_please_wait: Veuillez patienter ...
+    error_captcha: Votre compte n'a pas pu être vérifié. Veuillez contacter un administrateur.
+    label_recaptcha: reCAPTCHA
+    settings:
+      captcha_description_html: 'reCAPTCHA est un service gratuit de Google qui peut être activé pour votre instance OpenProject. S''il est activé, un formulaire captcha sera affiché lors de la connexion pour tous les utilisateurs qui n''ont pas encore vérifié un captcha. <br/> Veuillez consulter le lien suivant pour plus de détails sur reCAPTCHA et leurs versions, ainsi que pour savoir comment créer le site Web et les clés secrètes : %{recaptcha_link} <br/> HCaptcha est une alternative sans Google que vous pouvez utiliser si ne voulez pas utiliser reCAPTCHA. Merci de consulter ce lien pour plus d''informations : %{hcaptcha_link}.<br />Cloudflare Turnstile™ est une autre alternative plus pratique pour les utilisateurs tout en offrant le même niveau de sécurité. Voir ce lien pour plus d''informations : %{turnstile_link}
+
+        '
+      response_limit: Limite de réponse pour HCaptcha
+      response_limit_text: Le nombre maximum de caractères pour considérer la réponse hCaptcha comme valide.
+      secret_key: Clé secrète
+      secret_key_text: Entrez la clé secrète que vous avez créée dans la console d'administration reCAPTCHA.
+      type: Utiliser reCAPTCHA
+      type_disabled: Désactiver reCAPTCHA
+      type_hcaptcha: hCaptcha
+      type_turnstile: Cloudflare Turnstile™
+      type_v2: reCAPTCHA v2
+      type_v3: reCAPTCHA v3
+      website_key: Clé du site web (peut également être appelée "Clé du site")
+      website_key_text: Entrez la clé du site Web que vous avez créée dans la console d'administration reCAPTCHA pour ce domaine.
+    verify_account: Vérifiez votre compte

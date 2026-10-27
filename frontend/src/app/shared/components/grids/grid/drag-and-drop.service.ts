@@ -1,0 +1,167 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { Injectable, OnDestroy, inject } from '@angular/core';
+import { GridWidgetArea } from 'core-app/shared/components/grids/areas/grid-widget-area';
+import { GridArea } from 'core-app/shared/components/grids/areas/grid-area';
+import { GridAreaService } from 'core-app/shared/components/grids/grid/area.service';
+import { GridMoveService } from 'core-app/shared/components/grids/grid/move.service';
+import { Subscription } from 'rxjs';
+import { distinctUntilChanged, filter, throttleTime } from 'rxjs/operators';
+
+@Injectable()
+export class GridDragAndDropService implements OnDestroy {
+  readonly layout = inject(GridAreaService);
+  readonly move = inject(GridMoveService);
+
+  public draggedArea:GridWidgetArea|null;
+
+  public placeholderArea:GridWidgetArea|null;
+
+  public draggedHeight:number|null;
+
+  private mousedOverAreaObserver:Subscription;
+
+  constructor() {
+    // ngOnInit is not called on services
+    this.setupMousedOverAreaSubscription();
+  }
+
+  ngOnDestroy():void {
+    this.mousedOverAreaObserver.unsubscribe();
+  }
+
+  private setupMousedOverAreaSubscription() {
+    this.mousedOverAreaObserver = this
+      .layout
+      .$mousedOverArea
+      .pipe(
+        // avoid flickering of widgets as the grid gets resized by the placeholder movement
+        throttleTime(10),
+        distinctUntilChanged(),
+        filter((area) => this.currentlyDragging && !!area && !this.layout.isGap(area) && (this.placeholderArea!.startRow !== area.startRow || this.placeholderArea!.startColumn !== area.startColumn)),
+      ).subscribe((area) => {
+        this.updateArea(area!);
+
+        this.layout.scrollPlaceholderIntoView();
+      });
+  }
+
+  private updateArea(area:GridArea) {
+    this.layout.resetAreas(this.draggedArea);
+    this.moveAreasOnDragging(area);
+  }
+
+  private moveAreasOnDragging(dropArea:GridArea) {
+    if (!this.placeholderArea) {
+      return;
+    }
+    const widgetArea = this.draggedArea!;
+
+    // Set the draggedArea's startRow/startColumn properties
+    // to the drop zone ones.
+    // The dragged Area should keep its height and width normally but will
+    // shrink if the area would otherwise end outside the grid.
+    // we cannot use the widget's original area as moving it while dragging confuses cdkDrag
+    this.copyPositionButRestrict(dropArea, this.placeholderArea);
+
+    this.move.down(this.placeholderArea, widgetArea);
+  }
+
+  public get currentlyDragging() {
+    return !!this.draggedArea;
+  }
+
+  public isDropOnlyArea(area:GridArea) {
+    return !this.currentlyDragging && area.endRow === this.layout.numRows + 2;
+  }
+
+  public isDragged(area:GridWidgetArea) {
+    return this.currentlyDragging && this.draggedArea!.guid === area.guid;
+  }
+
+  public isPassive(area:GridWidgetArea) {
+    return this.currentlyDragging && !this.isDragged(area);
+  }
+
+  public get isDraggable() {
+    return this.layout.isEditable;
+  }
+
+  public start(area:GridWidgetArea) {
+    this.placeholderArea = new GridWidgetArea(area.widget);
+    // TODO find an angular way to do this that ideally does not require passing the element from the grid component
+    this.draggedHeight = (document as any).getElementById(area.guid).offsetHeight - 2; // border width * 2
+    this.draggedArea = area;
+  }
+
+  public abort() {
+    document.dispatchEvent(new Event('mouseup'));
+    this.draggedArea = null;
+    this.placeholderArea = null;
+    this.layout.resetAreas();
+  }
+
+  public drop() {
+    if (!this.draggedArea) {
+      return;
+    }
+
+    this.placeholderArea!.copyDimensionsTo(this.draggedArea);
+
+    if (!this.draggedArea.unchangedSize) {
+      this.layout.writeAreaChangesToWidgets();
+      this.layout.cleanupUnusedAreas();
+      this.layout.rebuildAndPersist();
+    }
+
+    this.draggedArea = null;
+    this.placeholderArea = null;
+  }
+
+  private copyPositionButRestrict(source:GridArea, sink:GridWidgetArea) {
+    sink.startRow = source.startRow;
+
+    // The first condition is aimed at the case when the user drags an element to the very last row
+    // which is not reflected by the numRows.
+    if (source.startRow === this.layout.numRows + 1) {
+      sink.endRow = this.layout.numRows + 2;
+    } else if (source.startRow + sink.widget.height > this.layout.numRows + 1) {
+      sink.endRow = this.layout.numRows + 1;
+    } else {
+      sink.endRow = source.startRow + sink.widget.height;
+    }
+
+    sink.startColumn = source.startColumn;
+    if (source.startColumn + sink.widget.width > this.layout.numColumns + 1) {
+      sink.endColumn = this.layout.numColumns + 1;
+    } else {
+      sink.endColumn = source.startColumn + sink.widget.width;
+    }
+  }
+}

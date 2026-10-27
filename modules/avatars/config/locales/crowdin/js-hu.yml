@@ -1,0 +1,11 @@
+---
+hu:
+  js:
+    avatars:
+      empty_file_error: Töltsön fel egy érvényes képet (jpg, png, gif)
+      error_image_too_large: Fájl mérete túl nagy.
+      label_choose_avatar: Profilkép kiválasztása fájlból
+      uploading_avatar: Az avatar frissítése.
+      wrong_file_format: 'A megengedett formátumok: jpg, png, gif'
+    button_update: Frissítés
+    label_preview: Előnézet

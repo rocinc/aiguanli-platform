@@ -1,0 +1,47 @@
+<div #container
+  data-test-selector="op-wp-card-view"
+  [ngClass]="classes()"
+  opSortableListsList
+  [opSortableListsListId]="resolvedListId"
+  [opSortableListsListAccepts]="acceptsDrops"
+  (opSortableListsDrop)="handleDrop($event)"
+  (opSortableListsRemoved)="handleRemoved($event)">
+  @if (inReference) {
+    <div
+      class="wp-inline-create--reference-container">
+      <ndc-dynamic [ndcDynamicComponent]="referenceClass"
+        [ndcDynamicInjector]="injector"
+        [ndcDynamicOutputs]="referenceOutputs" />
+    </div>
+  }
+
+  @for (wp of workPackages; track trackByHref($index, wp)) {
+    <wp-single-card [workPackage]="wp"
+      [attr.data-is-new]="isNewResource(wp) || undefined"
+      [attr.data-work-package-id]="wp.id"
+      [attr.data-class-identifier]="cardView.classIdentifier(wp)"
+      [showInfoButton]="showInfoButton"
+      [showStatusButton]="showStatusButton"
+      [showRemoveButton]="cardsRemovable"
+      [highlightingMode]="highlightingMode"
+      [draggable]="this.canDragOutOf(wp)"
+      [orientation]="orientation"
+      [shrinkOnMobile]="shrinkOnMobile"
+      [opSortableListsItem]="wp.id!"
+      [opSortableListsItemCanDrag]="itemCanDrag(wp)"
+      (onRemove)="removeCard(wp)"
+      (stateLinkClicked)="stateLinkClicked.emit($event)" />
+    @if (shrinkOnMobile) {
+      <hr
+        class="form--separator hidden-for-desktop">
+    }
+  }
+</div>
+
+@if (showEmptyResultsBox && isResultEmpty) {
+  <div>
+    <op-no-results [title]="text.noResults.title" [description]="text.noResults.description" />
+  </div>
+}
+
+

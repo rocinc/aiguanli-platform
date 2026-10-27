@@ -1,0 +1,107 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+.assistant-desk-ideas
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-16)
+  max-width: 60rem
+
+  &--list
+    list-style: none
+    margin: 0
+    padding: 0
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-12)
+
+  &--folded
+    &[open] > summary .assistant-card--chevron
+      transform: rotate(90deg)
+
+    > .assistant-desk-ideas--list
+      margin-top: var(--base-size-8)
+
+.assistant-idea
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-8)
+  padding: var(--base-size-16)
+  border: var(--borderWidth-thin) solid var(--borderColor-default)
+  border-radius: var(--borderRadius-medium)
+  background: var(--bgColor-default)
+
+  &--header
+    display: flex
+    flex-wrap: wrap
+    align-items: baseline
+    gap: var(--base-size-8)
+
+  &--mark
+    align-self: center
+    color: var(--fgColor-attention)
+
+  &--title
+    margin: 0
+    font-size: var(--text-body-size-large)
+    font-weight: var(--base-text-weight-semibold)
+    overflow-wrap: anywhere
+
+  &--who,
+  &--meta,
+  &--outcome
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--who
+    margin-inline-start: auto
+
+  &--quote
+    margin: 0
+    padding-inline-start: var(--base-size-12)
+    border-inline-start: var(--borderWidth-thick) solid var(--borderColor-muted)
+    overflow-wrap: anywhere
+
+  &--meta
+    margin-top: calc(var(--base-size-4) * -1)
+
+  &--more
+    > summary + .assistant-idea--others
+      margin-top: var(--base-size-8)
+
+    &[open] > summary .assistant-card--chevron
+      transform: rotate(90deg)
+
+  &--others
+    list-style: none
+    margin: 0
+    padding: 0
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+
+  &--actions
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: var(--base-size-8)
+
+  &--inline
+    > summary
+      cursor: pointer
+      list-style: none
+
+      &::-webkit-details-marker
+        display: none
+
+  &--form
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: var(--base-size-8)
+    margin-top: var(--base-size-8)

@@ -1,0 +1,11 @@
+---
+az:
+  js:
+    avatars:
+      empty_file_error: Zəhmət olmasa düzgün şəkil yükləyin (jpg, png, gif)
+      error_image_too_large: Şəkil çox böyükdür
+      label_choose_avatar: Avatar seçin
+      uploading_avatar: Avatarınız yüklənir
+      wrong_file_format: İcazə verilən formatlar jpg, png, gif-dir
+    button_update: Yeniləmə
+    label_preview: İlkin baxılış

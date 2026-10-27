@@ -1,0 +1,14 @@
+<widget-header
+  [name]="widgetName"
+  (onRenamed)="renameWidget($event)">
+  <widget-wp-table-menu slot="menu"
+    [resource]="resource" />
+</widget-header>
+
+<div class="op-widget-box--body">
+  @if (queryId) {
+    <wp-embedded-table [queryId]="queryId"
+      [configuration]="configuration"
+       />
+  }
+</div>

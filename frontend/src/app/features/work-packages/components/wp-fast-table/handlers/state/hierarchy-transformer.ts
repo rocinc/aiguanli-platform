@@ -1,0 +1,148 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { Injector } from '@angular/core';
+import { scrollTableRowIntoView } from 'core-app/features/work-packages/components/wp-fast-table/helpers/wp-table-row-helpers';
+import {
+  distinctUntilChanged, filter, map, takeUntil,
+} from 'rxjs/operators';
+import { IsolatedQuerySpace } from 'core-app/features/work-packages/directives/query-space/isolated-query-space';
+import { WorkPackageViewHierarchiesService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-hierarchy.service';
+import { WorkPackageTable } from 'core-app/features/work-packages/components/wp-fast-table/wp-fast-table';
+import {
+  collapsedGroupClass,
+  hierarchyGroupClass,
+  hierarchyRootClass,
+} from 'core-app/features/work-packages/components/wp-fast-table/helpers/wp-table-hierarchy-helpers';
+import { indicatorCollapsedClass } from 'core-app/features/work-packages/components/wp-fast-table/builders/modes/hierarchy/single-hierarchy-row-builder';
+import { tableRowClassName } from 'core-app/features/work-packages/components/wp-fast-table/builders/rows/single-row-builder';
+import { WorkPackageViewHierarchies } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-table-hierarchies';
+import { LazyInject } from 'core-app/shared/helpers/angular/lazy-inject.decorator';
+import { getNodeIndex } from 'core-app/shared/helpers/dom-helpers';
+
+export class HierarchyTransformer {
+  @LazyInject() public wpTableHierarchies:WorkPackageViewHierarchiesService;
+
+  @LazyInject() public querySpace:IsolatedQuerySpace;
+
+  constructor(public readonly injector:Injector,
+    table:WorkPackageTable) {
+    this.wpTableHierarchies
+      .updates$()
+      .pipe(
+        takeUntil(this.querySpace.stopAllSubscriptions),
+        map((state) => state.isVisible),
+        distinctUntilChanged(),
+      )
+      .subscribe(() => {
+        // We don't have to reload all results when _disabling_ the hierarchy mode.
+        if (!this.wpTableHierarchies.isEnabled) {
+          table.redrawTableAndTimeline();
+        }
+      });
+
+    let lastValue = this.wpTableHierarchies.isEnabled;
+
+    this.wpTableHierarchies
+      .updates$()
+      .pipe(
+        takeUntil(this.querySpace.stopAllSubscriptions),
+        filter(() => this.querySpace.tableRendered.hasValue()),
+      )
+      .subscribe((state:WorkPackageViewHierarchies) => {
+        if (state.isVisible === lastValue) {
+          this.renderHierarchyState(state);
+        }
+
+        lastValue = state.isVisible;
+      });
+  }
+
+  /**
+   * Update all currently visible rows to match the selection state.
+   */
+  private renderHierarchyState(state:WorkPackageViewHierarchies) {
+    const rendered = this.querySpace.tableRendered.value!;
+
+    // Show all hierarchies
+    document.querySelectorAll('[class^="__hierarchy-group-"]').forEach((el) => {
+      Array.from(el.classList)
+        .filter((className) => /__collapsed-group-\d+/g.test(className))
+        .forEach((className) => el.classList.remove(className));
+    });
+
+    // Mark which rows were hidden by some other hierarchy group
+    // (e.g., by a collapsed parent)
+    const collapsed:Record<number, boolean> = {};
+
+    // Hide all collapsed hierarchies
+    Object.entries(state.collapsed).forEach(([wpId, isCollapsed]) => {
+      // Toggle the root style
+      document.querySelector(`.${hierarchyRootClass(wpId)} .wp-table--hierarchy-indicator`)?.classList.toggle(indicatorCollapsedClass, isCollapsed);
+
+      // Get parent row and mark/unmark it as collapsed
+      const hierarchyRoot = document.querySelector(`.wp-timeline-cell.__hierarchy-root-${wpId}`);
+
+      if (hierarchyRoot) {
+        if (isCollapsed) {
+          hierarchyRoot.classList.add('__hierarchy-root-collapsed');
+        } else {
+          hierarchyRoot.classList.remove('__hierarchy-root-collapsed');
+        }
+      }
+
+      // Get all affected children rows
+      const affected = Array.from(document.querySelectorAll(`.${hierarchyGroupClass(wpId)}`));
+
+      // Hide/Show the descendants.
+      affected.forEach((el) => el.classList.toggle(collapsedGroupClass(wpId), isCollapsed));
+
+      // Update the hidden section of the rendered state
+      affected
+        .filter((el) => el.matches(`.${tableRowClassName}`))
+        .forEach((el) => {
+        // Get the index of this row
+        const index = getNodeIndex(el);
+
+        // Update the hidden state
+        if (!collapsed[index]) {
+          rendered[index].hidden = isCollapsed;
+          collapsed[index] = isCollapsed;
+        }
+      });
+    });
+
+    // Keep focused on the last element, if any.
+    // Based on https://stackoverflow.com/a/3782959
+    if (state.last) {
+      scrollTableRowIntoView(state.last);
+    }
+
+    this.querySpace.tableRendered.putValue(rendered, 'Updated hidden state of rows after hierarchy change.');
+  }
+}

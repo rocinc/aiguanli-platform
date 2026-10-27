@@ -1,0 +1,654 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# rubocop:disable Rails
+require "rubygems"
+require "bundler"
+Bundler.setup(:default, :development)
+
+require "colored2"
+require "json"
+require "optparse"
+require "base64"
+require "pathname"
+require "pry"
+require "time"
+require "yaml"
+require "httpx"
+require "cgi"
+
+require_relative "support/github_actions_failures"
+
+GITHUB_API_OPENPROJECT_PREFIX = "https://api.github.com/repos/opf/openproject"
+GITHUB_HTML_OPENPROJECT_PREFIX = "https://github.com/opf/openproject"
+RAILS_ROOT = Pathname.new(__dir__).dirname
+EXCLUDED_JOB_NAMES = %w[eslint rubocop].freeze
+
+if !ENV["GITHUB_TOKEN"]
+  raise "Missing GITHUB_TOKEN env, go to https://github.com/settings/tokens and create one with 'repo' access"
+end
+
+# workaround an openssl 3.6.0 issue
+# https://github.com/ruby/openssl/issues/949#issuecomment-3367944960
+s = OpenSSL::X509::Store.new.tap(&:set_default_paths)
+OpenSSL::SSL::SSLContext.send(:remove_const, :DEFAULT_CERT_STORE) rescue nil # rubocop:disable Style/RescueModifier
+OpenSSL::SSL::SSLContext.const_set(:DEFAULT_CERT_STORE, s.freeze)
+
+class Options
+  DEFAULTS = {
+    compact: false,
+    display_rerun_info: false,
+    display_images: false,
+    failed_jobs_logs: [],
+    full_backtrace: false,
+    no_cache: false,
+    run_id: nil,
+    job_id: nil,
+    verbose: false
+  }.freeze
+
+  BANNER = <<~BANNER.freeze
+    Usage: #{$0} [options] [url]
+
+    Fetches rspec failures from last completed GitHub actions on current branch,
+    and outputs them on standard output, one by line.
+
+    If given an url, it will fetch the failures from the given url using the workflow
+    id and the job id if present instead of the tip of the current branch.
+
+    Information is printed on standard error to preserve standard output.
+
+    Use this script with xargs to run failing specs locally:
+
+        #{$0} | xargs --no-run-if-empty bin/rspec
+
+
+    Options:
+  BANNER
+
+  class << self
+    def options
+      return @options if defined?(@options)
+
+      @options = DEFAULTS.dup
+      parse_options!
+      @options
+    end
+
+    def method_missing(name, *)
+      if DEFAULTS.key?(name)
+        options[name]
+      else
+        super
+      end
+    end
+
+    def respond_to_missing?(method_name, include_private = false)
+      DEFAULTS.key?(name) || super
+    end
+
+    def parse_options!
+      options.merge!(parse_args)
+      options.merge!(parse_url(ARGV.first)) if ARGV.any?
+    end
+
+    def parse_args # rubocop:disable Metrics/AbcSize
+      options = {}
+      opt_parser = OptionParser.new do |parser|
+        parser.banner = BANNER
+
+        parser.on("-b", "--full-backtrace", "Output full backtrace of test failures") do
+          options[:full_backtrace] = true
+        end
+
+        parser.on("-c", "--compact", "Output all failing rspec files on one line") do
+          options[:compact] = true
+        end
+
+        parser.on("-d", "--display-rerun-info",
+                  "Displays rspec rerun instructions like CI with seed") do
+          options[:display_rerun_info] = true
+        end
+
+        parser.on("-f PATH", "--failed-job-log PATH",
+                  "Use given file as failed job log instead of downloading from GitHub. Can be used multiple times.") do |path|
+          options[:failed_jobs_logs] << path
+        end
+
+        parser.on("-i", "--images", "Download and display screenshots of failed feature tests") do
+          options[:display_images] = true
+        end
+
+        parser.on("-n", "--no-cache", "Do not use cached replies from GitHub API calls") do
+          options[:no_cache] = true
+        end
+
+        parser.on("-r RUN_ID", "--run-id RUN_ID", Integer,
+                  "The workflow run id to use (in github url: actions/runs/{id})") do |value|
+          options[:run_id] = value
+        end
+
+        parser.on("-h", "--help", "Prints this help") do
+          puts parser
+          exit
+        end
+
+        parser.on("-v", "--verbose",
+                  "Print more information, mostly useful for debugging") do
+          options[:verbose] = true
+        end
+      end
+      opt_parser.parse!
+      options
+    end
+
+    def parse_url(url)
+      case url
+      when %r{^https://github.com/opf/openproject/actions/runs/(\d+)(?:/job/(\d+)(?:\?.*)?)?$}
+        run_id = $1.to_i
+        job_id = $2&.to_i
+        say_verbose("Extracted run id #{run_id}#{" and job id #{job_id}" if job_id} from #{url}")
+        { run_id:, job_id: }
+      else
+        warn "Unrecognized url #{url}"
+        exit 1
+      end
+    end
+  end
+end
+
+def say_verbose(text)
+  return unless Options.verbose
+
+  warn "| #{text}"
+end
+
+# Returns current branch
+def current_branch_name
+  @current_branch_name ||= `git rev-parse --abbrev-ref HEAD`.strip
+end
+
+def github_url(path)
+  if path.start_with?("http")
+    path
+  else
+    "#{GITHUB_API_OPENPROJECT_PREFIX}/#{path}"
+  end
+end
+
+def http
+  HTTPX
+    .plugin(:follow_redirects)
+    .with_headers(
+      "Authorization" => "Bearer #{ENV.fetch('GITHUB_TOKEN')}"
+    )
+end
+
+def get_http(path)
+  url = github_url(path)
+  say_verbose("HTTP GET #{url}")
+
+  response = http.get(url)
+
+  response.raise_for_status
+  say_verbose("HTTP Response #{response.status}")
+  response.to_s
+rescue HTTPX::HTTPError => e
+  warn error_details(e)
+  exit 1
+rescue StandardError => e
+  warn "Failed to perform API request GET #{url}: #{e}"
+  exit 1
+end
+
+def error_details(error)
+  response = error.response
+  response_body = response.json
+
+  parts = []
+  parts << "Failed to perform API request GET #{response.uri}: #{error}"
+  parts << "  #{response_body['message']}"
+  parts << "  See #{response_body['documentation_url']}"
+  parts += error.backtrace.map { "    #{it}" }
+  parts.join("\n")
+end
+
+def get_json(path)
+  JSON.parse(get_http(path))
+end
+
+def path_to_cache_key(path)
+  path
+    .gsub(/\?.*$/, "") # remove query parameter
+    .gsub(/^#{GITHUB_API_OPENPROJECT_PREFIX}\/?/o, "") # remove https://.../
+    .gsub(/\W/, "_") # transform non alphanum chars
+end
+
+def get_jobs(workflow_run)
+  workflow_run["jobs_url"]
+  cache_key = [
+    path_to_cache_key(workflow_run["jobs_url"]),
+    workflow_run["updated_at"].delete(":")
+  ].join("_")
+  cached(cache_key) { get_json(workflow_run["jobs_url"]) }
+end
+
+def get_log(job)
+  cached("job_#{job['id']}.log") do
+    get_http("actions/jobs/#{job['id']}/logs")
+  end
+end
+
+def cached(unique_name)
+  if Options.no_cache
+    return yield
+  end
+
+  cached_file = RAILS_ROOT.join("tmp/github_pr_errors/#{unique_name}")
+  if cached_file.file?
+    say_verbose("Reading from cached file #{cached_file}")
+    content = cached_file.read
+    content.start_with?("---") ? YAML::load(content) : content
+  else
+    content = yield
+    say_verbose("Writing to cached file #{cached_file}")
+    cached_file.dirname.mkpath
+    cached_file.write(content.is_a?(String) ? content : YAML::dump(content))
+    content
+  end
+end
+
+def last_with_status(workflow_runs, status)
+  workflow_runs
+    .select { |entry| entry["status"] == status }
+    .max_by { |entry| entry["run_number"] }
+end
+
+def get_last_workflow_run(branch_name)
+  test_workflow_runs =
+    get_json("actions/runs?branch=#{CGI.escape(branch_name)}")
+      .then { |response| response["workflow_runs"] }
+      .select { |entry| entry["name"] == "Test suite" }
+
+  last_completed = last_with_status(test_workflow_runs, "completed")
+  last_in_progress = last_with_status(test_workflow_runs, "in_progress")
+
+  last_in_progress || last_completed or raise "No workflow run found for branch #{branch_name}"
+end
+
+def get_workflow_run(run_id)
+  if run_id
+    warn "Looking for the workflow run with id #{run_id.to_s.bold}"
+    get_json("actions/runs/#{CGI.escape(run_id.to_s)}")
+  else
+    warn "Looking for the last 'Test suite' workflow run in current branch #{current_branch_name.bold}"
+    get_last_workflow_run(current_branch_name)
+  end
+end
+
+class WorkflowRunDecorator
+  attr_reader :workflow_run
+
+  def initialize(workflow_run)
+    @workflow_run = workflow_run
+  end
+
+  def head_branch = workflow_run["head_branch"]
+  def head_sha = workflow_run["head_sha"]
+  def run_started_at = Time.parse(workflow_run["run_started_at"]).utc
+
+  def commit_message
+    workflow_run["head_commit"]
+      .then { |commit| commit["message"] }
+      .then { |message| message.split("\n", 2).first }
+  end
+end
+
+Report = Data.define(
+  :errors,
+  :failures_explanation,
+  :head_branch,
+  :head_sha,
+  :commit_message,
+  :run_started_at,
+  :run_status,
+  :failed_job_logs,
+  :merge_branch_sha
+) do
+  def initialize(errors: [],
+                 failures_explanation: nil,
+                 head_branch: nil,
+                 head_sha: nil,
+                 commit_message: nil,
+                 run_started_at: nil,
+                 run_status: nil,
+                 failed_job_logs: nil,
+                 merge_branch_sha: nil)
+    super
+  end
+
+  def with_workflow_run_info(workflow_run)
+    workflow_run = WorkflowRunDecorator.new(workflow_run)
+    with(
+      head_branch: workflow_run.head_branch,
+      head_sha: workflow_run.head_sha,
+      commit_message: workflow_run.commit_message,
+      run_started_at: workflow_run.run_started_at
+    )
+  end
+end
+
+class Formatter
+  def initialize(compact: false)
+    @compact = compact
+  end
+
+  def compact?
+    @compact
+  end
+
+  def display_workflow_run_info(report)
+    warn "  Branch: #{report.head_branch.bold}"
+    warn "  Commit SHA: #{report.head_sha.bold}"
+    warn "  Commit message: #{report.commit_message.bold}"
+    warn "  Last attempted run started at: #{report.run_started_at.localtime.to_s.bold}"
+  end
+
+  def display_workflow_status(workflow_run)
+    warn "  Run attempt: #{workflow_run['run_attempt']}"
+    warn "  #{status_line(workflow_run)}"
+  end
+
+  def display_job_status(job)
+    warn "    #{status_line(job)}"
+  end
+
+  def display_errors_from_report(report)
+    display_failures_explanation(report.failures_explanation)
+    display_errors(report.errors)
+    display_rerun_env_setup(report) if Options.display_rerun_info
+  end
+
+  def display_failures_explanation(failures_explanation)
+    return if failures_explanation.nil? || failures_explanation.empty?
+
+    warn "Failures explanation:".bold
+    warn clean_failures_explanation(failures_explanation)
+    warn ""
+  end
+
+  def display_errors(errors)
+    if errors.empty?
+      warn "No rspec errors found :-/"
+    elsif compact?
+      display_errors_compact(errors)
+    else
+      display_errors_detailed(errors)
+    end
+  end
+
+  def display_pull_request_info(workflow_run) # rubocop:disable Metrics/AbcSize
+    return unless workflow_run["event"] == "pull_request"
+
+    if pr = workflow_run["pull_requests"].first
+      pr_number = "##{pr['number']}"
+      pr_html_url = "#{GITHUB_HTML_OPENPROJECT_PREFIX}/pull/#{pr['number']}"
+      pr_display_title = "#{workflow_run['display_title'].bold} #{pr_number.white.dark} #{pr_html_url.white.dark}"
+      warn "  Pull Request: #{pr_display_title} "
+      warn "    base branch: #{pr.dig('base', 'ref').bold}"
+      warn "    base SHA: #{pr.dig('base', 'sha').bold}"
+    else
+      warn "  Pull Request: not found; perhaps it is already merged or closed?"
+    end
+  end
+
+  private
+
+  # Remove test failure backtrace lines that are not useful.
+  # - rspec_retry and retriable lines
+  # - top level lines which are mostyl around blocks executing on each spec
+  # - make the spec file name bold
+  def clean_failures_explanation(failures_explanation)
+    return failures_explanation if Options.full_backtrace
+
+    failures_explanation
+      .split("\n")
+      .reject { |line| line.include?("spec/support/rspec_retry") || line.include?("/usr/local/bundle/gems/retriable") }
+      .reject { |line| line.include?("<top (required)>") && !line.include?("_spec.rb") }
+      .join("\n")
+      .gsub(/[.a-z_\/]+_spec.rb/, &:bold)
+  end
+
+  def display_errors_compact(errors)
+    puts errors.map { escaped_location(it) }.join(" ")
+  end
+
+  def display_errors_detailed(errors)
+    if Options.display_rerun_info
+      errors
+        .sort_by { |error| [error.tests_group.test_env_number.to_i, error.location] }
+        .group_by(&:tests_group)
+        .each do |tests_group, tests_group_errors|
+          display_tests_group_info(tests_group)
+          tests_group_errors.each { display_error(it) }
+          display_tests_group_rerun_commands(tests_group)
+        end
+    else
+      errors
+        .sort_by(&:location)
+        .each { display_error(it) }
+    end
+  end
+
+  def display_error(error)
+    puts escaped_location(error)
+    display_error_attribute("loading error", error.loading_error)
+    display_error_attribute("html", error.page_html)
+    display_error_screenshot(error.page_screenshot)
+  end
+
+  def display_error_screenshot(screenshot_url)
+    return unless screenshot_url
+
+    display_error_attribute("screenshot", screenshot_url)
+    if Options.display_images
+      if screenshot_url.start_with?("/")
+        # external pull requests do not have access to AWS credentials to upload screenshots
+        warn "      (cannot display screenshot: it is local file stored on the runner)".yellow
+        return
+      end
+      begin
+        Open3.popen2e("imgcat", "--width", "50%", "--url", screenshot_url) do |stdin, stdout_and_stderr, _thread|
+          stdin.close
+          warn stdout_and_stderr.read
+        end
+      rescue Errno::ENOENT => e
+        warn e
+        warn "To display image inline, you need to have a compatible terminal like iTerm2 " \
+             "or Konsole, and the 'imgcat' command installed."
+        warn "See https://iterm2.com/documentation-images.html to know more."
+      end
+    end
+  end
+
+  def display_error_attribute(name, value)
+    return unless value
+
+    warn [
+      "    ",
+      "↳".blue.bold,
+      " ",
+      name.blue,
+      ": ",
+      value.to_s.blue
+    ].join
+  end
+
+  def display_rerun_env_setup(report)
+    warn <<~INSTRUCTIONS.white.dark
+      To be closer to CI conditions, run these commands first:
+      ```
+      #{checkout_test_commit_commands(report)}
+      #{reset_test_database_command}
+      #{precompile_assets_command}
+      ```
+      Then start a load-stress tool and run a test group using the rspec command above.
+    INSTRUCTIONS
+  end
+
+  def checkout_test_commit_commands(report)
+    if report.merge_branch_sha
+      <<~INSTRUCTIONS
+        # GitHub Action run merged #{report.merge_branch_sha} into #{report.head_sha} (#{report.head_branch} branch)
+        git checkout -B repro_ci_failures #{report.head_sha}
+        git merge --no-edit --no-verify #{report.merge_branch_sha}
+      INSTRUCTIONS
+    else
+      "git checkout #{report.head_sha}"
+    end
+  end
+
+  def reset_test_database_command
+    "rm -f db/structure.sql; bin/rails db:drop db:create db:migrate RAILS_ENV=test"
+  end
+
+  def precompile_assets_command
+    "bin/rails assets:clobber openproject:plugins:register_frontend assets:precompile"
+  end
+
+  def display_tests_group_info(tests_group)
+    return unless tests_group
+
+    warn "Tests group ##{tests_group.test_env_number}".bold
+  end
+
+  def display_tests_group_rerun_commands(tests_group)
+    return unless tests_group
+
+    warn <<~COMMANDS.white.dark
+      To run the tests group in conditions closer to CI, use this command:
+      ```
+      CI=true TZ=UTC OPENPROJECT_LOG__LEVEL=info CAPYBARA_PUMA_THREADS=0:4 \
+      DISABLE_SPRING=1 OPENPROJECT_DISABLE_DEV_ASSET_PROXY=1 \
+      bin/rspec --seed #{tests_group.seed} #{tests_group.files.join(' ')}
+      ```
+    COMMANDS
+  end
+
+  def status_icon(job)
+    case job["status"]
+    when "queued", "in_progress"
+      "●".yellow
+    else
+      case job["conclusion"]
+      when "success"
+        "✓".green
+      when "failure"
+        "✗".red
+      else
+        "-"
+      end
+    end
+  end
+
+  def status_url(job)
+    return if job["conclusion"] == "success"
+
+    job["html_url"].white.dark
+  end
+
+  def status_line(job)
+    [
+      "#{status_icon(job)} #{job['name']}: #{job['conclusion'] || job['status']}",
+      status_url(job)
+    ].compact.join("  ")
+  end
+
+  def escaped_location(error)
+    "'#{error.location}'"
+  end
+end
+
+def get_jobs_from_job_id(job_id)
+  warn "  Looking for the job with id #{job_id.to_s.bold}"
+
+  # no need to fetch anything as we only use the job id to get the logs
+  # mock the same structure as the jobs response
+  [{ "id" => job_id }]
+end
+
+def get_failing_jobs_from_workflow_last_attempt(workflow_run, formatter)
+  get_jobs(workflow_run)
+    .then { |jobs_response| jobs_response["jobs"] }
+    .sort_by { it["name"] }
+    .each { |job| formatter.display_job_status(job) }
+    .select { it["conclusion"] == "failure" }
+    .reject { EXCLUDED_JOB_NAMES.include?(it["name"]) }
+end
+
+def get_relevant_jobs(job_id, workflow_run, formatter)
+  if job_id
+    get_jobs_from_job_id(job_id)
+  else
+    formatter.display_workflow_status(workflow_run)
+    get_failing_jobs_from_workflow_last_attempt(workflow_run, formatter)
+  end
+end
+
+def get_failed_jobs_logs_from_github(report, formatter)
+  workflow_run = get_workflow_run(Options.run_id)
+  report = report.with_workflow_run_info(workflow_run)
+
+  formatter.display_workflow_run_info(report)
+  formatter.display_pull_request_info(workflow_run)
+
+  failed_job_logs = get_relevant_jobs(Options.job_id, workflow_run, formatter)
+    .map { |job| get_log(job) }
+
+  report.with(
+    failed_job_logs:,
+    run_status: failed_job_logs.any? ? "error" : workflow_run["status"]
+  )
+end
+
+def get_failed_jobs_logs_from_args
+  Options.failed_jobs_logs.map { |path| File.read(path) }
+end
+
+def get_failed_jobs_logs(report, formatter)
+  if Options.failed_jobs_logs.any?
+    failed_job_logs = get_failed_jobs_logs_from_args
+    report.with(
+      failed_job_logs:,
+      run_status: failed_job_logs.none? ? "completed" : "error"
+    )
+  else
+    get_failed_jobs_logs_from_github(report, formatter)
+  end
+end
+
+##########
+
+# report stores all found information about the workflow run
+report = Report.new
+formatter = Formatter.new(compact: Options.compact)
+
+report = get_failed_jobs_logs(report, formatter)
+
+scan_result = GithubActionsFailures::JobErrorsFinder.scan_logs(report.failed_job_logs)
+report = report.with(
+  errors: scan_result.errors,
+  failures_explanation: scan_result.failures_explanation,
+  merge_branch_sha: scan_result.merge_branch_sha
+)
+
+case report.run_status
+when "completed"
+  warn "All jobs successful 🎉"
+when "in_progress"
+  # NOOP
+when "error"
+  formatter.display_errors_from_report(report)
+end
+
+# rubocop:enable Rails

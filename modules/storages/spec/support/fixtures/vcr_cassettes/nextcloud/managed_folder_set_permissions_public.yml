@@ -1,0 +1,1708 @@
+---
+http_interactions:
+- request:
+    method: mkcol
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/%5BSample%5D%20Project%20Name%20%7C%20Ehuu%20(-273)
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Fri, 02 May 2025 17:42:38 GMT
+      Oc-Fileid:
+      - '00000876ocxxq957y92g'
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=d499387faab68e006dd8ff890885b6d4; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=GXD5Tv8wXbQ8giQuf%2BpDJrMoJuh2ZqBCoAFiwxm%2FGUprfFyEuTFiGYvCERZNMqH9O7y7MLsxGDSek0hkbElXUi%2F0w9HnD0muGazegsTZF0fFn1oR%2F5rj7G5Sq59aE4nt;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=d499387faab68e006dd8ff890885b6d4;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=d499387faab68e006dd8ff890885b6d4;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=d499387faab68e006dd8ff890885b6d4;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=355e94e331c562888ca73f4e14b7bb29;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - 0ioHkdvXtrsbaPCtGsc4
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - 0ioHkdvXtrsbaPCtGsc4
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '0'
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Fri, 02 May 2025 17:42:38 GMT
+- request:
+    method: propfind
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/%5BSample%5D%20Project%20Name%20%7C%20Ehuu%20(-273)
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propfind xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
+          <d:prop>
+            <oc:fileid/>
+            <oc:size/>
+            <d:getlastmodified/>
+            <oc:permissions/>
+            <oc:owner-display-name/>
+          </d:prop>
+        </d:propfind>
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Depth:
+      - '1'
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '229'
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:38 GMT
+      Dav:
+      - 1, 3, extended-mkcol, access-control, calendarserver-principal-property-search,
+        nextcloud-checksum-update, nc-calendar-search, nc-enable-birthday-calendar
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=e357e7f3d0aaac573298195de669d50f; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=%2F%2FFTyX534b5i2RgW46jZJMRkTkrvX%2BbnvBVj4ewsyDcHez%2BAqZtMOoY2hkGXhZWil3L5Mxu3uIbsv6UCZEe2xn6JEPqaULNsoakEWcPyLG%2B8yuyXM3wc376Gt14yjKQT;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=e357e7f3d0aaac573298195de669d50f;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=e357e7f3d0aaac573298195de669d50f;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=e357e7f3d0aaac573298195de669d50f;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=ea9176b26c8ba55a7fd220ce3f84297f;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - D1IeCYvrqS7qo8JKfW0c
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - D1IeCYvrqS7qo8JKfW0c
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '361'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns"><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/%5bSample%5d%20Project%20Name%20%7c%20Ehuu%20(-273)/</d:href><d:propstat><d:prop><oc:fileid>876</oc:fileid><oc:size>0</oc:size><d:getlastmodified>Fri, 02 May 2025 17:42:38 GMT</d:getlastmodified><oc:permissions>RMGDNVCK</oc:permissions><oc:owner-display-name>OpenProject</oc:owner-display-name></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>
+  recorded_at: Fri, 02 May 2025 17:42:38 GMT
+- request:
+    method: mkcol
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/%3C=o=%3E%20%7C%20%22Jedi%22%20Project%20Folder%20%7C%7C%7C%20(-273)
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Fri, 02 May 2025 17:42:38 GMT
+      Oc-Fileid:
+      - '00000877ocxxq957y92g'
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=caefd2136456c4adca454cea46a4bb16; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=t%2B30ajw1XmjumF8fSPRiKo5U%2BaQvApwQ0C559dKwx%2F2tIw%2BunZyTf43dH6P0auQGvP4jbRS024waXH4oCIq2TfDOIPa4md8fVGl041MTSdJtupR3%2BVIQuIZa8Gxtdr1E;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=caefd2136456c4adca454cea46a4bb16;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=caefd2136456c4adca454cea46a4bb16;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=caefd2136456c4adca454cea46a4bb16;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=11c832fc3fc6dbf7980127c269c71548;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - iyaAcyWGJS9mc6cb6AWQ
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - iyaAcyWGJS9mc6cb6AWQ
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '0'
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Fri, 02 May 2025 17:42:38 GMT
+- request:
+    method: propfind
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/%3C=o=%3E%20%7C%20%22Jedi%22%20Project%20Folder%20%7C%7C%7C%20(-273)
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propfind xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
+          <d:prop>
+            <oc:fileid/>
+            <oc:size/>
+            <d:getlastmodified/>
+            <oc:permissions/>
+            <oc:owner-display-name/>
+          </d:prop>
+        </d:propfind>
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Depth:
+      - '1'
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '229'
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:38 GMT
+      Dav:
+      - 1, 3, extended-mkcol, access-control, calendarserver-principal-property-search,
+        nextcloud-checksum-update, nc-calendar-search, nc-enable-birthday-calendar
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=c22b2225005e1b4df17b49f048534f3a; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=efViKBS%2F%2FWyEJvTQR9e5oM4e1RKhO0RKjLpud7IZRNuSAWJLcOgJp0opD0m5GHAd9A%2F4R2UgWyf8DPNB9Xg8JH%2B27ImWsEHWRBRZ9kaefuTrt8otkkpiHe9yNtXAUA39;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=c22b2225005e1b4df17b49f048534f3a;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=c22b2225005e1b4df17b49f048534f3a;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=c22b2225005e1b4df17b49f048534f3a;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=c95bfcfb61f0d1259b094968a3a402b6;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - XPrlaAbEK5399uWiGiGw
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - XPrlaAbEK5399uWiGiGw
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '367'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns"><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/%3c%3do%3d%3e%20%7c%20%22Jedi%22%20Project%20Folder%20%7c%7c%7c%20(-273)/</d:href><d:propstat><d:prop><oc:fileid>877</oc:fileid><oc:size>0</oc:size><d:getlastmodified>Fri, 02 May 2025 17:42:38 GMT</d:getlastmodified><oc:permissions>RMGDNVCK</oc:permissions><oc:owner-display-name>OpenProject</oc:owner-display-name></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>
+  recorded_at: Fri, 02 May 2025 17:42:38 GMT
+- request:
+    method: mkcol
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/INACTIVE%20PROJECT!%20f0r%20r34lz%20(-273)
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Fri, 02 May 2025 17:42:39 GMT
+      Oc-Fileid:
+      - '00000878ocxxq957y92g'
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=9356497c3c90e42a3742e4b9f54ce5b3; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=onsgkK%2BtTLjcgxTQJ9oa8zQD7xo8Jv6vhG5WzXVEtVsE8%2B0yfaHD9JXwNOEJRN8nFza5aW1726ACh0D%2BHJjNFELKRmlqXcj9EMy5XkmDd6DD8C7AcOfqaik1x%2Bk05Pgj;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=9356497c3c90e42a3742e4b9f54ce5b3;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=9356497c3c90e42a3742e4b9f54ce5b3;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=9356497c3c90e42a3742e4b9f54ce5b3;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=a6ef09f4d7027f4f8bdde3005f7a57d8;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - UBNdVbCuQ14ONGswqUvL
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - UBNdVbCuQ14ONGswqUvL
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '0'
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Fri, 02 May 2025 17:42:39 GMT
+- request:
+    method: propfind
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/INACTIVE%20PROJECT!%20f0r%20r34lz%20(-273)
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propfind xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
+          <d:prop>
+            <oc:fileid/>
+            <oc:size/>
+            <d:getlastmodified/>
+            <oc:permissions/>
+            <oc:owner-display-name/>
+          </d:prop>
+        </d:propfind>
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Depth:
+      - '1'
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '229'
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:39 GMT
+      Dav:
+      - 1, 3, extended-mkcol, access-control, calendarserver-principal-property-search,
+        nextcloud-checksum-update, nc-calendar-search, nc-enable-birthday-calendar
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=0e3f5bbc4ab5b9d5561ed57699762721; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=GNUAL65zg6zLBzD%2F3i%2FmAiHB3ErG7YJXWB6wtrCqyZajtZF9vqMubsuhlAu52se5VLo%2FgetvgirH0L5u72S0DpsJ57GUjondjA3oM7GUxc7IqVTXMsAQuEB66eqO8HZn;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=0e3f5bbc4ab5b9d5561ed57699762721;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=0e3f5bbc4ab5b9d5561ed57699762721;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=0e3f5bbc4ab5b9d5561ed57699762721;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=bef5adcd064e93f58ddf6959e2b6f756;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - pugdfkHqAW6icbCbjSEy
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - pugdfkHqAW6icbCbjSEy
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '362'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns"><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/INACTIVE%20PROJECT%21%20f0r%20r34lz%20(-273)/</d:href><d:propstat><d:prop><oc:fileid>878</oc:fileid><oc:size>0</oc:size><d:getlastmodified>Fri, 02 May 2025 17:42:39 GMT</d:getlastmodified><oc:permissions>RMGDNVCK</oc:permissions><oc:owner-display-name>OpenProject</oc:owner-display-name></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>
+  recorded_at: Fri, 02 May 2025 17:42:39 GMT
+- request:
+    method: mkcol
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/PUBLIC%20PROJECT%20(-273)
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Fri, 02 May 2025 17:42:39 GMT
+      Oc-Fileid:
+      - '00000879ocxxq957y92g'
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=40ad5ff6bc4c14a0a1d7f8699db8b044; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=x4u1NIo0%2FjYSAEW%2Fnz0Hbr%2FNpISXs5UKH%2FoSkXPtic%2F6AI0hc9sD8ZYGP%2FrOgRkftvvvv2B45hmUg4MlYgaZde3KRIo%2B3qHUCJayuyfhebq0oastr%2BTp20d0o%2Be725Df;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=40ad5ff6bc4c14a0a1d7f8699db8b044;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=40ad5ff6bc4c14a0a1d7f8699db8b044;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=40ad5ff6bc4c14a0a1d7f8699db8b044;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=a5c6b765ba3a9cb068fb65167097572c;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - JEFaRqoyUZUB7bscVvN8
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - JEFaRqoyUZUB7bscVvN8
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '0'
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Fri, 02 May 2025 17:42:39 GMT
+- request:
+    method: propfind
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/PUBLIC%20PROJECT%20(-273)
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propfind xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
+          <d:prop>
+            <oc:fileid/>
+            <oc:size/>
+            <d:getlastmodified/>
+            <oc:permissions/>
+            <oc:owner-display-name/>
+          </d:prop>
+        </d:propfind>
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Depth:
+      - '1'
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '229'
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:39 GMT
+      Dav:
+      - 1, 3, extended-mkcol, access-control, calendarserver-principal-property-search,
+        nextcloud-checksum-update, nc-calendar-search, nc-enable-birthday-calendar
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=9655b4d33dbd1c5c0bf7c5008e1e267d; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=nw6z8XHTp6B8zj6KfzMr5AGjVCDKY9ihGYMBpkvi04AxWVSLpHXkE6l1TuTYz6vbpaZ6APX1LB1xI%2F4EOKFEZTzvL4RwmdUYdSKwth3GnX%2BAvhGO798%2Fhzx8YwKn8Ufd;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=9655b4d33dbd1c5c0bf7c5008e1e267d;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=9655b4d33dbd1c5c0bf7c5008e1e267d;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=9655b4d33dbd1c5c0bf7c5008e1e267d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=8f8bfbe3daeba3c3ddf5fdd2c4dfa01e;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - PU4V2OOgdJHbHu8KL8FI
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - PU4V2OOgdJHbHu8KL8FI
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '346'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns"><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/PUBLIC%20PROJECT%20(-273)/</d:href><d:propstat><d:prop><oc:fileid>879</oc:fileid><oc:size>0</oc:size><d:getlastmodified>Fri, 02 May 2025 17:42:39 GMT</d:getlastmodified><oc:permissions>RMGDNVCK</oc:permissions><oc:owner-display-name>OpenProject</oc:owner-display-name></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>
+  recorded_at: Fri, 02 May 2025 17:42:39 GMT
+- request:
+    method: get
+    uri: https://nextcloud.local/ocs/v1.php/apps/integration_openproject/fileinfo/876
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Ocs-Apirequest:
+      - 'true'
+      Accept:
+      - application/json
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';base-uri 'none';manifest-src 'self';frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:39 GMT
+      Feature-Policy:
+      - autoplay 'none';camera 'none';fullscreen 'none';geolocation 'none';microphone
+        'none';payment 'none'
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=b751bcc33632dab3da41c33474cebd44; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=lnbN%2FnTAH083SNN3VUfJSoY6B7JwBSEOXQwXnBTC49EuXypfZCt75oUA1v0eh3G9P9oQxkaSYooXxUJGxAV%2B0SObYYwEHkG91oBxRsqlFC7i6OPpVLfEKjiWgrw%2FQaWv;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=b751bcc33632dab3da41c33474cebd44;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=b751bcc33632dab3da41c33474cebd44;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=b751bcc33632dab3da41c33474cebd44;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=46697da7a0422fa42b9a25296b046025;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - QbpWZKOOtjJF60jxnhoO
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '282'
+    body:
+      encoding: UTF-8
+      string: '{"ocs":{"meta":{"status":"ok","statuscode":100,"message":"OK","totalitems":"","itemsperpage":""},"data":{"status":"OK","statuscode":200,"id":876,"name":"[Sample]
+        Project Name | Ehuu (-273)","mtime":1746207758,"ctime":0,"mimetype":"application\/x-op-directory","size":0,"owner_name":"OpenProject","owner_id":"OpenProject","modifier_name":null,"modifier_id":null,"dav_permissions":"RMGDNVCK","path":"files\/OpenProject\/[Sample]
+        Project Name | Ehuu (-273)\/"}}}'
+  recorded_at: Fri, 02 May 2025 17:42:39 GMT
+- request:
+    method: proppatch
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/%5BSample%5D%20Project%20Name%20%7C%20Ehuu%20(-273)
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propertyupdate xmlns:d="DAV:" xmlns:nc="http://nextcloud.org/ns">
+          <d:set>
+            <d:prop>
+              <nc:acl-list>
+                <nc:acl>
+                  <nc:acl-mapping-type>group</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>OpenProject</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>0</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>OpenProject</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>31</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>anakin</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>31</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>leia</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>3</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>luke</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>3</nc:acl-permissions>
+                </nc:acl>
+              </nc:acl-list>
+            </d:prop>
+          </d:set>
+        </d:propertyupdate>
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '1419'
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:39 GMT
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=965db6cfc1ce1352e5355278e8164773; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=n%2FpVzjW%2BmT%2BYCI9IU9L3VbIo7iHYRXwzdtNutWgqcIVHgb02obDHbmDe3meIEAqrDjpd4irrK%2B3Lmjux9KPcTtm8MfSe0pepGbuag1HOdRiySmYsFrgU8W%2FnlIk7ZbZW;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=965db6cfc1ce1352e5355278e8164773;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=965db6cfc1ce1352e5355278e8164773;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=965db6cfc1ce1352e5355278e8164773;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=7f4be1c673f32155a00ff08b0880ad47;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - UYa0eGyLuzKz6CsNtZOz
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - UYa0eGyLuzKz6CsNtZOz
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '402'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns"><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/%5bSample%5d%20Project%20Name%20%7c%20Ehuu%20(-273)</d:href><d:propstat><d:prop><nc:acl-list/></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>
+  recorded_at: Fri, 02 May 2025 17:42:39 GMT
+- request:
+    method: get
+    uri: https://nextcloud.local/ocs/v1.php/apps/integration_openproject/fileinfo/877
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Ocs-Apirequest:
+      - 'true'
+      Accept:
+      - application/json
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';base-uri 'none';manifest-src 'self';frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:39 GMT
+      Feature-Policy:
+      - autoplay 'none';camera 'none';fullscreen 'none';geolocation 'none';microphone
+        'none';payment 'none'
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=80955eb782c2f277642c098356ee71b3; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=k15kb7fottkcJorDd3LYyJii7pVJYEXhydSH2J43SRsEwahOpxwvSLOi8P6ZA%2FO6TPboTkpr7Ip2GFf7WZIQb2uOtITw4v9jIJgPnKl%2Bata7MFoHF%2B6iqapjPM0aeJir;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=80955eb782c2f277642c098356ee71b3;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=80955eb782c2f277642c098356ee71b3;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=80955eb782c2f277642c098356ee71b3;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=f6e8d8b0e6b6e494363084e80a6b8775;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - zadxDHADjiZNl7W23Slr
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '294'
+    body:
+      encoding: UTF-8
+      string: '{"ocs":{"meta":{"status":"ok","statuscode":100,"message":"OK","totalitems":"","itemsperpage":""},"data":{"status":"OK","statuscode":200,"id":877,"name":"\u003C=o=\u003E
+        | \"Jedi\" Project Folder ||| (-273)","mtime":1746207758,"ctime":0,"mimetype":"application\/x-op-directory","size":0,"owner_name":"OpenProject","owner_id":"OpenProject","modifier_name":null,"modifier_id":null,"dav_permissions":"RMGDNVCK","path":"files\/OpenProject\/\u003C=o=\u003E
+        | \"Jedi\" Project Folder ||| (-273)\/"}}}'
+  recorded_at: Fri, 02 May 2025 17:42:39 GMT
+- request:
+    method: proppatch
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/%3C=o=%3E%20%7C%20%22Jedi%22%20Project%20Folder%20%7C%7C%7C%20(-273)
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propertyupdate xmlns:d="DAV:" xmlns:nc="http://nextcloud.org/ns">
+          <d:set>
+            <d:prop>
+              <nc:acl-list>
+                <nc:acl>
+                  <nc:acl-mapping-type>group</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>OpenProject</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>0</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>OpenProject</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>31</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>anakin</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>31</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>leia</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>3</nc:acl-permissions>
+                </nc:acl>
+              </nc:acl-list>
+            </d:prop>
+          </d:set>
+        </d:propertyupdate>
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '1179'
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:39 GMT
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=a1128ed8ad22a5a7f7390b4b58f391ca; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=ERbVWu2GFnH%2F0Hf9%2F2%2BwYZQ%2BilMlhu4Az8UJ2TX2NESnqt8G4gPCt11XZpQhyeUxxZt%2F3a%2FayGBVvjKzZXFrPXeIMV5PmX%2Fr2cx0uSscePGAgT%2F6RlRA14EkKOHQ0mjS;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=a1128ed8ad22a5a7f7390b4b58f391ca;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=a1128ed8ad22a5a7f7390b4b58f391ca;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=a1128ed8ad22a5a7f7390b4b58f391ca;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=20b622508dfd833c4a038be64969d14a;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - fztL3jwlZO2zWTr7Lex1
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - fztL3jwlZO2zWTr7Lex1
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '423'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns"><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/%3c%3do%3d%3e%20%7c%20%22Jedi%22%20Project%20Folder%20%7c%7c%7c%20(-273)</d:href><d:propstat><d:prop><nc:acl-list/></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>
+  recorded_at: Fri, 02 May 2025 17:42:39 GMT
+- request:
+    method: get
+    uri: https://nextcloud.local/ocs/v1.php/apps/integration_openproject/fileinfo/879
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Ocs-Apirequest:
+      - 'true'
+      Accept:
+      - application/json
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';base-uri 'none';manifest-src 'self';frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:39 GMT
+      Feature-Policy:
+      - autoplay 'none';camera 'none';fullscreen 'none';geolocation 'none';microphone
+        'none';payment 'none'
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=e2ebacdf1bdf6d7c11e4b1027edc6e82; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=dDyh8imx4JuoOLyJ84nAsueFF6fUfqRdnSu9dvbHTBySFxDiLssVfu02E19h%2Bd7ouinOJPm%2FNHeqDE%2F0XyNdoXDO1wAw7bHKnnVvK%2BuZs32D3PaMP9Av6vwqH8HUBapC;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=e2ebacdf1bdf6d7c11e4b1027edc6e82;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=e2ebacdf1bdf6d7c11e4b1027edc6e82;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=e2ebacdf1bdf6d7c11e4b1027edc6e82;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=23f103040c1ab6d81c2c32844e63fe30;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - GPWWpAiFTnnh0dlyYxOn
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '276'
+    body:
+      encoding: UTF-8
+      string: '{"ocs":{"meta":{"status":"ok","statuscode":100,"message":"OK","totalitems":"","itemsperpage":""},"data":{"status":"OK","statuscode":200,"id":879,"name":"PUBLIC
+        PROJECT (-273)","mtime":1746207759,"ctime":0,"mimetype":"application\/x-op-directory","size":0,"owner_name":"OpenProject","owner_id":"OpenProject","modifier_name":null,"modifier_id":null,"dav_permissions":"RMGDNVCK","path":"files\/OpenProject\/PUBLIC
+        PROJECT (-273)\/"}}}'
+  recorded_at: Fri, 02 May 2025 17:42:39 GMT
+- request:
+    method: proppatch
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/PUBLIC%20PROJECT%20(-273)
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propertyupdate xmlns:d="DAV:" xmlns:nc="http://nextcloud.org/ns">
+          <d:set>
+            <d:prop>
+              <nc:acl-list>
+                <nc:acl>
+                  <nc:acl-mapping-type>group</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>OpenProject</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>0</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>OpenProject</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>31</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>anakin</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>31</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>admin</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>1</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>leia</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>1</nc:acl-permissions>
+                </nc:acl>
+                <nc:acl>
+                  <nc:acl-mapping-type>user</nc:acl-mapping-type>
+                  <nc:acl-mapping-id>luke</nc:acl-mapping-id>
+                  <nc:acl-mask>31</nc:acl-mask>
+                  <nc:acl-permissions>1</nc:acl-permissions>
+                </nc:acl>
+              </nc:acl-list>
+            </d:prop>
+          </d:set>
+        </d:propertyupdate>
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '1660'
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:39 GMT
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=ea4d37f27d27f2a810ccac3924d7ccee; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=%2FwkMCHH6hSW2jaabRQLxkrerSmx3rjfD6xXIJazGTbSo9trnP3YQeQL5BbpmlAudRnlf6%2BtHXfpvpSkK7bpW4EvA6Iqo8uKnAIZjq3A97b3YtA%2B%2BrgokjAv8M8pNoYlx;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=ea4d37f27d27f2a810ccac3924d7ccee;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=ea4d37f27d27f2a810ccac3924d7ccee;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=ea4d37f27d27f2a810ccac3924d7ccee;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=00e7da43c74c519915d0a7fed1adf5b2;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - HynNmFTNJA5meH9M71QA
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - HynNmFTNJA5meH9M71QA
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '376'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns"><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/PUBLIC%20PROJECT%20(-273)</d:href><d:propstat><d:prop><nc:acl-list/></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>
+  recorded_at: Fri, 02 May 2025 17:42:39 GMT
+- request:
+    method: get
+    uri: https://nextcloud.local/ocs/v1.php/cloud/groups/OpenProject
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Ocs-Apirequest:
+      - 'true'
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';base-uri 'none';manifest-src 'self';frame-ancestors 'none'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:39 GMT
+      Feature-Policy:
+      - autoplay 'none';camera 'none';fullscreen 'none';geolocation 'none';microphone
+        'none';payment 'none'
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=3609652bdddea802f735d1d99b1ee5c4; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=EXmLsrDu%2Fi%2Btqfxs%2F%2BUdtP%2F20AssBlm%2BwlU%2F9IkE6r0k1Gu%2BO7PEuqJ2UIUXmdpJgZ5npak3IXX86XPYS5GFgQWaHfKkHzxEdXy%2FLaCD6BQlFdFbpKESC8GGr4%2BW8ycM;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=3609652bdddea802f735d1d99b1ee5c4;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=3609652bdddea802f735d1d99b1ee5c4;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=3609652bdddea802f735d1d99b1ee5c4;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=8803fbd4fbbb7a738fd938d66f8a11a9;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - RnXjm5e4zCfuJimY2ZNT
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '186'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <ocs>
+         <meta>
+          <status>ok</status>
+          <statuscode>100</statuscode>
+          <message>OK</message>
+          <totalitems></totalitems>
+          <itemsperpage></itemsperpage>
+         </meta>
+         <data>
+          <users>
+           <element>admin</element>
+           <element>anakin</element>
+           <element>leia</element>
+           <element>luke</element>
+           <element>OpenProject</element>
+          </users>
+         </data>
+        </ocs>
+  recorded_at: Fri, 02 May 2025 17:42:40 GMT
+- request:
+    method: propfind
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/PUBLIC%20PROJECT%20(-273)
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propfind xmlns:d="DAV:" xmlns:nc="http://nextcloud.org/ns">
+          <d:prop>
+            <nc:acl-list/>
+          </d:prop>
+        </d:propfind>
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '141'
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 02 May 2025 17:42:40 GMT
+      Dav:
+      - 1, 3, extended-mkcol, access-control, calendarserver-principal-property-search,
+        nextcloud-checksum-update, nc-calendar-search, nc-enable-birthday-calendar
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=22370be7611d423c6e8831a0902d8612; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=pDKh%2BjHHH3Na%2FeiT2%2B%2BCueb4VbmWWL%2B61Y31GilHnpXZBwT7R5FCORdI%2F%2FRfTlO0YlBmQLX3lC86VngifiG3%2BYTye%2F2k1NxEYrgzWWAaWHkufBDgSW1bLTc1aw3e2Pe6;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=22370be7611d423c6e8831a0902d8612;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=22370be7611d423c6e8831a0902d8612;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=22370be7611d423c6e8831a0902d8612;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=e30b7355617048e137570c7eadb0cbd1;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - rY9Jg2IS1BKm2LaIjKZp
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - rY9Jg2IS1BKm2LaIjKZp
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '383'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns"><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/PUBLIC%20PROJECT%20(-273)/</d:href><d:propstat><d:prop><nc:acl-list><nc:acl><nc:acl-mapping-type>group</nc:acl-mapping-type><nc:acl-mapping-id>OpenProject</nc:acl-mapping-id><nc:acl-mapping-display-name>OpenProject</nc:acl-mapping-display-name><nc:acl-mask>31</nc:acl-mask><nc:acl-permissions>0</nc:acl-permissions></nc:acl><nc:acl><nc:acl-mapping-type>user</nc:acl-mapping-type><nc:acl-mapping-id>OpenProject</nc:acl-mapping-id><nc:acl-mapping-display-name>OpenProject</nc:acl-mapping-display-name><nc:acl-mask>31</nc:acl-mask><nc:acl-permissions>31</nc:acl-permissions></nc:acl><nc:acl><nc:acl-mapping-type>user</nc:acl-mapping-type><nc:acl-mapping-id>anakin</nc:acl-mapping-id><nc:acl-mapping-display-name>anakin</nc:acl-mapping-display-name><nc:acl-mask>31</nc:acl-mask><nc:acl-permissions>31</nc:acl-permissions></nc:acl><nc:acl><nc:acl-mapping-type>user</nc:acl-mapping-type><nc:acl-mapping-id>admin</nc:acl-mapping-id><nc:acl-mapping-display-name>admin</nc:acl-mapping-display-name><nc:acl-mask>31</nc:acl-mask><nc:acl-permissions>1</nc:acl-permissions></nc:acl><nc:acl><nc:acl-mapping-type>user</nc:acl-mapping-type><nc:acl-mapping-id>leia</nc:acl-mapping-id><nc:acl-mapping-display-name>leia</nc:acl-mapping-display-name><nc:acl-mask>31</nc:acl-mask><nc:acl-permissions>1</nc:acl-permissions></nc:acl><nc:acl><nc:acl-mapping-type>user</nc:acl-mapping-type><nc:acl-mapping-id>luke</nc:acl-mapping-id><nc:acl-mapping-display-name>luke</nc:acl-mapping-display-name><nc:acl-mask>31</nc:acl-mask><nc:acl-permissions>1</nc:acl-permissions></nc:acl></nc:acl-list></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>
+  recorded_at: Fri, 02 May 2025 17:42:40 GMT
+- request:
+    method: delete
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/%5BSample%5D%20Project%20Name%20%7C%20Ehuu%20(-273)
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Date:
+      - Fri, 02 May 2025 17:42:40 GMT
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=8ff17957ef3e5924bcf989152b869ad2; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=TpGtpHBWb6EZ95S0sBMZaSn98YHoPFPBgi1M5tyNmLGRhnwvvAQ6gSqIuuddxgvcbCs6IgomS62SKTUTjEHSNQfWXpsYH8gipoQtPHUCinofhgCrb4pNLgNdJsCHdvlE;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=8ff17957ef3e5924bcf989152b869ad2;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=8ff17957ef3e5924bcf989152b869ad2;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=8ff17957ef3e5924bcf989152b869ad2;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=e2bbf8d3abbcf184d224e224d5c0b3c0;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - tclosJru9q9JRj6ujIZF
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - tclosJru9q9JRj6ujIZF
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Fri, 02 May 2025 17:42:40 GMT
+- request:
+    method: delete
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/%3C=o=%3E%20%7C%20%22Jedi%22%20Project%20Folder%20%7C%7C%7C%20(-273)
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Date:
+      - Fri, 02 May 2025 17:42:40 GMT
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=302824c8b40ce8235a04193d47cad2aa; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=lXGX5lNthCMfreTIwEhCXxnk%2F6HzOxBgWKR1rpsZErcIEKnIliUr9RlZYv4QQgGSp6TBM0VdeOF9dTuOL0k7bReDgM7EzJiaQsq6ZOmgfuho7NnZZ1PQZmKtvjZ%2FSuRc;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=302824c8b40ce8235a04193d47cad2aa;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=302824c8b40ce8235a04193d47cad2aa;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=302824c8b40ce8235a04193d47cad2aa;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=62cd236f7a19ff8cac5e2230176b2b21;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - lh0tkT14VUkSBtkHooGp
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - lh0tkT14VUkSBtkHooGp
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Fri, 02 May 2025 17:42:40 GMT
+- request:
+    method: delete
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/INACTIVE%20PROJECT!%20f0r%20r34lz%20(-273)
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Date:
+      - Fri, 02 May 2025 17:42:40 GMT
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=d866ee894317616937773b6aabc66f80; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=qUYCSyJyeWxFk3nvdNzQ%2BaUvU5Kv9xYNWvwCy6VSsfpWvSQjTcH%2F6CXzmu3xFijI2ayQ2aD8QwAfJTxMYbPOUoJud%2B60Xhsq%2F4RNP7c4BwlCrGSm987bvRswln6y571h;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=d866ee894317616937773b6aabc66f80;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=d866ee894317616937773b6aabc66f80;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=d866ee894317616937773b6aabc66f80;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=314c4fef44e6364fb29aae932017478e;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - ZfWZZiL84NhxyKDEPnB0
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - ZfWZZiL84NhxyKDEPnB0
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Fri, 02 May 2025 17:42:40 GMT
+- request:
+    method: delete
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/PUBLIC%20PROJECT%20(-273)
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Basic <BASIC_AUTH>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Date:
+      - Fri, 02 May 2025 17:42:40 GMT
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocxxq957y92g=cd3284ab7ceacd3c5b4001b0ec7a3864; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=PPDMGyveoqji42hoizr%2FoFuItGU%2F9NI2Qm9Bo6UclHum%2BTtH%2BvMZ519hYcv5F2nSEYJB6%2FOfN7vOzRa40kyfrVGckgOkG70RA4xznJDXIdtNu%2BdhFHJyaUgodth73HiB;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=cd3284ab7ceacd3c5b4001b0ec7a3864;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocxxq957y92g=cd3284ab7ceacd3c5b4001b0ec7a3864;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocxxq957y92g=cd3284ab7ceacd3c5b4001b0ec7a3864;
+        path=/; secure; HttpOnly; SameSite=Lax, ocxxq957y92g=d833106ef85f51ec8b9fbab9d688d635;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - MpQm7iMy4M4B1wsfPlzu
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - MpQm7iMy4M4B1wsfPlzu
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Fri, 02 May 2025 17:42:40 GMT
+recorded_with: VCR 6.3.1

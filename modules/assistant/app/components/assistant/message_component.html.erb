@@ -1,0 +1,96 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= content_tag(
+      :li,
+      id:,
+      class: ["assistant-message", "assistant-message--#{mine? ? 'user' : 'assistant'}",
+              ("assistant-message--streaming" if streaming?), ("assistant-message--failed" if failed?)],
+      "aria-busy": streaming? ? "true" : nil,
+      data: { test_selector: "assistant-message", **stream_data }
+    ) do %>
+  <p class="sr-only"><%= speaker %></p>
+  <% unless mine? %>
+    <div id="<%= status_id %>" class="assistant-message--status"
+         data-assistant--message-stream-target="status">
+      <% if streaming? %>
+        <span class="assistant-message--dots" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span data-assistant-progress><%= progress %></span>
+      <% end %>
+    </div>
+  <% end %>
+  <div id="<%= content_id %>" class="assistant-message--content op-uc-container"
+       data-assistant--message-stream-target="content">
+    <%= body %>
+  </div>
+  <% if failed? %>
+    <p class="assistant-message--failure">
+      <%= render(Primer::Beta::Octicon.new(icon: :alert, size: :small, "aria-hidden": true)) %>
+      <%= t("assistant.panel.failed_hint") %>
+    </p>
+  <% end %>
+
+  <% if stopped? %>
+    <p class="assistant-message--stopped"><%= t("assistant.panel.stopped") %></p>
+  <% end %>
+
+  <% if !streaming? && cards.any? %>
+    <div class="assistant-message--cards">
+      <% cards.each do |card| %>
+        <% case card["type"] %>
+        <% when "action" %>
+          <% if (found = action(card["action_id"])) %>
+            <%= render(Assistant::ActionCardComponent.new(action: found, user:, variant: :compact, heading_level: 3)) %>
+          <% end %>
+        <% when "fact" %>
+          <section class="assistant-fact" aria-label="<%= card["title"] %>">
+            <h3 class="assistant-fact--title"><%= card["title"] %></h3>
+            <dl class="assistant-fact--rows">
+              <% Array(card["rows"]).each do |label, value, because| %>
+                <div class="assistant-fact--row">
+                  <dt><%= label %></dt>
+                  <dd>
+                    <span class="assistant-fact--value"><%= value %></span>
+                    <% if because.present? %>
+                      <span class="assistant-fact--because"><%= because %></span>
+                    <% end %>
+                  </dd>
+                </div>
+              <% end %>
+            </dl>
+          </section>
+        <% when "options" %>
+          <section class="assistant-options" aria-label="<%= card["title"] %>">
+            <h3 class="assistant-options--title"><%= card["title"] %></h3>
+            <ul class="assistant-options--list">
+              <% Array(card["items"]).each do |item| %>
+                <li class="assistant-options--item">
+                  <% if (found = action(item["action_id"])) %>
+                    <%= render(
+                          Assistant::ActionCardComponent.new(
+                            action: found, user:, variant: :compact,
+                            siblings: sibling_ids(card), heading_level: 4
+                          )
+                        ) %>
+                  <% else %>
+                    <p class="assistant-options--label"><%= item["label"] %></p>
+                  <% end %>
+                  <% if item["consequence"].present? %>
+                    <p class="assistant-options--consequence"><%= item["consequence"] %></p>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          </section>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,22 @@
+<widget-header
+  [name]="widgetName"
+  (onRenamed)="renameWidget($event)">
+
+  <widget-menu slot="menu"
+    [resource]="resource" />
+</widget-header>
+
+<div class="op-widget-box--body">
+  @if ({hasCapability: hasCapability$ | async}; as context) {
+    @if (context.hasCapability === false) {
+      <div class="op-toast -error">
+        <span [textContent]="text.missing_permission"></span>
+      </div>
+    }
+    @if (context.hasCapability === true) {
+      <op-wp-calendar [showMeetings]="true"
+        [static]="true"
+       />
+    }
+  }
+</div>

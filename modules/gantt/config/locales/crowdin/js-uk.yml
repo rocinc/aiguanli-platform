@@ -1,0 +1,7 @@
+---
+uk:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Віхи
+      label_gantt_chart_plural: Діаграми Ґанта

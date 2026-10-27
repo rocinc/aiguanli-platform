@@ -1,0 +1,68 @@
+# /api/v3/storages/{id}/folders
+---
+post:
+  summary: Creation of a new folder
+  operationId: create_storage_folder
+  tags:
+    - File links
+  description: Creates a new folder under the given parent
+  parameters:
+    - name: id
+      description: Storage id
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 1337
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/storage_folder_write_model.yml'
+        examples:
+          'Valid example':
+            $ref: '../components/examples/storage-create-folder-request-body.yml'
+  responses:
+    '201':
+      description: Created
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/storage_file_model.yml'
+    '400':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          example:
+            _type: Error
+            errorIdentifier: urn:openproject-org:api:v3:errors:InvalidQuery
+            message: The given parent is not a directory.
+      description: |-
+        Returned if the request is missing a required parameter.
+    '403':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          example:
+            _type: Error
+            errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+            message: You are not authorized to access this resource.
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** manage file links
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          example:
+            _type: Error
+            errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+            message: The requested resource could not be found.
+      description: |-
+        Returned if the storage does not exist or the client does not have sufficient permissions to see it.
+
+        **Required permission:** view file links

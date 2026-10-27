@@ -1,0 +1,63 @@
+<div class="op-ian-center">
+  <div
+    class="op-ian-center--content"
+    [class.op-ian-center--content_empty]="(loading$ | async) === true || (hasNotifications$ | async) === false"
+    [class.op-ian-center--content_first-selected]="firstNotificationIsSelected$ | async"
+    >
+    @if ((loading$ | async) === false) {
+      @if ((hasNotifications$ | async)) {
+        <cdk-virtual-scroll-viewport
+          itemSize="100"
+          class="op-ian-center--viewport"
+          >
+          <op-in-app-notification-entry *cdkVirtualFor="let records of notifications$ | async; trackBy: trackNotificationGroups; templateCacheSize: 0"
+            class="op-ian-item"
+            [class.op-ian-item_expanded]="records[0].expanded"
+            [class.op-ian-item_read]="records[0].readIAN === true"
+            [class.op-ian-item_selected]="notificationMatchesSelectedWorkPackage(records[0], selectedWorkPackage$ | async)"
+            [notification]="records[0]"
+            [aggregatedNotifications]="records"
+            attr.data-test-selector="op-ian-notification-item-{{records[0].id}}"
+            [attr.data-qa-ian-read]="records[0].readIAN === true || undefined"
+            [attr.data-qa-ian-selected]="notificationMatchesSelectedWorkPackage(records[0], selectedWorkPackage$ | async)"
+           />
+        </cdk-virtual-scroll-viewport>
+      } @else {
+        <div class="op-ian-center--loading-indicator">
+          <img [src]="image.no_notification" class="op-ian-center-loading-image" alt=""/>
+          <p class="op-ian-center-loading-text">
+            <span [textContent]="noNotificationText((totalCount$ | async) > 0)"></span>
+          </p>
+          @if ((totalCount$ | async) > 0) {
+            <span
+              [textContent]="text.no_results.with_current_filter"
+            ></span>
+          }
+          @if ((totalCount$ | async) === 0) {
+            <p>
+              <span [textContent]="text.no_results.at_all"></span>
+              <br/>
+              <span [innerHTML]="text.change_notification_settings"></span>
+            </p>
+          }
+        </div>
+      }
+    } @else {
+      <div class="op-ian-center--loading-indicator">
+        <img [src]="image.loading"
+          alt=""
+          class="op-ian-center-loading-image"
+          data-test-selector="op-ian-center--loading-indicator"/>
+      </div>
+    }
+  </div>
+  <div class="op-ian-center--footer">
+    @if (hasMoreThanPageSize$ | async) {
+      <p
+        class="op-ian-center--max-warning"
+        [textContent]="totalCountWarning$ | async"
+        >
+      </p>
+    }
+  </div>
+</div>

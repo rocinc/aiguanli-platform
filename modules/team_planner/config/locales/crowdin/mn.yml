@@ -1,0 +1,21 @@
+---
+mn:
+  ee:
+    feature_names:
+      team_planner_view: Багийн төлөвлөгч
+    upsell:
+      team_planner_view:
+        description: Багийн төлөвлөгч-ийн тусламжтайгаар багийнхаа төлөвлөлтийн талаарх бүрэн танилцуулгатай танилцаарай. Огноог өөрчлөх, зөөх эсвэл томилогдсон хүмүүсийг өөрчлөхийн тулд ажлын багцуудыг сунгаж, богиносгож, чирэх, буулгах боломжтой.
+        title: Багийн төлөвлөгч
+  permission_manage_team_planner: Багийн төлөвлөгчийг удирдах
+  permission_view_team_planner: Багийн төлөвлөгчийг харах
+  plugin_openproject_team_planner:
+    description: Provides team planner views.
+    name: OpenProject Team Planner
+  project_module_team_planner_view: Багийн төлөвлөгчид
+  team_planner:
+    label_assignees: Томилогдсон хүмүүс
+    label_create_new_team_planner: Шинэ баг төлөвлөгч үүсгэх
+    label_new_team_planner: Шинэ багийн төлөвлөгч
+    label_team_planner: Багийн төлөвлөгч
+    label_team_planner_plural: Багийн төлөвлөгчид

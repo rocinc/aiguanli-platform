@@ -1,0 +1,17 @@
+@if (handler) {
+  <div
+    class="inline-edit--active-field inplace-edit {{ handler.fieldName }}"
+    [ngClass]="{'-error': handler.isErrorenous }">
+    <form (submit)="handler.handleUserSubmit()"
+      role="form"
+      autocomplete="off"
+      tabindex="-1">
+      <label [for]="handler.htmlId"
+        class="sr-only">
+        {{handler.fieldLabel}}
+        {{handler.errorMessageOnLabel()}}
+      </label>
+      <ng-container *ngComponentOutlet="componentClass; injector: fieldInjector" />
+    </form>
+  </div>
+}

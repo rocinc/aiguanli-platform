@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+if command -v overmind &> /dev/null; then
+  # Start Procfile.dev and do not generate a $PORT env var, as this overrides our $FE_PORT, as the new version of
+  # `ng serve` seems to pick the $ENV var over the CLI arg, which causes the FE to fail to start on the expected port.
+  overmind start -f Procfile.dev -N
+elif command -v foreman &> /dev/null; then
+  foreman start -f Procfile.dev
+else
+  echo 'Neither overmind, nor foreman is installed, either `gem install overmind` or `gem install foreman`.'
+  exit 1
+fi

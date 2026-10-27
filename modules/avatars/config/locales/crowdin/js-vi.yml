@@ -1,0 +1,11 @@
+---
+vi:
+  js:
+    avatars:
+      empty_file_error: Vui lòng tải lên hình ảnh hợp lệ (jpg, png, gif)
+      error_image_too_large: Hình ảnh quá lớn
+      label_choose_avatar: Chọn Avatar từ tập tin
+      uploading_avatar: Đang tải hình đại diện của bạn
+      wrong_file_format: 'Định dạng ảnh được chấp nhận: jpg, png, gif'
+    button_update: cập nhật
+    label_preview: Xem trước

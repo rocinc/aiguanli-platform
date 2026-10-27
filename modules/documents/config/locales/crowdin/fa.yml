@@ -1,0 +1,165 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+fa:
+  activerecord:
+    attributes:
+      document:
+        content_binary: محتوای دودویی
+        title: عنوان
+    errors:
+      models:
+        document_type:
+          one_or_more_required: آخرین نوع سند را نمی‌توان حذف کرد
+    models:
+      document:
+        one: سند
+        other: اسناد
+      document_type:
+        one: نوع سند
+        other: انواع سند
+  activity:
+    filter:
+      document: اسناد
+  attributes:
+    collaborative_editing_hocuspocus_url: URL سرور Hocuspocus
+    documents: اسناد
+  default_doc_category_tech: مستندات فنی
+  default_doc_category_user: اسناد کاربر
+  documents:
+    active_editors: ویرایشگران فعال
+    active_editors_count:
+      one: ۱ ویرایشگر فعال
+      other: "%{count} ویرایشگر فعال"
+    admin:
+      collaboration_settings:
+        banner:
+          none_writable: این مقادیر از طریق متغیرهای محیطی پیکربندی شده‌اند و در اینجا قابل ویرایش نیستند.
+          some_unwritable: برخی مقادیر از طریق متغیرهای محیطی پیکربندی شده‌اند و در اینجا قابل ویرایش نیستند.
+        hocuspocus_server: سرور Hocuspocus
+        hocuspocus_server_secret:
+          caption: رمز ارائه‌شده توسط سرور Hocuspocus را وارد کنید.
+          label: رمز کلاینت
+        hocuspocus_server_url:
+          caption: نشانی WebSocket یک سرور Hocuspocus فعال.
+          invalid_scheme: باید از پروتکل WebSocket (ws:// یا wss://) استفاده شود.
+          label: URL سرور Hocuspocus
+        page_header:
+          description: |-
+            در صورت فعال‌بودن، همکاری بلادرنگ به چند کاربر اجازه می‌دهد یک سند را هم‌زمان ویرایش کنند.
+            برای کارکرد به یک %{hocuspocus_server_link} فعال نیاز دارد.
+      disable_text_collaboration_dialog:
+        confirmation_checkbox_message: می‌دانم که ممکن است داده‌ها را برای همیشه از دست بدهم
+        confirmation_message: |-
+          ممکن است همه اسناد موجود غیرقابل دسترسی شوند. فقط در صورتی این کار را انجام دهید که مطمئن هستید می‌خواهید
+          همکاری بلادرنگ و ویرایشگر BlockNote را در این نمونه غیرفعال کنید.
+        heading: همکاری بلادرنگ غیرفعال شود؟
+        success: همکاری بلادرنگ غیرفعال شد.
+        title: غیرفعال‌کردن همکاری بلادرنگ
+      enable_text_collaboration:
+        description: |-
+          پس از فعال‌سازی، چند کاربر می‌توانند هم‌زمان روی یک سند با یکدیگر کار کنند.
+          همه اسناد جدید بر پایه ویرایشگر جدید (BlockNote) خواهند بود و به اتصال فعال به
+          سرور Hocuspocus نیاز دارند.
+        heading: همکاری بلادرنگ فعال نیست
+        primary_action: فعال‌کردن همکاری بلادرنگ
+        success: همکاری بلادرنگ فعال شد.
+    button_add_type: نوع
+    delete_dialog:
+      confirmation_message_html: این کار این سند و همه فایل‌های پیوست آن را برای همیشه حذف می‌کند. آیا مطمئن هستید؟
+      heading: این سند حذف شود؟
+      title: حذف سند
+    delete_document_type_dialog:
+      at_least_one_type_required:
+        heading: آخرین نوع سند را نمی‌توان حذف کرد
+        message: همیشه باید دست‌کم یک نوع سند پیکربندی شده باشد. اگر می‌خواهید این مورد را حذف کنید، ابتدا نوع دیگری ایجاد کنید.
+        title: نوع سند قابل حذف نیست
+      confirmation_message: نوع «%{type_name}» در حال حاضر استفاده نمی‌شود. حذف این نوع اثری بر اسناد موجود نخواهد داشت.
+      heading: این نوع سند حذف شود؟
+      reassign_message:
+        one: نوع «%{type_name}» در حال حاضر در %{document_count} سند استفاده می‌شود. لطفاً نوعی را برای تخصیص مجدد آن انتخاب کنید.
+        other: نوع «%{type_name}» در حال حاضر در %{document_count} سند استفاده می‌شود. لطفاً نوعی را برای تخصیص مجدد آن‌ها انتخاب کنید.
+      select_reassign_to_label: تخصیص مجدد اسناد به
+      title: حذف نوع سند
+    document_categories_deprecation_notice:
+      description: |-
+        با معرفی ماژول جدید اسناد، دسته‌بندی‌های فایل موجود شما به نوع‌های سند تبدیل شده‌اند.
+        همه اسناد موجود نیز به این نوع‌های جدید مهاجرت داده شده‌اند.
+      heading: "«دسته‌بندی فایل» اکنون «نوع سند» نامیده می‌شود"
+      primary_action: پیکربندی انواع سند
+      secondary_action: اطلاعات بیشتر درباره ماژول اسناد
+    document_type_actions: اقدامات نوع سند
+    documents_list_blank_slate:
+      description: در این نما سندی وجود ندارد. برای افزودن یک سند روی دکمه زیر کلیک کنید.
+      heading: هنوز سندی وجود ندارد
+    index_page:
+      label_legacy: قدیمی
+      name: نام
+      type: نوع
+      updated_at: آخرین ویرایش
+    info_line:
+      connection_restored: اکنون دوباره آنلاین هستید.
+      currently_offline: در حال حاضر آفلاین هستید.
+    label_attachment_author: نویسنده پیوست
+    label_categories: دسته‌بندی‌ها
+    last_updated_at: آخرین ذخیره %{time}.
+    menu:
+      all: همه اسناد
+      collaboration_settings: همکاری بلادرنگ
+      types: انواع
+    new_category: دسته‌بندی جدید
+    new_type: نوع جدید
+    page_header:
+      action_menu:
+        document_actions: اقدامات سند
+        edit_title: ویرایش عنوان
+      heading: همه اسناد
+    show_edit_view:
+      connection_error_notice:
+        action: تلاش مجدد
+        description_server_unavailable: |-
+          سند باز نمی‌شود زیرا سرور همکاری متنی بلادرنگ در دسترس نیست.
+          اگر مشکل ادامه داشت با مدیر سیستم تماس بگیرید.
+      tabs: زبانه‌های سند
+    subheader:
+      filter:
+        label: فیلتر نام سند
+        placeholder: برای جست‌وجوی نام اسناد اینجا تایپ کنید
+    text_collaboration_disabled_notice:
+      description: |-
+        سند باز نمی‌شود زیرا همکاری متنی بلادرنگ غیرفعال است.
+        اگر می‌خواهید به این سند دسترسی داشته باشید، از مدیر سیستم بخواهید همکاری بلادرنگ را فعال کند.
+  enumeration_doc_categories: دسته‌بندی‌های سند
+  label_document_added: سند افزوده شد
+  label_document_category: دسته‌بندی
+  label_document_description: توضیحات
+  label_document_new: سند نو
+  label_document_plural: اسناد
+  label_document_title: عنوان
+  label_document_type: نوع
+  label_documents: اسناد
+  permission_manage_documents: مدیریت اسناد
+  permission_view_documents: دیدن اسناد
+  plugin_openproject_documents:
+    description: افزونه‌ای برای OpenProject که امکان ایجاد اسناد در پروژه‌ها را فراهم می‌کند.
+    name: اسناد OpenProject
+  project_module_documents: اسناد

@@ -1,0 +1,7 @@
+---
+tr:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Aşamalar
+      label_gantt_chart_plural: Gantt grafikleri

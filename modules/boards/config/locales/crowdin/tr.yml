@@ -1,0 +1,51 @@
+---
+tr:
+  activerecord:
+    models:
+      boards/grid:
+        one: Board
+        other: Boards
+  boards:
+    board_type_attributes:
+      assignee: Atanan
+      basic: Temel
+      status: Kanban
+      subproject: Alt proje
+      subtasks: Üst-Alt
+      version: Sürüm
+    board_type_descriptions:
+      assignee: 'Atanan kullanıcılara dayalı otomatik sütunlara sahip pano. İş paketlerini göndermek için idealdir.
+
+        '
+      basic: 'Boş bir tahtayla sıfırdan başlayın. Bu panoya kartları ve sütunları elle ekleyin.
+
+        '
+      status: 'Yapılacaklar, Devam Ediyor, Tamamlandı gibi durum sütunlarını içeren temel kanban tarzı pano.
+
+        '
+      subproject: 'Alt projeler için otomatik sütunlara sahip pano. İş paketlerini diğer listelere sürüklemek üzere (alt)projeyi buna göre günceller.
+
+        '
+      subtasks: 'Alt öğeler için otomatik sütunlara sahip pano. İş paketlerini diğer listelere sürüklemek üzere üst öğeyi buna göre günceller.
+
+        '
+      version: 'Sürüm özelliğine dayalı otomatik sütunlara sahip pano. Ürün geliştirmeyi planlamak için idealdir.
+
+        '
+    board_types:
+      action: Eylem panosu (%{attribute})
+      free: Temel
+    label_board: Pano
+    label_board_type: Pano türü
+    label_boards: Panolar
+    label_create_new_board: Yeni pano oluştur
+  ee:
+    upsell:
+      board_view:
+        description: Panolar ile iş akışlarınızı otomatikleştirmek ister misiniz? Gelişmiş kartlar bir Enterprise eklentidir. Lütfen ücretli bir plana yükseltin.
+  permission_manage_board_views: Panoları yönetme
+  permission_show_board_views: Panoları görüntüleme
+  plugin_openproject_boards:
+    description: Pano görünümleri sağlar.
+    name: OpenProject Panoları
+  project_module_board_view: Panolar

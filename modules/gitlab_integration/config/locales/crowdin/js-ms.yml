@@ -1,0 +1,54 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) 2023 Ben Tey
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See docs/COPYRIGHT.rdoc for more details.
+#++
+---
+ms:
+  js:
+    gitlab_integration:
+      gitlab_pipelines: Saluran
+      tab_header_issue:
+        title: Isu-isu
+      tab_header_mr:
+        copy_menu:
+          description: Salin potongan git ke papan klip
+          label: Potongan git
+        create_mr:
+          description: Cipta satu Penggabungan Permintaan
+          label: Cipta PP
+        git_actions:
+          branch_name: Nama cabang
+          cmd: Cipta cabang dengan komit kosong
+          commit_message: Mesej komit
+          copy_error: "❌ Salinan gagal!"
+          copy_success: "✅ Disalin!"
+          title: Potongan cepat untuk Git
+        title: Penggabungan permintaan
+      tab_issue:
+        empty: Tiada isu yang dipautkan lagi. Pautkan isu-isu yang sedia ada dengan menggunakan kod <code>OP#%{wp_id}</code> (atau <code>PP#%{wp_id}</code> untuk pautan peribadi) dalam tajuk/deskripsi isu atau cipta isu yang baru.
+      tab_mrs:
+        empty: Tiada penggabungan permintaan yang dipautkan lagi. Pautkan PP sedia ada dengan menggunakan kod <code>OP#%{wp_id}</code> (atau <code>PP#%{wp_id}</code> untuk pautan peribadi) dalam tajuk/deskripsi PP atau cipta PP yang baru.
+      updated_on: Dikemas kini pada
+      work_packages:
+        tab_name: GitLab
+    work_packages:
+      tabs:
+        gitlab: GitLab

@@ -1,0 +1,188 @@
+<div
+  class="op-wp-single-card"
+  data-test-selector="op-wp-single-card"
+  data-tour-selector="op-wp-single-card"
+  role="button"
+  tabindex="0"
+  data-draggable-surface
+  [attr.data-qa-draggable]="draggable || undefined"
+  [attr.data-qa-selected]="selected || undefined"
+  [ngClass]="cardClasses()"
+  [title]="cardTitle()"
+  (click)="cardClicked.emit({ workPackageId: workPackage.id, event: $event })"
+  (keydown.enter)="cardClicked.emit({ workPackageId: workPackage.id, event: $event })"
+  (keydown.space)="cardClicked.emit({ workPackageId: workPackage.id, event: $event })"
+  (dblclick)="cardDblClicked.emit({ workPackageId: workPackage.id, event: $event })"
+  (contextmenu)="cardContextMenu.emit({ workPackageId: workPackage.id, event: $event })"
+  >
+
+  <div class="op-wp-single-card--highlighting"
+    [ngClass]="cardHighlightingClass(workPackage)">
+  </div>
+
+  <div class="op-wp-single-card--card-actions">
+    <div class="op-wp-single-card--inline-buttons hidden-for-mobile"
+      data-test-selector="op-wp-single-card--inline-buttons">
+      @if (!isNewResource(workPackage) && showInfoButton) {
+        <button
+          type="button"
+          class="spot-link op-wp-single-card--details-button op-wp-single-card--card-action"
+          data-test-selector="op-wp-single-card--details-button"
+          [title]="text.detailsView"
+          (click)="emitStateLinkClicked($event, workPackage, true)">
+          <op-icon icon-classes="icon3 icon-info2" />
+        </button>
+      }
+
+      @if (isNewResource(workPackage) || showRemoveButton) {
+        <button
+          class="spot-link op-wp-single-card--inline-cancel-button op-wp-single-card--card-action"
+          data-test-selector="op-wp-single-card--inline-cancel-button"
+          [class.-show]="isNewResource(workPackage)"
+          [title]="text.removeCard"
+          (click)="onRemoved(workPackage)">
+          <op-icon icon-classes="icon-context icon-close" />
+        </button>
+      }
+
+      @if (disabledInfo && disabledInfo.text.length > 0) {
+        <op-icon [attr.data-tooltip]="disabledInfo.text"
+          class="-multiline op-wp-single-card--card-action op-wp-single-card--card-action_closed"
+          [ngClass]="'tooltip--' + disabledInfo.orientation"
+          icon-classes="icon-context icon-not-supported" />
+      }
+    </div>
+  </div>
+
+  @if (isNewResource(workPackage)) {
+    <edit-form [resource]="workPackage"
+      [inEditMode]="isNewResource(workPackage)"
+      >
+      <div class="op-wp-single-card-content -new">
+        <op-editable-attribute-field [resource]="workPackage"
+          [wrapperClasses]="'work-packages--type-selector'"
+          [fieldName]="'type'"
+          class="op-wp-single-card-content--type" />
+        <op-editable-attribute-field [resource]="workPackage"
+          fieldName="subject"
+          class="op-wp-single-card-content--subject -bold" />
+      </div>
+    </edit-form>
+  }
+
+  @if (!isNewResource(workPackage)) {
+    <div
+      class="op-wp-single-card--content">
+      <span
+        class="op-wp-single-card--content-project-name"
+        [ngClass]="{'op-wp-single-card--content-project-name_hideable': showInfoButton || showRemoveButton}"
+        >
+        - {{wpProjectName(workPackage)}}
+      </span>
+      <a class="op-wp-single-card--content-id"
+        [href]="fullWorkPackageLink(workPackage)"
+        [ngClass]="uiStateLinkClass"
+        (click)="emitStateLinkClicked($event, workPackage)"
+        >
+        {{workPackage.formattedId}}
+      </a>
+      <span class="op-wp-single-card--content-subject-line">
+        @if (showAsInlineCard && showStartDate) {
+          <span
+            class="op-wp-single-card--content-inline-date"
+            >
+            <display-field [resource]="workPackage"
+              [displayFieldOptions]="{ writable: false, dateFormat: 'MMM DD, YYYY', placeholder: '' }"
+              fieldName="startDate"
+              containerType="single-view" />
+            -
+          </span>
+        }
+        @if (!showAsInlineCard && highlightingMode !== 'type') {
+          <span
+            [textContent]="wpTypeAttribute(workPackage)"
+            class="op-wp-single-card--content-type"
+            data-test-selector="op-wp-single-card--content-type"
+            [ngClass]="typeHighlightingClass(workPackage)"
+          ></span>
+        }
+        @if (assistantNotice(workPackage); as notice) {
+          <a class="assistant-list-mark assistant-list-mark--leading"
+            data-test-selector="assistant-list-mark"
+            [href]="fullWorkPackageLink(workPackage)"
+            [ngClass]="uiStateLinkClass"
+            [title]="notice"
+            (click)="emitStateLinkClicked($event, workPackage)"
+            >✦</a>
+        }
+        <span
+          class="op-wp-single-card--content-subject"
+          data-test-selector="op-wp-single-card--content-subject"
+          [textContent]="wpSubject(workPackage)"
+        ></span>
+        @if (showAsInlineCard && showEndDate) {
+          <span
+            class="op-wp-single-card--content-inline-date"
+            >
+            -
+            <display-field [resource]="workPackage"
+              [displayFieldOptions]="{ writable: false, dateFormat: 'MMM DD, YYYY', placeholder: '' }"
+              fieldName="dueDate"
+              containerType="single-view" />
+          </span>
+        }
+      </span>
+      @if (this.cardCoverImageShown(workPackage) && !showAsInlineCard) {
+        <img
+          [src]="this.bcfSnapshotPath(workPackage)"
+          class="op-wp-single-card--content-cover-image"
+          alt="">
+      }
+      <div class="op-wp-single-card--content-status-baseline">
+        @if (showStatusButton) {
+          <wp-status-button [workPackage]="workPackage"
+            [small]="true"
+            class="op-wp-single-card--content-status"
+             />
+        }
+        @if (baselineIcon(workPackage) !== null) {
+          @switch (baselineMode) {
+            @case ('added') {
+              <span title="{{ text.baseLineIconAdded }}">
+                <svg op-arrow-in-icon size="small" class="op-table-baseline--icon-added"></svg>
+              </span>
+            }
+            @case ('removed') {
+              <span title="{{ text.baseLineIconRemoved }}">
+                <svg reply-icon size="small" class="op-table-baseline--icon-removed"></svg>
+              </span>
+            }
+            @default {
+              <span title="{{ text.baseLineIconChanged }}">
+                <svg op-triangle-delta-icon size="small" class="op-table-baseline--icon-changed"></svg>
+              </span>
+            }
+          }
+        }
+      </div>
+      @if (workPackage.assignee) {
+        <op-principal [principal]="workPackage.assignee"
+          [hideName]="true"
+          [link]="false"
+          avatarImageAltText="{{ text.assigneeAlt(workPackage.assignee.name) }}"
+          size="mini"
+          class="op-wp-single-card--content-assignee"
+          data-test-selector="op-wp-single-card--content-assignee"
+         />
+      }
+      @if (!showAsInlineCard && (workPackage.startDate || workPackage.dueDate)) {
+        <display-field [resource]="workPackage"
+          [displayFieldOptions]="{ writable: false, dateFormat: 'MMM DD, YYYY', placeholder: '' }"
+          [displayClass]="combinedDateDisplayField"
+          fieldName="dueDate"
+          class="op-wp-single-card--content-dates"
+          containerType="single-view" />
+      }
+    </div>
+  }
+</div>

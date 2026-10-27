@@ -1,0 +1,80 @@
+<div class="op-toast -{{ type }} {{ icon }}" tabindex="0">
+  <div class="op-toast--content" role="alert" aria-atomic="true">
+    @if (type === 'loading') {
+      <p [textContent]="toast.message"></p>
+      @if ((loading$ | async)) {
+        <div
+          class="op-loading-indicator op-loading-indicator_embedded"
+          >
+          <div></div><div></div>
+        </div>
+      }
+    }
+    @if (type !== 'loading') {
+      <p>
+        <span [textContent]="toast.message"></span>
+        <span [textContent]="' '"></span>
+        @if (toast.link) {
+          <a href="#"
+            class="op-toast--target-link"
+            [textContent]="toast.link!.text"
+            (click)="executeTarget()">
+          </a>
+        }
+      </p>
+    }
+    <div>
+      @switch (type) {
+        @case ('upload') {
+          <div>
+            @if (canBeHidden) {
+              <div>
+                <a href="#" [hidden]="show" (click)="show = true">
+                  <svg chevron-right-icon size="small"></svg>
+                </a>
+                <a href="#" [hidden]="!show" (click)="show = false">
+                  <svg chevron-down-icon size="small"></svg>
+                </a>
+                <span [textContent]="uploadText"></span>
+              </div>
+            }
+            <div [ngClass]="{ '-hidden': !show && canBeHidden }">
+              @if (data && data.length > 0) {
+                <ul class="op-toast--uploads">
+                  @for (upload of data; track upload) {
+                    <op-toasters-upload-progress [file]="upload[0]"
+                      [upload]="upload[1]"
+                      (uploadSuccess)="onUploadSuccess()"
+                      (uploadError)="remove()" />
+                  }
+                </ul>
+              }
+            </div>
+          </div>
+        }
+        @case ('success') {
+          <div></div>
+        }
+        @case ('error') {
+          <div>
+            <ul class="op-toast--errors">
+              @for (error of data; track error) {
+                <li [textContent]="error"></li>
+              }
+            </ul>
+          </div>
+        }
+      }
+    </div>
+    @if (removable) {
+      <button
+        type="button"
+        class="spot-link op-toast--close"
+        [title]="text.close_popup"
+        (click)="remove()"
+        >
+        <svg x-icon size="small"></svg>
+      </button>
+    }
+  </div>
+</div>

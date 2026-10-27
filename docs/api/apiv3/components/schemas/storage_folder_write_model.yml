@@ -1,0 +1,13 @@
+# Schema: StorageFolderWriteModel
+---
+type: object
+required:
+  - name
+  - parentId
+properties:
+  name:
+    type: string
+    description: Name of the folder to be created
+  parentId:
+    type: string
+    description: Unique identifier of the parent folder in which the new folder should be created in

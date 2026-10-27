@@ -1,0 +1,26 @@
+@if (user) {
+  <div class="op-assignee-board-header">
+    @if (user.id) {
+      <op-principal [principal]="user"
+        [hideName]="true"
+        size="mini"
+       />
+    }
+    <h2 class="editable-toolbar-title--fixed">
+      <small [textContent]="text.assignee"></small>
+      <br/>
+      @if (user.id) {
+        <a
+          [href]="pathHelper.userPath(user.id)"
+          [textContent]="user.name"
+          target="_blank">
+        </a>
+      }
+      @if (!user.id) {
+        <span
+          [textContent]="user.name">
+        </span>
+      }
+    </h2>
+  </div>
+}

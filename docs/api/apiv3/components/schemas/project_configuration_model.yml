@@ -1,0 +1,10 @@
+# Schema: ProjectConfigurationModel
+---
+allOf:
+  - $ref: "./configuration_model.yml"
+  - type: object
+    properties:
+      enabledInternalComments:
+        type: boolean
+        description: Whether internal comments are enabled for this project
+        readOnly: true

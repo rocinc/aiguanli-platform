@@ -1,0 +1,139 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+pl:
+  activerecord:
+    attributes:
+      budget:
+        author: Autor
+        available: Dostępne
+        base_amount: Kwota podstawowa
+        budget: Zaplanowane
+        budget_ratio: Wydano (%)
+        description: Opis
+        labor_budget: Planowane koszty pracy
+        labor_budget_items: Planowane koszty pracy
+        material_budget: Planowane koszty jednostkowe
+        spent: Wydatki
+        status: Status
+        subject: Temat
+        type: Jednostki
+      work_package:
+        budget_subject: Tytuł budżetu
+    errors:
+      models:
+        labor_budget_item:
+          attributes:
+            principal:
+              not_a_member_of_budget_project: nie jest członkiem projektu budżetu
+    models:
+      budget:
+        one: Budżet
+        few: Budżety
+        many: Budżety
+        other: Budżety
+      labor_budget_item:
+        one: Planowany koszt pracy
+        few: Planowane koszty pracy
+        many: Planowane koszty pracy
+        other: Planowane koszty pracy
+      material_budget_item:
+        one: Jednostka
+        few: Jednostki
+        many: Jednostki
+        other: Jednostki
+  activity:
+    filter:
+      budget: Budżetowanie
+  attributes:
+    budget: Budżet
+  budgets:
+    widgets:
+      budget_by_cost_type:
+        blankslate:
+          description: Uzyskaj przegląd swoich budżetów i kosztów, aby skutecznie śledzić stan projektu
+          heading: Rozpocznij kontrolowanie projektu
+        blankslate_zero:
+          description: Aby zobaczyć tutaj dane, dodaj szczegóły dotyczące planowanego budżetu
+          heading: Brak szczegółów budżetu
+        count_caption:
+          one: Dane zagregowane z %{count} budżetu
+          other: Dane zagregowane z %{count} budżetów
+          zero: Brak danych budżetowych.
+        count_caption_with_subitems:
+          portfolio:
+            one: Dane zagregowane z %{count} budżetu zawarte w tym portfolio i jego podpozycjach.
+            other: Dane zagregowane z %{count} budżetów zawarte w tym portfolio i jego podpozycjach.
+            zero: Brak danych budżetowych.
+          program:
+            one: Dane zagregowane z %{count} budżetu zawarte w tym programie i jego podpozycjach.
+            other: Dane zagregowane z %{count} budżetów zawarte w tym programie i jego podpozycjach.
+            zero: Brak danych budżetowych.
+          project:
+            one: Dane zagregowane z %{count} budżetu zawarte w tym projekcie i jego podpozycjach.
+            other: Dane zagregowane z %{count} budżetów zawarte w tym projekcie i jego podpozycjach.
+            zero: Brak danych budżetowych.
+        title: Budżet według typu kosztów
+        view_details: Wyświetl szczegóły budżetu
+      budget_totals:
+        remaining_budget: Pozostały budżet
+        spent_budget: Wydany budżet
+        title: Sumy budżetowe
+        total_actual_costs: Łączne koszty rzeczywiste
+        total_planned_budget: Łączny planowany budżet
+  budgets_title: Budżety
+  button_add_budget: Dodaj budżet
+  button_add_budget_item: Dodaj planowane koszty
+  button_add_cost_type: Dodaj typ kosztu
+  button_cancel_edit_budget: Anuluj edycję budżetu
+  button_cancel_edit_costs: Anuluj edycję kosztów
+  caption_labor: Praca
+  caption_labor_costs: Rzeczywiste koszty pracy
+  caption_material_costs: Rzeczywiste koszty jednostkowe
+  events:
+    budget: Budżet edytowany
+  help_click_to_edit: Kliknij tutaj aby edytować.
+  help_currency_format: Format wyświetlanej waluty %n jest zastąpiony przez wartość waluty, %u którą jest zastąpiony jednostką walutową.
+  help_override_rate: Podaj wartość tutaj aby zastąpić domyślną stawkę.
+  label_budget_available: Dostępny budżet
+  label_budget_details: Szczegóły budżetu
+  label_budget_id: 'Budżet #%{id}'
+  label_budget_new: Nowy budżet
+  label_budget_planned: Planowany budżet
+  label_budget_plural: Budżety
+  label_budget_spent: Wydany budżet
+  label_budget_spent_ratio: Wskaźnik wydatków z budżetu
+  label_budget_totals: Sumy
+  label_deliverable: Budżet
+  label_example_placeholder: np. %{decimal}
+  label_view_all_budgets: Zobacz wszystkie budżety
+  label_yes: Tak
+  notice_budget_conflict: Pakiety robocze muszą być z tego samego projektu.
+  notice_no_budgets_available: Nie ma dostępnych budżetów.
+  permission_edit_budgets: Edytuj budżety
+  permission_view_budgets: Zobacz budżety
+  plugin_budgets_engine:
+    name: Budżety
+  project_module_budgets: Budżety
+  text_budget_delete: Usuń budżet ze wszystkich pakietów roboczych
+  text_budget_destroy_assigned_wp: Liczba pakietów roboczych przypisanych do tego budżetu wynosi %{count}. Co chcesz zrobić?
+  text_budget_reassign_to: 'Przypisz je do tego budżetu:'

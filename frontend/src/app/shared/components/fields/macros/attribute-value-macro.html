@@ -1,0 +1,13 @@
+@if (error) {
+  <span>
+    <i class="icon icon-error"></i>
+    <em [textContent]="error"></em>
+  </span>
+}
+@if (!!resource) {
+  <display-field [resource]="resource"
+    containerType="single-view"
+    [displayFieldOptions]="{ writable: false, layout: layout }"
+    [fieldName]="fieldName" />
+  <span class="sr-only" [textContent]="ariaContext"></span>
+}

@@ -1,0 +1,71 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://login.microsoftonline.com/wrong/oauth2/v2.0/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=client_credentials&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default+offline_access&client_id=MISSING_SHARE_POINT_TEST_OAUTH_CLIENT_ID&client_secret=MISSING_SHARE_POINT_TEST_OAUTH_CLIENT_SECRET
+    headers:
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '205'
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      X-Ms-Request-Id:
+      - 0d8e094d-bf49-42ad-8b6e-677ece661300
+      X-Ms-Ests-Server:
+      - 2.1.21470.11 - WEULR1 ProdSlices
+      X-Ms-Srs:
+      - 1.P
+      Content-Security-Policy-Report-Only:
+      - object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-HKi3EGElocyMfDLvNKm_gQ'
+        'unsafe-inline' 'unsafe-eval' https://*.msauth.net https://*.msftauth.net
+        https://*.msftauthimages.net https://*.msauthimages.net https://*.msidentity.com
+        https://*.microsoftonline-p.com https://*.microsoftazuread-sso.com https://*.azureedge.net
+        https://*.outlook.com https://*.office.com https://*.office365.com https://*.microsoft.com
+        https://*.bing.com 'report-sample'; report-uri https://csp.microsoft.com/report/ESTS-UX-All
+      X-Xss-Protection:
+      - '0'
+      Set-Cookie:
+      - fpc=AitILJrTjEBLlVgOsH3ITlc; expires=Thu, 04-Sep-2025 10:04:27 GMT; path=/;
+        secure; HttpOnly; SameSite=None, x-ms-gateway-slice=estsfd; path=/; secure;
+        samesite=none; httponly, stsservicecookie=estsfd; path=/; secure; samesite=none;
+        httponly
+      Date:
+      - Tue, 05 Aug 2025 10:04:27 GMT
+      Content-Length:
+      - '519'
+    body:
+      encoding: UTF-8
+      string: '{"error":"invalid_request","error_description":"AADSTS900023: Specified
+        tenant identifier ''wrong'' is neither a valid DNS name, nor a valid external
+        domain. Trace ID: 0d8e094d-bf49-42ad-8b6e-677ece661300 Correlation ID: 44e3e981-e91a-428d-9583-b7cb9d6a7722
+        Timestamp: 2025-08-05 10:04:27Z","error_codes":[900023],"timestamp":"2025-08-05
+        10:04:27Z","trace_id":"0d8e094d-bf49-42ad-8b6e-677ece661300","correlation_id":"44e3e981-e91a-428d-9583-b7cb9d6a7722","error_uri":"https://login.microsoftonline.com/error?code=900023"}'
+  recorded_at: Tue, 05 Aug 2025 10:04:27 GMT
+recorded_with: VCR 6.3.1

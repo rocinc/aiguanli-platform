@@ -1,0 +1,26 @@
+---
+mn:
+  activerecord:
+    models:
+      job_status/status:
+        one: Background job status
+        other: Background job statuses
+  job_status_dialog:
+    click_to_download: Or [click here](download_url) to download.
+    download_starts: Татаж авах ажиллагаа автоматаар эхлэх ёстой.
+    errors: Ямар нэг алдаа гарлаа
+    generic_messages:
+      cancelled: Алдаа гарсны улмаас ажил цуцлагдлаа.
+      error: Ажлыг дуусгаж чадсангүй.
+      in_process: Одоогоор уг ажлыг боловсруулж байна.
+      in_queue: Ажлыг дараалалд оруулсан бөгөөд удахгүй боловсруулагдах болно.
+      not_found: Энэ ажил олдсонгүй.
+      success: Ажил амжилттай дууссан.
+    redirect: Таныг дахин чиглүүлж байна.
+    redirect_errors: Эдгээр алдааны улмаас таныг автоматаар дахин чиглүүлэхгүй.
+    redirect_link: Энд дарж үргэлжлүүлнэ үү.
+    title: Суурь ажлын төлөв
+  label_job_status_plural: Ажлын төлвүүд
+  plugin_openproject_job_status:
+    description: Listing and status of background jobs.
+    name: OpenProject Job status

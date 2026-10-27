@@ -1,0 +1,52 @@
+---
+sr:
+  activerecord:
+    models:
+      boards/grid:
+        one: Board
+        few: Boards
+        other: Boards
+  boards:
+    board_type_attributes:
+      assignee: Zadužen
+      basic: Osnovno
+      status: Kanban
+      subproject: Potprojekat
+      subtasks: Parent-child
+      version: Verzija
+    board_type_descriptions:
+      assignee: 'Tabla sa automatizovanim kolonama, po dodeljenim korisnicima. Idealna za otpremanje radnih paketa.
+
+        '
+      basic: 'Počnite ispočetka sa praznom tablom. Na tablu, ručno dodaj kartice i kolone.
+
+        '
+      status: 'Osnovna tabla u kanban stilu, sa kolonama koje prikazuju status, kao što su: Uraditi, Tekuće, Završeno.
+
+        '
+      subproject: 'Tabla sa automatizovanim kolonama za potprojekte. Prevlačenje radnog paketa na druge liste osvežava stanje potprojekta.
+
+        '
+      subtasks: 'Tabla sa automatizovanim kolonama za podelemente. Prevlačenje radnog paketa na druge liste osvežava stanje izvornog elementa.
+
+        '
+      version: 'Tabla sa automatizovanim kolonama, po atributima verzije. Idealna za planiranje razvoja proizvoda.
+
+        '
+    board_types:
+      action: Tabla sa zadacima (%{attribute})
+      free: Osnovno
+    label_board: Board
+    label_board_type: Tip table
+    label_boards: Boards
+    label_create_new_board: Nova tabla
+  ee:
+    upsell:
+      board_view:
+        description: Would you like to automate your workflows with Boards? Advanced boards are an Enterprise add-on. Please upgrade to a paid plan.
+  permission_manage_board_views: Manage boards
+  permission_show_board_views: View boards
+  plugin_openproject_boards:
+    description: Provides board views.
+    name: OpenProject Boards
+  project_module_board_view: Boards

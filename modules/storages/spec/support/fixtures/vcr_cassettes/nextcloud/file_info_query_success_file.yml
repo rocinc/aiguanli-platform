@@ -1,0 +1,86 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://nextcloud.local/ocs/v1.php/apps/integration_openproject/fileinfo/56
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - OpenProject 17.0.0 HTTPX Client
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Ocs-Apirequest:
+      - 'true'
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';base-uri 'none';manifest-src 'self';frame-ancestors 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Thu, 20 Nov 2025 14:26:16 GMT
+      Feature-Policy:
+      - autoplay 'none';camera 'none';fullscreen 'none';geolocation 'none';microphone
+        'none';payment 'none'
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.65 (Debian)
+      Set-Cookie:
+      - ocup2vbftjhb=5ad0d1bb8b45c52211b5bfed6d2529c7; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=y0AhPf0PsM2ugxn0wPl3%2BgM%2BcAoQkFmVhRsXwjZ9WQJt5bVboBv%2Bv%2FSf3fzgCUNQKD%2F%2BX8bGP16Vkz6ljB%2FYi3PMKDBMmTIiSxxCBC%2B14iG%2Fl0I%2FKFTNXZUTUPsTq7TY;
+        path=/; secure; HttpOnly; SameSite=Lax, ocup2vbftjhb=5ad0d1bb8b45c52211b5bfed6d2529c7;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocup2vbftjhb=5ad0d1bb8b45c52211b5bfed6d2529c7;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocup2vbftjhb=5ad0d1bb8b45c52211b5bfed6d2529c7;
+        path=/; secure; HttpOnly; SameSite=Lax, ocup2vbftjhb=5ad0d1bb8b45c52211b5bfed6d2529c7;
+        path=/; secure; HttpOnly; SameSite=Lax, ocup2vbftjhb=5ad0d1bb8b45c52211b5bfed6d2529c7;
+        path=/; secure; HttpOnly; SameSite=Lax, ocup2vbftjhb=5ad0d1bb8b45c52211b5bfed6d2529c7;
+        path=/; secure; HttpOnly; SameSite=Lax, ocup2vbftjhb=5ad0d1bb8b45c52211b5bfed6d2529c7;
+        path=/; secure; HttpOnly; SameSite=Lax, ocup2vbftjhb=5ad0d1bb8b45c52211b5bfed6d2529c7;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.3.27
+      X-Request-Id:
+      - WlZrpzCh5VsO1qezwkdj
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-User-Id:
+      - admin
+      Content-Length:
+      - '253'
+    body:
+      encoding: UTF-8
+      string: '{"ocs":{"meta":{"status":"ok","statuscode":100,"message":"OK","totalitems":"","itemsperpage":""},"data":{"status":"OK","statuscode":200,"id":56,"name":"Reasons
+        to use Nextcloud.pdf","mtime":1757331131,"ctime":0,"mimetype":"application\/pdf","size":976625,"owner_name":"admin","owner_id":"admin","modifier_name":"admin","modifier_id":"admin","dav_permissions":"RGDNVW","path":"files\/Reasons
+        to use Nextcloud.pdf"}}}'
+  recorded_at: Thu, 20 Nov 2025 14:26:16 GMT
+recorded_with: VCR 6.3.1

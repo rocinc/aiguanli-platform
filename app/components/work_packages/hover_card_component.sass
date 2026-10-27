@@ -1,0 +1,19 @@
+.op-wp-hover-card
+  display: grid
+  align-items: center
+  grid-template-columns: auto auto 1fr
+  grid-template-rows: max-content 1fr auto
+  grid-row-gap: calc(var(--stack-gap-condensed) / 2)
+  grid-column-gap: var(--stack-gap-condensed)
+  grid-template-areas: "info project project project" "subject subject subject subject" "assignee assignee dates dates"
+  overflow: hidden
+
+  &--project
+    @include text-shortener()
+
+  &--dates
+    justify-self: flex-end
+    white-space: nowrap
+
+  &--principal
+    max-width: 300px

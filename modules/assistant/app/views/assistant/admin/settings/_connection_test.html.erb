@@ -1,0 +1,28 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+<%= turbo_frame_tag "assistant-llm-test", class: "d-flex flex-items-center mb-3", data: { test_selector: "assistant-llm-test" } do %>
+  <%= form_with(url: test_connection_admin_settings_assistant_path, method: :post) do %>
+    <%= render(Primer::Beta::Button.new(type: :submit, size: :small, data: { turbo_submits_with: t("assistant.admin.test.running") },
+                                        test_selector: "assistant-llm-test-button")) { t("assistant.admin.test.button") } %>
+  <% end %>
+  <% if results %>
+    <ul class="list-style-none ml-3 mb-0" role="status" data-test-selector="assistant-llm-test-result">
+      <% results.each do |result| %>
+        <li class="<%= result.ok ? 'color-fg-success' : 'color-fg-danger' %>">
+          <% if result.ok %>
+            <%= t("assistant.admin.test.ok", model: result.model, seconds: number_with_precision(result.seconds, precision: 1)) %>
+          <% else %>
+            <%= t("assistant.admin.test.failed", reason: result.reason) %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>

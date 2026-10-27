@@ -1,0 +1,7 @@
+---
+nl:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Mijlpalen
+      label_gantt_chart_plural: Gantt grafieken

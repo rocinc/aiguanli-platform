@@ -1,0 +1,32 @@
+<ng-template
+  #optionTemplate
+  let-item
+  let-search="search"
+  >
+  @if (item && item.href) {
+    <op-principal [principal]="item"
+      [hideName]="true"
+      [hoverCard]="hoverCards"
+      size="mini"
+     />
+  }
+  <span [opSearchHighlight]="search"
+    [attr.data-hover-card-url]="getHoverCardUrl(item)"
+    data-hover-card-trigger-target="trigger"
+    class="op-user-autocompleter--name">
+    {{ item.name }}
+  </span>
+  @if (item.email) {
+    <span
+      class="op-autocompleter__option-principal-email"
+      [opSearchHighlight]="search"
+    >{{ item.email }}</span>
+  }
+</ng-template>
+@if (inviteUserToProject) {
+  <ng-template #footerTemplate>
+    <op-invite-user-button [projectId]="inviteUserToProject"
+      class="op-select-footer"
+     />
+  </ng-template>
+}

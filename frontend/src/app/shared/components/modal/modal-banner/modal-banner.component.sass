@@ -1,0 +1,24 @@
+@import 'helpers'
+
+.op-modal-banner
+  display: grid
+  grid-template-columns: 20px auto max-content
+  grid-gap: 1rem
+  align-items: center
+  padding: 0.75rem 1rem
+
+  @media only screen and (max-width: $breakpoint-sm)
+    grid-template-columns: auto max-content
+
+  &:first-child
+    border-top-left-radius: 0.25rem
+    border-top-right-radius: 0.25rem
+
+  &_warning
+    background: var(--bgColor-attention-muted)
+
+  &_info
+    background: var(--bgColor-accent-muted)
+
+  &--button
+    margin: 0

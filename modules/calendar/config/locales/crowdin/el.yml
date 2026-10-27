@@ -1,0 +1,12 @@
+---
+el:
+  label_calendar: Ημερολόγιο
+  label_calendar_plural: Ημερολόγια
+  label_new_calendar: Νέο ημερολόγιο
+  permission_manage_calendars: Διαχείριση ημερολογίων
+  permission_share_calendars: Εγγραφή σε iCalendars
+  permission_view_calendar: Προβολή ημερολογίων
+  plugin_openproject_calendar:
+    description: Provides calendar views.
+    name: OpenProject Calendar
+  project_module_calendar_view: Ημερολόγια

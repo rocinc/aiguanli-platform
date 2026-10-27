@@ -1,0 +1,181 @@
+# /api/v3/versions/{id}
+---
+get:
+  summary: Get version
+  operationId: get_version
+  tags:
+    - Versions
+  description: Retrieves a version defined by its unique identifier.
+  parameters:
+    - description: Version id
+      example: 1
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            "$ref": "../components/schemas/version_read_model.yml"
+          examples:
+            response:
+              $ref: "../components/examples/version_simple_response.yml"
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: |-
+        Returned if the version does not exist or the client does not have sufficient permissions
+        to see it.
+
+        **Required permission:** view work packages **or** manage versions (any project where the version is available)
+
+        *Note: A client without sufficient permissions shall not be able to test for the existence of
+        a version. That's why a 404 is returned here, even if a 403 might be more appropriate.*
+        
+delete:
+  summary: Delete version
+  operationId: delete_Version
+  tags:
+    - Versions
+  description: Deletes the version. Entities associated to the version will no longer be assigned to it.
+  parameters:
+    - description: Version id
+      example: 1
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  responses:
+    '204':
+      description: Returned if the version was successfully deleted
+    '403':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not authorized to access this resource.
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** manage versions
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: |-
+        Returned if the version does not exist or the client does not have sufficient permissions
+        to see it.
+
+        **Required permission:** view work packages **or** manage versions (any project where the version is available)
+
+        *Note: A client without sufficient permissions shall not be able to test for the existence of
+        a version. That's why a 404 is returned here, even if a 403 might be more appropriate.*
+    '406':
+      $ref: "../components/responses/missing_content_type.yml"
+    '415':
+      $ref: "../components/responses/unsupported_media_type.yml"
+      
+patch:
+  summary: Update Version
+  operationId: update_Version
+  tags:
+    - Versions
+  description: |-
+    Updates the given version by applying the attributes provided in the body. Please note that while there is a fixed
+    set of attributes, custom fields can extend a version's attributes and are accepted by the endpoint.
+  parameters:
+    - description: Version id
+      example: 1
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../components/schemas/version_write_model.yml"
+        examples:
+          'update name':
+            $ref: "../components/examples/version_update_name_request.yml"
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            "$ref": "../components/schemas/version_read_model.yml"
+          examples:
+            response:
+              $ref: "../components/examples/version_simple_response.yml"
+    '400':
+      $ref: "../components/responses/invalid_request_body.yml"
+    '403':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not authorized to access this resource.
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** Manage versions in the version's project.
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: |-
+        Returned if the version does not exist or the client does not have sufficient permissions
+        to see it.
+
+        **Required permission:** view work packages **or** manage versions (any project where the version is available)
+
+        *Note: A client without sufficient permissions shall not be able to test for the existence of
+        a version. That's why a 404 is returned here, even if a 403 might be more appropriate.*
+    '406':
+      $ref: "../components/responses/missing_content_type.yml"
+    '415':
+      $ref: "../components/responses/unsupported_media_type.yml"
+    '422':
+      description: |-
+        Returned if:
+
+        * a constraint for a property was violated (`PropertyConstraintViolation`)

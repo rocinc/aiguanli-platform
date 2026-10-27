@@ -1,0 +1,89 @@
+# /api/v3/custom_fields/{id}/items
+---
+get:
+  summary: Get the custom field hierarchy items
+  operationId: get_custom_field_items
+  description: |-
+    Retrieves the hierarchy of custom fields.
+
+    The hierarchy is a tree structure of hierarchy items. It is represented as a flat list of items, where each item
+    has a reference to its parent and children. The list is ordered in a depth-first manner. The first item is the
+    requested parent. If parent was unset, the root item is returned as first element.
+
+    Passing the `depth` query parameter allows to limit the depth of the hierarchy. If the depth is unset, the full
+    hierarchy tree is returned. If the depth is set to `0`, only the requested parent is returned. Any other positive
+    integer will return the number of children levels specified by this value.
+
+    This endpoint only returns, if the custom field is of type `hierarchy`.
+  tags:
+    - Custom Fields
+  parameters:
+    - name: id
+      description: The custom field's unique identifier
+      in: path
+      example: 42
+      required: true
+      schema:
+        type: integer
+    - name: parent
+      description: The identifier of the parent hierarchy item
+      in: query
+      example: 1337
+      required: false
+      schema:
+        type: integer
+    - name: depth
+      description: The level of hierarchy depth
+      in: query
+      example: 1
+      required: false
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/hierarchy_item_collection_model.yml'
+          examples:
+            'simple response':
+              $ref: '../components/examples/hierarchy_item_collection_response.yml'
+            'filtered response':
+              $ref: '../components/examples/hierarchy_item_collection_filtered_response.yml'
+    '403':
+      description: Returned if the user is not logged in.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not authorized to access this resource.
+    '404':
+      description: Returned if the custom field does not exist or the user lacks the permission to view it.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+    '422':
+      description: Returned if the custom field is not of type hierarchy.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:UnprocessableContent
+                message: The requested custom field resource is of wrong type.

@@ -1,0 +1,3 @@
+<%= render(Overviews::PageHeaderComponent.new(project: @project, current_user:)) %>
+<%= call_hook :view_overviews_show_top, project: @project %>
+<%= render(Overviews::ShowComponent.new(project: @project, current_user:)) %>

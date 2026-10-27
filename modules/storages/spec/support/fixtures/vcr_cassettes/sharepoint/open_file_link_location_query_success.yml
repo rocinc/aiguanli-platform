@@ -1,0 +1,90 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw/items/01ANJ53WYLXAJW5PXSCJB2CFCD42UPDKMI?$select=parentReference
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer <BEARER TOKEN>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Content-Encoding:
+      - gzip
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - e7a4716f-67e7-4500-ac13-d82c9f32180a
+      Client-Request-Id:
+      - e7a4716f-67e7-4500-ac13-d82c9f32180a
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"002","RoleInstance":"FR3PEPF00000165"}}'
+      Splogid:
+      - e6fdbba1-106f-0000-7534-cf31b43a0fa1
+      Date:
+      - Fri, 15 Aug 2025 12:25:51 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)/$entity","@odata.etag":"\"{6E13B80B-F2BE-4312-A114-43E6A8F1A988},1\"","parentReference":{"driveType":"documentLibrary","driveId":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw","id":"01ANJ53W56Y2GOVW7725BZO354PWSELRRZ","name":"Shared
+        Documents","path":"/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw/root:","siteId":"1099e315-d0c7-47c7-8640-aa9504b70fff"}}'
+  recorded_at: Fri, 15 Aug 2025 12:25:51 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw/items/01ANJ53W56Y2GOVW7725BZO354PWSELRRZ?$select=webUrl
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer <BEARER TOKEN>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Content-Encoding:
+      - gzip
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 4f7c9d66-ff7b-4f82-af8a-03bc5f61a347
+      Client-Request-Id:
+      - 4f7c9d66-ff7b-4f82-af8a-03bc5f61a347
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"002","RoleInstance":"FR3PEPF00000165"}}'
+      Splogid:
+      - e6fdbba1-e076-0000-7534-c426bf0fd973
+      Date:
+      - Fri, 15 Aug 2025 12:25:51 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)/$entity","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Shared%20Documents"}'
+  recorded_at: Fri, 15 Aug 2025 12:25:51 GMT
+recorded_with: VCR 6.3.1

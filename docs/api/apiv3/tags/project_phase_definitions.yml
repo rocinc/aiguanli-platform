@@ -1,0 +1,32 @@
+---
+description: |-
+  Project phases separate the whole of the project's duration into smaller, distinct parts.
+  Such a phase will then have different focus on certain aspects of project management. E.g. while the first phase might be about gathering requirements, the second phase might be about implementing the requirements
+  and the third phase might be about testing the implementation.
+
+  The phases within the projects rely on an abstract definition of the project life cycle valid in a number of projects within the OpenProject instance.
+  That definition is a set of ProjectPhaseDefinitions.
+
+  ## Actions
+
+  * None currently
+
+  ## Linked Properties
+
+  | Link         | Description                                                                                  | Type                   | Constraints | Supported operations |Condition                                                                                  |
+  | :----------: | -------------                                                                                | ----                   | ----------- | -------------------- |-----------------------------------------                                                  |
+  | self         | This project phase definition                                                                | ProjectPhaseDefinition | not null    | READ                 |                                                                                           |
+
+  ## Local Properties
+
+  | Property               | Description                                                 | Type      | Constraints | Supported operations |
+  |---------------         |-------------------------------------------------------------|-----------|-------------|----------------------|
+  | id                     | Project phase definition's id                               | Integer   | x > 0       | READ                 |
+  | name                   |                                                             | String    |             | READ                 |
+  | startGate              | Indicates whether the project phase has a gate at the start | Boolean   |             | READ                 |
+  | startGateName          | The name of the gate at the start of the phase              | String    |             | READ                 |
+  | finishGate             | Indicates whether the project phase has a gate at the end   | Boolean   |             | READ                 |
+  | finishGateName         | The name of the gate at the end of the phase                | String    |             | READ                 |
+  | createdAt              | Time of creation                                            | DateTime  |             | READ                 |
+  | updatedAt              | Time of the most recent change to the project phase         | DateTime  |             | READ                 |
+name: Project Phase Definitions

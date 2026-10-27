@@ -1,0 +1,72 @@
+@import 'helpers'
+
+$meeting-agenda-item--presenter-width: 170px
+$meeting-agenda-item--presenter-width--mobile: 150px
+
+.op-meeting-agenda-item
+  display: grid
+  grid-template-columns: 20px auto 1fr fit-content($meeting-agenda-item--presenter-width) fit-content(40px)
+  grid-template-areas: "drag-handle content duration presenter actions" ". title title title title" ". notes notes notes notes" ". outcomes outcomes outcomes outcomes"
+
+  &--drag-handle,
+  &--duration,
+  &--content,
+  &--presenter,
+  &--actions
+    align-self: start
+
+  &--duration
+    white-space: nowrap
+    justify-self: end
+
+  &--content
+    overflow-wrap: anywhere
+
+  &--presenter
+    max-width: $meeting-agenda-item--presenter-width
+    justify-self: end
+
+  &--actions
+    justify-self: end
+    margin-top: -5px // Needed because the invisible effect makes the button look misaligned otherwise
+
+  &--title
+    align-self: center
+    overflow-wrap: anywhere
+
+  .custom-presenter-flex
+    margin-left: auto
+
+  .muted-color
+    color: var(--fgColor-muted)
+
+  .override
+    padding-bottom: 0
+
+  @media screen and (max-width: $breakpoint-lg)
+    grid-template-columns: 20px auto 1fr auto 50px
+    grid-template-areas: "drag-handle content content content actions" ". title title title title" ". presenter duration . ."  ". notes notes notes notes" ". outcomes outcomes outcomes outcomes"
+
+    &--author
+      justify-self: stretch
+
+    &--presenter
+      width: inherit
+      max-width: $meeting-agenda-item--presenter-width--mobile
+      margin-left: 0
+      margin-top: 5px
+
+    &--duration
+      justify-self: start
+      margin-top: 5px
+      margin-left: 8px
+
+    .custom-presenter-flex
+      margin-left: 0
+
+// Highlight agenda item when linked to it
+.op-meeting-agenda-item-wrapper
+  &:target
+    scroll-margin: 100px
+    outline: 2px solid var(--borderColor-accent-emphasis)
+    border-radius: 2px

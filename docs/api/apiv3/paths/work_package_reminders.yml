@@ -1,0 +1,132 @@
+# /api/v3/work_packages/{work_package_id}/reminders
+---
+get:
+  summary: List work package reminders
+  operationId: list_work_package_reminders
+  tags:
+    - Work Packages
+    - Reminders
+  description: |-
+    Gets a list of your upcoming reminders for this work package.
+
+    Only active reminders that belong to the current user are returned.
+  parameters:
+    - name: work_package_id
+      in: path
+      description: Work package id
+      example: 1
+      required: true
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            type: object
+            required:
+              - _type
+              - total
+              - count
+              - _embedded
+            properties:
+              _type:
+                type: string
+                enum:
+                  - Collection
+              total:
+                type: integer
+                description: The total amount of elements available in the collection.
+                minimum: 0
+              count:
+                type: integer
+                description: Actual amount of elements in this response.
+                minimum: 0
+              _embedded:
+                type: object
+                required:
+                  - elements
+                properties:
+                  elements:
+                    type: array
+                    items:
+                      $ref: '../components/schemas/reminder_model.yml'
+    '403':
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** view work packages for the project the work package is contained in.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+    '404':
+      description: |-
+        Returned if the work package does not exist or the client does not have sufficient permissions to see it.
+
+        **Required permission:** view work package
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+
+post:
+  summary: Create a work package reminder
+  operationId: create_work_package_reminder
+  tags:
+    - Work Packages
+    - Reminders
+  description: |-
+    Creates a new reminder for the specified work package.
+
+    **Note:** A user can only have one **active** reminder at a time for a given work package.
+  parameters:
+    - name: work_package_id
+      in: path
+      description: Work package id
+      example: 1
+      required: true
+      schema:
+        type: integer
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - remindAt
+          properties:
+            remindAt:
+              type: string
+              format: date-time
+              description: The date and time when the reminder is due
+            note:
+              type: string
+              description: The note of the reminder
+  responses:
+    '201':
+      description: Reminder created successfully
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/reminder_model.yml'
+    '404':
+      description: |-
+        Returned if the work package does not exist or the client does not have sufficient permissions to see it.
+
+        **Required permission:** view work package
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+    '409':
+      description: |-
+        Returned if the user already has an active reminder for this work package.
+
+        **Error message**: You can only set one reminder at a time for a work package. Please delete or update the existing reminder.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'

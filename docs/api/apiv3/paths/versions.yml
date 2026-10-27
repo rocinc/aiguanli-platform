@@ -1,0 +1,101 @@
+# /api/v3/versions
+---
+get:
+  summary: List versions
+  operationId: list_versions
+  tags:
+    - Versions
+  description: |-
+    Returns a collection of versions. The client can choose to filter the versions similar to how work packages are
+    filtered. In addition to the provided filters, the server will reduce the result set to only contain versions,
+    for which the requesting client has sufficient permissions (*view_work_packages*).
+  parameters:
+    - name: filters
+      description: |-
+        JSON specifying filter conditions. Accepts the same format as returned by
+        the [queries](https://www.openproject.org/docs/api/endpoints/queries/) endpoint. Currently supported
+        filters are:
+
+        - sharing: filters versions by how they are shared within the server (*none*, *descendants*, *hierarchy*, *tree*, *system*).
+        - name: filters versions by their name.
+      example: '[{ "sharing": { "operator": "=", "values": ["system"] } }]'
+      in: query
+      required: false
+      schema:
+        type: string
+    - name: sortBy
+      description: |-
+        JSON specifying sort criteria. Accepts the same format as returned by
+        the [queries](https://www.openproject.org/docs/api/endpoints/queries/) endpoint. Currently supported
+        attributes are:
+
+        - id: Sort by the version id
+        - name: Sort by the version name using numeric collation, comparing sequences of decimal digits by their numeric value
+      example: '[["name", "desc"]]'
+      in: query
+      required: false
+      schema:
+        type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/version_collection_model.yml"
+
+post:
+  summary: Create version
+  operationId: create_version
+  tags:
+    - Versions
+  description: |-
+    Creates a new version applying the attributes provided in the body. Please note that while there is a fixed set
+    of attributes, custom fields can extend a version's attributes and are accepted by the endpoint.
+
+    You can use the form and schema to be retrieve the valid attribute values and by that be guided towards
+    successful creation.
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../components/schemas/version_write_model.yml"
+        examples:
+          'create version':
+            $ref: '../components/examples/version_create_request.yml'
+  responses:
+    '201':
+      description: Created
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/version_read_model.yml"
+          examples:
+            response:
+              $ref: '../components/examples/version_simple_response.yml'
+    '400':
+      $ref: "../components/responses/invalid_request_body.yml"
+    '403':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not authorized to access this resource.
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** Manage versions
+    '406':
+      $ref: "../components/responses/missing_content_type.yml"
+    '415':
+      $ref: "../components/responses/unsupported_media_type.yml"
+    '422':
+      description: |-
+        Returned if:
+
+        * a constraint for a property was violated (`PropertyConstraintViolation`)

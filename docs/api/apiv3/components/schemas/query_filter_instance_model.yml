@@ -1,0 +1,22 @@
+type: object
+required:
+  - _links
+  - _type
+  - name
+properties:
+  _links:
+    type: object
+    required:
+      - filter
+      - schema
+    properties:
+      filter:
+        "$ref": "./link.yml"
+      schema:
+        "$ref": "./link.yml"
+      operator:
+        "$ref": "./link.yml"
+  _type:
+    type: string
+  name:
+    type: string

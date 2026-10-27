@@ -1,0 +1,87 @@
+<form name="modalSortingForm">
+  <div id="modal-sorting"
+    class="modal-content-container loading-indicator--location"
+    data-indicator-name="sorting-modal">
+
+    <p [textContent]="text.sorting_mode.description"></p>
+    <div class="form--field -full-width">
+      <div class="form--field-container">
+        <label class="option-label">
+          <input type="radio"
+            [(ngModel)]="sortingMode"
+            (change)="updateSortingMode($event.target.value)"
+            name="sorting_mode_switch"
+            value="manual">
+          {{ text.sorting_mode.manually }}
+        </label>
+      </div>
+    </div><div class="form--field -full-width">
+    <div class="form--field-container">
+      <label class="option-label">
+        <input type="radio"
+          [(ngModel)]="sortingMode"
+          (change)="updateSortingMode($event.target.value)"
+          name="sorting_mode_switch"
+          value="automatic">
+        {{ text.sorting_mode.automatic }}
+      </label>
+    </div>
+    <div class="form--field-instructions">
+      {{ text.sorting_mode.warning }}
+    </div>
+  </div>
+
+  @if (sortingMode === 'automatic') {
+    @for (sort of sortationObjects; track $index; let index = $index) {
+      <div class="form--row modal-sorting-row-{{index}}"
+        >
+        <div class="form--field -full-width">
+          <label
+            for="modal-sorting-attribute-{{index}}"
+            [textContent]="text['sort_criteria_' + index]"
+            class="form--label sr-only">
+          </label>
+          <div class="form--field-container">
+            <div class="form--select-container">
+              <select
+                id="modal-sorting-attribute-{{index}}"
+                name="modal-sorting-attribute-{{index}}"
+                (change)="updateSelection(sort, $event.target.value)"
+                class="form--select">
+                @if (!!sort.column.href) {
+                  <option
+                    [textContent]="sort.column.name"
+                    [value]="sort.column.href"
+                  selected></option>
+                }
+                <option [textContent]="emptyColumn.name"
+                  [value]="emptyColumn.href"
+                  [selected]="sort.column.href === null"></option>
+                @for (column of availableColumns; track column.href) {
+                  <option
+                    [textContent]="column.name"
+                    [value]="column.href"></option>
+                }
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form--field -full-width">
+          <div class="form--field-container">
+            @for (availableDirection of availableDirections; track availableDirection.href) {
+              <label class="option-label">
+                <input type="radio"
+                  [(ngModel)]="sort.direction"
+                  [value]="availableDirection.href"
+                  [textContent]="availableDirection.name"
+                  name="modal-sorting-attribute-{{index}}--sort-direction">
+                {{ availableDirection.name }}
+              </label>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  }
+</div>
+</form>

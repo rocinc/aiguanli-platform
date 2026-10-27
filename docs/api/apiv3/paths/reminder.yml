@@ -1,0 +1,79 @@
+# /api/v3/reminders/{id}
+---
+patch:
+  summary: Update a reminder
+  operationId: update_reminder
+  tags:
+    - Reminders
+  description: |-
+    Updates an existing reminder.
+
+    A user can only update their own active reminder.
+
+    **Required permission:** view work packages for the project the reminder is contained in.
+  parameters:
+    - name: id
+      in: path
+      description: Reminder ID
+      example: 1
+      required: true
+      schema:
+        type: integer
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            remindAt:
+              type: string
+              format: date-time
+              description: The date and time when the reminder is due
+            note:
+              type: string
+              description: The note of the reminder (optional)
+  responses:
+    '200':
+      description: Reminder updated successfully
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/reminder_model.yml'
+    '404':
+      description: |-
+        Returned if the reminder does not exist or the client does not have sufficient permissions to see it.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+
+delete:
+  summary: Delete a reminder
+  operationId: delete_reminder
+  tags:
+    - Reminders
+  description: |-
+    Deletes an existing reminder.
+
+    A user can only delete their own active reminder.
+
+    **Required permission:** view work packages for the project the reminder is contained in.
+  parameters:
+    - name: id
+      in: path
+      description: Reminder ID
+      example: 1
+      required: true
+      schema:
+        type: integer
+  responses:
+    '204':
+      description: Reminder deleted successfully
+    '404':
+      description: |-
+        Returned if the reminder does not exist or the client does not have sufficient permissions to see it.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'

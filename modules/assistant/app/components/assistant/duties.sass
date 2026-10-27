@@ -1,0 +1,205 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+.assistant-duties
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-32)
+  max-width: 56rem
+
+  &--section
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+
+  &--heading
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    justify-content: space-between
+    gap: var(--base-size-8)
+
+  &--catalog
+    > summary
+      cursor: pointer
+      list-style: none
+
+      &::-webkit-details-marker
+        display: none
+
+    &[open]
+      flex-basis: 100%
+
+  &--catalog-body
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+    margin-top: var(--base-size-8)
+
+  &--lead,
+  &--quiet
+    margin: 0
+    color: var(--fgColor-muted)
+
+  &--quiet
+    font-size: var(--text-body-size-small)
+
+  &--list,
+  &--offers
+    list-style: none
+    margin: 0
+    padding: 0
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-12)
+
+  &--offers
+    gap: 0
+    border: var(--borderWidth-thin) solid var(--borderColor-default)
+    border-radius: var(--borderRadius-medium)
+
+    > li + li
+      border-top: var(--borderWidth-thin) solid var(--borderColor-muted)
+
+.assistant-duty
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-8)
+  padding: var(--base-size-16)
+  border: var(--borderWidth-thin) solid var(--borderColor-default)
+  border-radius: var(--borderRadius-medium)
+  background: var(--bgColor-default)
+
+  &--paused
+    background: var(--bgColor-muted)
+
+  &--header
+    display: flex
+    align-items: center
+    gap: var(--base-size-8)
+
+  &--title
+    margin: 0
+    font-size: var(--text-title-size-small)
+    font-weight: var(--base-text-weight-semibold)
+
+  &--does
+    margin: 0
+
+  &--facts
+    display: grid
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr))
+    gap: var(--base-size-8) var(--base-size-16)
+    margin: 0
+
+    dt
+      color: var(--fgColor-muted)
+      font-size: var(--text-body-size-small)
+
+    dd
+      margin: 0
+
+  &--stale
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    justify-content: space-between
+    gap: var(--base-size-8)
+    padding: var(--base-size-8) var(--base-size-12)
+    border-radius: var(--borderRadius-small)
+    background: var(--bgColor-muted)
+
+    p
+      margin: 0
+
+  &--settings
+    > summary
+      cursor: pointer
+      list-style: none
+
+      &::-webkit-details-marker
+        display: none
+
+    &[open]
+      flex-basis: 100%
+
+  &--form
+    display: flex
+    flex-wrap: wrap
+    align-items: flex-end
+    gap: var(--base-size-12)
+    margin-top: var(--base-size-8)
+
+  &--controls
+    display: flex
+    flex-wrap: wrap
+    align-items: flex-start
+    gap: var(--base-size-8)
+
+.assistant-offer
+  &--summary
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+    padding: var(--base-size-12) var(--base-size-16)
+    cursor: pointer
+
+  &--title
+    font-weight: var(--base-text-weight-semibold)
+
+  &--does,
+  &--level
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--confirm
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    gap: var(--base-size-8)
+    padding: 0 var(--base-size-16) var(--base-size-12)
+
+    p
+      margin: 0
+
+.assistant-duty-offer
+  display: flex
+  align-items: center
+  gap: var(--base-size-16)
+  padding: var(--base-size-12) var(--base-size-16)
+
+  & + &
+    border-top: var(--borderWidth-thin) solid var(--borderColor-muted)
+
+  &--text
+    flex: 1
+    min-width: 0
+
+  &--title
+    display: flex
+    align-items: center
+    gap: var(--base-size-4)
+    margin: 0
+    font-size: var(--text-body-size-medium)
+    font-weight: var(--base-text-weight-semibold)
+
+  &--does
+    margin: var(--base-size-4) 0 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--example
+    display: block
+    overflow-wrap: anywhere
+
+  &--form
+    flex-shrink: 0
+
+@media (max-width: 543px)
+  .assistant-duty-offer
+    flex-direction: column
+    align-items: stretch

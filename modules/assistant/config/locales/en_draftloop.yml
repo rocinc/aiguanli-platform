@@ -1,0 +1,41 @@
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+en:
+  assistant:
+    draft_loop:
+      hint: "Edit the words directly, or select a passage to change only that."
+      revise_label: "How should it change?"
+      revise_placeholder: "What else should change?"
+      revise_start: "Write again"
+      refine_label: "Change this passage"
+      refine_placeholder: "How should this passage change?"
+      refine_start: "Change"
+      chip_shorter: "Shorter"
+      chip_specific: "More specific"
+      chip_rephrase: "Say it differently"
+      chip_formal: "More formal"
+      refined_note: "Changed that passage."
+      undo_refine: "Undo"
+      stop: "Stop"
+      versions: "Versions"
+      prev_version: "Previous version"
+      next_version: "Next version"
+      preview: "The text being rewritten"
+      reread: "The words changed. Tick \"I have read it\" again once you have read them."
+      texts:
+        revising: "Rewriting with your comment…"
+        refining: "Changing that passage…"
+        revise_failed: "That did not work; the draft is as it was. You can try again."
+        refine_failed: "That passage was not changed; the draft is as it was."
+        empty_result: "Nothing new came back; the draft is as it was."
+        stopped_kept: "Stopped; the draft is as it was."
+        leave_confirm: "Press Esc once more to drop these changes."
+        reread: "The words changed. Tick \"I have read it\" again once you have read them."
+        revised: "Rewritten; this is version %{current}."
+        refined: "That passage is changed."
+        version_position: "Version %{current} of %{total}"
+        failed: "The assistant could not do that just now."

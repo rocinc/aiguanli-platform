@@ -1,0 +1,17 @@
+<% @digest.sections.each do |key, lines| -%>
+<%= t("assistant.brief_mail.sections.#{key}") %>
+
+<% lines.each do |line| -%>
+- <%= "【#{line.project}】" if line.project %><%= line.text %><%= " #{line.url}" if line.url %>
+<% if line.detail.present? -%>
+  <%= line.detail %>
+<% end -%>
+<% end -%>
+
+<% end -%>
+<% if @digest.deferred_count.positive? -%>
+<%= t("assistant.brief_mail.deferred", count: @digest.deferred_count) %>
+
+<% end -%>
+<%= t("assistant.brief_mail.open") %>: <%= my_page_url %>
+<%= t("assistant.brief_mail.settings") %>: <%= my_assistant_url %>

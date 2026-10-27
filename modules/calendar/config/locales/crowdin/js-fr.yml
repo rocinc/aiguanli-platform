@@ -1,0 +1,9 @@
+---
+fr:
+  js:
+    calendar:
+      create_new: Créer un nouveau calendrier
+      label_calendar_plural: Calendriers
+      title: Calendrier
+      too_many: Il y a %{count} lots de travaux au total, mais seulement %{max} peuvent être affichés.
+      unsaved_title: Calendrier sans nom

@@ -1,0 +1,12 @@
+@import 'helpers'
+
+.op-portfolio-overview
+  display: grid
+  grid-template-areas: "description subitems" "description subitems"
+  grid-template-columns: 1fr 1fr
+  grid-template-rows: auto auto auto
+  gap: 1rem
+
+  @media only screen and (max-width: $breakpoint-xl)
+    grid-template-areas: "description" "subitems"
+    grid-template-columns: 1fr

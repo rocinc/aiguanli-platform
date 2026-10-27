@@ -1,0 +1,54 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) 2023 Ben Tey
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See docs/COPYRIGHT.rdoc for more details.
+#++
+---
+es:
+  js:
+    gitlab_integration:
+      gitlab_pipelines: Tuberías
+      tab_header_issue:
+        title: Problemas
+      tab_header_mr:
+        copy_menu:
+          description: Copiar fragmentos de código de Git en el portapapeles
+          label: Fragmentos de código de Git
+        create_mr:
+          description: Crear una solicitud de fusión
+          label: Crear MR
+        git_actions:
+          branch_name: Nombre de la sucursal
+          cmd: Crear rama con commit vacío
+          commit_message: Commit mensaje
+          copy_error: "❌ ¡Copia fallida!"
+          copy_success: "✅ ¡Copiado!"
+          title: Fragmentos de código rápido para Git
+        title: Fusionar solicitudes
+      tab_issue:
+        empty: Aún no hay temas enlazados. Enlace una cuestión existente utilizando el código <code>OP#%{wp_id}</code> (o <code>PP#%{wp_id}</code> para enlaces privados) en el título/descripción de la cuestión o cree una nueva cuestión.
+      tab_mrs:
+        empty: Aún no hay ninguna solicitud de fusión vinculada. Enlace una MR existente utilizando el código <code>OP#%{wp_id}</code> (o <code>PP#%{wp_id}</code> para enlaces privados) en el título/descripción de la MR o cree una nueva MR.
+      updated_on: Actualizado el
+      work_packages:
+        tab_name: GitLab
+    work_packages:
+      tabs:
+        gitlab: GitLab

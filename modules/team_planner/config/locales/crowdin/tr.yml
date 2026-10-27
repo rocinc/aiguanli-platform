@@ -1,0 +1,21 @@
+---
+tr:
+  ee:
+    feature_names:
+      team_planner_view: Takım planlayıcısı
+    upsell:
+      team_planner_view:
+        description: Takım Planlayıcısı ile ekibinizin planlamasına ilişkin eksiksiz bir genel bakış elde edin. Tarihleri değiştirmek, taşımak veya atananları değiştirmek için iş paketlerini genişletin, kısaltın ve sürükleyip bırakın.
+        title: Takım planlayıcısı
+  permission_manage_team_planner: Takım planlayıcıyı yönet
+  permission_view_team_planner: Takım planlayıcıyı görüntüle
+  plugin_openproject_team_planner:
+    description: Takım planlayıcı görünümleri sağlar.
+    name: OpenProject Takım Planlayıcı
+  project_module_team_planner_view: Takım planlayıcıları
+  team_planner:
+    label_assignees: Atananlar
+    label_create_new_team_planner: Yeni takım planlayıcısı oluştur
+    label_new_team_planner: 'Yeni takım planlayıcı '
+    label_team_planner: Takım planlayıcısı
+    label_team_planner_plural: Takım planlayıcıları

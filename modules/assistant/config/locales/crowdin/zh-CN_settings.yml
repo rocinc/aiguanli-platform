@@ -1,0 +1,92 @@
+zh-CN:
+  label_assistant_my_settings: "助理设置"
+  label_assistant_my_performance: "我的表现"
+  label_assistant_project_settings: "AI 助理"
+  assistant:
+    settings:
+      title: "助理设置"
+      lede: "我多主动、什么时候打断你、替你做哪些事，由你定。"
+      save: "保存"
+      saved: "已保存。"
+      unknown_rule: "（这类提示已不再使用）"
+      level:
+        heading: "我多主动"
+        follow: "跟随项目"
+        follow_caption: "项目定了默认就用项目的，没定就用站点默认（%{site}）。"
+        names:
+          quiet: "安静"
+          standard: "标准"
+          active: "积极"
+        captions:
+          quiet: "只在你被叫、被指派、轮到职责时开口；每天最多打断 %{count} 次。"
+          standard: "再加上页面上跟你有关的提示；每天最多打断 %{count} 次。"
+          active: "再加上你做决定时的机会和灵感；每天最多打断 %{count} 次。"
+      projects:
+        heading: "在这个项目里不一样"
+        caption: "你在这些项目里用得上我。这里选了档位，这个项目就按它来，不受上面的选择影响。"
+        follow: "跟随上面的选择"
+      cap:
+        heading: "每天最多打断"
+        follow: "跟随档位"
+        times: "%{count} 次"
+        caption: "跟随档位时，安静 %{quiet} 次、标准 %{standard} 次、积极 %{active} 次。自定的次数就按你选的来；超出的事我放进简报。"
+      brief:
+        heading: "简报"
+        time: "每天 %{time}，攒下的事汇成简报，放到你的“我的页面”上。"
+        change_html: "时间跟随你的每日提醒时段，在%{link}里改。"
+        reminder_settings: "提醒设置"
+        email: "同时把简报发到我的邮箱"
+      mutes:
+        heading: "不用告诉我的事"
+        empty: "你没有关掉任何一类提示。"
+        in_project: "（在“%{project}”里）"
+      restore: "恢复"
+      restored: "已恢复“%{rule}”。之后有这类事，我会再告诉你。"
+      grants:
+        heading: "它替我做事"
+        lede: "这些事你让我直接去做，不再先问。"
+        empty: "你还没有让我直接做过任何事；需要你点头的，我都会先问。"
+        in_project: "（在“%{project}”里）"
+      revoke: "收回"
+      revoked: "已收回。“%{project}”里的“%{kind}”，以后我会先问。"
+    brief_mail:
+      subject: "今天 · %{day}"
+      settings: "不想收到这封邮件，在助理设置里关掉"
+      deferred:
+        one: "另有 1 条不急的，在你的页面上。"
+        other: "另有 %{count} 条不急的，在你的页面上。"
+      open: "在你的页面上处理"
+      sections:
+        away: "你不在时"
+        decisions: "要你决定的"
+        drafts: "写好了，等你发的"
+        done: "我替你做了的"
+    project_settings:
+      title: "AI 助理"
+      lede: "这个项目里，助理多主动、开哪些口、能接哪些职责，由项目管理员定。"
+      levels:
+        quiet: "安静"
+        standard: "标准"
+        active: "积极"
+      level:
+        heading: "项目默认档位"
+        effect: "对还没有自己选档位的成员生效；成员在自己的助理设置里选了，以他自己的为准。"
+        follow: "跟随站点默认（%{site}）"
+      roles:
+        heading: "按角色的默认档位"
+        effect: "对还没有自己选档位、在这个项目里担任该角色的成员生效，压过上面的项目默认；一个人有几个角色时取最安静的。"
+        follow: "跟随项目默认"
+      rules:
+        heading: "项目里开着的提示"
+        effect: "取消勾选的那类提示，在这个项目里不会对任何人开口；个人另外关掉的不受影响。"
+      leads:
+        heading: "项目负责人"
+        effect: "这些人会收到项目层面的提示，比如进度偏离和团队负载；一个都不选时，按角色里的项目管理员算。"
+      duties:
+        heading: "可以交给我的职责"
+        effect: "只有勾选的职责，成员才能在桌子的“职责”标签里交给我；取消已在做的职责，它会先暂停。"
+        in_use: "现在有人在用。"
+      budget:
+        heading: "每月用量上限"
+        effect: "只管这个项目，单位是 token，不会超过站点的总上限（%{site}）。这个项目本月已用 %{used}。"
+        none: "不设上限"

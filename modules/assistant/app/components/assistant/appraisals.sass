@@ -1,0 +1,252 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+.assistant-appraisals,
+.assistant-appraisal
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-24)
+  max-width: 64rem
+
+.assistant-appraisals
+  &--bar
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: var(--base-size-8) var(--base-size-16)
+
+  &--fairness,
+  &--quiet
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--scroll
+    overflow-x: auto
+    border: var(--borderWidth-thin) solid var(--borderColor-default)
+    border-radius: var(--borderRadius-medium)
+
+    &:focus-visible
+      outline: 2px solid var(--focus-outlineColor)
+      outline-offset: 2px
+
+  &--table
+    width: 100%
+    border-collapse: collapse
+    font-variant-numeric: tabular-nums
+
+    th,
+    td
+      padding: var(--base-size-8) var(--base-size-12)
+      border-bottom: var(--borderWidth-thin) solid var(--borderColor-muted)
+      text-align: right
+      white-space: nowrap
+
+    thead th
+      background: var(--bgColor-muted)
+      font-size: var(--text-body-size-small)
+      font-weight: var(--base-text-weight-semibold)
+
+    tbody tr:last-child > *
+      border-bottom: 0
+
+    th:first-child,
+    td:last-child
+      text-align: left
+
+  &--sort
+    color: inherit
+
+  &--name
+    font-weight: var(--base-text-weight-normal)
+
+  &--tag
+    display: inline-flex
+    align-items: center
+    gap: var(--base-size-4)
+    margin-left: var(--base-size-8)
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--insufficient
+    color: var(--fgColor-muted)
+    font-style: italic
+
+  &--situation
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+    white-space: normal !important
+
+.assistant-appraisal
+  &--section
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+
+  &--lead,
+  &--quiet
+    margin: 0
+    color: var(--fgColor-muted)
+
+  &--quiet
+    font-size: var(--text-body-size-small)
+
+  &--dimensions
+    list-style: none
+    margin: 0
+    padding: 0
+    display: grid
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr))
+    gap: var(--base-size-12)
+
+  &--situation,
+  &--views
+    margin: 0
+    padding-left: var(--base-size-20)
+
+.assistant-dimension
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-4)
+  padding: var(--base-size-12) var(--base-size-16)
+  border: var(--borderWidth-thin) solid var(--borderColor-default)
+  border-radius: var(--borderRadius-medium)
+
+  &--head
+    display: flex
+    flex-wrap: wrap
+    align-items: baseline
+    gap: var(--base-size-4) var(--base-size-8)
+
+  &--title
+    flex-basis: 100%
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+    font-weight: var(--base-text-weight-semibold)
+
+  &--value
+    margin: 0
+    font-size: var(--text-title-size-medium)
+    font-weight: var(--base-text-weight-semibold)
+    font-variant-numeric: tabular-nums
+
+  &--insufficient
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-medium)
+    font-weight: var(--base-text-weight-normal)
+
+  &--median
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--because,
+  &--quiet
+    margin: 0
+    font-size: var(--text-body-size-small)
+
+  &--quiet
+    color: var(--fgColor-muted)
+
+  &--evidence,
+  &--add-note
+    font-size: var(--text-body-size-small)
+
+    > summary
+      cursor: pointer
+
+    &[open] .assistant-card--chevron
+      transform: rotate(90deg)
+
+  &--add-summary
+    color: var(--fgColor-accent)
+
+  &--evidence-list
+    margin: var(--base-size-4) 0 0
+    padding-left: var(--base-size-20)
+
+  &--notes
+    list-style: none
+    margin: 0
+    padding: 0
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+
+.assistant-note
+  display: flex
+  flex-wrap: wrap
+  align-items: baseline
+  gap: var(--base-size-4)
+  padding: var(--base-size-4) var(--base-size-8)
+  border-radius: var(--borderRadius-small)
+  background: var(--bgColor-accent-muted)
+  font-size: var(--text-body-size-small)
+
+  &--who
+    color: var(--fgColor-muted)
+
+  &--text
+    flex-basis: 100%
+    overflow-wrap: anywhere
+
+.assistant-note-form
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  gap: var(--base-size-8)
+  margin-top: var(--base-size-4)
+
+  textarea
+    width: 100%
+
+.assistant-written
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-8)
+  padding: var(--base-size-16)
+  border: var(--borderWidth-thin) solid var(--borderColor-default)
+  border-radius: var(--borderRadius-medium)
+
+  &--draft
+    border-style: dashed
+
+  &--meta
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--editor
+    width: 100%
+    font-family: var(--fontStack-monospace)
+
+  &--new
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: var(--base-size-8)
+
+.assistant-mine
+  padding: var(--base-size-16)
+  border: var(--borderWidth-thin) solid var(--borderColor-default)
+  border-radius: var(--borderRadius-medium)
+
+  &--values
+    display: grid
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr))
+    gap: var(--base-size-8) var(--base-size-16)
+    margin: 0
+
+    dt
+      color: var(--fgColor-muted)
+      font-size: var(--text-body-size-small)
+
+    dd
+      margin: 0
+      font-weight: var(--base-text-weight-semibold)
+      font-variant-numeric: tabular-nums

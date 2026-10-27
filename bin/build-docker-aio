@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker build -t openproject/openproject:$(git rev-parse --abbrev-ref HEAD | tr '/' '-') -f docker/prod/Dockerfile .

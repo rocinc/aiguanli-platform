@@ -1,0 +1,179 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { AbstractWidgetComponent } from 'core-app/shared/components/grids/widgets/abstract-widget.component';
+import { ApplicationRef, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, inject } from '@angular/core';
+import {
+  CustomTextEditFieldService,
+} from 'core-app/shared/components/grids/widgets/custom-text/custom-text-edit-field.service';
+import { HalResource } from 'core-app/features/hal/resources/hal-resource';
+import { filter } from 'rxjs/operators';
+import { GridAreaService } from 'core-app/shared/components/grids/grid/area.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+
+@Component({
+  templateUrl: './custom-text.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    CustomTextEditFieldService,
+  ],
+  standalone: false,
+})
+export class WidgetCustomTextComponent extends AbstractWidgetComponent implements OnInit, OnChanges, OnDestroy {
+  handler = inject(CustomTextEditFieldService);
+  protected cdr = inject(ChangeDetectorRef);
+  protected sanitization = inject(DomSanitizer);
+  protected appRef = inject(ApplicationRef);
+  protected layout = inject(GridAreaService);
+
+  protected currentRawText:string;
+
+  public customText:SafeHtml;
+
+  public text!:{ attachments:string };
+
+  @ViewChild('displayContainer') readonly displayContainer:ElementRef<HTMLElement>;
+
+  ngOnInit():void {
+    this.text = { attachments: this.i18n.t('js.label_attachments') };
+
+    this.setupVariables(true);
+
+    this
+      .handler
+      .valueChanged$
+      .pipe(
+        this.untilDestroyed(),
+        filter((value) => value !== this.resource.options.text),
+      ).subscribe((newText) => {
+      const changeset = this.setChangesetOptions({ text: { raw: newText } });
+      this.resourceChanged.emit(changeset);
+    });
+
+    this
+      .handler
+      .stateChanged$
+      .pipe(this.untilDestroyed())
+      .subscribe(() => this.cdr.markForCheck());
+  }
+
+  ngOnChanges(changes:SimpleChanges):void {
+    if (changes.resource.currentValue.options.text.raw !== this.currentRawText) {
+      this.setupVariables();
+
+      this.cdr.detectChanges();
+    }
+  }
+
+  public activate(event:MouseEvent) {
+    // Let interactive elements within the formatted text handle the click themselves.
+    if (this.clickedElementIsInteractiveWithinDisplayContainer(event)) {
+      return;
+    }
+
+    // Load the attachments so that they are displayed in the list.
+    // Once that is done, we can show the edit form.
+    void this.resource.grid.updateAttachments().then(() => {
+      this.handler.activate();
+      this.cdr.detectChanges();
+    });
+  }
+
+  public get placeholderText() {
+    return this.i18n.t('js.grid.widgets.work_packages_overview.placeholder');
+  }
+
+  public get inplaceEditClasses() {
+    let classes = 'inplace-editing--container inline-edit--display-field -editable';
+
+    if (this.textEmpty) {
+      classes += ' -placeholder';
+    }
+
+    return classes;
+  }
+
+  public get schema() {
+    return this.handler.schema;
+  }
+
+  public get changeset() {
+    return this.handler.changeset;
+  }
+
+  public get active() {
+    return this.handler.active;
+  }
+
+  public get textEmpty() {
+    return !this.currentRawText.length;
+  }
+
+  public get isTextEditable() {
+    return this.layout.isEditable;
+  }
+
+  private setupVariables(initial = false) {
+    this.memorizeRawText();
+    if (initial) {
+      this.handler.initialize(this.resource);
+    } else {
+      this.handler.reinitialize(this.resource);
+    }
+    this.memorizeCustomText();
+  }
+
+  private memorizeRawText() {
+    this.currentRawText = (this.resource.options.text as HalResource).raw;
+  }
+
+  private memorizeCustomText() {
+    this.customText = this.sanitization.bypassSecurityTrustHtml(this.handler.htmlText);
+  }
+
+  private clickedElementIsInteractiveWithinDisplayContainer(event:MouseEvent) {
+    const displayContainer = this.displayContainer.nativeElement;
+
+    // Pagination replaces the clicked button with the active-page span before
+    // this handler runs. The composed path retains the original button even
+    // after it has been detached from the DOM, unlike event.target.closest().
+    const eventPath = event.composedPath();
+    const displayContainerIndex = eventPath.indexOf(displayContainer);
+
+    if (displayContainerIndex === -1) {
+      return false;
+    }
+
+    const eventPathWithinDisplayContainer = eventPath.slice(0, displayContainerIndex);
+
+    return eventPathWithinDisplayContainer.some(
+      (target) => target instanceof Element
+        && target.matches('a, button, input, select, textarea, [role="button"], [role="link"]'),
+    );
+  }
+}

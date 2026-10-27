@@ -1,0 +1,122 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { ApplicationRef, Injectable, Injector, inject } from '@angular/core';
+import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
+import { TransitionService } from '@uirouter/core';
+import { FocusHelperService } from 'core-app/shared/directives/focus/focus-helper';
+import {
+  ExternalQueryConfigurationComponent,
+  QueryConfigurationLocals,
+} from 'core-app/features/work-packages/components/wp-table/external-configuration/external-query-configuration.component';
+import { OpQueryConfigurationLocalsToken } from 'core-app/features/work-packages/components/wp-table/external-configuration/external-query-configuration.constants';
+
+export type Class = new(...args:any[]) => any;
+
+@Injectable()
+export class ExternalQueryConfigurationService {
+  readonly FocusHelper = inject(FocusHelperService);
+  private appRef = inject(ApplicationRef);
+  private $transitions = inject(TransitionService);
+  private injector = inject(Injector);
+
+  // Hold a reference to the DOM node we're using as a host
+  private _portalHostElement:HTMLElement;
+
+  // And a reference to the actual portal host interface on top of the element
+  private _bodyPortalHost:DomPortalOutlet;
+
+  /**
+   * Create a portal host element to contain the table configuration components.
+   */
+  private get bodyPortalHost() {
+    if (!this._portalHostElement) {
+      const hostElement = this._portalHostElement = document.createElement('div');
+      hostElement.classList.add('op-external-query-configuration--container');
+      document.body.appendChild(hostElement);
+
+      this._bodyPortalHost = new DomPortalOutlet(
+        hostElement,
+        this.appRef,
+        this.injector,
+      );
+    }
+
+    return this._bodyPortalHost;
+  }
+
+  /**
+   * Open a Modal reference and append it to the portal
+   */
+  public show(data:Partial<QueryConfigurationLocals>) {
+    this.detach();
+
+    // Create a portal for the given component class and render it
+    const portal = new ComponentPortal(
+      this.externalQueryConfigurationComponent(),
+      null,
+      this.injectorFor(data),
+    );
+    this.bodyPortalHost.attach(portal);
+    this._portalHostElement.style.display = 'block';
+  }
+
+  /**
+   * Closes currently open modal window
+   */
+  public detach() {
+    // Detach any component currently in the portal
+    if (this.bodyPortalHost.hasAttached()) {
+      this.bodyPortalHost.detach();
+      this._portalHostElement.style.display = 'none';
+    }
+  }
+
+  /**
+   * Create an augmented injector that is equal to this service's injector + the additional data
+   * passed into +show+.
+   * This allows callers to pass data into the newly created modal.
+   *
+   */
+  private injectorFor(data:any) {
+    // Pass the service because otherwise we're getting a cyclic dependency between the portal
+    // host service and the bound portal
+    data.service = this;
+
+    return Injector.create({
+      providers: [
+        { provide: OpQueryConfigurationLocalsToken, useValue: data },
+      ],
+      parent: this.injector,
+    });
+  }
+
+  externalQueryConfigurationComponent():Class {
+    return ExternalQueryConfigurationComponent;
+  }
+}

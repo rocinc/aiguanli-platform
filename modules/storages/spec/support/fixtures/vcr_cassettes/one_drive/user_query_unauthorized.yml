@@ -1,0 +1,117 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/me
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer <BEARER TOKEN>
+      User-Agent:
+      - httpx.rb/1.4.0
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Content-Type:
+      - application/json
+      Content-Encoding:
+      - gzip
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 1c749aa9-446f-4fc8-88b8-2e9e471d83d5
+      Client-Request-Id:
+      - 1c749aa9-446f-4fc8-88b8-2e9e471d83d5
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"003","RoleInstance":"FR1PEPF00000C2C"}}'
+      Www-Authenticate:
+      - Bearer realm="", authorization_uri="https://login.microsoftonline.com/common/oauth2/authorize",
+        client_id="00000003-0000-0000-c000-000000000000", PoP realm="", authorization_uri="https://login.microsoftonline.com/common/oauth2/authorize",
+        client_id="00000003-0000-0000-c000-000000000000", nonce="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjREMzlFRkU5OUIyRDhGRTcyMEQzMTI3MjEzQjU2ODVCNUU5Mjc5Q0QifQ.eyJ0cyI6MTczOTM1MTg4MH0.kt3dPPtjBJx9uWX7_Wq8eYING42nz_qYzinWHZPaRiXdTJrCkmifV2BBTbPFqvqqRCB57ULYs8Qo2g_K1X2VMBFN2uMVS31jN1qPKc0wsGtvTS3sPVddu37o74juPCYT5UMhc-VXT0VjV8eEHxu9XbejVsKOG7YUV4kLqaH2D0cSXEe8n_XlpooT5hEEWh948aqHFHihtg8yh6ZtEFyKRWu1JRPINAb81UserbOtXgFBNT05Mb0tjT1ImuQxh1IgGg_6HKPQbhBg_lKcsuHK2GzfF-hq_b6xgWVdNwwgLu5X_HnU6B40YSHhXPvtopGjwRYwmMtIUR46DFAiXg7lDg"
+      Date:
+      - Wed, 12 Feb 2025 09:18:37 GMT
+    body:
+      encoding: UTF-8
+      string: '{"error":{"code":"InvalidAuthenticationToken","message":"IDX14102:
+        Unable to decode the header ''[PII of type ''Microsoft.IdentityModel.Logging.SecurityArtifact''
+        is hidden. For more details, see https://aka.ms/IdentityModel/PII.]'' as Base64Url
+        encoded string.","innerError":{"date":"2025-02-12T09:18:37","request-id":"1c749aa9-446f-4fc8-88b8-2e9e471d83d5","client-request-id":"1c749aa9-446f-4fc8-88b8-2e9e471d83d5"}}}'
+  recorded_at: Wed, 12 Feb 2025 09:18:37 GMT
+- request:
+    method: post
+    uri: https://login.microsoftonline.com/4d44bf36-9b56-45c0-8807-bbf386dd047f/oauth2/v2.0/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=refresh_token&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default+offline_access&client_id=b8a5bb54-5fb2-4e0e-9427-9d24dbac32ff&client_secret=nB58Q%7EwWf6.4zUIojn2nzkrpzDWlkQtDSWPcLa6R&refresh_token=1.Aa8AvB1v4679fkK2Gw2W3fuBpFS7pbiyXw5OlCedJNusMv9KAU6vAA.AgABAwEAAABVrSpeuWamRam2jAF1XRQEAwDs_wUA9P9fuYdbTREQpkZ8rD4xDnTo87QINqdVLwMCTvvfK8qm8E8jqHUQI1vNcWnBxLcz9sLzbFQyYSMWPJfcutVWA6TGcRyChH--auYHFJdWuQVhY-IDHSlr9he4HvBKxu-XHTQe7qIQt-rGsX1S33_s0uhSyGuyx7Yp4IODhR5GAZPTROZVJQ0wm1eizjMNLHN4kBolD0ygtTQYVgxSPHF-DOI-2i-nirY2Vu-9LkNgwHL3N_fAOWCMXXyqzHI__FeqBYlD_r-1WlHOM8mCnFHU1gFU8Uhpo9S1xxrwL6C72znEKIo2ofVfRSNY0ZSiY8wqnR2U08DalYNiTlpm1rZOfwK4pnLws3y4oCHr9MKppUR6ujtl1SqaVmBGhh5B8dbUK4Yk7Rb6bY1r_xChL8Nn97RNvFy0vZ9P2L_iQgp4bOMTboEgX4zxMs8eg98CJZTvKjH431QCXQD81GAmofCH0i_BbSNQt8MWws7F9HfYDf111oz5MBVrHdhSxN-nOXYHy-3_wtyoSpIzkKzUG1uct9YKms8xr-vNLdYWzN8V0C3QgZE6GKKyxNoeZNbuvzl5Bgk7AEYnbLIJDHuRdidaEvNOGB8ppryZqPirTy1ekFYrWSl31nvsi6YKF1APhoePpGLB_5Odw41CmadE9VGx8RCOk2RozTvYXHs5pVx8DEcYW8f9muNudCKNohmHwwehXitXy_BWnNJmdJsZlPgyoycDcuWpgHPr6vsyXehPsuzoWwyFBa9lrIpvHRGE5xTfmZUSkFSkBjAPIzcae6StZTR_mgi3Ro8YZE
+    headers:
+      User-Agent:
+      - httpx.rb/1.4.0
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '1108'
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      X-Ms-Request-Id:
+      - efbbc4bf-7965-4ada-bf13-cc5b0ad80900
+      X-Ms-Ests-Server:
+      - 2.1.20003.9 - WEULR1 ProdSlices
+      X-Ms-Srs:
+      - 1.P
+      Content-Security-Policy-Report-Only:
+      - object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-BWX41QpOKELW_L5Wtr1q_Q'
+        'unsafe-inline' 'unsafe-eval' https://*.msauth.net https://*.msftauth.net
+        https://*.msftauthimages.net https://*.msauthimages.net https://*.msidentity.com
+        https://*.microsoftonline-p.com https://*.microsoftazuread-sso.com https://*.azureedge.net
+        https://*.outlook.com https://*.office.com https://*.office365.com https://*.microsoft.com
+        https://*.bing.com 'report-sample'; report-uri https://csp.microsoft.com/report/ESTS-UX-All
+      X-Xss-Protection:
+      - '0'
+      Set-Cookie:
+      - fpc=AhGFSuHL20lJk-bGh8Sd7JA; expires=Fri, 14-Mar-2025 09:18:37 GMT; path=/;
+        secure; HttpOnly; SameSite=None, x-ms-gateway-slice=estsfd; path=/; secure;
+        samesite=none; httponly, stsservicecookie=estsfd; path=/; secure; samesite=none;
+        httponly
+      Date:
+      - Wed, 12 Feb 2025 09:18:37 GMT
+      Content-Length:
+      - '476'
+    body:
+      encoding: UTF-8
+      string: '{"error":"invalid_grant","error_description":"AADSTS9002313: Invalid
+        request. Request is malformed or invalid. Trace ID: efbbc4bf-7965-4ada-bf13-cc5b0ad80900
+        Correlation ID: aadcc87f-2440-458c-882a-56376dd209fb Timestamp: 2025-02-12
+        09:18:37Z","error_codes":[9002313],"timestamp":"2025-02-12 09:18:37Z","trace_id":"efbbc4bf-7965-4ada-bf13-cc5b0ad80900","correlation_id":"aadcc87f-2440-458c-882a-56376dd209fb","error_uri":"https://login.microsoftonline.com/error?code=9002313"}'
+  recorded_at: Wed, 12 Feb 2025 09:18:37 GMT
+recorded_with: VCR 6.3.1

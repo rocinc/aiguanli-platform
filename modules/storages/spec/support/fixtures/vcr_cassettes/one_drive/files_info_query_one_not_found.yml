@@ -1,0 +1,189 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!dmVLG22QlE2PSW0AqVB7UOhZ8n7tjkVGkgqLNnuw2OBb-brzKzZAR4DYT1k9KPXs/items/01AZJL5PJTICED3C5YSVAY6NWTBNA2XERU?$select=id,name,fileSystemInfo,file,folder,size,createdBy,lastModifiedBy,parentReference
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.2.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Content-Encoding:
+      - gzip
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - fea83d0b-352a-496c-9d2d-1e6b0dbc1e16
+      Client-Request-Id:
+      - fea83d0b-352a-496c-9d2d-1e6b0dbc1e16
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"005","RoleInstance":"FR3PEPF000002C3"}}'
+      Date:
+      - Thu, 25 Apr 2024 13:51:28 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)/$entity","@odata.etag":"\"{3D884033-B88B-4195-8F36-D30B41AB9234},6\"","createdBy":{"user":{"email":"eschubert.op@outlook.com","id":"0a0d38a9-a59b-4245-93fa-0d2cf727f17a","displayName":"Eric
+        Schubert"}},"id":"01AZJL5PJTICED3C5YSVAY6NWTBNA2XERU","lastModifiedBy":{"user":{"email":"eschubert.op@outlook.com","id":"0a0d38a9-a59b-4245-93fa-0d2cf727f17a","displayName":"Eric
+        Schubert"}},"name":"Document.docx","parentReference":{"driveType":"documentLibrary","driveId":"b!dmVLG22QlE2PSW0AqVB7UOhZ8n7tjkVGkgqLNnuw2OBb-brzKzZAR4DYT1k9KPXs","id":"01AZJL5PMAXGDWAAKMEBALX4Q6GSN5BSBR","name":"Folder","path":"/drives/b!dmVLG22QlE2PSW0AqVB7UOhZ8n7tjkVGkgqLNnuw2OBb-brzKzZAR4DYT1k9KPXs/root:/Folder","siteId":"1b4b6576-906d-4d94-8f49-6d00a9507b50"},"file":{"hashes":{"quickXorHash":"unQc+b2OwmpXiE0xrwtDf4g4ZjI="},"mimeType":"application/vnd.openxmlformats-officedocument.wordprocessingml.document"},"fileSystemInfo":{"createdDateTime":"2023-09-26T14:40:58Z","lastModifiedDateTime":"2023-09-26T14:42:03Z"},"size":22514}'
+  recorded_at: Thu, 25 Apr 2024 13:51:29 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!dmVLG22QlE2PSW0AqVB7UOhZ8n7tjkVGkgqLNnuw2OBb-brzKzZAR4DYT1k9KPXs/items/not_existent?$select=id,name,fileSystemInfo,file,folder,size,createdBy,lastModifiedBy,parentReference
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer <BEARER TOKEN>
+      User-Agent:
+      - httpx.rb/1.2.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Encoding:
+      - gzip
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - c0a2affb-624f-44b7-9e57-8bc2fdfcbe7f
+      Client-Request-Id:
+      - c0a2affb-624f-44b7-9e57-8bc2fdfcbe7f
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"005","RoleInstance":"FR3PEPF00000366"}}'
+      Date:
+      - Thu, 25 Apr 2024 13:51:28 GMT
+    body:
+      encoding: UTF-8
+      string: '{"error":{"code":"itemNotFound","message":"Item not found"}}'
+  recorded_at: Thu, 25 Apr 2024 13:51:29 GMT
+- request:
+    method: post
+    uri: https://login.microsoftonline.com/4d44bf36-9b56-45c0-8807-bbf386dd047f/oauth2/v2.0/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=client_credentials&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default+offline_access&client_id=4262df2b-77bb-49c2-a5df-28355da676d2&client_secret=Vwk8Q%7EJTuPh.pAjvPiWBQBdTFMDK%7EAIwxbj9_axB
+    headers:
+      User-Agent:
+      - httpx.rb/1.2.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '201'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      X-Ms-Request-Id:
+      - cdc3f5fe-4f4c-4123-8821-1c1dc262dc00
+      X-Ms-Ests-Server:
+      - 2.1.17846.6 - SEC ProdSlices
+      X-Ms-Srs:
+      - 1.P
+      X-Xss-Protection:
+      - '0'
+      Set-Cookie:
+      - fpc=AinSItHZvHpPhPx_Ohm_iySkbDoXAQAAAOFWvN0OAAAA; expires=Sat, 25-May-2024
+        13:51:29 GMT; path=/; secure; HttpOnly; SameSite=None, x-ms-gateway-slice=estsfd;
+        path=/; secure; samesite=none; httponly, stsservicecookie=estsfd; path=/;
+        secure; samesite=none; httponly
+      Date:
+      - Thu, 25 Apr 2024 13:51:28 GMT
+      Connection:
+      - close
+      Content-Length:
+      - '1740'
+    body:
+      encoding: UTF-8
+      string: '{"token_type":"Bearer","expires_in":3599,"ext_expires_in":3599,"access_token":"<ACCESS_TOKEN>"}'
+  recorded_at: Thu, 25 Apr 2024 13:51:29 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!dmVLG22QlE2PSW0AqVB7UOhZ8n7tjkVGkgqLNnuw2OBb-brzKzZAR4DYT1k9KPXs/items/not_existent?$select=id,name,fileSystemInfo,file,folder,size,createdBy,lastModifiedBy,parentReference
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.2.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Encoding:
+      - gzip
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - f29d4c34-af1e-4beb-9dbc-d11fc3768b6a
+      Client-Request-Id:
+      - f29d4c34-af1e-4beb-9dbc-d11fc3768b6a
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"005","RoleInstance":"FR3PEPF00000538"}}'
+      Date:
+      - Thu, 25 Apr 2024 13:51:29 GMT
+    body:
+      encoding: UTF-8
+      string: '{"error":{"code":"itemNotFound","message":"Item not found"}}'
+  recorded_at: Thu, 25 Apr 2024 13:51:29 GMT
+recorded_with: VCR 6.2.0

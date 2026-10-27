@@ -1,0 +1,18 @@
+services:
+  traefik:
+    environment:
+      # For step CA only: Overwrite trusted CA certificates with Step root CA (not needed for Let's encrypt)
+      LEGO_CA_CERTIFICATES: /step/certs/root_ca.crt
+      # Overwrite to enable Let's encrypt instead of using Step CA for certificate generation
+      # TRAEFIK_ENTRYPOINTS_WEBSECURE_HTTP_TLS_CERTRESOLVER: letsencrypt
+      # TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_EMAIL: you@example.com
+
+    # Necessary for certificates via Step CA only
+    depends_on:
+      step:
+        condition: service_healthy
+
+    # Enabling traefik for the traefik container itself will give you access to the Traefik Dashboard, which can be a useful
+    # tool to inspect whether everything is working fine. It's not advised to publicly expose this dashboard.
+    labels:
+      - "traefik.enable=true"

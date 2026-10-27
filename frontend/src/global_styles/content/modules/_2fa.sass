@@ -1,0 +1,64 @@
+/*-- copyright
+ * OpenProject Costs Plugin
+ *
+ * Copyright (C) the OpenProject GmbH
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ */
+
+// Let the qr float next to the manual entry
+.mobile-otp-qr-form
+  display: flex
+  margin: 2rem 0
+
+  .qr-code-element
+    margin-right: 50px
+
+.mobile-otp-qr-manually
+  align-self: center
+
+// Add some padding to QR code
+.qr-code-element
+  padding: 5px
+
+#resend_otp_container
+  margin-top: 30px
+
+#resend_otp_container .resend-header
+  font-size: 14px
+  font-weight: var(--base-text-weight-bold)
+  margin-bottom: 10px
+
+
+// Backup codes display
+.two-factor-authentication--backup-codes
+  // Avoid stretching the columns too much
+  max-width: 500px
+  margin: 2rem 0
+  background: var(--bgColor-muted)
+  border: 1px solid var(--borderColor-default)
+  border-radius: 5px
+
+  ul
+    padding: 10px
+    margin: 0
+    column-count: 2
+    column-gap: 50px
+    list-style: none
+    font-family: monospace
+    font-size: 1.3rem
+    font-weight: var(--base-text-weight-bold)
+  li
+    padding: 5px

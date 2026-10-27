@@ -1,0 +1,11 @@
+@if ((pullRequests$ | async)?.length === 0) {
+  <p
+    class="op-tab-content--text-box"
+    [innerHTML]="emptyText"
+  ></p>
+}
+
+@for (pullRequest of (pullRequests$ | async); track pullRequest.id) {
+  <op-github-pull-request [pullRequest]="pullRequest"
+   />
+}

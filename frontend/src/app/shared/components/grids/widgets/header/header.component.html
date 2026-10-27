@@ -1,0 +1,22 @@
+<div class="op-widget-box--header"
+     [ngClass]="{ '-editable': isRenameable }">
+  <h3 class="op-widget-box--header-title-wrapper"
+    data-test-selector="op-widget-box--header">
+    @if (drag.isDraggable) {
+      <svg
+        grabber-icon
+        size="small"
+        cdkDragHandle
+      class="grid--area-drag-handle hidden-for-mobile"></svg>
+    }
+
+    <editable-toolbar-title [title]="name"
+      (onSave)="renamed($event)"
+      [editable]="isRenameable"
+      class="op-widget-box--header-title" />
+
+    <ng-content select="[slot=append]" />
+  </h3>
+
+  <ng-content select="[slot=menu]" />
+</div>

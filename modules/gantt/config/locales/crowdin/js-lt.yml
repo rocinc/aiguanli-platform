@@ -1,0 +1,7 @@
+---
+lt:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Gairės
+      label_gantt_chart_plural: Ganto diagramos

@@ -1,0 +1,54 @@
+# /api/v3/statuses/{id}
+---
+get:
+  summary: Get a work package status
+  operationId: get_status
+  tags:
+    - Statuses
+  description: |-
+    Returns a work package status by its unique identifier.
+  parameters:
+    - name: id
+      description: Status id
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 1
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          examples:
+            response:
+              $ref: '../components/examples/status_response.yml'
+          schema:
+            $ref: '../components/schemas/status_model.yml'
+    '403':
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** view work package (on any project)
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not allowed to see this status.
+    '404':
+      description: Returned if the status does not exist.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.

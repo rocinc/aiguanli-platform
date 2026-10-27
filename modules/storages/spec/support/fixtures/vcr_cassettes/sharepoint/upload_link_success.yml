@@ -1,0 +1,119 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://login.microsoftonline.com/e36f1dbc-fdae-427e-b61b-0d96ddfb81a4/oauth2/v2.0/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=client_credentials&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default+offline_access&client_id=404e0567-19a1-4a64-b2d1-d3b0c99f2ed9&client_secret=QRB8Q%7Ei.1rID_.MC9FTfRGq-FTE5SgWYsoeLacWf
+    headers:
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '199'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      X-Ms-Request-Id:
+      - af06b92c-2b59-4bc2-8ae9-9a3d8a5a5f00
+      X-Ms-Ests-Server:
+      - 2.1.21470.11 - FRC ProdSlices
+      X-Ms-Srs:
+      - 1.P
+      Content-Security-Policy-Report-Only:
+      - object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-eD9bRpc_Aa_gWZPBrAwR0Q'
+        'unsafe-inline' 'unsafe-eval' https://*.msauth.net https://*.msftauth.net
+        https://*.msftauthimages.net https://*.msauthimages.net https://*.msidentity.com
+        https://*.microsoftonline-p.com https://*.microsoftazuread-sso.com https://*.azureedge.net
+        https://*.outlook.com https://*.office.com https://*.office365.com https://*.microsoft.com
+        https://*.bing.com 'report-sample'; report-uri https://csp.microsoft.com/report/ESTS-UX-All
+      X-Xss-Protection:
+      - '0'
+      Set-Cookie:
+      - fpc=AmIqy3cQKMdJvusHJv4b8IZZ-dCOAQAAAAu_K-AOAAAA; expires=Wed, 10-Sep-2025
+        10:38:04 GMT; path=/; secure; HttpOnly; SameSite=None, x-ms-gateway-slice=estsfd;
+        path=/; secure; samesite=none; httponly, stsservicecookie=estsfd; path=/;
+        secure; samesite=none; httponly
+      Date:
+      - Mon, 11 Aug 2025 10:38:04 GMT
+      Content-Length:
+      - '1925'
+    body:
+      encoding: UTF-8
+      string: '{"token_type":"Bearer","expires_in":3599,"ext_expires_in":3599,"access_token":"<ACCESS_TOKEN>"}'
+  recorded_at: Mon, 11 Aug 2025 10:38:04 GMT
+- request:
+    method: post
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8Qconfm2i6SKEoCmuGYqQK/items/root:/DeathStart_blueprints.tiff:/createUploadSession
+    body:
+      encoding: UTF-8
+      string: '{"item":{"@microsoft.graph.conflictBehavior":"rename","name":"DeathStart_blueprints.tiff"}}'
+    headers:
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '91'
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+      Content-Encoding:
+      - gzip
+      Location:
+      - https://graph.microsoft.com
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 11d5399e-3605-4cbb-b559-b4bbe6d97644
+      Client-Request-Id:
+      - 11d5399e-3605-4cbb-b559-b4bbe6d97644
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"001","RoleInstance":"FR2PEPF000003EA"}}'
+      Splogid:
+      - 24aebaa1-50ac-0000-7a8c-c21d7730abda
+      Odata-Version:
+      - '4.0'
+      Date:
+      - Mon, 11 Aug 2025 10:38:05 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#microsoft.graph.uploadSession","expirationDateTime":"2025-08-11T10:53:05.45Z","nextExpectedRanges":["0-"],"uploadUrl":"https://ymt6d.sharepoint.com/sites/OPTest/_api/v2.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8Qconfm2i6SKEoCmuGYqQK/items/01ANJ53WYPWYGIOMO3WFGK2YENXB7ESIS5/uploadSession?guid=''5fa68ee0-d944-4323-817a-2bf0ece08ae5''&overwrite=False&rename=True&dc=0&tempauth=v1.eyJzaXRlaWQiOiIxMDk5ZTMxNS1kMGM3LTQ3YzctODY0MC1hYTk1MDRiNzBmZmYiLCJhcHBfZGlzcGxheW5hbWUiOiJPUCBTZWxlY3RlZCIsIm5hbWVpZCI6IjQwNGUwNTY3LTE5YTEtNGE2NC1iMmQxLWQzYjBjOTlmMmVkOUBlMzZmMWRiYy1mZGFlLTQyN2UtYjYxYi0wZDk2ZGRmYjgxYTQiLCJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAveW10NmQuc2hhcmVwb2ludC5jb21AZTM2ZjFkYmMtZmRhZS00MjdlLWI2MWItMGQ5NmRkZmI4MWE0IiwiZXhwIjoiMTc1NDk5NTA4NSJ9.CkAKDGVudHJhX2NsYWltcxIwQ09DTjU4UUdFQUFhRmt4TWEwZHlNV3R5ZDJ0MVN6WmFiemxwYkhCbVFVRXFBQT09CjIKCmFjdG9yYXBwaWQSJDAwMDAwMDAzLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMAoKCgRzbmlkEgI2NhILCKa2j4Kms6w-EAUaDjIwLjE5MC4xOTAuMTAwKixhM1l1blg1YkN6MFBCVjM3S2RGblA1QWdyL08wYllnS0FIeU1rU3Rvam1jPTCBAjgBQhChuq4krFAAAHqMwh13MKvaShBoYXNoZWRwcm9vZnRva2VuegExugENc2VsZWN0ZWRzaXRlc8gBAQ._udXSV3Fv81Ws1n5RdRe3aKpVRVZIewLPNiHh8CVjy0"}'
+  recorded_at: Mon, 11 Aug 2025 10:38:05 GMT
+recorded_with: VCR 6.3.1

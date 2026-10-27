@@ -1,0 +1,26 @@
+@import 'helpers'
+
+.outcome-container
+  // To prevent flickering when changing meeting states due to the actions button icon
+  .title
+    min-height: 32px
+
+.op-meeting-outcome-notes
+  display: grid
+  grid-template-columns: auto fit-content(40px)
+  grid-template-areas: "title actions" "content content"
+
+  &:target
+    scroll-margin: 100px
+
+.outcome-container
+  &:has(.op-meeting-outcome-notes:target)
+    outline: 2px solid var(--borderColor-accent-emphasis)
+    border-radius: 2px
+
+  &--content
+    overflow: auto
+
+
+
+

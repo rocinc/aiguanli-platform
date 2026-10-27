@@ -1,0 +1,87 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+@import ../openproject/mixins
+
+body:has(.type-form-configuration-page)
+  @include extended-content--bottom
+
+  #content-body
+    display: flex
+    flex-direction: column
+
+.type-form-configuration-page
+  &--wrapper
+    height: 100%
+    overflow: hidden
+
+  &--sidebar
+    border-top-left-radius: var(--borderRadius-medium)
+    border-top-right-radius: var(--borderRadius-medium)
+
+  &--sidebar,
+  &--main
+    @include styled-scroll-bar
+    min-height: 0
+
+  &--active-list
+    overflow: auto
+    height: 100%
+
+  &--inactive-list
+    list-style: none
+    margin: 0
+    padding: 0
+
+    .ActionListItem-visual--leading
+      pointer-events: auto
+
+  &--inactive-item,
+  &--inactive-empty
+    margin-block: var(--base-size-4)
+
+  &--inactive-item .ActionListContent
+    padding-inline: var(--base-size-4)
+
+  &--row-alignment-spacer
+    min-width: var(--base-size-16)
+    width: var(--base-size-16)
+    min-height: var(--control-small-size)
+
+  &--drag-handle,
+  &--actions
+    align-self: flex-start
+    justify-self: end
+
+  &--actions-button
+    margin-top: 0
+
+  @media screen and (max-width: $breakpoint-md)
+    &--main-inner
+      padding-left: 0
+      padding-top: var(--base-size-24)

@@ -1,0 +1,119 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+#
+require "spec_helper"
+require_module_spec_helper
+
+RSpec.describe Storages::Admin::SidePanel::HealthNotificationsComponent, type: :component do
+  frozen_date_time = Time.zone.local(2023, 11, 28, 1, 2, 3)
+
+  describe "storage without automatically managed project folders" do
+    let(:storage) { build_stubbed(:nextcloud_storage, :as_not_automatically_managed) }
+
+    it "does not render" do
+      render_inline described_class.new(storage:)
+      expect(page.text).to be_empty
+    end
+  end
+
+  describe "storage with automatically managed project folders" do
+    before do
+      render_inline(described_class.new(storage:))
+    end
+
+    describe "synchronization health report" do
+      context "with healthy storage" do
+        let(:storage) do
+          travel_to(frozen_date_time) do
+            create(:nextcloud_storage_with_complete_configuration, :as_healthy)
+          end
+        end
+
+        it "shows a healthy status" do
+          expect(page).to have_test_selector("storage-health-status", text: "Healthy")
+          expect(page).to have_test_selector("storage-health-checked-at", text: "Last sync: 11/28/2023 01:02 AM")
+        end
+      end
+
+      context "with storage health pending" do
+        let(:storage) do
+          travel_to(frozen_date_time) do
+            create(:nextcloud_storage_with_complete_configuration)
+          end
+        end
+
+        it "shows pending label" do
+          expect(page).to have_test_selector("storage-health-status", text: "Pending")
+        end
+      end
+
+      context "with unhealthy storage" do
+        let(:storage) do
+          travel_to(frozen_date_time) do
+            create(:nextcloud_storage_with_complete_configuration, :as_unhealthy)
+          end
+        end
+
+        it "shows an error status" do
+          expect(page).to have_test_selector("storage-health-status", text: "Error")
+          expect(page).to have_test_selector("storage-health-error", text: "Error code: description since 11/28/2023 01:02 AM")
+        end
+      end
+
+      context "with an unhealthy storage with a localized error message" do
+        let(:error_text) { I18n.t("services.errors.models.nextcloud_sync_service.unauthorized") }
+        let(:storage) do
+          travel_to(frozen_date_time) do
+            create(:nextcloud_storage_with_complete_configuration, :as_unhealthy, health_reason: error_text)
+          end
+        end
+
+        it "shows a correctly formatted error message" do
+          expect(page).to have_test_selector("storage-health-status", text: "Error")
+          expect(page).to have_test_selector("storage-health-error", text: "#{error_text} since 11/28/2023 01:02 AM")
+        end
+      end
+
+      context "with unhealthy storage, long reason" do
+        let(:storage) do
+          travel_to(frozen_date_time) do
+            create(:nextcloud_storage_with_complete_configuration, :as_unhealthy_long_reason)
+          end
+        end
+
+        it "shows a formatted error reason" do
+          expect(page).to have_test_selector("storage-health-status", text: "Error")
+          expect(page).to have_test_selector("storage-health-error",
+                                             text: "Unauthorized: Outbound request not authorized since 11/28/2023 01:02 AM")
+        end
+      end
+    end
+  end
+end

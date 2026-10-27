@@ -1,0 +1,142 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import {
+  WorkPackageResource,
+} from 'core-app/features/hal/resources/work-package-resource';
+import {
+  DisplayFieldRenderer,
+  editFieldContainerClass,
+} from 'core-app/shared/components/fields/display/display-field-renderer';
+import { Injector } from '@angular/core';
+import { uiStateLinkClass } from 'core-app/features/work-packages/components/wp-fast-table/builders/ui-state-link-builder';
+import { QueryColumn } from 'core-app/features/work-packages/components/wp-query/query-column';
+import { SchemaCacheService } from 'core-app/core/schemas/schema-cache.service';
+import { LazyInject } from 'core-app/shared/helpers/angular/lazy-inject.decorator';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+import { WorkPackageViewBaselineService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-baseline.service';
+
+export const tdClassName = 'wp-table--cell-td';
+export const editCellContainer = 'wp-table--cell-container';
+
+export class CellBuilder {
+  @LazyInject(SchemaCacheService) schemaCache:SchemaCacheService;
+
+  @LazyInject(WorkPackageViewBaselineService) wpTableBaseline:WorkPackageViewBaselineService;
+
+  public fieldRenderer = new DisplayFieldRenderer(this.injector, 'table');
+
+  constructor(public injector:Injector) {
+  }
+
+  public build(workPackage:WorkPackageResource, column:QueryColumn) {
+    const td = document.createElement('td');
+    const attribute = column.id;
+    td.classList.add(tdClassName, attribute);
+
+    if (attribute === 'subject') {
+      td.classList.add('-max');
+    }
+
+    if (['startDate', 'dueDate', 'duration'].includes(attribute)) {
+      td.classList.add('-no-ellipsis');
+    }
+
+    if (['estimatedTime', 'remainingTime'].includes(attribute)) {
+      td.classList.add('-min-200');
+    }
+
+    const schema = this.schemaCache.of(workPackage);
+    const fieldSchema = schema.ofProperty(attribute);
+    if (fieldSchema?.type === 'User') {
+      td.classList.add('-contains-avatar');
+    }
+
+    const container = document.createElement('span');
+    td.appendChild(container);
+    this.render(container, workPackage, attribute);
+
+    return td;
+  }
+
+  public refresh(container:HTMLElement, workPackage:WorkPackageResource, attribute:string) {
+    container.innerHTML = '';
+    this.render(container, workPackage, attribute);
+  }
+
+  private render(container:HTMLElement, workPackage:WorkPackageResource, attribute:string) {
+    const schema = this.schemaCache.of(workPackage);
+    const mappedName = schema.mappedName(attribute);
+    const hasBaseline = attribute !== 'id' && this.wpTableBaseline.isChanged(workPackage, mappedName);
+    container.classList.add(editCellContainer, editFieldContainerClass, attribute);
+
+    const displayElement = this.fieldRenderer.render(workPackage, attribute, null);
+
+    if (hasBaseline) {
+      displayElement.classList.add('op-table-baseline--field', 'op-table-baseline--new-field');
+      this.prependChanges(container, workPackage, mappedName);
+    }
+
+    container.appendChild(displayElement);
+
+    if (attribute === 'subject') {
+      this.appendAssistantMark(container, workPackage);
+    }
+  }
+
+  private appendAssistantMark(container:HTMLElement, workPackage:WorkPackageResource) {
+    const notice = (workPackage.$links as unknown as Record<string, { title?:string }|undefined>).assistantNotice;
+    if (!notice?.title) {
+      return;
+    }
+
+    const mark = document.createElement('a');
+    mark.href = this.injector.get(PathHelperService).workPackagePath(workPackage.id!);
+    mark.classList.add('assistant-list-mark', 'assistant-list-mark--leading', uiStateLinkClass);
+    mark.dataset.workPackageId = workPackage.id!;
+    mark.dataset.wpState = 'split';
+    mark.title = notice.title;
+    mark.textContent = '✦';
+    container.prepend(mark);
+  }
+
+  private prependChanges(
+    container:HTMLElement,
+    workPackage:WorkPackageResource,
+    attribute:string,
+  ):void {
+    const base = (workPackage.attributesByTimestamp!)[0];
+    base.$links.schema = base.$links.schema || workPackage.$links.schema;
+    const span = this.fieldRenderer.render(base, attribute, null);
+    span.classList.add('op-table-baseline--field', 'op-table-baseline--old-field');
+    container.classList.add('op-table-baseline--container');
+    (container.parentElement as HTMLTableElement).classList.add('op-table-baseline--cell');
+    container.classList.remove(editCellContainer);
+    container.appendChild(span);
+  }
+}

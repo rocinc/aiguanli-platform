@@ -1,0 +1,7 @@
+---
+es:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Hitos
+      label_gantt_chart_plural: Diagramas de Gantt

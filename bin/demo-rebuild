@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# 重建演示世界：还原基线库 → 迁移 → seed_acceptance + seed_demo → 重启开发栈。
+# 用法: bin/demo-rebuild   （不要把周末设成工作日再扫描，否则 v1.1 风险信号的时间窗口会错开）
+set -uo pipefail
+cd "$(dirname "$0")/.."
+export PATH="$HOME/.rubies/4.0.6/bin:$PATH"
+BASELINE="${BASELINE:-modules/assistant/db/baseline/quill.dump}"
+LOG="${LOG:-/tmp/demo-rebuild.log}"
+DB=openproject_development
+
+bash start-dev.sh stop
+bash start-dev.sh db
+docker exec op-postgres psql -U openproject -d postgres -c "select pg_terminate_backend(pid) from pg_stat_activity where datname='$DB'" >/dev/null
+docker exec op-postgres dropdb -U openproject --if-exists "$DB"
+docker exec op-postgres createdb -U openproject "$DB"
+docker exec -i op-postgres pg_restore -U openproject -d "$DB" --no-owner < "$BASELINE" >>"$LOG" 2>&1
+bundle exec rake db:migrate >>"$LOG" 2>&1 || { echo "迁移失败，见 $LOG"; exit 1; }
+
+ASSISTANT_SEED_DEMO=1 ASSISTANT_SEED_FORCE=1 bundle exec rake assistant:seed_acceptance >>"$LOG" 2>&1 || { echo "seed 失败，见 $LOG"; exit 1; }
+
+
+# 种子的"此刻"取当天 09:02(UTC)，若现实时间还没到，排在当天的简报会被推迟；让它们立刻到期，由每分钟的投递作业送出。
+docker exec op-postgres psql -U openproject -d "$DB" -c "update assistant_signals set deliver_at = now() - interval '1 minute' where state='pending' and deliver_at > now()" >>"$LOG" 2>&1
+
+nohup bash start-dev.sh start >>"$LOG" 2>&1 &
+echo "完成。日志 $LOG"

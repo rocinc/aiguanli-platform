@@ -1,0 +1,11 @@
+---
+ja:
+  js:
+    avatars:
+      empty_file_error: 正しい画像をアップロードしてください (jpg、png、gif)
+      error_image_too_large: 画像が大きすぎます。
+      label_choose_avatar: ファイルからアバターを選択
+      uploading_avatar: アバターを更新しています。
+      wrong_file_format: 利用可能な形式は jpg、png、gif です。
+    button_update: 更新
+    label_preview: プレビュー

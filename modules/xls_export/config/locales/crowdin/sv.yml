@@ -1,0 +1,17 @@
+---
+sv:
+  different_formats: Olika format
+  export:
+    format:
+      xls: XLS
+      xls_with_descriptions: XLS med beskrivningar
+      xls_with_relations: XLS med relationer
+  export_to_excel: 'Exportera XLS '
+  plugin_openproject_xls_export:
+    description: Exportera ärendelistor som Excel-kalkylblad (.xls).
+    name: OpenProject XLS-export
+  print_with_description: Skriv ut förhandsgranskning med beskrivning
+  sentence_separator_or: eller
+  xls_export:
+    child_of: barn till
+    parent_of: förälder till

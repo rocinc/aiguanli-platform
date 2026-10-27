@@ -1,0 +1,50 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/me
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer <BEARER TOKEN>
+      User-Agent:
+      - httpx.rb/1.4.0
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+      Content-Encoding:
+      - gzip
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - cd945df0-d5ae-4364-b92e-e660f2d8692f
+      Client-Request-Id:
+      - cd945df0-d5ae-4364-b92e-e660f2d8692f
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"002","RoleInstance":"FR3PEPF000009EA"}}'
+      X-Ms-Resource-Unit:
+      - '1'
+      Odata-Version:
+      - '4.0'
+      Date:
+      - Wed, 12 Feb 2025 08:43:54 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#users/$entity","businessPhones":[],"displayName":"OP
+        Member","givenName":"OP","jobTitle":null,"mail":"op.member@ymt6d.onmicrosoft.com","mobilePhone":null,"officeLocation":null,"preferredLanguage":null,"surname":"Member","userPrincipalName":"op.member@ymt6d.onmicrosoft.com","id":"a9023fd0-c421-4695-b83c-bb3ba67708d6"}'
+  recorded_at: Wed, 12 Feb 2025 08:43:54 GMT
+recorded_with: VCR 6.3.1

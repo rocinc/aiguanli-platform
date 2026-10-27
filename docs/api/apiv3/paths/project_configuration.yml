@@ -1,0 +1,54 @@
+# /api/v3/projects/{id}/configuration
+---
+get:
+  parameters:
+  - description: Project id
+    example: 1
+    in: path
+    name: id
+    required: true
+    schema:
+      type: integer
+  responses:
+    '200':
+      content:
+        application/hal+json:
+          examples:
+            response:
+              value:
+                _type: Configuration
+                _links:
+                  self:
+                    href: "/api/v3/projects/1/configuration"
+                  userPreferences:
+                    href: "/api/v3/my_preferences"
+                maximumAttachmentFileSize: 5242880
+                perPageOptions:
+                  - 20
+                  - 100
+                enabledInternalComments: true
+          schema:
+            "$ref": "../components/schemas/project_configuration_model.yml"
+      description: OK
+      headers: {}
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: Returned if the project does not exist or the user cannot view it.
+      headers: {}
+  tags:
+    - Configuration
+    - Projects
+  description: |-
+    Returns the configuration scoped to a specific project, including all global
+    configuration properties plus project-specific settings.
+  operationId: View_project_configuration
+  summary: View project configuration

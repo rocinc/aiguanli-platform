@@ -1,0 +1,17 @@
+<div class="op-wp-calendar"
+  data-test-selector="op-wp-calendar"
+  (contextmenu)="openContextMenu($event)"
+  [attr.data-indicator-name]="'table'">
+  @if ((calendarOptions$ | async); as calendarOptions) {
+    @if (calendarOptions) {
+      <full-calendar #ucCalendar
+        [options]="calendarOptions"
+       />
+    }
+  }
+  @if (static) {
+    <div
+      [textContent]="workPackagesCalendar.tooManyResultsText"
+    class="op-wp-calendar--notification"></div>
+  }
+</div>

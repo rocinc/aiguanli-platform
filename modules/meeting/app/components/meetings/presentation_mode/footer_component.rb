@@ -1,0 +1,105 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+module Meetings
+  module PresentationMode
+    class FooterComponent < ApplicationComponent
+      include ApplicationHelper
+      include OpTurbo::Streamable
+
+      def initialize(meeting:, sorted_agenda_item_ids:, current_item:, started_at:)
+        super()
+
+        @meeting = meeting
+        @project = meeting.project
+        @current_item = current_item
+        @started_at = started_at.iso8601
+        @agenda_item_ids = sorted_agenda_item_ids
+        @current_index = sorted_agenda_item_ids.index(current_item.id)
+      end
+
+      def current_item
+        @current_item
+      end
+
+      def current_section
+        current_item&.meeting_section
+      end
+
+      def total_items
+        @total_items ||= @agenda_item_ids.size
+      end
+
+      def has_previous?
+        @current_index > 0
+      end
+
+      def has_next?
+        @current_index < total_items - 1
+      end
+
+      def next_item
+        return nil unless has_next?
+
+        if defined?(@next_item)
+          @next_item
+        else
+          next_id = @agenda_item_ids[@current_index + 1]
+          @next_item = @meeting.agenda_items.find_by(id: next_id)
+        end
+      end
+
+      def previous_item
+        return nil unless has_previous?
+
+        if defined?(@previous_item)
+          @previous_item
+        else
+          previous_id = @agenda_item_ids[@current_index - 1]
+          @previous_item = @meeting.agenda_items.find_by(id: previous_id)
+        end
+      end
+
+      def progress_text
+        if total_items.zero?
+          t("meeting.presentation_mode.no_items")
+        else
+          t("meeting.presentation_mode.total_items", current: @current_index + 1, total: total_items)
+        end
+      end
+
+      def running_time
+        render(OpPrimer::RelativeTimeComponent.new(datetime: helpers.in_user_zone(@started_at),
+                                                   format: :elapsed,
+                                                   prefix: nil))
+      end
+    end
+  end
+end

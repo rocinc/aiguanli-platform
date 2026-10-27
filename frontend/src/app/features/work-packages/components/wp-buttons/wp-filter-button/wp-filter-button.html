@@ -1,0 +1,20 @@
+<button
+  class="button"
+  [attr.id]="buttonId"
+  [attr.accesskey]="accessKey"
+  [attr.title]="title"
+  [attr.aria-label]="label"
+  [disabled]="disabled"
+  (click)="performAction($event)"
+  [ngClass]="{ '-active': isActive }"
+  data-test-selector="wp-filter-button"
+  >
+  <op-icon icon-classes="{{ iconClass }} button--icon" />
+  <span class="button--text">
+    {{ buttonText }}
+    @if (initialized) {
+      <span class="badge" [textContent]="filterCount"></span>
+    }
+  </span>
+  <svg triangle-down-icon size="small"/>
+</button>

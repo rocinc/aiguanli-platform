@@ -1,0 +1,125 @@
+@if (query) {
+  <div class="work-packages-split-view--tabletimeline-content">
+    <div class="work-packages-tabletimeline--table-side work-package-table--container __hidden_overflow_container">
+      <table
+        class="keyboard-accessible-list generic-table work-package-table"
+        data-controller="table-highlighting"
+        [class.op-table-baseline]="baselineEnabled"
+        >
+          <colgroup>
+            @if (configuration.dragAndDropEnabled) {
+              <col data-highlight="false">
+            }
+            @if (baselineEnabled) {
+              <col data-highlight="false">
+            }
+            <!-- Generate col elements dynamically(!) for each requested column plus one for the action menu's column. -->
+            @for (column of [].constructor(columns.length); track $index) {
+              <col>
+            }
+            @if (configuration.columnMenuEnabled) {
+              <col>
+            }
+            @if (!configuration.columnMenuEnabled) {
+              <col data-highlight="false">
+            }
+          </colgroup>
+          <caption class="sr-only">
+            <span>{{text.tableSummary}}</span>
+            <span id="wp-table-sort-summary"></span>
+            <span>{{text.tableSummaryHints}}</span>
+          </caption>
+          <thead class="-sticky">
+            <tr>
+              @if (configuration.dragAndDropEnabled) {
+                <th class="wp-table--manual-sort-th -short hide-when-print">
+                  <div class="generic-table--empty-header">
+                    @if (manualSortEnabled) {
+                      <op-icon icon-classes="icon-sort-by" />
+                    }
+                  </div>
+                </th>
+              }
+              @if (baselineEnabled) {
+                <th class="wp-table--baseline-th -short hide-when-print">
+                  <div class="generic-table--empty-header op-table-baseline--column-header">
+                    <svg op-baseline-icon size="small" />
+                  </div>
+                </th>
+              }
+              @for (column of columns; track column.href) {
+                <th
+                  [attr.aria-label]="column.name"
+                  [ngClass]="{'-max': column.id === 'subject', '-min-200': ['estimatedTime', 'remainingTime'].includes(column.id) }"
+                  class="wp-table--table-header">
+                  <sortHeader [headerColumn]="column"
+                    [locale]="column.custom_field && column.custom_field.name_locale || locale"
+                    [table]="workPackageTable"
+                    opColumnsContextMenu
+                    [opColumnsContextMenu-column]="column"
+                    [opColumnsContextMenu-table]="workPackageTable" />
+                </th>
+              }
+              @if (configuration.columnMenuEnabled || configuration.actionsColumnEnabled) {
+                <th class="wp-table--configuration-modal--trigger wp-table--context-menu-th -short hide-when-print"
+                  >
+                  @if (configuration.columnMenuEnabled) {
+                    <div class="generic-table--sort-header-outer">
+                      <wp-table-config-menu />
+                    </div>
+                  }
+                </th>
+              }
+            </tr>
+          </thead>
+          @if (!isEmbedded && query && results.count === 0) {
+            <tbody class="work-package--empty-tbody">
+              <tr id="empty-row-notification">
+                <td [attr.colspan]="numTableColumns">
+                  <span>
+                    <op-icon icon-classes="icon-info1 icon-context" />
+                    <span>
+                      <strong>{{text.noResults.title}}</strong>
+                      {{text.noResults.description}}
+                    </span>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          }
+          <tbody class="results-tbody work-package--results-tbody">
+          </tbody>
+          <tbody>
+            <tr class="wp-table--sums-row wp-table--row"
+              wpTableSumsRow
+              [wpTableSumsRow-table]="workPackageTable">
+            </tr>
+          </tbody>
+          @if (tableElement && configuration.inlineCreateEnabled) {
+            <tbody
+              wpInlineCreate
+              [colspan]="numTableColumns"
+              [table]="workPackageTable"
+              [projectIdentifier]="projectIdentifier"
+              (showing)="inlineCreateVisible = $event"
+              >
+            </tbody>
+          }
+        </table>
+      </div>
+      @if (!configuration.isEmbedded) {
+        <div
+          class="work-packages--tabletimeline--timeline--resizer hidden-for-mobile hide-when-print">
+          <wp-resizer [elementClass]="'work-packages-tabletimeline--timeline-side'"
+            [resizeEvent]="'wp-resize.timeline'"
+            [variableName]="'--gantt-split-width'"
+            [elementMinWidth]="550"
+          [localStorageKey]="'openProject-timelineFlexBasis'" />
+        </div>
+      }
+      <div class="work-packages-tabletimeline--timeline-side" aria-hidden="true" tabindex="-1"
+        [ngClass]="{ '-single-margin': (sumVisible || inlineCreateVisible) && !(sumVisible && inlineCreateVisible), '-double-margin': sumVisible && inlineCreateVisible }">
+        <wp-timeline-container />
+      </div>
+    </div>
+  }

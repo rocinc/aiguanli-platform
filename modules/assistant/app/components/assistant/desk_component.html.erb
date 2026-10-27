@@ -1,0 +1,62 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= content_tag(:div, class: "assistant-desk", data: { test_selector: "assistant-desk" }) do %>
+  <%=
+    render(Primer::OpenProject::PageHeader.new) do |header|
+      header.with_title { t("assistant.desk.title") }
+      header.with_description { summary }
+      header.with_breadcrumbs([{ href: project_overview_path(project), text: project.name }, t("assistant.desk.title")])
+      unless read_only? || paused_until
+        header.with_action_menu(
+          menu_arguments: { anchor_align: :end, test_selector: "assistant-desk-pause" },
+          button_arguments: {
+            button_block: ->(button) {
+              button.with_leading_visual_icon(icon: :"bell-slash")
+              button.with_trailing_action_icon(icon: :"triangle-down")
+              t("assistant.desk.pause.button")
+            }
+          }
+        ) do |menu|
+          Assistant::Pause::LENGTHS.each do |length|
+            menu.with_item(
+              label: t("assistant.desk.pause.#{length}"), tag: :button, href: project_assistant_pause_path(project),
+              form_arguments: { method: :post, inputs: [{ name: "length", value: length }, { name: "tab", value: tab }] }
+            )
+          end
+        end
+      end
+      header.with_tab_nav(label: t("assistant.desk.tabs.label")) do |nav|
+        tabs.each do |key|
+          nav.with_tab(
+            selected: key == tab, href: project_assistant_desk_path(project, tab: key), test_selector: "assistant-desk-tab-#{key}"
+          ) do |item|
+            item.with_text { tab_label(key) }
+          end
+        end
+      end
+    end
+  %>
+
+  <% if paused_until %>
+    <p class="assistant-desk--paused" data-test-selector="assistant-desk-paused">
+      <%= paused_text %>
+      <%= form_with(url: project_assistant_pause_path(project, tab:), method: :delete, class: "d-inline") do %>
+        <%= render(Primer::Beta::Button.new(type: :submit, scheme: :invisible, size: :small)) { t("assistant.desk.pause.resume") } %>
+      <% end %>
+    </p>
+  <% end %>
+
+  <% if intro %>
+    <p class="assistant-desk--intro"><%= intro %></p>
+  <% end %>
+
+  <%= render(tab_content) %>
+<% end %>

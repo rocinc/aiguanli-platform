@@ -1,0 +1,71 @@
+---
+http_interactions:
+- request:
+    method: mkcol
+    uri: https://nextcloud.local/remote.php/dav/files/admin/DeathStar3/New%20Folder
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - OpenProject 17.1.0 HTTPX Client
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <SECRET>
+  response:
+    status:
+      code: 409
+      message: Conflict
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Wed, 17 Dec 2025 15:40:27 GMT
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=HeLagRoWmO5E2VxeoavrXg3%2Bb6a%2B%2BNlGiOUscDK6p1TX9GtK8H9Yn6qNqq0DoP05krNSScZt%2F%2BexspUxiZIAu0zJHOQhBB4HubxCAJHJSM9IxezX7lrdAxz%2By92VYzlb;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9966d5fcc0745434e996b4e530cb631d;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.3.20
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '218'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="utf-8"?>
+        <d:error xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns">
+          <s:exception>Sabre\DAV\Exception\Conflict</s:exception>
+          <s:message>Parent node does not exist</s:message>
+        </d:error>
+  recorded_at: Wed, 17 Dec 2025 15:40:27 GMT
+recorded_with: VCR 6.3.1

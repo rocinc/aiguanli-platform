@@ -1,0 +1,82 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<div class="assistant-appraisals" data-test-selector="assistant-appraisals-team">
+  <div class="assistant-appraisals--bar">
+    <nav aria-label="<%= t("assistant.performance.period_label") %>">
+      <%= render(Primer::Alpha::SegmentedControl.new("aria-label": t("assistant.performance.period_label"), size: :small)) do |control| %>
+        <% periods.each do |key| %>
+          <% control.with_item(tag: :a, href: period_path(key), label: period_label(key), selected: key == period) %>
+        <% end %>
+      <% end %>
+    </nav>
+    <p class="assistant-appraisals--fairness"><%= t("assistant.performance.fairness") %></p>
+  </div>
+
+  <% if rows.empty? %>
+    <%= render(Primer::Beta::Blankslate.new(border: true)) do |slate| %>
+      <% slate.with_visual_icon(icon: :people) %>
+      <% slate.with_heading(tag: :h2) { t("assistant.performance.team_empty.title") } %>
+      <% slate.with_description { t("assistant.performance.team_empty.text") } %>
+    <% end %>
+  <% else %>
+    <div class="assistant-appraisals--scroll" tabindex="0" role="region" aria-labelledby="assistant-appraisals-caption">
+      <table class="assistant-appraisals--table">
+        <caption id="assistant-appraisals-caption" class="sr-only">
+          <%= t("assistant.performance.table_caption", period: period_label(period)) %>
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><%= t("assistant.performance.member") %></th>
+            <% COLUMNS.each do |key| %>
+              <th scope="col" aria-sort="<%= aria_sort(key) %>">
+                <%= link_to(
+                      dimension_label(key), sort_path(key), class: "assistant-appraisals--sort",
+                                                            "aria-label": t("assistant.performance.sort_by", dimension: dimension_label(key))
+                    ) %>
+                <% if key == sort %>
+                  <%= render(Primer::Beta::Octicon.new(icon: :"arrow-down", size: :xsmall, "aria-hidden": true)) %>
+                <% end %>
+              </th>
+            <% end %>
+            <th scope="col"><%= t("assistant.performance.situation_column") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% sorted_rows.each do |profile, hash| %>
+            <tr data-test-selector="assistant-appraisals-row">
+              <th scope="row" class="assistant-appraisals--name">
+                <%= link_to(profile.user.name, member_path(profile.user)) %>
+                <% if finalized_for[profile.user.id] %>
+                  <span class="assistant-appraisals--tag"><%= t("assistant.performance.has_final") %></span>
+                <% end %>
+                <% if notes_count(hash).positive? %>
+                  <span class="assistant-appraisals--tag">
+                    <%= render(Primer::Beta::Octicon.new(icon: :comment, size: :xsmall, "aria-hidden": true)) %>
+                    <%= t("assistant.performance.notes_count", count: notes_count(hash)) %>
+                  </span>
+                <% end %>
+              </th>
+              <% COLUMNS.each do |key| %>
+                <% d = dim(hash, key) %>
+                <td class="<%= class_names("assistant-appraisals--value", "assistant-appraisals--insufficient" => d["insufficient"]) %>">
+                  <%= dimension_value(d) %>
+                  <span class="sr-only"><%= d["because"] %></span>
+                </td>
+              <% end %>
+              <td class="assistant-appraisals--situation"><%= situation_line(hash).presence || no_value %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <p class="assistant-appraisals--quiet"><%= t("assistant.performance.team_hint") %></p>
+  <% end %>
+</div>

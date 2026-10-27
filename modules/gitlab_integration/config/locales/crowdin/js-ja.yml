@@ -1,0 +1,54 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) 2023 Ben Tey
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See docs/COPYRIGHT.rdoc for more details.
+#++
+---
+ja:
+  js:
+    gitlab_integration:
+      gitlab_pipelines: パイプライン
+      tab_header_issue:
+        title: 課題
+      tab_header_mr:
+        copy_menu:
+          description: git スニペットをクリップボードにコピー
+          label: Git snippets
+        create_mr:
+          description: マージリクエストを作成
+          label: MRの作成
+        git_actions:
+          branch_name: ブランチ名
+          cmd: 空のコミットでブランチを作成
+          commit_message: コミットメッセージ
+          copy_error: "❌ コピーに失敗しました！"
+          copy_success: "✅ コピーしました！"
+          title: Git 用のクイックスニペットです。
+        title: マージリクエスト
+      tab_issue:
+        empty: 課題がまだリンクされていません。<code>OP#%{wp_id}</code>（プライベートリンクの場合は <code>PP#%{wp_id}</code>）を課題のタイトル/説明に追加して既存の課題にリンクするか、新しい課題を作成してください。
+      tab_mrs:
+        empty: マージリクエストがまだリンクされていません。<code>OP#%{wp_id}</code>（プライベートリンクの場合は <code>PP#%{wp_id}</code>）をMRのタイトル/説明に追加して既存のMRにリンクするか、新しいMRを作成してください。
+      updated_on: 更新日時
+      work_packages:
+        tab_name: GitLab
+    work_packages:
+      tabs:
+        gitlab: GitLab

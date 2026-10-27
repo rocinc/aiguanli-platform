@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Script to check if README files in docs directory are all in uppercase (README.md)
+# Exits with error code 1 if any lowercase readme.md files are found
+
+DOCS_DIR="docs"
+ERRORS_FOUND=0
+
+readme_count=$(find "$DOCS_DIR" -iname "readme.md" -type f | wc -l)
+echo "Checking $((readme_count)) README file case in $DOCS_DIR/ directory..."
+
+# Find all readme.md files (case insensitive) in the docs directory
+while IFS= read -r -d '' file; do
+    # Get the filename without path
+    filename="${file##*/}"
+
+    # Check if the filename is not in uppercase
+    if [ "$filename" != "README.md" ]; then
+        echo "ERROR: Found lowercase readme file: $file"
+        echo "       Expected: README.md (uppercase)"
+        ERRORS_FOUND=1
+    fi
+done < <(find "$DOCS_DIR" -iname "readme.md" -type f -print0)
+
+if [ $readme_count -eq 0 ]; then
+    echo "No README.md files found in $DOCS_DIR directory"
+    exit 0
+fi
+
+if [ $ERRORS_FOUND -eq 1 ]; then
+    echo ""
+    echo "🔴 Found $((readme_count)) README files, but some are not in uppercase."
+    echo "Please rename lowercase readme.md files to README.md"
+    exit 1
+else
+    echo "🟢 All $((readme_count)) README files are correctly named (uppercase)"
+    exit 0
+fi

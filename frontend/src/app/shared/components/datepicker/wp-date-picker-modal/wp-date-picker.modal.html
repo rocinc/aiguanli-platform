@@ -1,0 +1,24 @@
+<div
+  class="spot-modal spot-modal_auto-size spot-modal_full-screen-when-narrow loading-indicator--location"
+  data-indicator-name="modal"
+  tabindex="0"
+  >
+  @if (turboFrameSrc) {
+    <turbo-frame
+      [src]="turboFrameSrc"
+      opModalWithTurboContent
+      [change]="locals.change"
+      [resource]="locals.resource"
+      (successfulCreate)="handleSuccessfulCreate($event)"
+      (successfulUpdate)="handleSuccessfulUpdate()"
+      (cancel)="handleCancel()"
+      id="wp-datepicker-dialog--content">
+      <op-content-loader viewBox="0 0 100 100">
+        <svg:rect x="5" y="5" width="70" height="5" rx="1"/>
+        <svg:rect x="80" y="5" width="15" height="5" rx="1"/>
+        <svg:rect x="5" y="15" width="90" height="8" rx="1"/>
+        <svg:rect x="5" y="30" width="90" height="12" rx="1"/>
+      </op-content-loader>
+    </turbo-frame>
+  }
+</div>

@@ -1,0 +1,80 @@
+---
+tr:
+  activerecord:
+    attributes:
+      webhooks/log:
+        event_name: Etkinlik ismi
+        response_body: Tepki
+        response_code: Cevap kodu
+        url: Taşıma kapasitesi URL
+      webhooks/webhook:
+        enabled: Etkin
+        events: Etkinlikler
+        projects: Etkin projeler
+        secret: İmza sırrı
+        url: Taşıma kapasitesi URL
+    models:
+      webhooks/log:
+        one: Webhook log
+        other: Webhook logs
+      webhooks/webhook:
+        one: Webhook
+        other: Webhooks
+  plugin_openproject_webhooks:
+    description: Daha iyi üçüncü parti entegrasyonu için OpenProject webhooklarını destekleyen bir eklenti API'si sağlar.
+    name: OpenProject Webhookları
+  webhooks:
+    outgoing:
+      deliveries:
+        no_results_table: Geçtiğimiz günlerde bu web kancası için teslimat yapılmadı.
+        time: Teslimat süresi
+        title: Son teslimatlar
+      events:
+        comment: Yorum
+        created: Oluşturuldu
+        internal_comment: İç yorum
+        updated: Güncellenmiş
+      explanation_html: 'Bir iş paketinin oluşturulması veya bir projede güncelleme yapılması gibi bir olayın meydana gelmesi üzerine OpenProject yapılandırılmış web uç noktalarına bir POST isteği gönderecektir. Çoğu zaman, olay [yapılandırılmış toplama süresi](aggregation_path) geçtikten sonra gönderilir.
+
+        '
+      form:
+        apiv3_doc_url: Daha fazla bilgi için API belgelerini ziyaret edin
+        description:
+          placeholder: Web kancası için isteğe bağlı açıklama.
+        enabled:
+          description: 'İşaretlendiğinde, web kancası seçilen olaylarda tetiklenir. Web kancasını devre dışı bırakmak için işaretini kaldırın.
+
+            '
+        events:
+          title: Etkin etkinlikler
+        introduction: 'Abone olduğunuz projedeki herhangi bir etkinlik için aşağıdaki payload URL''sine bir POST isteği gönderin. Yük, değiştirilen nesnenin APIv3 temsiline karşılık gelir.
+
+          '
+        project_ids:
+          all: Tüm projeler
+          description: Bu web kancasının hangi projeler için yürütüleceğini seçin.
+          selected: Sadece seçilen projeler
+          title: Etkin projeler
+        secret:
+          description: 'Ayarlanırsa, bu gizli değer OpenProject tarafından web kancası yükünü imzalamak için kullanılır.
+
+            '
+        selected_project_ids:
+          title: Seçilmiş projeler
+      label_add_new: Yeni web kancası ekle
+      label_edit: Web kancasını düzenle
+      label_x_events:
+        one: 1 olay
+        other: "%{count} olay"
+        zero: Olay yok
+      no_results_table: Henüz bir web kancası tanımlanmadı.
+      status:
+        disabled: Web kancası devre dışı
+        disabled_text: Web kancasını etkinleştirmek için düzenle düğmesine tıklayın.
+        enabled: Web kancası etkin
+        enabled_text: Web kancası, aşağıda tanımlanan etkinlikler için yük taşıyacaktır.
+    plural: Web Kancaları
+    resources:
+      time_entry:
+        name: Zaman girişi
+    singular: Webhook

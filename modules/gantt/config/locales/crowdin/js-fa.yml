@@ -1,0 +1,7 @@
+---
+fa:
+  js:
+    work_packages:
+      default_queries:
+        milestones: نقاط عطف
+      label_gantt_chart_plural: نمودارهای گانت

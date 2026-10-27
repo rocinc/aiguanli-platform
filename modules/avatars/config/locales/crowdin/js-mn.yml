@@ -1,0 +1,11 @@
+---
+mn:
+  js:
+    avatars:
+      empty_file_error: Хүчинтэй зураг (jpg, png, gif) байршуулна уу
+      error_image_too_large: Зураг хэт том байна.
+      label_choose_avatar: Аватарыг файлаас сонгох
+      uploading_avatar: Таны аватарыг байршуулж байна.
+      wrong_file_format: Зөвшөөрөгдсөн формат нь jpg, png, gif
+    button_update: Шинэчлэх
+    label_preview: Урьдчилан харах

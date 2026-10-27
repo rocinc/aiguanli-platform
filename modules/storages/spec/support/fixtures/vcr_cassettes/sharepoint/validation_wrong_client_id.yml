@@ -1,0 +1,73 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://login.microsoftonline.com/e36f1dbc-fdae-427e-b61b-0d96ddfb81a4/oauth2/v2.0/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=client_credentials&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default+offline_access&client_id=wrong&client_secret=MISSING_SHARE_POINT_TEST_OAUTH_CLIENT_SECRET
+    headers:
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '170'
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      X-Ms-Request-Id:
+      - b9b5e557-3dd1-4dc4-9e59-5e74874a6d00
+      X-Ms-Ests-Server:
+      - 2.1.21415.9 - WEULR1 ProdSlices
+      X-Ms-Srs:
+      - 1.P
+      Content-Security-Policy-Report-Only:
+      - object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-jBhpk_0765VVucQFbOM0LQ'
+        'unsafe-inline' 'unsafe-eval' https://*.msauth.net https://*.msftauth.net
+        https://*.msftauthimages.net https://*.msauthimages.net https://*.msidentity.com
+        https://*.microsoftonline-p.com https://*.microsoftazuread-sso.com https://*.azureedge.net
+        https://*.outlook.com https://*.office.com https://*.office365.com https://*.microsoft.com
+        https://*.bing.com 'report-sample'; report-uri https://csp.microsoft.com/report/ESTS-UX-All
+      X-Xss-Protection:
+      - '0'
+      Set-Cookie:
+      - fpc=AnT_CCHlhq5DrGfLgYOcDn9kaFwcAQAAACvOI-AOAAAA; expires=Thu, 04-Sep-2025
+        10:04:28 GMT; path=/; secure; HttpOnly; SameSite=None, x-ms-gateway-slice=estsfd;
+        path=/; secure; samesite=none; httponly, stsservicecookie=estsfd; path=/;
+        secure; samesite=none; httponly
+      Date:
+      - Tue, 05 Aug 2025 10:04:28 GMT
+      Content-Length:
+      - '707'
+    body:
+      encoding: UTF-8
+      string: '{"error":"unauthorized_client","error_description":"AADSTS700016: Application
+        with identifier ''wrong'' was not found in the directory ''MSFT''. This can
+        happen if the application has not been installed by the administrator of the
+        tenant or consented to by any user in the tenant. You may have sent your authentication
+        request to the wrong tenant. Trace ID: b9b5e557-3dd1-4dc4-9e59-5e74874a6d00
+        Correlation ID: d0596f2e-6188-4936-b844-41d86bc0a099 Timestamp: 2025-08-05
+        10:04:28Z","error_codes":[700016],"timestamp":"2025-08-05 10:04:28Z","trace_id":"b9b5e557-3dd1-4dc4-9e59-5e74874a6d00","correlation_id":"d0596f2e-6188-4936-b844-41d86bc0a099","error_uri":"https://login.microsoftonline.com/error?code=700016"}'
+  recorded_at: Tue, 05 Aug 2025 10:04:28 GMT
+recorded_with: VCR 6.3.1

@@ -1,0 +1,40 @@
+# Example: Portfolio collection
+---
+value:
+  _type: Collection
+  count: 2
+  total: 2
+  pageSize: 20
+  offset: 1
+  _embedded:
+    elements:
+      - _hint: Portfolio resource shortened for brevity
+        id: 1
+        identifier: connect2030
+        name: Digital Connect 2030
+        active: true
+        public: true
+      - _hint: Portfolio resource shortened for brevity
+        id: 2
+        identifier: future2050
+        name: Digital Future 2050
+        active: true
+        public: false
+  _links:
+    self:
+      href: '/api/v3/portfolios?filters=%5B%5D&offset=1&pageSize=20'
+    jumpTo:
+      href: '/api/v3/portfolios?filters=%5B%5D&offset=%7Boffset%7D&pageSize=20'
+      templated: true
+    changeSize:
+      href: '/api/v3/portfolios?filters=%5B%5D&offset=1&pageSize=%7Bsize%7D'
+      templated: true
+    representations:
+      - href: '/portfolios.csv?filters=%5B%5D&offset=1&pageSize=20'
+        identifier: csv
+        type: text/csv
+        title: CSV
+      - href: '/portfolios.xls?filters=%5B%5D&offset=1&pageSize=20'
+        identifier: xls
+        type: application/vnd.ms-excel
+        title: XLS

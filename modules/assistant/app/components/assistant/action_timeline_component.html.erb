@@ -1,0 +1,27 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<ol class="assistant-timeline" aria-label="<%= t("assistant.timeline.label") %>" data-test-selector="assistant-action-timeline">
+  <% entries.each do |entry| %>
+    <li class="assistant-timeline--entry">
+      <span class="assistant-timeline--marker" aria-hidden="true">
+        <%= render(Primer::Beta::Octicon.new(icon: entry.icon, size: :small)) %>
+      </span>
+      <div class="assistant-timeline--body">
+        <% if entry.url %>
+          <%= link_to(entry.text, entry.url, data: { turbo_frame: "_top" }) %>
+        <% else %>
+          <span><%= entry.text %></span>
+        <% end %>
+        <%= content_tag(:time, Assistant::Text.stamp(entry.at), datetime: entry.at.iso8601, class: "assistant-timeline--time") %>
+      </div>
+    </li>
+  <% end %>
+</ol>

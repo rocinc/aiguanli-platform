@@ -1,0 +1,132 @@
+<widget-header
+  [name]="widgetName"
+  [editable]="isEditable">
+
+  <widget-menu slot="menu"
+    [resource]="resource" />
+</widget-header>
+
+<div class="op-widget-box--body">
+  @if (noEntries) {
+    <op-no-results [title]="text.noResults" />
+  }
+
+  @if (!noEntries) {
+    <div class="total-hours">
+      <p><span [textContent]="total"></span></p>
+    </div>
+    @if (entriesLoaded && anyEntries) {
+      <div class="generic-table--results-container">
+        <table class="generic-table time-entries">
+          <colgroup>
+          <col>
+            <col>
+              <col>
+                <col>
+                  <col data-highlight="false">
+                </colgroup>
+                <thead class="-sticky">
+                  <tr>
+                    <th>
+                      <div class="generic-table--sort-header-outer">
+                        <div class="generic-table--sort-header">
+                          <span [textContent]="schema.activity.name"></span>
+                        </div>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="generic-table--sort-header-outer">
+                        <div class="generic-table--sort-header">
+                          <span [textContent]="schema.entity.name"></span>
+                        </div>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="generic-table--sort-header-outer">
+                        <div class="generic-table--sort-header">
+                          <span [textContent]="schema.comment.name"></span>
+                        </div>
+                      </div>
+                    </th>
+                    <th>
+                      <div class="generic-table--sort-header-outer">
+                        <div class="generic-table--sort-header">
+                          <span [textContent]="schema.hours.name"></span>
+                        </div>
+                      </div>
+                    </th>
+                    <th><div class="generic-table--empty-header"></div></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of rows; track item.entry?.id || 'sum:' + item.date) {
+                    <tr class="time-entry">
+                      @if (item.entry) {
+                        <td class="activity"
+                          [textContent]="activityName(item.entry)">
+                        </td>
+                      }
+                      @if (item.sum) {
+                        <td colspan="3"
+                          >
+                          <strong [textContent]="item.date"></strong>
+                        </td>
+                      }
+                      @if (item.entry && item.entry.entity) {
+                        <td class="subject"
+                          >
+                          {{projectName(item.entry)}} - <a [href]="entityPath(item.entry)" [textContent]="entityName(item.entry)"></a>
+                        </td>
+                      }
+                      @if (item.entry && !item.entry.entity) {
+                        <td class="subject"
+                          [textContent]="projectName(item.entry)">
+                        </td>
+                      }
+                      @if (item.entry) {
+                        <td class="comments"
+                          [textContent]="comment(item.entry)">
+                        </td>
+                      }
+                      @if (item.entry) {
+                        <td class="hours"
+                          [textContent]="hours(item.entry)">
+                        </td>
+                      }
+                      @if (item.sum) {
+                        <td class="hours"
+                          >
+                          <em [textContent]="item.sum"></em>
+                        </td>
+                      }
+                      <td class="buttons">
+                        @if (item.entry && item.entry.updateImmediately) {
+                          <a
+                            (click)="editTimeEntry(item.entry)"
+                            (keyup.enter)="editTimeEntry(item.entry)"
+                            (keyup.space)="editTimeEntry(item.entry)"
+                            tabindex="0"
+                            [title]="text.edit"
+                            attr.data-test-selector="edit-time-entry-{{ item.entry.id }}">
+                            <op-icon icon-classes="icon-context icon-edit" />
+                          </a>
+                        }
+                        @if (item.entry && item.entry.delete) {
+                          <a
+                            tabindex="0"
+                            (click)="deleteIfConfirmed($event, item.entry)"
+                            (keyup.enter)="deleteIfConfirmed($event, item.entry)"
+                            (keyup.space)="deleteIfConfirmed($event, item.entry)"
+                            [title]="text.delete">
+                            <op-icon icon-classes="icon-context icon-delete" />
+                          </a>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+      </div>

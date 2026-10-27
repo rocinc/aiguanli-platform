@@ -1,0 +1,11 @@
+---
+uk:
+  js:
+    avatars:
+      empty_file_error: Будь ласка, завантажте зображення вірного формату (jpg, png, gif)
+      error_image_too_large: Зображення завелике.
+      label_choose_avatar: Оберіть ваш Avatar з файлу
+      uploading_avatar: Завантаження вашого аватару.
+      wrong_file_format: 'Дозволені формати: jpg, png, gif'
+    button_update: Оновити
+    label_preview: Попередній перегляд

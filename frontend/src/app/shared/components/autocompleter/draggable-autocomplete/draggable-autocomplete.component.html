@@ -1,0 +1,85 @@
+<div class="op-draggable-autocomplete">
+  <div class="FormControl-spacingWrapper mb-3">
+    <div class="FormControl width-full op-draggable-autocomplete-container" [id]="formControlId">
+      <label class="FormControl-label"
+        [textContent]="inputLabel"
+        [attr.for]="id">
+      </label>
+
+      <ng-select #ngSelectComponent
+        [items]="availableOptions"
+        ngClass="op-draggable-autocomplete--input ng-select--primerized"
+        bindLabel="name"
+        [multiple]="false"
+        [virtualScroll]="true"
+        [placeholder]="inputPlaceholder"
+        [clearSearchOnAdd]="true"
+        [closeOnSelect]="true"
+        [searchFn]="searchFunction"
+        [appendTo]="appendTo"
+        (open)="opened()"
+        (change)="select($event)"
+       />
+      @if (inputCaption) {
+        <span class="FormControl-caption" [textContent]="inputCaption"></span>
+      }
+    </div>
+  </div>
+
+  <div class="FormControl-spacingWrapper">
+    <div class="FormControl width-full">
+      <span class="FormControl-label" [textContent]="dragAreaLabel" [tabIndex]="0" role="region"></span>
+
+      <div
+        class="op-draggable-autocomplete--selected"
+        opSortableLists
+        opSortableListsAxis="horizontal"
+        (opSortableListsDrop)="reorder($event)"
+        >
+        @for (item of selectedOptions; track item.id) {
+          <div
+            class="op-draggable-autocomplete--item"
+            [opSortableListsItem]="item.id"
+          >
+            <span
+              class="op-draggable-autocomplete--item-text"
+              [textContent]="item.name"
+            ></span>
+            @if (isRemovable(item)) {
+              <button
+                type="button"
+                (click)="remove(item)"
+                class="op-draggable-autocomplete--remove-item"
+                [attr.aria-label]="removeLabel(item)"
+              >
+                <svg octicon icon="x" size="xsmall" aria-hidden="true"></svg>
+              </button>
+            }
+          </div>
+        }
+
+        @if (!isArrayOfValues) {
+          <span>
+            <input type="hidden" [name]="name" [value]="hiddenValue" />
+          </span>
+        }
+        @if (isArrayOfValues) {
+          <span>
+            @for (value of hiddenValues; track value) {
+              <input type="hidden" [name]="name" [value]="value" />
+            }
+          </span>
+        }
+      </div>
+      @if (hasError) {
+        <div class="FormControl-inlineValidation" id="validation-1b0e1d91-109a-429f-bf04-0231cc9234ec">
+          <span class=" FormControl-inlineValidation--visual" data-target="primer-text-field.validationErrorIcon">
+            <svg aria-hidden="true" height="12" viewBox="0 0 12 12" version="1.1" width="12" class="octicon octicon-alert-fill">
+              <path d="M4.855.708c.5-.896 1.79-.896 2.29 0l4.675 8.351a1.312 1.312 0 0 1-1.146 1.954H1.33A1.313 1.313 0 0 1 .183 9.058ZM7 7V3H5v4Zm-1 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path></svg>
+            </span>
+            <span [textContent]="errorMessage"></span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>

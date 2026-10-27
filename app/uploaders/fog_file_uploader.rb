@@ -1,0 +1,176 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+require "carrierwave/storage/fog"
+
+class FogFileUploader < CarrierWave::Uploader::Base
+  include FileUploader
+  storage :fog
+
+  # Delete cache and old rack file after store
+  # cf. https://github.com/carrierwaveuploader/carrierwave/wiki/How-to:-Delete-cache-garbage-directories
+
+  before :store, :remember_cache_id
+  after :store, :delete_tmp_dir
+  after :store, :delete_old_tmp_file
+
+  def copy_to(attachment)
+    attachment.file = local_file
+  end
+
+  ##
+  # Marker callers can `extend` onto a local File/Tempfile before assigning it to this
+  # uploader, to opt that specific file into being moved (rather than copied) into the
+  # cache (see #move_to_cache below) — e.g. BackupJob does this for the backup archive
+  # it just wrote, to avoid briefly holding two copies of a large file on disk while
+  # caching it ahead of the upload to S3.
+  #
+  # Only extend a file with this if you don't need it afterwards and control it
+  # exclusively (e.g. a freshly written, disposable tempfile) — the source file is
+  # deleted from its original location once moved. Regular attachments never opt in,
+  # so their source file (e.g. a fixture, a seeded asset) is always left untouched.
+  module MovableSource
+  end
+
+  def cache!(new_file = file)
+    @move_new_file_to_cache = new_file.is_a?(MovableSource)
+    super
+  end
+
+  ##
+  # Moves a freshly assigned local file into the cache instead of copying it, if the
+  # caller explicitly opted in via MovableSource (see above).
+  #
+  # This only affects genuinely local, path-backed sources (e.g. a Tempfile just
+  # written to disk). Re-caching an already-remote file (e.g. Attachment#copy's
+  # `attachment.file = diskfile`) never takes this path, since that source isn't
+  # a local path but a remote file reference, so the original stored file is safe.
+  def move_to_cache
+    @move_new_file_to_cache
+  end
+
+  def store_dir
+    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  end
+
+  def remote_file
+    @remote_file || file
+  end
+
+  def local_file
+    @remote_file ||= file
+    cache_stored_file!
+    super
+  end
+
+  ##
+  # Streams this remote file's content into +output+ in chunks.
+  #
+  # @param output [IO] Stream to copy the file to
+  def stream_to(output)
+    fog_directory_files.get(remote_file.path) do |chunk, _remaining_bytes, _total_bytes|
+      output.write(chunk)
+    end
+  end
+
+  ##
+  # This is necessary for carrierwave to set the Content-Type in the S3 metadata for instance.
+  def fog_attributes
+    content_type = model.respond_to?(:content_type) ? model.content_type : ""
+
+    return super if content_type.blank?
+
+    super.merge "Content-Type": content_type
+  end
+
+  ##
+  # Generates a download URL for this file.
+  #
+  # @param options [Hash] Options hash.
+  # @option options [String] :content_disposition Pass this content disposition to S3 so that it serves the file with it.
+  # @option options [String] :content_type Pass this content type to S3 so that it serves the file with it.
+  # @option options [DateTime] :expires_at Date at which the link should expire (default: now + 5 minutes)
+  # @option options [ActiveSupport::Duration] :expires_in Duration in which the link should expire.
+  #
+  # @return [String] The URL to download the file from.
+  def download_url(options = {})
+    url_options = {}
+
+    set_content_disposition!(url_options, options:)
+    set_content_type!(url_options, options:)
+    set_expires_at!(url_options, options:)
+
+    remote_file.url url_options
+  end
+
+  ##
+  # Checks if this file exists and is readable in the remote storage.
+  #
+  # In the current version of carrierwave the call to #exists?
+  # throws an error if the file does not exist:
+  #
+  #   Excon::Errors::Forbidden: Expected(200) <=> Actual(403 Forbidden)
+  def readable?
+    remote_file&.exists?
+  rescue Excon::Errors::Forbidden
+    false
+  end
+
+  private
+
+  def fog_directory_files
+    storage.connection.directories.new(key: fog_directory, public: fog_public).files
+  end
+
+  def set_content_disposition!(url_options, options:)
+    return if options[:content_disposition].blank?
+
+    (url_options[:query] ||= {})["response-content-disposition"] = options[:content_disposition]
+  end
+
+  def set_content_type!(url_options, options:)
+    return if options[:content_type].blank?
+
+    # Like the content disposition above, this makes S3 serve the file with the
+    # given Content-Type, overriding the stored object type.
+    (url_options[:query] ||= {})["response-content-type"] = options[:content_type]
+  end
+
+  def set_expires_at!(url_options, options:)
+    if options[:expires_in].present?
+      expires = [options[:expires_in], OpenProject::Configuration.fog_download_url_expires_in].min
+      url_options[:expire_at] = ::Fog::Time.now + expires
+    end
+
+    if options[:expires_at].present?
+      url_options[:expire_at] = ::Fog::Time.at options[:expires_at] - ::Fog::Time.offset
+    end
+  end
+end

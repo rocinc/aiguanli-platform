@@ -1,0 +1,117 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+.assistant-object-line
+  margin: var(--base-size-8) 0
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-4)
+
+  &--more-summary
+    display: flex
+    align-items: center
+    gap: var(--base-size-4)
+    cursor: pointer
+    list-style: none
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+    &::-webkit-details-marker
+      display: none
+
+  &--more[open] > &--more-summary .assistant-notice--chevron
+    transform: rotate(90deg)
+
+  &--folded
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+    margin-top: var(--base-size-4)
+
+  &--facts,
+  &--cards
+    margin: 0
+    padding-left: var(--base-size-20)
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--cards
+    list-style: none
+    padding-left: 0
+
+  &--origin
+    display: flex
+    align-items: baseline
+    gap: var(--base-size-8)
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+.assistant-list-mark
+  margin-left: var(--base-size-4)
+  color: var(--fgColor-muted)
+  text-decoration: none
+
+  &:hover
+    color: var(--fgColor-default)
+
+  &--leading
+    flex-shrink: 0
+    margin: 0 var(--base-size-4) 0 0
+
+.assistant-marks
+  &--entry
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+
+  &--title
+    margin: 0
+    font-weight: var(--base-text-weight-semibold)
+
+  &--quote
+    margin: 0
+    padding-left: var(--base-size-12)
+    border-left: var(--borderWidth-thick) solid var(--borderColor-default)
+    color: var(--fgColor-muted)
+
+  &--origin,
+  &--record
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+.assistant-promises
+  &--item
+    display: flex
+    align-items: center
+    gap: var(--base-size-8)
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+op-wp-assistant-field-slot
+  display: block
+
+  .assistant-promises
+    margin-top: var(--base-size-4)
+
+.assistant-wp-line--full .assistant-object-line
+  margin: var(--base-size-8) 0
+
+.assistant-wp-line--split .assistant-object-line
+  margin: 0 var(--base-size-16) var(--base-size-12) var(--base-size-20)
+
+#assistant-wp-aside-frame,
+#assistant-version-aside-frame
+  display: block
+
+  &:empty
+    display: none
+
+.assistant-wp-aside
+  margin: var(--base-size-8) 0

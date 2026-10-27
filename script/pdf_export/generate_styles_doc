@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+# Generates the PDF export styling yaml documentation.
+
+require "md_to_pdf/style/schema_doc"
+require "yaml"
+require "json"
+require "fileutils"
+
+root = File.expand_path("../../", __dir__)
+config = YAML.load_file(File.join(__dir__, "styles.yml"))
+
+config["styles"].each do |entry|
+  schema_file = File.join(root, entry["path"], "schema.json")
+  schema = JSON::load_file(schema_file)
+  schema["description"] = "This document describes the style settings format for the [PDF Export styling file](https://github.com/opf/openproject/blob/dev/#{entry['path']}/standard.yml)."
+  generator = MarkdownToPDF::StyleSchemaDocsGenerator.new(schema)
+  markdown = generator.generate_markdown
+  styles_doc_folder = File.join(root, "docs", "system-admin-guide", "design", "pdf-export-styles", entry["name"])
+  FileUtils.mkdir_p(styles_doc_folder)
+  styles_doc_file = File.join(styles_doc_folder, "README.md")
+  File.write(styles_doc_file, markdown)
+  puts "Doc written: #{styles_doc_file}"
+end

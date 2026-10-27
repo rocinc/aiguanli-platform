@@ -1,0 +1,56 @@
+$status_not-set: var(--progressBar-track-bgColor) // invisible background color
+
+@mixin portfolio-sub-item-status-background-color
+  &.-not-set
+    background-color: $status_not-set
+  &.-on-track
+    background-color: $project-status_on-track
+  &.-at-risk
+    background-color: $project-status_at-risk
+  &.-off-track
+    background-color: $project-status_off-track
+  &.-not-started
+    background-color: $project-status_not-started
+  &.-finished
+    background-color: $project-status_finished
+  &.-discontinued
+    background-color: $project-status_discontinued
+
+.op-portfolios
+  &--progress
+    flex-basis: 25%
+    max-width: 300px
+    margin-left: auto
+
+    @media screen and (max-width: $breakpoint-sm)
+      display: none
+
+  &--sub-status
+    @include portfolio-sub-item-status-background-color
+
+  &--popover
+    width: fit-content
+    max-width: 550px
+    flex-wrap: wrap
+    row-gap: var(--base-size-16, 1rem)
+    justify-content: space-evenly
+
+    .op-bubble
+      margin: auto
+      @include portfolio-sub-item-status-background-color
+
+  &--details-footer, &--details-header
+    align-items: center
+
+    @media screen and (max-width: $breakpoint-sm)
+      flex-direction: column !important
+      align-items: flex-start
+      row-gap: var(--base-size-16, 1rem)
+
+  &--description
+    @media screen and (max-width: $breakpoint-sm)
+      margin-top: var(--base-size-16, 1rem)
+      margin-bottom: var(--base-size-16, 1rem) !important
+
+.op-hover-card:has(> .op-portfolios--popover)
+  width: fit-content

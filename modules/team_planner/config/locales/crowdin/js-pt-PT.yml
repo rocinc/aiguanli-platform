@@ -1,0 +1,29 @@
+---
+pt-PT:
+  js:
+    team_planner:
+      add_assignee: Pessoa atribuída
+      add_existing: Adicionar existente
+      add_existing_title: Adicionar pacotes de trabalho existentes
+      cannot_drag_here: Não é possível mover o pacote de trabalho devido a permissões ou restrições de edição.
+      cannot_drag_to_non_working_day: Este pacote de trabalho não pode iniciar/terminar num dia não útil.
+      create_label: Planeador de equipa
+      create_title: Criar novo planeador de equipa
+      drag_here_to_remove: Arraste aqui para remover o responsável e as datas de início e término.
+      eight_weeks: 8 semanas
+      four_weeks: 4 semanas
+      label_team_planner_plural: Planeadores de equipa
+      modify:
+        errors:
+          fallback: Este pacote de trabalho não pode ser editado.
+          permission_denied: Não tem as permissões necessárias para modificar isto.
+      no_data: Adicione encarregados para configurar o seu planeador de equipa.
+      one_week: 1 semana
+      quick_add:
+        empty_state: Utilize o campo de pesquisa para encontrar pacotes de trabalho e arraste-os para o planeador, a fim de os atribuir a alguém e definir as datas de início e de fim.
+        search_placeholder: Pesquisar...
+      remove_assignee: Remover encarregável
+      today: Hoje
+      two_weeks: 2 semanas
+      unsaved_title: Planeador de equipa sem nome
+      work_week: Semana de trabalho

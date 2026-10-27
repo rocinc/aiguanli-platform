@@ -1,0 +1,7 @@
+@if (available) {
+  @for (action of actions; track action.href) {
+    <wp-custom-action [workPackage]="workPackage"
+      [action]="action"
+      class="custom-action" />
+  }
+}

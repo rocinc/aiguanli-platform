@@ -1,0 +1,56 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= render(
+      Primer::Alpha::Dialog.new(
+        id: DIALOG_ID, title:, position: :right, position_narrow: :fullscreen,
+        size: :large, classes: "assistant-panel-dialog",
+        data: { controller: "assistant--panel-dialog",
+                assistant__panel_dialog_src_value: src,
+                assistant__panel_dialog_shortcuts_value: shortcuts?,
+                keep_open_on_submit: "true",
+                assistant_user_id: assistant_user_id,
+                test_selector: "assistant-panel-dialog" }
+      )
+    ) do |dialog| %>
+  <% dialog.with_header(show_divider: true) %>
+  <% dialog.with_body(classes: "assistant-panel-dialog--body") do %>
+    <%= helpers.turbo_frame_tag(
+          FRAME_ID, class: "assistant-panel-dialog--frame",
+                    data: { assistant__panel_dialog_target: "frame" }
+        ) do %>
+      <div class="assistant-panel-dialog--loading" role="status">
+        <%= render(Primer::Beta::Spinner.new(size: :small)) %>
+        <span><%= t("assistant.panel.loading") %></span>
+      </div>
+    <% end %>
+    <template data-assistant--panel-dialog-target="failed">
+      <div class="assistant-panel-dialog--failed" role="alert" data-test-selector="assistant-panel-failed">
+        <p class="assistant-panel-dialog--failed-text"><%= t("assistant.panel.load_failed") %></p>
+        <%= render(
+              Primer::Beta::Button.new(
+                size: :small, data: { action: "assistant--panel-dialog#retry" }
+              )
+            ) { t("assistant.panel.retry") } %>
+      </div>
+    </template>
+  <% end %>
+<% end %>
+<button type="button" hidden data-show-dialog-id="<%= DIALOG_ID %>" id="<%= DIALOG_ID %>-opener"
+        data-test-selector="assistant-panel-opener"></button>
+<% if beacon_type %>
+  <%= content_tag(
+        :div, "",
+        hidden: true,
+        data: { controller: "assistant--beacon", test_selector: "assistant-beacon",
+                assistant__beacon_url_value: beacon_url, assistant__beacon_type_value: beacon_type,
+                assistant__beacon_id_value: viewed.id }
+      ) %>
+<% end %>

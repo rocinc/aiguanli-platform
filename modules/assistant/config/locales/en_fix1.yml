@@ -1,0 +1,24 @@
+en:
+  assistant:
+    writing:
+      errors:
+        unavailable: "The language model did not respond, so nothing was written. Your text is unchanged; try again in a few minutes."
+    admin:
+      test:
+        button: "Test connection"
+        running: "Testing…"
+        ok: "Connected. Model: %{model}, took %{seconds} s."
+        failed: "Not connected: %{reason}"
+        no_address: "no endpoint address is set."
+        no_key: "no API key is set (ASSISTANT_LLM_API_KEY)."
+        no_model: "no model name is set."
+        bad_address: "the endpoint address is not a valid URL."
+        timeout: "no answer within %{seconds} seconds."
+        unreachable: "%{host} cannot be reached (%{detail})."
+        ssl: "the secure connection failed (%{detail})."
+        denied: "the key was refused (HTTP %{status})."
+        limited: "too many requests or the quota is used up (HTTP %{status})."
+        server: "the model service reported an error (HTTP %{status})."
+        no_such_model: "the model “%{model}” does not exist (HTTP %{status})."
+        not_found: "the address was not found (HTTP %{status}); check that it ends like /v1."
+        other: "the service answered HTTP %{status}: %{detail}"

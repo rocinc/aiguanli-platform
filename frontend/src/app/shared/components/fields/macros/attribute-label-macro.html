@@ -1,0 +1,13 @@
+@if (resource) {
+  <span [textContent]="label"></span>
+  <span class="sr-only" [textContent]="ariaContext"></span>
+  <attribute-help-text [attribute]="attribute"
+    [attributeScope]="attributeScope" />
+}
+
+@if (error) {
+  <span>
+    <i class="icon icon-error"></i>
+    <em [textContent]="error"></em>
+  </span>
+}

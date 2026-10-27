@@ -1,0 +1,11 @@
+---
+hr:
+  js:
+    avatars:
+      empty_file_error: Molimo pohranite sliku u ispravom formatu (jpg, png, gif)
+      error_image_too_large: Slika je prevelika.
+      label_choose_avatar: Odaberite avatar iz datoteke
+      uploading_avatar: Avatar se pohranjuje.
+      wrong_file_format: Dozvoljeni formati su jpg, png, gif
+    button_update: Ažuriraj
+    label_preview: Pregled

@@ -1,0 +1,192 @@
+# frozen_string_literal: true
+
+# -- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+# ++
+
+require "spec_helper"
+
+RSpec.describe "Cancel editing work package", :js, :selenium do
+  let(:user) { create(:admin) }
+  let(:project) { create(:project) }
+  let(:work_package) { create(:work_package, project:) }
+  let(:work_package2) { create(:work_package, project:) }
+  let(:wp_page) { Pages::AbstractWorkPackage.new(work_package) }
+  let(:wp_table) { Pages::WorkPackagesTable.new }
+  let(:paths) do
+    [
+      new_work_package_path,
+      new_split_work_packages_path,
+      new_project_work_packages_path(project),
+      new_split_project_work_packages_path(project)
+    ]
+  end
+
+  before do
+    work_package
+    work_package2
+    login_as(user)
+  end
+
+  def expect_active_edit(path)
+    visit path
+    expect_angular_frontend_initialized
+    expect(page).to have_css("#wp-new-inline-edit--field-subject", wait: 10)
+  end
+
+  def expect_subject(val)
+    subject = page.find_by_id("wp-new-inline-edit--field-subject")
+    expect(subject.value).to eq(val)
+  end
+
+  def move_to_home_page(alert: true)
+    if alert
+      accept_alert do
+        find(".op-logo--link").click
+      end
+    else
+      find(".op-logo--link").click
+    end
+
+    expect(page).to have_current_path("/", ignore_query: true)
+    expect(page).to have_no_css("#wp-new-inline-edit--field-subject")
+    expect(page).to have_css("#projects-menu", text: "All projects")
+  end
+
+  it "does not show an alert when moving to other pages" do
+    # This used to show an alert until browsers dropped support
+    # for `onbeforeunload`.
+    #
+    # We want to find a way how to to regain that possibility
+    # at some later point in time. Until then we keep that block
+    # and only flip
+    #   move_to_home_page(alert: true)
+    # to
+    #  move_to_home_page(alert: false)
+    paths.each do |path|
+      expect_active_edit(path)
+      move_to_home_page(alert: true)
+    end
+  end
+
+  it "shows an alert when moving to other states" do
+    expect_active_edit(new_split_work_packages_path)
+    loading_indicator_saveguard
+    wp_table.expect_work_package_listed(work_package2)
+
+    wp_table.open_split_view(work_package2)
+    page.driver.browser.switch_to.alert.dismiss
+
+    expect(page).to have_css("#wp-new-inline-edit--field-subject")
+    expect(wp_page).not_to have_alert_dialog
+  end
+
+  it "shows an alert when moving to other states while editing a single attribute (Regression #25135)" do
+    wp_table.visit!
+    wp_table.expect_work_package_listed(work_package, work_package2)
+
+    # Edit subject in split page
+    split_page = wp_table.open_split_view(work_package)
+    version = split_page.edit_field :targetVersions
+    version.activate!
+
+    # Decline move, expect field still active
+    wp_table.open_split_view(work_package2)
+    page.driver.browser.switch_to.alert.dismiss
+    version.expect_active!
+
+    sleep 1
+
+    # Now accept to move to the second page
+    split_page = wp_table.open_split_view(work_package2)
+    page.driver.browser.switch_to.alert.accept
+    version = split_page.edit_field :targetVersions
+    version.expect_inactive!
+  end
+
+  it "cancels the editing when clicking the button" do
+    paths.each do |path|
+      expect_active_edit(path)
+      find_by_id("work-packages--edit-actions-cancel").click
+
+      expect(wp_page).not_to have_alert_dialog
+    end
+  end
+
+  it "correctly cancels setting the back route (Regression #30714)" do
+    wp_table.visit!
+    wp_table.expect_work_package_listed(work_package, work_package2)
+
+    # Edit subject in split page
+    wp_page = wp_table.open_split_view(work_package)
+    wp_page.ensure_page_loaded
+
+    # Edit description in full view
+    description = wp_page.edit_field :description
+    description.activate!
+    wait_for_network_idle
+
+    description.click_and_type_slowly "foobar"
+
+    # Try to move back to list, expect warning
+    page.execute_script("window.history.back()")
+    expect(wp_page).to have_alert_dialog
+    wp_page.dismiss_alert_dialog!
+    description.expect_active!
+
+    # Now cancel the field
+    description.cancel_by_click
+    description.expect_inactive!
+
+    # Now we should be able to get back to list
+    page.execute_script("window.history.back()")
+
+    wait_for { wp_page.has_alert_dialog? }.to be false
+  end
+
+  context "when user does not want to be warned" do
+    before do
+      create(:user_preference, user:, others: { warn_on_leaving_unsaved: false })
+    end
+
+    it "does alert when moving to a new page" do
+      # Moving to angular states
+      expect_active_edit(new_split_work_packages_path)
+      wp_table.expect_work_package_listed(work_package2)
+
+      wp_table.open_split_view(work_package2)
+      expect(wp_page).not_to have_alert_dialog
+
+      expect(page).to have_no_css("#wp-new-inline-edit--field-subject")
+      expect(page).to have_css(".work-packages--details--subject", text: work_package2.subject)
+
+      # Moving somewhere else
+      expect_active_edit(new_split_work_packages_path)
+      move_to_home_page(alert: true)
+    end
+  end
+end

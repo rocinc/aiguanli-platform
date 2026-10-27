@@ -1,0 +1,76 @@
+@import "helpers"
+
+.op-baseline
+  &--header
+    width: 280px
+    margin: $spot-spacing-1 $spot-spacing-1 0 $spot-spacing-1
+    color: var(--fgColor-muted)
+
+    &_banner-active
+      width: 450px
+
+    &:has(+ .op-baseline--body_ranged)
+      width: auto
+
+  &--info-button
+    display: flex
+    align-items: center
+
+  &--body
+    flex-shrink: 1
+    flex-basis: 100%
+    overflow: auto
+    margin-top: 0 !important
+
+    @media screen and #{$spot-mq-drop-modal-in-context}
+      max-height: 70vh
+
+    &_ranged
+      width: 600px
+
+  &--time
+
+    &-input
+      width: 65%
+
+    &-help
+      display: flex
+      align-items: flex-end
+      justify-content: center
+      background-color: var(--bgColor-neutral-muted)
+      border: 1px solid var(--borderColor-default)
+      border-left: none !important
+      padding: $spot-spacing-0_5 $spot-spacing-0_25
+      line-height: 1rem
+
+    &-tooltip-body
+      width: 220px
+      display: block
+
+  &--filter
+
+    &-description
+      font-size: $spot-spacing-0_75
+      font-style: italic
+      line-height: $spot-spacing-1
+      color: $spot-color-basic-gray-2
+
+  &--range-container
+    margin: 1rem
+    display: grid
+    grid-template-columns: 1fr 1fr
+    grid-gap: 1rem
+
+  &--datepicker
+    margin: 1rem
+  // remove additional margins when baseline component
+  // is used in baseline tab of WP configuration madal
+  &_tab.op-baseline--header
+    margin: 0
+    width: auto !important
+  &_tab
+    .spot-form-field
+      margin-right: 0
+      margin-left: 0
+    .op-baseline--range-container
+      margin: 0

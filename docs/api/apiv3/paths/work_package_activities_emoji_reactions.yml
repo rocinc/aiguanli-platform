@@ -1,0 +1,46 @@
+# /api/v3/work_packages/{id}/activities_emoji_reactions
+---
+get:
+  summary: List emoji reactions by work package activities
+  operationId: list_work_package_activities_emoji_reactions
+  tags:
+    - WorkPackages
+    - Activities
+    - EmojiReactions
+  description: List all emoji reactions of all activities of a single work package.
+  parameters:
+    - name: id
+      description: ID of the work package whose activities' emoji reactions will be listed
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 1
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/emoji_reactions_model.yml'
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: |-
+        Returned if the work package does not exist or the client does not have sufficient permissions
+        to see it.
+
+        **Required permission:**
+        - `view_work_packages`
+        - for internal comments: `view_internal_comments`
+
+        *Note: A client without sufficient permissions shall not be able to test for the existence of a work package.
+        That's why a 404 is returned here, even if a 403 might be more appropriate.*

@@ -1,0 +1,139 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://login.microsoftonline.com/e36f1dbc-fdae-427e-b61b-0d96ddfb81a4/oauth2/v2.0/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=client_credentials&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default+offline_access&client_id=404e0567-19a1-4a64-b2d1-d3b0c99f2ed9&client_secret=QRB8Q%7Ei.1rID_.MC9FTfRGq-FTE5SgWYsoeLacWf
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.2
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '199'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      X-Ms-Request-Id:
+      - b44c082a-cb18-4883-a38e-e6dbfdd22500
+      X-Ms-Ests-Server:
+      - 2.1.22096.4 - SEC ProdSlices
+      X-Ms-Srs:
+      - 1.P
+      Content-Security-Policy-Report-Only:
+      - object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-ZNsza9fQgu7TjqceYMisrA'
+        'unsafe-inline' 'unsafe-eval' https://*.msauth.net https://*.msftauth.net
+        https://*.msftauthimages.net https://*.msauthimages.net https://*.msidentity.com
+        https://*.microsoftonline-p.com https://*.microsoftazuread-sso.com https://*.azureedge.net
+        https://*.outlook.com https://*.office.com https://*.office365.com https://*.microsoft.com
+        https://*.bing.com 'report-sample'; report-uri https://csp.microsoft.com/report/ESTS-UX-All
+      Cross-Origin-Opener-Policy-Report-Only:
+      - same-origin; report-to="coop-endpoint"
+      Reporting-Endpoints:
+      - coop-endpoint="https://idux.azurewebsites.net/api/coopReport"
+      X-Xss-Protection:
+      - '0'
+      Set-Cookie:
+      - fpc=AhKQy5ix3QZLh6i7P8N8rr5Z-dCOAQAAAKi0eeAOAAAA; expires=Sat, 08-Nov-2025
+        13:50:32 GMT; path=/; secure; HttpOnly; SameSite=None, x-ms-gateway-slice=estsfd;
+        path=/; secure; samesite=none; httponly, stsservicecookie=estsfd; path=/;
+        secure; samesite=none; httponly
+      Date:
+      - Thu, 09 Oct 2025 13:50:32 GMT
+      Content-Length:
+      - '2035'
+    body:
+      encoding: UTF-8
+      string: '{"token_type":"Bearer","expires_in":3599,"ext_expires_in":3599,"access_token":"<ACCESS_TOKEN>"}'
+  recorded_at: Thu, 09 Oct 2025 13:50:32 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW/items/01ANJ53WZVLARJSRFKOFF3HLYZPMPUK6HI%20?$select=id,name,parentReference,webUrl,fileSystemInfo,createdBy,lastModifiedBy
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.2
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Cache-Control:
+      - private
+      Content-Type:
+      - text/html; charset=utf-8
+      Content-Encoding:
+      - gzip
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 3af2782e-d576-49a4-a025-207ff88dd425
+      Client-Request-Id:
+      - 3af2782e-d576-49a4-a025-207ff88dd425
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"006","RoleInstance":"FR1PEPF00001FCD"}}'
+      Splogid:
+      - 9bb6cda1-9036-0000-83a4-a7e3a20f3dac
+      Date:
+      - Thu, 09 Oct 2025 13:50:32 GMT
+    body:
+      encoding: UTF-8
+      string: "<!DOCTYPE html>\r\n<html>\r\n    <head>\r\n        <title>The resource
+        cannot be found.</title>\r\n        <meta name=\"viewport\" content=\"width=device-width\"
+        />\r\n        <style>\r\n         body {font-family:\"Verdana\";font-weight:normal;font-size:
+        .7em;color:black;} \r\n         p {font-family:\"Verdana\";font-weight:normal;color:black;margin-top:
+        -5px}\r\n         b {font-family:\"Verdana\";font-weight:bold;color:black;margin-top:
+        -5px}\r\n         H1 { font-family:\"Verdana\";font-weight:normal;font-size:18pt;color:red
+        }\r\n         H2 { font-family:\"Verdana\";font-weight:normal;font-size:14pt;color:maroon
+        }\r\n         pre {font-family:\"Consolas\",\"Lucida Console\",Monospace;font-size:11pt;margin:0;padding:0.5em;line-height:14pt}\r\n
+        \        .marker {font-weight: bold; color: black;text-decoration: none;}\r\n
+        \        .version {color: gray;}\r\n         .error {margin-bottom: 10px;}\r\n
+        \        .expandable { text-decoration:underline; font-weight:bold; color:navy;
+        cursor:pointer; }\r\n         @media screen and (max-width: 639px) {\r\n          pre
+        { width: 440px; overflow: auto; white-space: pre-wrap; word-wrap: break-word;
+        }\r\n         }\r\n         @media screen and (max-width: 479px) {\r\n          pre
+        { width: 280px; }\r\n         }\r\n        </style>\r\n    </head>\r\n\r\n
+        \   <body bgcolor=\"white\">\r\n\r\n            <span><H1>Server Error in
+        '/' Application.<hr width=100% size=1 color=silver></H1>\r\n\r\n            <h2>
+        <i>The resource cannot be found.</i> </h2></span>\r\n\r\n            <font
+        face=\"Arial, Helvetica, Geneva, SunSans-Regular, sans-serif \">\r\n\r\n            <b>
+        Description: </b>HTTP 404. The resource you are looking for (or one of its
+        dependencies) could have been removed, had its name changed, or is temporarily
+        unavailable. &nbsp;Please review the following URL and make sure that it is
+        spelled correctly.\r\n            <br><br>\r\n\r\n            <b> Requested
+        URL: </b>/_api/v2.0/drives(&#39;b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW&#39;)/items/01ANJ53WZVLARJSRFKOFF3HLYZPMPUK6HI<br><br>\r\n\r\n
+        \           </font>\r\n\r\n    </body>\r\n</html>\r\n"
+  recorded_at: Thu, 09 Oct 2025 13:50:32 GMT
+recorded_with: VCR 6.3.1

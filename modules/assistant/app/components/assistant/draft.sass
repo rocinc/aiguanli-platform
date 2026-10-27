@@ -1,0 +1,350 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+.assistant-draft-card
+  display: block
+  padding: var(--base-size-8) var(--base-size-12)
+  border: var(--borderWidth-thin) solid var(--borderColor-default)
+  border-radius: var(--borderRadius-medium)
+  background: var(--bgColor-muted)
+
+  &--line,
+  &--quiet,
+  &--sent
+    margin: 0
+    padding: var(--base-size-4) var(--base-size-8)
+
+  &--sent
+    border-color: transparent
+    background: transparent
+
+  &--quiet
+    color: var(--fgColor-muted)
+
+  &--row
+    display: flex
+    align-items: baseline
+    gap: var(--base-size-8)
+
+    .octicon
+      flex-shrink: 0
+      align-self: flex-start
+      margin-top: var(--base-size-4)
+
+  &--body
+    flex: 1
+    min-width: 12rem
+
+  &--lead
+    margin: 0
+    font-size: var(--text-body-size-medium)
+    font-weight: var(--base-text-weight-normal)
+    line-height: var(--text-body-lineHeight-medium)
+    overflow-wrap: anywhere
+
+  &--signature,
+  &--after,
+  &--basis
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--main
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+    margin: var(--base-size-8) 0 0 var(--base-size-24)
+
+  &--text
+    padding-left: var(--base-size-12)
+    border-left: var(--base-size-2) solid var(--borderColor-default)
+
+    p
+      margin: 0
+      white-space: pre-line
+      overflow-wrap: anywhere
+      display: -webkit-box
+      -webkit-line-clamp: 4
+      -webkit-box-orient: vertical
+      overflow: hidden
+
+  &--toggle
+    position: absolute
+    width: 1px
+    height: 1px
+    opacity: 0
+    overflow: hidden
+
+  &--edit
+    display: none
+    flex-direction: column
+    gap: var(--base-size-8)
+
+  &:has(.assistant-draft-card--toggle:checked) .assistant-draft-card--edit
+    display: flex
+
+  &:has(.assistant-draft-card--toggle:checked) .assistant-draft-card--text
+    display: none
+
+  &:has(.assistant-draft-card--toggle:focus-visible) .assistant-draft-card--edit-button
+    outline: var(--focus-outline)
+    outline-offset: var(--base-size-2)
+
+  &--edit-button
+    cursor: pointer
+
+  &--basis-summary
+    cursor: pointer
+    list-style: none
+
+    &::-webkit-details-marker
+      display: none
+
+  &--basis[open] &--chevron
+    transform: rotate(90deg)
+
+  &--basis-list
+    margin: var(--base-size-4) 0 0
+    padding-left: var(--base-size-20)
+
+  &--final
+    color: var(--fgColor-danger)
+
+  &--notice
+    margin: 0
+    color: var(--fgColor-default)
+
+  &--keep
+    display: none
+
+  &:has(.assistant-draft-card--toggle:checked) .assistant-draft-card--keep
+    display: inline-flex
+
+  &--reread
+    margin: 0
+    color: var(--fgColor-danger)
+    font-size: var(--text-body-size-small)
+
+  &--actions
+    display: flex
+    flex-wrap: wrap
+    gap: var(--base-size-8)
+
+  &--look
+    margin-left: var(--base-size-4)
+
+.assistant-draft--reread
+  margin: 0
+  color: var(--fgColor-danger)
+  font-size: var(--text-body-size-small)
+
+.assistant-bench
+  position: relative
+  min-width: 0
+
+  [hidden]
+    display: none !important
+
+  &--head
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    justify-content: space-between
+    gap: var(--base-size-4) var(--base-size-8)
+
+  &--versions
+    display: inline-flex
+    align-items: center
+    gap: var(--base-size-4)
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+    font-variant-numeric: tabular-nums
+
+  &--step
+    min-width: var(--base-size-24)
+    height: var(--base-size-24)
+    padding: 0
+    color: var(--fgColor-default)
+    background: transparent
+    border: 0
+    border-radius: var(--borderRadius-medium)
+    font-size: var(--text-body-size-large)
+    line-height: 1
+    cursor: pointer
+    transition: background-color 120ms ease-out
+
+    &:hover:not(:disabled)
+      background: var(--bgColor-neutral-muted)
+
+    &:disabled
+      color: var(--fgColor-disabled)
+      cursor: default
+
+    &:focus-visible
+      outline: 2px solid var(--focus-outlineColor)
+      outline-offset: 1px
+
+  &--area,
+  &--preview
+    width: 100%
+    min-width: 0
+    max-height: 18rem
+    line-height: var(--text-body-lineHeight-medium, 1.5)
+    white-space: pre-wrap
+    overflow-wrap: anywhere
+
+  &--area
+    resize: vertical
+    field-sizing: content
+
+    &.-swap
+      animation: assistant-bench-swap 160ms ease-out
+
+  &--preview
+    box-sizing: border-box
+    min-height: 3rem
+    overflow-y: auto
+    padding: var(--base-size-8)
+    background: var(--bgColor-muted)
+    border-radius: var(--borderRadius-medium)
+    font-size: var(--text-body-size-medium)
+
+    &:focus-visible
+      outline: 2px solid var(--focus-outlineColor)
+
+  &--mark
+    padding: 0
+    color: inherit
+    background: var(--bgColor-attention-muted)
+    border-radius: var(--borderRadius-small)
+
+    &.-waiting
+      animation: assistant-bench-pulse 1.2s ease-in-out infinite
+
+  &--note,
+  &--status
+    margin: var(--base-size-4) 0 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--status
+    display: flex
+    align-items: center
+    gap: var(--base-size-8)
+
+  &--pulse
+    flex-shrink: 0
+    width: var(--base-size-8)
+    height: var(--base-size-8)
+    border-radius: 50%
+    background: var(--fgColor-accent)
+    animation: assistant-bench-pulse 1.2s ease-in-out infinite
+
+  &--error
+    color: var(--fgColor-danger)
+
+  &--link
+    padding: 0
+    color: var(--fgColor-accent)
+    background: transparent
+    border: 0
+    cursor: pointer
+    font: inherit
+
+    &:hover
+      text-decoration: underline
+
+    &:focus-visible
+      outline: 2px solid var(--focus-outlineColor)
+      outline-offset: 1px
+
+  &--revise
+    display: flex
+    gap: var(--base-size-8)
+    align-items: center
+    margin-top: var(--base-size-4)
+
+  &--revise-input
+    flex: 1 1 auto
+    min-width: 0
+
+  &--bar
+    position: absolute
+    z-index: 2
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+    box-sizing: border-box
+    max-width: calc(100% - var(--base-size-16))
+    padding: var(--base-size-8)
+    background: var(--overlay-bgColor, var(--bgColor-default))
+    border: var(--borderWidth-thin) solid var(--borderColor-default)
+    border-radius: var(--borderRadius-medium)
+    box-shadow: var(--shadow-floating-small)
+    animation: assistant-bench-in 120ms ease-out
+
+    &.-below
+      animation-name: assistant-bench-in-below
+
+  &--bar-row
+    display: flex
+    gap: var(--base-size-4)
+    align-items: center
+
+  &--bar-input
+    flex: 1 1 auto
+    min-width: 0
+
+  &--bar-chips
+    display: flex
+    flex-wrap: wrap
+    gap: var(--base-size-4)
+
+  &--chip
+    padding: 0 var(--base-size-8)
+    color: var(--fgColor-default)
+    background: var(--bgColor-muted)
+    border: var(--borderWidth-thin) solid var(--borderColor-muted)
+    border-radius: var(--borderRadius-full, 999px)
+    font-size: var(--text-body-size-small)
+    line-height: var(--base-size-24)
+    cursor: pointer
+    transition: background-color 120ms ease-out
+
+    &:hover
+      background: var(--bgColor-neutral-muted)
+
+    &:focus-visible
+      outline: 2px solid var(--focus-outlineColor)
+      outline-offset: 1px
+
+@keyframes assistant-bench-in
+  from
+    opacity: 0
+    transform: translateY(var(--base-size-4))
+
+@keyframes assistant-bench-in-below
+  from
+    opacity: 0
+    transform: translateY(calc(-1 * var(--base-size-4)))
+
+@keyframes assistant-bench-swap
+  from
+    opacity: 0.35
+
+@keyframes assistant-bench-pulse
+  0%, 100%
+    opacity: 0.3
+  50%
+    opacity: 1
+
+@media (prefers-reduced-motion: reduce)
+  .assistant-bench--pulse,
+  .assistant-bench--bar,
+  .assistant-bench--area,
+  .assistant-bench--mark
+    animation: none

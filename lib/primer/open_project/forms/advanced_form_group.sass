@@ -1,0 +1,50 @@
+.FormControl-advanced-check-group-wrap,
+.FormControl-advanced-radio-group-wrap
+  & fieldset
+    padding: 0
+    margin: 0
+    border: 0
+
+.FormControl-advanced-check-group-list,
+.FormControl-advanced-radio-group-list
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  gap: var(--base-size-12) var(--base-size-16)
+
+  @media screen and (max-width: $breakpoint-sm)
+    grid-template-columns: 1fr
+
+.FormControl-advanced-checkbox-wrap,
+.FormControl-advanced-radio-wrap
+  display: flex
+  background-color: var(--bgColor-inset)
+  border: var(--borderWidth-thin, 1px) solid var(--borderColor-default)
+  border-radius: var(--borderRadius-medium)
+
+  &:has(input:hover)
+    background-color: var(--bgColor-accent-muted)
+    border-color: var(--borderColor-accent-muted)
+
+  &:has(input:checked)
+    background-color: var(--bgColor-accent-muted)
+    border-color: var(--control-checked-borderColor-rest)
+
+  & .FormControl-label
+    display: block
+    flex: 1
+    cursor: pointer
+
+.FormControl-advanced-checkbox-content,
+.FormControl-advanced-radio-content
+  display: grid
+  grid-template-columns: min-content auto min-content
+  gap: var(--base-size-8)
+  padding: var(--base-size-12)
+
+.FormControl-advanced-checkbox-label-text,
+.FormControl-advanced-radio-label-text
+  color: var(--fgColor-accent)
+
+.FormControl-advanced-checkbox-icon,
+.FormControl-advanced-radio-icon
+  fill: var(--fgColor-accent)

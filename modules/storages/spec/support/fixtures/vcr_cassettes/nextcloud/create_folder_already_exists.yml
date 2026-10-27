@@ -1,0 +1,73 @@
+---
+http_interactions:
+- request:
+    method: mkcol
+    uri: https://nextcloud.local/remote.php/dav/files/admin/Folder
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - OpenProject 17.1.0 HTTPX Client
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <SECRET>
+  response:
+    status:
+      code: 405
+      message: Method Not Allowed
+    headers:
+      Allow:
+      - OPTIONS, GET, HEAD, DELETE, PROPFIND, PUT, PROPPATCH, COPY, MOVE, REPORT
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Wed, 17 Dec 2025 15:45:43 GMT
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocm4e2tlfbl8=35a11310c69fd49d2455153e7911a84b; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=fwSW41LZ6mHzn%2Fyl4k2lIQNz8%2FEIGjUULGowstszDCk0MMdV0dVbf32szxUkyjemWbfY%2F%2FSXcI40Qg0mBGSdBym4hKnhu%2BRavWw84ECzOGMfYIHwuPHWqiu76EeR1PRQ;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=35a11310c69fd49d2455153e7911a84b;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocm4e2tlfbl8=35a11310c69fd49d2455153e7911a84b;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=35a11310c69fd49d2455153e7911a84b;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=35a11310c69fd49d2455153e7911a84b;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=35a11310c69fd49d2455153e7911a84b;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=35a11310c69fd49d2455153e7911a84b;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=35a11310c69fd49d2455153e7911a84b;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=35a11310c69fd49d2455153e7911a84b;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.3.20
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '247'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="utf-8"?>
+        <d:error xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns">
+          <s:exception>Sabre\DAV\Exception\MethodNotAllowed</s:exception>
+          <s:message>The resource you tried to create already exists</s:message>
+        </d:error>
+  recorded_at: Wed, 17 Dec 2025 15:45:43 GMT
+recorded_with: VCR 6.3.1

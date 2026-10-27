@@ -1,0 +1,38 @@
+# /api/v3/workspaces/{id}/work_packages/form
+---
+post:
+  summary: Form for creating Work Packages in a Workspace
+  operationId: form_create_work_package_in_workspace
+  tags:
+    - Work Packages
+  description: |-
+    This endpoint allows you to validation a new work package creation body in a specific workspace. It works similarly
+    to the `/api/v3/work_packages/form` endpoint, but already specifies the work package's workspace in the path, so that
+    it does not have to be defined in the request body.
+  parameters:
+    - name: id
+      description: ID of the workspace in which the work package will be created
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/work_package_write_model.yml'
+        examples:
+          'Minimal example':
+            $ref: '../components/examples/work_package_create_only_subject.yml'
+          'Valid example':
+            $ref: '../components/examples/work_package_create_valid.yml'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/work_package_form_model.yml'
+    '415':
+      $ref: '../components/responses/unsupported_media_type.yml'

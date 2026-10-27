@@ -1,0 +1,71 @@
+@if (workPackage) {
+  <div
+    class="work-packages--details loading-indicator--location"
+    data-indicator-name="wpDetails"
+    >
+    @if (showTabs) {
+      <op-wp-tabs [workPackage]="workPackage"
+        [view]="'split'"
+       />
+    }
+    @if (workPackage) {
+      <div class="work-packages--details-content work-packages-tab-view--overflow"
+        [class.work-packages--details-content_no-tabs]="!showTabs"
+        >
+        <span
+          class="sr-only"
+          tabindex="-1"
+          [textContent]="focusAnchorLabel"
+        ></span>
+        <edit-form
+          [resource]="workPackage"
+          class="work-packages--details-form"
+          >
+          <div class="work-packages--details-header">
+            <div class="work-packages--details-header-left">
+              <wp-breadcrumb [workPackage]="workPackage"
+                class="work-packages--breadcrumb"
+               />
+              @if (showBackButton()) {
+                <op-back-button linkClass="work-packages-back-button"
+                  [customBackMethod]="backToList.bind(this)"
+                 />
+              }
+              <wp-subject [workPackage]="workPackage" class="subject-header" />
+            </div>
+          </div>
+          <turbo-frame id="assistant-wp-line-frame" loading="lazy" class="assistant-wp-line assistant-wp-line--split hide-when-print"
+            [attr.src]="PathHelper.staticBase + '/assistant/work_packages/' + workPackage.id + '/line'"></turbo-frame>
+          @if (showTabs) {
+            <div
+              class="work-package-details-tab"
+              data-notification-selector='notification-scroll-container'
+              ui-view
+              >
+            </div>
+          }
+          @if (!showTabs && activeTab) {
+            <div
+              class="work-package-details-tab"
+              data-notification-selector='notification-scroll-container'
+              >
+              <ndc-dynamic [ndcDynamicComponent]="activeTabComponent"
+                [ndcDynamicInputs]="{ workPackage: workPackage }" />
+            </div>
+          }
+        </edit-form>
+      </div>
+    }
+    @if (workPackage) {
+      <div class="work-packages--details-toolbar-container">
+        <wp-details-toolbar [workPackage]="workPackage"
+          [displayNotificationsButton]="(displayNotificationsButton$ | async)"
+         />
+      </div>
+    }
+    <div class="work-packages--details--resizer hidden-for-mobile hide-when-print">
+      <wp-resizer [elementClass]="resizerClass"
+      [localStorageKey]="'openProject-splitViewFlexBasis'" />
+    </div>
+  </div>
+}

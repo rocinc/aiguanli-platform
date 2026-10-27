@@ -1,0 +1,1428 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+Rails.application.routes.draw do
+  root to: "homescreen#index", as: "home"
+  rails_relative_url_root = OpenProject::Configuration["rails_relative_url_root"] || ""
+
+  # Route for error pages
+  get "/404", to: "errors#not_found"
+  get "/422", to: "errors#unacceptable"
+  get "/500", to: "errors#internal_error"
+
+  # Route for health_checks
+  get "/health_check" => "ok_computer/ok_computer#show", check: "web"
+  # Override the default `all` checks route to return the full check
+  get "/health_checks/all" => "ok_computer/ok_computer#show", check: "full"
+  mount OkComputer::Engine, at: "/health_checks"
+
+  get "/api/docs" => "api_docs#index"
+
+  mount API::Mcp => "/mcp"
+
+  # Redirect deprecated issue links to new work packages uris
+  get "/issues(/)" => redirect("#{rails_relative_url_root}/work_packages")
+  # The URI.escape doesn't escape / unless you ask it to.
+  # see https://github.com/rails/rails/issues/5688
+  get "/issues/*rest" => redirect { |params, _req|
+    "#{rails_relative_url_root}/work_packages/#{URI::RFC2396_Parser.new.escape(params[:rest])}"
+  }
+
+  # Respond with 410 gone for APIV2 calls
+  match "/api/v2(/*unmatched_route)", to: proc { [410, {}, [""]] }, via: :all
+
+  # Respond with 404 for source maps that are not found
+  # This prevents routing errors in test when developer mode is activated
+  match "/assets/compiler.js.map", to: proc { [404, {}, [""]] }, via: :all
+  match "*.css.map", to: proc { [404, {}, [""]] }, via: :all
+
+  # Redirect wp short url for work packages to full URL
+  get "/wp(/)" => redirect("#{rails_relative_url_root}/work_packages")
+  get "/wp/*rest" => redirect { |params, _req|
+    "#{rails_relative_url_root}/work_packages/#{URI::RFC2396_Parser.new.escape(params[:rest])}"
+  }, as: :work_package_short
+
+  # Add catch method for Rack OmniAuth to allow route helpers
+  # Note: This renders a 404 in rails but is caught by omniauth in Rack before
+  get "/auth/failure", to: "omni_auth_login#failure", as: "omni_auth_failure"
+  match "/auth/:provider", to: proc { [404, {}, [""]] }, as: "omni_auth_start", via: %i[get post]
+  match "/auth/:provider/callback", to: "omni_auth_login#callback", as: "omni_auth_callback", via: %i[get post]
+
+  scope ".well-known" do
+    get "oauth-authorization-server", to: "oauth_metadata#authorization_server", as: :authorization_server_metadata
+    get "oauth-protected-resource", to: "oauth_metadata#protected_resource", as: :protected_resource_metadata
+
+    get "openproject-metadata", to: "openproject_metadata#show"
+  end
+
+  # In case assets are actually delivered by a node server (e.g. in test env)
+  # forward requests to the proxy
+  if FrontendAssetHelper.assets_proxied?
+    match "/assets/frontend/*appendix",
+          to: redirect("#{FrontendAssetHelper.cli_proxy}/assets/frontend/%{appendix}", status: 307),
+          format: false,
+          via: :all
+  end
+
+  # Shared route concerns
+  # TODO: Add description how to configure controller to support shares
+  concern :shareable do
+    resources :members, path: "shares", controller: "shares", only: %i[index create update destroy] do
+      member do
+        post "resend_invite" => "shares#resend_invite"
+      end
+
+      collection do
+        get :dialog, to: "shares#dialog"
+        patch :bulk, to: "shares#bulk_update"
+        put :bulk, to: "shares#bulk_update"
+        delete :bulk, to: "shares#bulk_destroy"
+      end
+    end
+  end
+
+  scope controller: "account" do
+    get "/account/force_password_change", action: "force_password_change"
+    post "/account/change_password", action: "change_password"
+    match "/account/lost_password", action: "lost_password", via: %i[get post]
+    get "/account/password_recovery", action: "password_recovery"
+    post "/account/set_recovered_password", action: "set_recovered_password"
+    match "/account/register", action: "register", via: %i[get post patch]
+    get "/account/activate", action: "activate"
+
+    match "/login", action: "login", as: "signin", via: %i[get post]
+    get "/login/internal", action: "internal_login", as: "internal_signin"
+    get "/logout", action: "logout", as: "signout"
+
+    get "/sso", action: "auth_source_sso_failed", as: "sso_failure"
+
+    get "/login/:stage/failure", action: "stage_failure", as: "stage_failure"
+    get "/login/:stage/:secret", action: "stage_success", as: "stage_success"
+
+    get "/account/consent", action: "consent", as: "account_consent"
+    get "/account/decline_consent", action: "decline_consent", as: "account_decline_consent"
+    post "/account/confirm_consent", action: "confirm_consent", as: "account_confirm_consent"
+  end
+
+  get "/external_redirect", to: "external_link_warning#show", as: "external_redirect"
+
+  resources :attribute_help_texts, only: [] do
+    member do
+      get :show_dialog
+    end
+  end
+
+  # Because of https://github.com/intridea/grape/pull/853/files this has to be
+  # placed behind handling the deprecated v1 because otherwise, a 405 is
+  # returned for all routes for which the v3 has also resources. Grape does
+  # remove the prefix (v3) before checking whether the method is supported. I
+  # don't understand why that should make sense.
+  mount API::Root => "/api"
+
+  # OAuth authorization routes
+  use_doorkeeper do
+    # Do not add global application controller
+    skip_controllers :applications, :authorized_applications
+  end
+
+  get "/roles/workflow/:id/:role_id/:type_id" => "roles#workflow"
+
+  # Configuring one variant of a type, from administration or from the settings of a project
+  # that owns one.
+  concern :type_variant_configuration do
+    resources :settings, controller: "settings_tab", only: %i[index]
+
+    # ProjectsTabController turns a project away: which projects use a type is instance-wide.
+    resource :projects, controller: "projects_tab", only: %i[edit update] do
+      collection do
+        post :enable_all, to: "projects_tab#enable_all_projects"
+
+        get :new_link
+        get :tree
+        post :link
+        delete :unlink
+
+        get :new_switch
+        post :switch
+      end
+    end
+
+    resource :details, controller: "details_tab", only: %i[update edit]
+
+    resource :form_configuration, only: %i[edit update], controller: "form_configuration_tab" do
+      get :reset_dialog
+      resources :groups, only: %i[create edit update destroy], controller: "form_configuration_groups_tab", param: :key do
+        collection do
+          post :add_group
+        end
+
+        member do
+          post :cancel_edit
+          put :drop
+          put :move
+          patch :update_query
+        end
+      end
+      resources :rows, only: %i[destroy], controller: "form_configuration_tab", param: :row_key do
+        member do
+          put :drop
+          put :move
+          put :toggle_required
+        end
+      end
+    end
+
+    resource :project_attributes, controller: "project_attributes_tab", only: %i[edit] do
+      post :toggle
+      put :enable_all_of_section
+      put :disable_all_of_section
+    end
+
+    resource :defaults, controller: "defaults_tab", only: %i[update edit]
+
+    scope "link_config/:aspect", controller: "configuration_links", as: :configuration_link do
+      get :dialog
+      post :confirm
+      post :switch
+    end
+
+    scope "independent_config/:aspect", controller: "configuration_independence", as: :configuration_independence do
+      get :dialog
+      post :confirm
+      post :switch
+    end
+
+    scope "copy_config/:aspect", controller: "configuration_copies", as: :configuration_copy do
+      get :dialog
+      post :confirm
+      post :copy
+    end
+
+    scope "dependents/:aspect", controller: "configuration_dependents", as: :configuration_dependents do
+      get :dialog
+    end
+
+    scope "exclusions/:aspect", controller: "excluded_elements", as: :excluded_element do
+      post :toggle
+    end
+
+    resource :workflow, controller: "workflow_tab", only: %i[edit] do
+      resource :matrix, only: %i[show update], controller: "/workflows/matrix" do
+        get :status_dialog
+        post :confirm_statuses
+      end
+
+      resource :copy, only: %i[new], controller: "/workflows/copies" do
+        resource :from_role, only: %i[create], controller: "/workflows/copies/from_roles"
+      end
+    end
+
+    resources :pdf_export_template, only: %i[],
+                                    controller: "pdf_export_template",
+                                    path: "pdf_export" do
+      member do
+        post :toggle
+        put :drop
+        get :edit_settings
+        patch :update_settings
+      end
+      collection do
+        get :edit
+        put :enable_all
+        put :disable_all
+        put :update_artefact_export
+      end
+    end
+
+    resource :creation_wizard, controller: "creation_wizard", only: %i[show update]
+  end
+
+  resources :types, module: "work_package_types", only: %i[index destroy] do
+    collection do
+      post "move/:id", action: "move", as: :move
+      get :workflow_summary, to: "/workflows/summaries#show"
+    end
+
+    member do
+      get :menu
+      put :drop
+      post :duplicate
+    end
+  end
+
+  # `only: []` so this resource does not shadow the project's own types page, which has its own
+  # controller.
+  resources :types, only: [], module: "work_package_types" do
+    # The project has to stay behind the type. Ahead of it, an optional segment takes any
+    # positional argument for itself, silently naming a type's id as a project.
+    nested do
+      scope "(in-project/:in_project_id)" do
+        resources :variants, controller: "variants", only: %i[index destroy] do
+          member do
+            get :menu
+            post :make_default
+            post :remove_default
+            get :convert_to_global_dialog
+            post :convert_to_global
+            get :deletion_dialog
+            post :deletion_preview
+          end
+        end
+
+        scope "(variants/:variant_id)" do
+          concerns :type_variant_configuration
+        end
+      end
+    end
+
+    collection do
+      scope "(in-project/:in_project_id)" do
+        get "creation_wizard/new", to: "creation_wizard#new", as: :new_creation_wizard
+        post "creation_wizard", to: "creation_wizard#create", as: :creation_wizard
+      end
+    end
+  end
+
+  resources :statuses, except: :show do
+    member do
+      put :move
+    end
+  end
+
+  get "custom_style/:digest/logo/:filename" => "custom_styles#logo_download",
+      as: "custom_style_logo",
+      constraints: { filename: /[^\/]*/ }
+
+  get "custom_style/:digest/logo_mobile/:filename" => "custom_styles#logo_mobile_download",
+      as: "custom_style_logo_mobile",
+      constraints: { filename: /[^\/]*/ }
+
+  get "custom_style/:digest/export_logo/:filename" => "custom_styles#export_logo_download",
+      as: "custom_style_export_logo",
+      constraints: { filename: /[^\/]*/ }
+
+  get "custom_style/:digest/export_cover/:filename" => "custom_styles#export_cover_download",
+      as: "custom_style_export_cover",
+      constraints: { filename: /[^\/]*/ }
+
+  get "custom_style/:digest/export_footer/:filename" => "custom_styles#export_footer_download",
+      as: "custom_style_export_footer",
+      constraints: { filename: /[^\/]*/ }
+
+  get "custom_style/:digest/favicon/:filename" => "custom_styles#favicon_download",
+      as: "custom_style_favicon",
+      constraints: { filename: /[^\/]*/ }
+
+  get "custom_style/:digest/touch-icon/:filename" => "custom_styles#touch_icon_download",
+      as: "custom_style_touch_icon",
+      constraints: { filename: /[^\/]*/ }
+
+  get "highlighting/styles(/:version_tag)" => "highlighting#styles",
+      as: "highlighting_css_styles"
+
+  resources :custom_fields, except: :show do
+    member do
+      delete "options/:option_id", to: "custom_fields#delete_option", as: :delete_option_of
+
+      post :reorder_alphabetical
+
+      get :attribute_help_text
+      put :update_attribute_help_text
+
+      get :list_items
+    end
+
+    scope module: :admin do
+      scope module: :custom_fields do
+        resources :projects, controller: "/admin/custom_fields/custom_field_projects", only: %i[index new create]
+        resource :project, controller: "/admin/custom_fields/custom_field_projects", only: :destroy
+        resources :items, controller: "/admin/custom_fields/hierarchy/items" do
+          member do
+            get :change_parent, action: :change_parent_dialog
+            post :change_parent, action: :change_parent
+            get :delete, action: :deletion_dialog
+            get :item_actions
+            post :move
+            get :new_child, action: :new
+            post :new_child, action: :create
+          end
+        end
+      end
+    end
+  end
+
+  get "(projects/:project_id)/search" => "search#index", as: "search"
+
+  # only providing routes for journals when there are multiple subclasses of journals
+  # all subclasses will look for the journals routes
+  resources :journals, only: :index do
+    get "diff/:field", action: :diff, on: :member, as: "diff"
+  end
+
+  # REVIEW: review those wiki routes
+  scope "projects/:project_id/wiki/:id" do
+    resource :wiki_menu_item, only: %i[edit update]
+  end
+
+  # generic route for adding/removing watchers
+  scope ":object_type/:object_id", constraints: OpenProject::Acts::Watchable::RouteConstraint do
+    post "/watch" => "watchers#watch"
+    delete "/unwatch" => "watchers#unwatch"
+  end
+
+  # generic route for adding/removing favorites
+  scope ":object_type/:object_id", constraints: OpenProject::Acts::Favoritable::RouteConstraint do
+    post "/favorite" => "favorites#favorite"
+    delete "/favorite" => "favorites#unfavorite"
+  end
+
+  resources :project_queries, only: %i[show new create update destroy], controller: "projects/queries" do
+    concerns :shareable
+
+    member do
+      get :rename
+      post :toggle_public
+      get :destroy_confirmation_modal
+    end
+
+    collection do
+      get :configure_view_modal
+    end
+  end
+
+  namespace :projects do
+    resource :menu, only: %i[show]
+    resource :filters, only: %i[show]
+    resource :identifier_suggestion, only: %i[show], controller: "identifier_suggestion"
+  end
+
+  namespace :header do
+    resources :projects, only: :index do
+      collection do
+        get :frame
+      end
+    end
+  end
+
+  %w[portfolio project program].each do |workspace_type|
+    resources workspace_type.pluralize,
+              only: %i[new create],
+              defaults: { workspace_type: },
+              controller: workspace_type.pluralize
+  end
+
+  resources :projects, except: %i[new create show edit update] do
+    scope module: "projects" do
+      namespace "settings" do
+        resource :general, only: %i[show update], controller: "general" do
+          get :toggle_public_dialog
+          post :toggle_public
+        end
+        resource :modules, only: %i[show update]
+        resource :subitems, only: %i[show update]
+        resource :template, only: %i[show update], controller: "template" do
+          post :toggle_template, on: :member
+        end
+        resource :creation_wizard, controller: "creation_wizard", only: %i[show] do
+          get :disable_dialog
+          post :toggle
+          post :update_name_settings
+          post :update_submission_settings
+          post :update_artifact_export_settings
+          post :refresh_submission_form
+          post :toggle_project_custom_field
+          put :enable_all_of_section
+          put :disable_all_of_section
+        end
+        resource :project_custom_fields, only: %i[show] do
+          member do
+            post :toggle
+          end
+          collection do
+            put :enable_all_of_section
+            put :disable_all_of_section
+          end
+        end
+        resources :life_cycle_steps, only: %i[index], path: "life_cycle" do
+          member do
+            post :toggle
+          end
+          collection do
+            post :enable_all
+            post :disable_all
+          end
+        end
+        resource :repository, only: %i[show], controller: "repository"
+        resource :versions, only: %i[show]
+        resource :storage, only: %i[show], controller: "storage"
+        get :types, to: redirect("projects/%{project_id}/settings/work_packages/types")
+        get :custom_fields, to: redirect("projects/%{project_id}/settings/work_packages/custom_fields")
+        get :categories, to: redirect("projects/%{project_id}/settings/work_packages/categories")
+        resource :work_packages, only: %i[show]
+        namespace :work_packages do
+          resource :internal_comments, only: %i[show update]
+          resources :types, only: %i[index new create destroy] do
+            resource :switch, only: %i[new create], controller: "types/switches" do
+              resource :impact, only: :create, controller: "types/switches/impacts"
+            end
+          end
+          resource :custom_fields, only: %i[show update]
+          resource :categories, only: %i[show update]
+        end
+      end
+
+      resource :templated, only: %i[create destroy], controller: "templated"
+      resource :archive, only: %i[create destroy], controller: "archive" do
+        collection do
+          get :dialog
+        end
+      end
+      resource :identifier, only: %i[show update], controller: "identifier" do
+        get :identifier_update_dialog, on: :member, defaults: { format: :turbo_stream }
+      end
+      resource :status, only: %i[update destroy], controller: "status"
+      resource :creation_wizard, only: %i[show update], controller: "creation_wizard" do
+        get :help_text, on: :member
+      end
+    end
+
+    member do
+      get "settings", to: redirect("projects/%{id}/settings/general/")
+
+      get "export_project_initiation", to: "projects#export_project_initiation_pdf"
+
+      get :list_row_menu
+
+      get :copy, to: "projects#copy_form"
+      post :copy
+
+      patch :types
+
+      # Destroy uses a get request to prompt the user before the actual DELETE request
+      get :destroy_info, as: "confirm_destroy"
+      post :deactivate_work_package_attachments
+    end
+
+    resources :versions, only: %i[new create] do
+      collection do
+        put :close_completed
+      end
+    end
+
+    # this is only another name for versions#index
+    # For nice "road in the url for the index action
+    # this could probably be rewritten with a resource as: 'roadmap'
+    get "/roadmap" => "versions#index"
+
+    resources :news do
+      resources :comments, controller: "news/comments", only: %i[create destroy]
+    end
+
+    # Match everything to be the ID of the wiki page except the part that
+    # is reserved for the format. This assumes that we have only two formats:
+    # .txt and .html
+    resources :wiki,
+              constraints: { id: /([^\/]+(?=\.markdown)|[^\/]+)/ },
+              except: %i[index create] do
+      collection do
+        post "/new" => "wiki#create", as: "create"
+        get :export
+        get "/index" => "wiki#index"
+        get :menu
+        get :menu_tree
+      end
+
+      member do
+        get "/new" => "wiki#new_child", as: "new_child"
+        get "/diff/:version/vs/:version_from" => "wiki#diff", as: "wiki_diff_compare"
+        get "/diff(/:version)" => "wiki#diff", as: "wiki_diff"
+        get "/annotate/:version" => "wiki#annotate", as: "wiki_annotate"
+        get "/toc" => "wiki#index"
+        match :rename, via: %i[get patch]
+        get :parent_page, action: "edit_parent_page"
+        patch :parent_page, action: "update_parent_page"
+        get :history
+        post :protect
+        get :select_main_menu_item, to: "wiki_menu_items#select_main_menu_item"
+        post :replace_main_menu_item, to: "wiki_menu_items#replace_main_menu_item"
+      end
+    end
+
+    # as routes for index and show are swapped
+    # it is necessary to define the show action later
+    # than any other route as it otherwise would
+    # work as a catchall for everything under /wiki
+    get "wiki" => "wiki#show"
+
+    resources :work_packages, only: %i[index show] do
+      collection do
+        get "/report/:detail" => "work_packages/reports#report_details"
+        get "/report" => "work_packages/reports#report"
+        get "menu" => "work_packages/menus#show"
+        get "/export_dialog" => "work_packages#export_dialog"
+      end
+
+      get "/copy" => "work_packages#copy", on: :member, as: "copy"
+      get "/new" => "work_packages#new", on: :collection, as: "new"
+
+      get "(/:tab)" => "work_packages#show", on: :member, as: "",
+          constraints: { id: WorkPackage::SemanticIdentifier::ID_ROUTE_CONSTRAINT, state: /(?!(shares|copy|dialog)).+/ }
+
+      get "details/:work_package_id(/:tab)" => "work_packages#split_view", on: :collection, as: :details,
+          defaults: { tab: "overview" }, work_package_split_view: true,
+          constraints: { work_package_id: WorkPackage::SemanticIdentifier::ID_ROUTE_CONSTRAINT }
+
+      get "/create_new" => "work_packages#split_create", on: :collection, as: "new_split", work_package_split_create: true
+    end
+
+    namespace :work_packages do
+      resource :dialog, only: %i[new create] do
+        post :refresh_form
+      end
+    end
+
+    resources :activity, :activities, only: :index, controller: "activities" do
+      collection do
+        get :menu
+      end
+    end
+
+    resources :forums do
+      resources :topics, controller: "messages", except: [:index] do
+        member do
+          get :quote
+          post :reply, as: "reply_to"
+        end
+      end
+
+      member do
+        get :confirm_destroy
+        get :move
+        post :move
+      end
+    end
+
+    resources :categories, except: %i[index show], shallow: true
+
+    resources :members, only: %i[index create update] do
+      collection do
+        delete "by_principal/:principal_id", action: :destroy_by_principal
+
+        get :autocomplete_for_member
+        get :menu, to: "members/menus#show"
+      end
+    end
+
+    resource :repository, controller: "repositories", except: [:new] do
+      # Destroy uses a get request to prompt the user before the actual DELETE request
+      get :destroy_info
+      get :committers
+      post :committers
+      get :graph
+      get :revisions
+
+      get "/statistics", action: :stats, as: "stats"
+
+      get "(/revisions/:rev)/diff.:format", action: :diff
+      get "(/revisions/:rev)/diff(/*repo_path)",
+          action: :diff,
+          format: "html",
+          constraints: { rev: /[\w.-]+/, repo_path: /.*/ }
+
+      get "(/revisions/:rev)/:format/*repo_path",
+          action: :entry,
+          format: /raw/,
+          rev: /[\w.-]+/
+
+      %w{diff annotate changes entry browse}.each do |action|
+        get "(/revisions/:rev)/#{action}(/*repo_path)",
+            format: "html",
+            action:,
+            constraints: { rev: /[\w.-]+/, repo_path: /.*/ },
+            as: "#{action}_revision"
+      end
+
+      get "/revision(/:rev)", rev: /[\w.-]+/,
+                              action: :revision,
+                              as: "show_revision"
+
+      get "(/revisions/:rev)(/*repo_path)",
+          action: :show,
+          format: "html",
+          constraints: { rev: /[\w.-]+/, repo_path: /.*/ },
+          as: "show_revisions_path"
+    end
+  end
+
+  resources :portfolios,
+            only: %i[index]
+
+  namespace :portfolios do
+    resource :menu, only: %i[show]
+  end
+
+  resources :project_phases, only: [] do
+    member do
+      get "/hover_card" => "project_phases/hover_card#show", as: "hover_card"
+    end
+  end
+
+  resources :admin, controller: :admin, only: :index do
+    collection do
+      get :plugins
+      get :info
+      post :test_email
+    end
+  end
+
+  scope "admin" do
+    resource :announcements, only: %i[edit update]
+
+    get "/enterprise", to: redirect("#{rails_relative_url_root}/admin")
+
+    constraints(Constraints::Enterprise) do
+      resources :enterprise_tokens, only: %i[index new create destroy] do
+        member do
+          get :destroy_dialog
+        end
+
+        collection do
+          post :save_trial_key
+          delete :delete_trial_key
+        end
+      end
+
+      resource :enterprise_trial, only: %i[show create destroy] do
+        get :trial_dialog
+        post :request_resend, on: :collection
+      end
+    end
+
+    delete "design/logo" => "custom_styles#logo_delete", as: "custom_style_logo_delete"
+    delete "design/logo_mobile" => "custom_styles#logo_mobile_delete", as: "custom_style_logo_mobile_delete"
+    delete "design/export_logo" => "custom_styles#export_logo_delete", as: "custom_style_export_logo_delete"
+    delete "design/export_cover" => "custom_styles#export_cover_delete", as: "custom_style_export_cover_delete"
+    delete "design/export_footer" => "custom_styles#export_footer_delete", as: "custom_style_export_footer_delete"
+    delete "design/export_font_regular" => "custom_styles#export_font_regular_delete",
+           as: "custom_style_export_font_regular_delete"
+    delete "design/export_font_bold" => "custom_styles#export_font_bold_delete", as: "custom_style_export_font_bold_delete"
+    delete "design/export_font_italic" => "custom_styles#export_font_italic_delete", as: "custom_style_export_font_italic_delete"
+    delete "design/export_font_bold_italic" => "custom_styles#export_font_bold_italic_delete",
+           as: "custom_style_export_font_bold_italic_delete"
+    delete "design/favicon" => "custom_styles#favicon_delete", as: "custom_style_favicon_delete"
+    delete "design/touch_icon" => "custom_styles#touch_icon_delete", as: "custom_style_touch_icon_delete"
+    post "design/colors" => "custom_styles#update_colors", as: "update_design_colors"
+    post "design/themes" => "custom_styles#update_themes", as: "update_design_themes"
+    post "design/export_cover_text_color" => "custom_styles#update_export_cover_text_color",
+         as: "update_custom_style_export_cover_text_color"
+
+    resource :custom_style, only: %i[update show create], path: "design" do
+      get :export_demo_pdf_download
+    end
+
+    resources :attribute_help_texts, only: %i(index new create edit update destroy)
+
+    resources :groups, except: %i[show] do
+      member do
+        # this should be put into its own resource
+        post "/members" => "groups#add_users", as: "members_of"
+        delete "/members/:user_id" => "groups#remove_user", as: "member_of"
+        # this should be put into its own resource
+        patch "/memberships/:membership_id" => "groups#edit_membership", as: "membership_of"
+        put "/memberships/:membership_id" => "groups#edit_membership"
+        delete "/memberships/:membership_id" => "groups#destroy_membership"
+        post "/memberships" => "groups#create_memberships", as: "memberships_of"
+      end
+    end
+
+    resources :roles, except: %i[show] do
+      member do
+        put :drop
+      end
+
+      collection do
+        put "/" => "roles#bulk_update"
+        get :report
+      end
+    end
+
+    resources :ldap_auth_sources do
+      member do
+        get :test_connection
+      end
+    end
+
+    resources :mcp_configurations, only: %i[index update], controller: "admin/mcp_configurations" do
+      collection do
+        post :multi_update
+      end
+    end
+
+    resources :custom_actions, except: :show
+
+    namespace :oauth do
+      resources :applications do
+        member do
+          post :toggle
+        end
+      end
+    end
+  end
+
+  namespace :admin do
+    namespace :settings do
+      resource :general, controller: "/admin/settings/general_settings", only: %i[show update]
+      resource :languages, controller: "/admin/settings/languages_settings", only: %i[show update]
+      resource :external_links, controller: "/admin/settings/external_links_settings", only: %i[show update]
+      resource :exports, controller: "/admin/settings/exports_settings", only: %i[show update]
+      resource :repositories, controller: "/admin/settings/repositories_settings", only: %i[show update]
+      resource :experimental, controller: "/admin/settings/experimental_settings", only: %i[show update]
+
+      resource :authentication, controller: "/admin/settings/authentication_settings", only: %i[show update]
+      resource :attachments, controller: "/admin/settings/attachments_settings", only: %i[show update]
+      resource :virus_scanning, controller: "/admin/settings/virus_scanning_settings", only: %i[show update] do
+        collection do
+          post :av_form
+        end
+      end
+
+      resource :incoming_mails, controller: "/admin/settings/incoming_mails_settings", only: %i[show update]
+      resource :aggregation, controller: "/admin/settings/aggregation_settings", only: %i[show update]
+      resource :mail_notifications, controller: "/admin/settings/mail_notifications_settings", only: %i[show update]
+      resource :api, controller: "/admin/settings/api_settings", only: %i[show update]
+      # It is important to have this named something else than "work_packages".
+      # Otherwise the angular ui-router will also recognize that as a WorkPackage page and apply according classes.
+      resource :work_packages_general, controller: "/admin/settings/work_packages_general", only: %i[show update]
+      resource :work_packages_identifier, controller: "/admin/settings/work_packages_identifier", only: %i[show update] do
+        get :status, on: :member
+        get :confirm_dialog, on: :member, defaults: { format: :turbo_stream }
+      end
+      resource :versions_and_categories, controller: "/admin/settings/versions_and_categories", only: %i[show] do
+        post :enable_multiple_versions, on: :member
+        get :confirm_dialog, on: :member, defaults: { format: :turbo_stream }
+      end
+      resources :work_package_priorities, except: [:show] do
+        member do
+          put :move
+          get :reassign
+        end
+      end
+
+      resource :progress_tracking, controller: "/admin/settings/progress_tracking", only: %i[show update]
+      resource :projects, controller: "/admin/settings/projects_settings", only: %i[show update]
+      resource :new_project, controller: "/admin/settings/new_project_settings", only: %i[show update]
+      resources :project_phase_definitions,
+                controller: "/admin/settings/project_phase_definitions",
+                except: :show do
+        member do
+          patch :move
+          put :drop # should be patch, but requires passing method to generic-drag-and-drop controller
+        end
+      end
+      resources :project_custom_fields, controller: "/admin/settings/project_custom_fields" do
+        member do
+          delete "options/:option_id", action: "delete_option", as: :delete_option_of
+          post :reorder_alphabetical
+          put :move
+          put :drop
+
+          get :project_mappings
+          get :new_link
+          post :link
+          delete :unlink
+
+          get :role_assignment
+          post :update_role_assignment
+          get :role_assignment_preview_dialog
+
+          get :attribute_help_text
+          put :update_attribute_help_text
+
+          get :list_items
+        end
+
+        resources :items, controller: "/admin/settings/project_custom_fields/hierarchy/items" do
+          member do
+            get :change_parent, action: :change_parent_dialog
+            post :change_parent, action: :change_parent
+            get :delete, action: :deletion_dialog
+            get :item_actions
+            post :move
+            get :new_child, action: :new
+            post :new_child, action: :create
+          end
+        end
+      end
+
+      resources :project_custom_field_sections, controller: "/admin/settings/project_custom_field_sections",
+                                                only: %i[create update destroy] do
+        member do
+          put :move
+          put :drop
+        end
+        collection do
+          get :new_link
+        end
+      end
+
+      resources :user_custom_fields, controller: "/admin/settings/user_custom_fields" do
+        collection do
+          patch :semantic_keys, action: :update_semantic_keys
+        end
+
+        member do
+          delete "options/:option_id", action: "delete_option", as: :delete_option_of
+          post :reorder_alphabetical
+          put :move
+          put :drop
+
+          get :attribute_help_text
+          put :update_attribute_help_text
+
+          get :list_items
+        end
+
+        resources :items, controller: "/admin/settings/user_custom_fields/hierarchy/items" do
+          member do
+            get :change_parent, action: :change_parent_dialog
+            post :change_parent, action: :change_parent
+            get :delete, action: :deletion_dialog
+            get :item_actions
+            post :move
+            get :new_child, action: :new
+            post :new_child, action: :create
+          end
+        end
+      end
+
+      resources :user_custom_field_sections, controller: "/admin/settings/user_custom_field_sections",
+                                             only: %i[create update destroy] do
+        member do
+          put :move
+          put :drop
+        end
+        collection do
+          get :new_link
+        end
+        resources :built_in_attributes,
+                  controller: "/admin/settings/user_custom_field_sections/built_in_attributes",
+                  param: :key,
+                  only: [] do
+          member do
+            put :move
+            put :drop
+          end
+        end
+      end
+
+      resource :working_days_and_hours, controller: "/admin/settings/working_days_and_hours_settings", only: %i[show update] do
+        post :confirm_changes
+      end
+      resource :users, controller: "/admin/settings/users_settings", only: %i[show update]
+      resource :date_format, controller: "/admin/settings/date_format_settings", only: %i[show update]
+      resource :icalendar, controller: "/admin/settings/icalendar_settings", only: %i[show update]
+
+      resources :project_reserved_identifiers, only: %i[index destroy] do
+        collection do
+          get :search, defaults: { format: :turbo_stream }
+        end
+        member do
+          get :confirm_dialog, defaults: { format: :turbo_stream }
+        end
+      end
+
+      # Redirect /settings to general settings
+      get "/", to: redirect("/admin/settings/general")
+
+      # Plugin settings
+      get "plugin/:id", action: :show_plugin, as: :show_plugin
+      post "plugin/:id", action: :update_plugin
+    end
+
+    namespace :import do
+      get "/", to: redirect("/admin/import/jira")
+      resources :jira, controller: "/admin/import/jira/instances" do
+        collection do
+          post :test
+        end
+        member do
+          delete :delete_token
+        end
+        resources :run, controller: "/admin/import/jira/import_runs", module: :jiras, except: %i[new index] do
+          member do
+            get :continue
+            post :continue
+            delete :remove
+
+            get :import_modal
+            get :revert_modal
+            get :finalize_modal
+            get :history
+          end
+
+          resource :select_projects,
+                   controller: "/admin/import/jira/import_runs/select_projects",
+                   only: %i[show update] do
+            post :filter
+            get :switch_page
+            get :check_all
+            get :uncheck_all
+            get :toggle
+          end
+        end
+      end
+    end
+
+    resources :quarantined_attachments,
+              controller: "/admin/attachments/quarantined_attachments",
+              only: %i[index destroy]
+
+    resources :scim_clients, only: %i[index edit new create update destroy] do
+      member do
+        get :deletion_dialog
+      end
+
+      resources :static_tokens, only: %i[create destroy], controller: "/admin/scim_client_static_tokens" do
+        member do
+          get :deletion_dialog
+        end
+      end
+    end
+
+    resources :text_transform_actions, except: :show do
+      member do
+        get :deletion_dialog
+        post :toggle
+        put :drop
+      end
+
+      collection do
+        put :enable_all
+        put :disable_all
+        post :toggle_setting
+      end
+    end
+
+    resource :backups, controller: "/admin/backups", only: %i[show] do
+      collection do
+        get :reset_token_dialog
+        post :perform_token_reset
+        post :request_backup
+
+        post :delete_token
+      end
+    end
+
+    resources :departments,
+              only: %i[index show edit update destroy] do
+      member do
+        get :new_user
+        post :add_user
+        delete "remove_user/:user_id" => "departments#remove_user", as: :remove_user
+        get :change_parent, action: :change_parent_dialog
+        post :change_parent
+
+        # old routes for old group style management, might remove when new interface
+        patch "/memberships:membership_id" => "departments#edit_membership", as: "membership_of"
+        put "/memberships:membership_id" => "departments#edit_membership"
+        delete "/memberships:membership_id" => "departments#destroy_membership"
+        post "/memberships" => "departments#create_memberships", as: "memberships_of"
+      end
+
+      collection do
+        get :new_department
+        post :add_department
+        get :edit_organization_name
+        patch :cancel_edit_organization_name
+        patch :update_organization_name
+      end
+    end
+  end
+
+  namespace :work_packages do
+    get "menu" => "menus#show"
+
+    match "auto_complete" => "auto_completes#index", via: %i[get post]
+    resource :bulk, controller: "bulk", only: %i[edit update destroy] do
+      collection do
+        match :reassign, via: %i[get delete]
+        get :delete_dialog
+        post :confirm_delete
+      end
+    end
+  end
+
+  resources :work_packages, only: %i[index show new] do
+    concerns :shareable
+
+    get "hover_card" => "work_packages/hover_card#show", on: :member
+    get "project_attributes" => "work_packages/project_attributes_tab#index", on: :member
+
+    get "generate_pdf_dialog" => "work_packages#generate_pdf_dialog", on: :member
+    post "generate_pdf" => "work_packages#generate_pdf", on: :member
+
+    # move bulk of wps
+    get "move/new" => "work_packages/moves#new", on: :collection, as: "new_move"
+    post "move/refresh_form" => "work_packages/moves#refresh_form", on: :collection, as: "refresh_form_move"
+    post "move" => "work_packages/moves#create", on: :collection, as: "move"
+    # move individual wp
+    resource :move, controller: "work_packages/moves", only: %i[new create]
+
+    get "details/:work_package_id(/:tab)" => "work_packages#split_view", on: :collection, as: :details,
+        defaults: { tab: "overview" }, work_package_split_view: true,
+        constraints: { work_package_id: WorkPackage::SemanticIdentifier::ID_ROUTE_CONSTRAINT }
+
+    resources :activities, controller: "work_packages/activities_tab", only: %i[index create edit update] do
+      member do
+        get :cancel_edit
+        get :emoji_actions
+        get :item_actions
+        put :toggle_reaction
+      end
+
+      collection do
+        get :page_streams
+        get :update_streams
+        get :update_filter # filter not persisted
+        put :update_sorting # sorting is persisted
+        post :sanitize_internal_mentions
+      end
+    end
+
+    resources :hierarchy_relations, only: %i[new create destroy], controller: "work_package_hierarchy_relations"
+
+    resource :progress, only: %i[edit update], controller: "work_packages/progress" do
+      get :preview, on: :member
+    end
+    collection do
+      resource :progress,
+               only: %i[create new],
+               controller: "work_packages/progress",
+               as: :work_package_progress do
+        get :preview, on: :collection
+      end
+    end
+
+    resource :date_picker,
+             only: %i[show edit update],
+             controller: "work_packages/date_picker",
+             as: "date_picker" do
+      get :preview, on: :member
+    end
+
+    collection do
+      resource :date_picker,
+               only: %i[create new],
+               controller: "work_packages/date_picker",
+               as: "date_picker" do
+        get :preview, on: :collection
+      end
+    end
+
+    resources :relations_tab, only: %i[index], controller: "work_package_relations_tab"
+    resources :relations, only: %i[new create edit update destroy], controller: "work_package_relations"
+
+    resources :reminders,
+              controller: "work_packages/reminders",
+              only: %i[create update destroy] do
+      get :modal_body, on: :collection
+    end
+
+    get "/export_dialog" => "work_packages#export_dialog", on: :collection, as: "export_dialog"
+    get :show_conflict_flash_message, on: :collection # we don't need a specific work package for this
+
+    get "/split_view/update_counter" => "work_packages/split_view#update_counter",
+        on: :member
+
+    get "/split_view/get_relations_counter" => "work_packages/split_view#get_relations_counter",
+        on: :member
+
+    get "/copy" => "work_packages#copy", on: :member, as: "copy"
+    get "(/:tab)" => "work_packages#show", on: :member, as: "",
+        constraints: { id: WorkPackage::SemanticIdentifier::ID_ROUTE_CONSTRAINT, state: /(?!(shares|new|copy)).+/ }
+
+    # states managed by client-side (angular) routing on work_package#show
+    get "/" => "work_packages#index", on: :collection, as: "index"
+    get "/create_new" => "work_packages#split_create", on: :collection, as: "new_split", work_package_split_create: true
+
+    get "/share_upsell" => "work_packages#share_upsell", on: :collection, as: "share_upsell"
+    get "/edit" => "work_packages#show", on: :member, as: "edit"
+  end
+
+  resources :versions, only: %i[show edit update destroy] do
+    member do
+      get :status_by
+    end
+  end
+
+  resources :activity, :activities, only: :index, controller: "activities" do
+    collection do
+      get :menu
+    end
+  end
+
+  resources :users, constraints: { id: /(\d+|me)/ }, except: :edit do
+    collection do
+      get :configure_view_modal
+    end
+    resources :memberships, controller: "users/memberships", only: %i[update create destroy]
+    resources :working_hours, controller: "users/working_hours", except: [:index]
+    resources :non_working_times, controller: "users/non_working_times", except: [:index] do
+      collection do
+        get :working_days_preview
+      end
+    end
+
+    collection do
+      get "/invite" => "users/invite#start_dialog"
+      post "/invite/step" => "users/invite#step"
+    end
+
+    member do
+      get "/hover_card" => "users/hover_card#show"
+      get "/edit(/:tab)" => "users#edit", as: "edit"
+      get "/change_status/:change_action" => "users#change_status_info", as: "change_status_info"
+      post :change_status
+      post :resend_invitation
+      patch :update_reminders
+      patch :update_workdays
+      patch :update_email_alerts
+      patch :update_participating
+      patch :update_non_participating
+      patch :update_date_alerts
+      get "project_notifications/new" => "users#new_project_settings", as: "new_project_settings"
+      post "project_notifications" => "users#create_project_settings", as: "project_notifications"
+      get "project_notifications/:project_id/edit" => "users#edit_project_settings", as: "edit_project_settings"
+      patch "project_notifications/:project_id" => "users#update_project_settings", as: "project_setting"
+      delete "project_notifications/:project_id" => "users#destroy_project_settings"
+      get :deletion_info
+    end
+  end
+
+  resources :placeholder_users, except: :edit do
+    resources :memberships, controller: "placeholder_users/memberships", only: %i[update create destroy]
+
+    member do
+      get "/edit(/:tab)" => "placeholder_users#edit", as: "edit"
+      get :deletion_info
+    end
+  end
+
+  # The show page of groups is public and thus moved out of the admin scope
+  resources :groups, only: %i[show], as: :show_group
+
+  resources :news, only: %i[index show]
+
+  # redirect for backwards compatibility
+  scope "attachments",
+        constraints: { id: /\d+/, filename: /[^\/]*/ },
+        format: false do
+    get "/download/:id/:filename",
+        to: redirect("#{rails_relative_url_root}/attachments/%{id}/%{filename}")
+
+    get "/download/:id",
+        to: redirect("#{rails_relative_url_root}/attachments/%{id}")
+
+    scope ":id" do
+      get "(/:filename)",
+          to: redirect("#{rails_relative_url_root}/api/v3/attachments/%{id}/content")
+
+      delete "",
+             to: redirect("#{rails_relative_url_root}/api/v3/attachments/%{id}")
+    end
+  end
+
+  resource :help, controller: :help, only: [] do
+    member do
+      get :keyboard_shortcuts
+      get :text_formatting
+    end
+  end
+
+  scope controller: "sys" do
+    match "/sys/repo_auth", action: "repo_auth", via: %i[get post]
+    get "/sys/fetch_changesets", action: "fetch_changesets"
+    match "/sys/projects", to: proc { [410, {}, [""]] }, via: :all
+    match "/sys/projects/:id/repository/update_storage", to: proc { [410, {}, [""]] }, via: :all
+  end
+
+  # alternate routes for the current user
+  scope "my" do
+    get "/deletion_info" => "users#deletion_info", as: "delete_my_account_info"
+    post "/oauth/revoke_application/:application_id" => "oauth/grants#revoke_application", as: "revoke_my_oauth_application"
+
+    resources :sessions, controller: "my/sessions", as: "my_sessions", only: %i[index destroy]
+    resources :auto_login_tokens, controller: "my/auto_login_tokens", as: "my_auto_login_tokens", only: %i[destroy]
+
+    get "/banner" => "my/enterprise_banners#show", as: "show_enterprise_banner"
+    post "/dismiss_banner" => "my/enterprise_banners#dismiss", as: "dismiss_enterprise_banner"
+  end
+
+  namespace :my do
+    resources :access_tokens, only: %i[index] do
+      collection do
+        get :dialog
+        post :generate_rss_key
+        delete :revoke_rss_key
+
+        post :generate_api_key
+      end
+
+      delete :remove_oauth_client_token
+      delete :revoke_api_key
+      delete :revoke_ical_token
+      delete :revoke_ical_meeting_token
+    end
+  end
+
+  scope controller: "my" do
+    get "/my/security", action: "security", as: "my_security"
+    get "/my/password", action: "password"
+    get "/my/password_confirmation_dialog", action: "password_confirmation_dialog"
+    post "/my/change_password", action: "change_password"
+
+    get "/my/account", action: "account"
+    get "/my/locale", action: "locale"
+    get "/my/interface", action: "interface"
+    get "/my/notifications", action: "notifications"
+
+    get "/my/working_hours", action: "working_hours"
+    get "/my/non_working_times", action: "non_working_times"
+
+    patch "/my/account", action: "update_account"
+    patch "/my/settings", action: "update_settings"
+    patch "/my/workdays", action: "update_workdays"
+    patch "/my/email_alerts", action: "update_email_alerts"
+    patch "/my/participating", action: "update_participating"
+    patch "/my/non_participating", action: "update_non_participating"
+    patch "/my/date_alerts", action: "update_date_alerts"
+
+    get "/my/project_notifications/new", action: "new_project_settings", as: "new_my_project_settings"
+    post "/my/project_notifications", action: "create_project_settings", as: "my_project_notifications"
+    get "/my/project_notifications/:project_id/edit", action: "edit_project_settings", as: "edit_my_project_settings"
+    patch "/my/project_notifications/:project_id", action: "update_project_settings", as: "my_project_setting"
+    delete "/my/project_notifications/:project_id", action: "destroy_project_settings"
+  end
+
+  scope controller: "onboarding" do
+    patch "user_settings", action: "user_settings"
+    get "onboarding_video_dialog", action: "onboarding_video_dialog"
+  end
+
+  resources :colors, except: [:index] do
+    member do
+      get :move
+      post :move
+    end
+  end
+
+  get "/robots" => "homescreen#robots", defaults: { format: :txt }
+
+  root to: "account#login"
+
+  concern :with_split_view do |options|
+    get "details/:work_package_id(/:tab)",
+        action: options.fetch(:action, :split_view),
+        defaults: { tab: :overview },
+        as: :details,
+        work_package_split_view: true
+  end
+
+  concern :with_split_create do
+    get "details/new",
+        action: :split_create,
+        as: :split_create,
+        work_package_split_create: true
+  end
+
+  resources :notifications, only: :index do
+    collection do
+      concerns :with_split_view
+
+      post :mark_all_read
+      resource :menu, module: :notifications, only: %i[show], as: :notifications_menu
+    end
+  end
+
+  namespace :notifications do
+    resource :menu, only: %i[show]
+  end
+
+  scope :notifications do
+    get "/share_upsell" => "notifications#share_upsell", as: "notifications_share_upsell"
+    get "/date_alerts" => "notifications#date_alerts", as: "notifications_date_alert_upsell"
+    get "/", to: "notifications#index", as: :notifications_center
+  end
+
+  # OAuthClient needs a "callback" URL that Nextcloud calls with a "code" (see OAuth2 RFC)
+  scope "oauth_clients/:oauth_client_id" do
+    get "callback", controller: "oauth_clients", action: :callback
+    get "ensure_connection", controller: "oauth_clients", action: :ensure_connection, as: "oauth_clients_ensure_connection"
+  end
+
+  namespace :scim_v2 do
+    mount Scimitar::Engine, at: "/"
+
+    get    "Users",     to: "users#index"
+    get    "Users/:id", to: "users#show"
+    post   "Users",     to: "users#create"
+    put    "Users/:id", to: "users#replace"
+    patch  "Users/:id", to: "users#update"
+    delete "Users/:id", to: "users#destroy"
+
+    get    "Groups",     to: "groups#index"
+    get    "Groups/:id", to: "groups#show"
+    post   "Groups",     to: "groups#create"
+    put    "Groups/:id", to: "groups#replace"
+    patch  "Groups/:id", to: "groups#update"
+    delete "Groups/:id", to: "groups#destroy"
+  end
+
+  scope "inplace_edit_fields/:model/:id/:attribute", as: "inplace_edit_field" do
+    post :update, controller: "inplace_edit_fields", action: :update
+    patch :update, controller: "inplace_edit_fields", action: :update
+    get :reset, controller: "inplace_edit_fields", action: :reset
+    get :edit, controller: "inplace_edit_fields", action: :edit
+    get :dialog, controller: "inplace_edit_fields", action: :dialog
+  end
+
+  if OpenProject::Configuration.lookbook_enabled?
+    mount Primer::ViewComponents::Engine, at: "/"
+    mount Lookbook::Engine, at: "/lookbook"
+  end
+
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+
+  if Rails.env.development? || OpenProject::Configuration.good_job_engine_basic_auth.present?
+    mount GoodJob::Engine => "good_job"
+  end
+end

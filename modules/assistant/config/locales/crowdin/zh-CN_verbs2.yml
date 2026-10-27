@@ -1,0 +1,44 @@
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+zh-CN:
+  assistant:
+    desk:
+      agreements:
+        questions_for_me: "在等你回答的问题"
+        question: "%{name} 问你："
+        question_alone: "有人问你："
+    thread:
+      chips:
+        intent:
+          - "怎么处理这个比较好？"
+          - "该提醒谁？"
+          - "要不要排进某场会？"
+      material:
+        intent_lead: |
+          ## 这次对话是关于什么的
+          对方在账本里一条别人说过的话（承诺、搁置、决定或问题）上点了“说一句”，想就这一条谈。你知道的一切都在下面。不要陈述下面没有、工具也没有返回的事实。
+          - 就这一条回答，不要泛泛而谈：点名下面的人、工作包和日期。
+          - 简短：先用几句话给出答案。对象是工作包时，日期和状态以工作包为准，别人说的日期只是他们说过的话。
+          - “怎么处理这个比较好”：权衡下面的材料（搁了多久、改约了几次、涉及谁、已经安排了什么），建议一个下一步。行下面的按钮负责真正动手（排进会议、交给、提醒、记结论/回答、搁置），你只说哪一个合适，不要声称已经做了。
+          - “该提醒谁”：根据下面的人说出是谁、为什么；没有点名任何人就如实说没有。
+          - “要不要排进某场会”：说明是否已经排进去了；还没有的话，项目里的会议值不值得；只在查会议时才用工具。
+          - 对方没有明确要求就不要改任何东西；要求了，用 propose 并设 hold=true，等对方确认。
+        intent_headline: "账本里记着：一条%{kind}（%{strength}，状态 %{status}），标题“%{title}”。原话：“%{quote}”"
+        intent_source: "%{day} 说于 %{text}。"
+        intent_nobody: "没有记名负责人或对方。"
+        intent_owner: "负责人（说了或要去做的人）：%{name}。"
+        intent_other: "对方（在等它或被问的人）：%{name}。"
+        intent_about: "关于：%{text}"
+        intent_said_date: "他们说的日期：%{date}。"
+        intent_work_package: "它对应的工作包是日期和状态的准绳：%{text}。他们当时说的日期是 %{said}。"
+        intent_moves:
+          other: "日期已经改约了 %{count} 次。"
+        intent_scheduled: "已经排进议程的会议：%{text}。"
+        intent_answered: "已被这个回答或解决：%{text}。"
+        intent_objections: "还有 %{count} 条异议没有解决。"
+        intent_replaces: "它取代了之前的一条：%{text}"
+        intent_closed: "它已不再开放（状态 %{status}）。"

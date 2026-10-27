@@ -1,0 +1,64 @@
+@import 'form-field.children'
+
+.spot-form-field
+  display: flex
+  flex-direction: column
+
+  // This is a fix for the formly-forms, which render the wrapper around a non-visible input
+  &:empty
+    display: none
+
+  &--label-wrap
+    display: flex
+    flex-direction: column
+    margin: 0
+    font-weight: normal
+
+  &--label
+    display: flex
+    flex-direction: row
+    align-items: center
+    margin-bottom: $spot-spacing-0_25
+
+    @include spot-body-small($weight: var(--base-text-weight-bold))
+
+  &--help-text
+    padding-left: $spot-spacing-0_25
+
+  &--actions
+    @include spot-body-small
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+
+    > *
+      margin-right: $spot-spacing-0_5
+
+  &--input
+    margin-bottom: $spot-spacing-0_25
+    display: -webkit-flex /* Safari */
+    display: flex
+
+    > *
+      flex-grow: 1
+
+  &--description
+    @include spot-caption
+    font-style: italic
+    margin-bottom: $spot-spacing-0_25
+    color: var(--fgColor-muted)
+
+  &--errors
+    display: flex
+    flex-direction: column
+
+  &--error
+    @include spot-caption
+    color: var(--control-borderColor-danger)
+    margin-bottom: $spot-spacing-0_25
+
+  &--label,
+  &--description,
+  &--errors
+    &:empty
+      display: none

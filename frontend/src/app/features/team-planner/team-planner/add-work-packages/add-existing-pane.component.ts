@@ -1,0 +1,245 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { I18nService } from 'core-app/core/i18n/i18n.service';
+import { imagePath } from 'core-app/shared/helpers/images/path-helper';
+import {
+  BehaviorSubject,
+  combineLatest,
+  Observable,
+  of,
+} from 'rxjs';
+import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
+import { ApiV3FilterBuilder } from 'core-app/shared/helpers/api-v3/api-v3-filter-builder';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  startWith,
+  switchMap,
+} from 'rxjs/operators';
+import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
+import { WorkPackageNotificationService } from 'core-app/features/work-packages/services/notifications/work-package-notification.service';
+import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
+import { UrlParamsHelperService } from 'core-app/features/work-packages/components/wp-query/url-params-helper';
+import { IsolatedQuerySpace } from 'core-app/features/work-packages/directives/query-space/isolated-query-space';
+import { UntilDestroyedMixin } from 'core-app/shared/helpers/angular/until-destroyed.mixin';
+import { CalendarDragDropService } from 'core-app/features/team-planner/team-planner/calendar-drag-drop.service';
+import { ActionsService } from 'core-app/core/state/actions/actions.service';
+import { teamPlannerEventRemoved } from 'core-app/features/team-planner/team-planner/planner/team-planner.actions';
+import { WorkPackageViewFiltersService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-filters.service';
+import { OpWorkPackagesCalendarService } from 'core-app/features/calendar/op-work-packages-calendar.service';
+
+@Component({
+  selector: 'op-add-existing-pane',
+  templateUrl: './add-existing-pane.component.html',
+  styleUrls: ['./add-existing-pane.component.sass'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
+})
+export class AddExistingPaneComponent extends UntilDestroyedMixin implements OnInit, OnDestroy {
+  private readonly querySpace = inject(IsolatedQuerySpace);
+  private I18n = inject(I18nService);
+  private readonly apiV3Service = inject(ApiV3Service);
+  private readonly notificationService = inject(WorkPackageNotificationService);
+  private readonly currentProject = inject(CurrentProjectService);
+  private readonly urlParamsHelper = inject(UrlParamsHelperService);
+  private readonly workPackagesCalendar = inject(OpWorkPackagesCalendarService);
+  private readonly calendarDrag = inject(CalendarDragDropService);
+  private readonly actions$ = inject(ActionsService);
+  private readonly wpFilters = inject(WorkPackageViewFiltersService);
+
+  @HostBinding('class.op-add-existing-pane') className = true;
+
+  @ViewChild('container') container:ElementRef<HTMLElement>;
+
+  @ViewChild('container')
+  set dragContainer(v:ElementRef<HTMLElement>|undefined) {
+    // ViewChild reference may be undefined initially
+    // due to ngIf
+    if (v !== undefined) {
+      this.calendarDrag.registerDrag(v, '.op-add-existing-pane--wp');
+    }
+  }
+
+  /** Input for search requests */
+  public searchString$ = new BehaviorSubject<string>('');
+
+  isEmpty$ = new BehaviorSubject<boolean>(true);
+
+  isLoading$ = new BehaviorSubject<boolean>(false);
+
+  noResultsFound$ = this.isEmpty$
+    .pipe(
+      map((resultEmpty) => {
+        if (this.searchString$.getValue().length === 0) {
+          return { showImage: true, text: this.text.empty_state };
+        }
+
+        if (resultEmpty) {
+          return { showImage: false, text: this.text.no_results };
+        }
+
+        return {};
+      }),
+    );
+
+  currentWorkPackages$ = combineLatest([
+    this.calendarDrag.draggableWorkPackages$,
+    this.querySpace.results.values$(),
+  ])
+    .pipe(
+      map(([draggable, rendered]) => {
+        const renderedIds = rendered.elements.map((el) => el.id!);
+        return draggable.filter((wp) => !renderedIds.includes(wp.id!));
+      }),
+    );
+
+  workPackageRemoved$:Observable<unknown> = this
+    .actions$
+    .ofType(teamPlannerEventRemoved)
+    .pipe(
+      startWith(null),
+    );
+
+  text = {
+    empty_state: this.I18n.t('js.team_planner.quick_add.empty_state'),
+    placeholder: this.I18n.t('js.team_planner.quick_add.search_placeholder'),
+    no_results: this.I18n.t('js.autocompleter.notFoundText'),
+  };
+
+  image = {
+    empty_state: imagePath('team-planner/add-existing-pane--empty-state.gif'),
+  };
+
+  ngOnInit():void {
+    combineLatest([
+      this
+        .searchString$
+        .pipe(
+          distinctUntilChanged(),
+          debounceTime(500),
+        ),
+      this
+        .wpFilters
+        .updates$()
+        .pipe(
+          startWith(null),
+        ),
+      this.workPackageRemoved$,
+    ])
+      .pipe(
+        this.untilDestroyed(),
+        map(([searchString]) => searchString),
+        switchMap((searchString:string) => this.searchWorkPackages(searchString)),
+      )
+      .subscribe((results) => {
+        this.calendarDrag.draggableWorkPackages$.next(results);
+
+        this.isEmpty$.next(results.length === 0);
+        this.isLoading$.next(false);
+      });
+  }
+
+  ngOnDestroy():void {
+    super.ngOnDestroy();
+    this.calendarDrag.destroyDraggable();
+  }
+
+  searchWorkPackages(searchString:string):Observable<WorkPackageResource[]> {
+    this.isLoading$.next(true);
+
+    // Return when the search string is empty
+    if (searchString.length === 0) {
+      this.isLoading$.next(false);
+      this.isEmpty$.next(true);
+
+      return of([]);
+    }
+
+    // Add any visible global filters
+    const activeFilters = this.wpFilters.currentlyVisibleFilters;
+    const filters:ApiV3FilterBuilder = this.urlParamsHelper.filterBuilderFrom(activeFilters);
+
+    filters.add('typeahead', '**', [searchString]);
+
+    // Add the existing filter, if any
+    this.addExistingFilters(filters);
+
+    return this
+      .apiV3Service
+      .withOptionalProject(this.currentProject.id)
+      .work_packages
+      .filtered(filters, { pageSize: '-1' })
+      .get()
+      .pipe(
+        map((collection) => collection.elements),
+        catchError((error:unknown) => {
+          this.notificationService.handleRawError(error);
+          return of([]);
+        }),
+        this.untilDestroyed(),
+      );
+  }
+
+  clearInput():void {
+    this.searchString$.next('');
+  }
+
+  get isSearching():boolean {
+    return this.searchString$.value !== '';
+  }
+
+  showDisabledText(wp:WorkPackageResource):{ text:string, orientation:'left'|'right' } {
+    return {
+      text: this.calendarDrag.workPackageDisabledExplanation(wp),
+      orientation: 'left',
+    };
+  }
+
+  openStateLink(event:{ workPackageId:string; requestedState:string }):void {
+    this.workPackagesCalendar.openSplitView(event.workPackageId);
+  }
+
+  private addExistingFilters(filters:ApiV3FilterBuilder) {
+    const query = this.querySpace.query.value;
+    if (query?.filters) {
+      const currentFilters = this.urlParamsHelper.buildV3GetFilters(query.filters);
+
+      currentFilters.forEach((filter) => {
+        Object.keys(filter).forEach((name) => {
+          if (name !== 'assignee' && name !== 'datesInterval') {
+            filters.add(name, filter[name].operator, filter[name].values);
+          }
+        });
+      });
+    }
+  }
+}

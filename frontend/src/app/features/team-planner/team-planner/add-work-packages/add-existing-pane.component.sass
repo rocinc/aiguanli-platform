@@ -1,0 +1,42 @@
+@import "helpers"
+
+\:host
+  display: grid
+  grid-template-rows: 32px 1fr
+  grid-row-gap: 10px
+  background: var(--data-gray-color-muted)
+  padding: 8px
+  border: 1px solid var(--borderColor-default)
+
+.op-add-existing-pane
+  &--results
+    overflow: auto
+    @include styled-scroll-bar
+
+  &--empty-state
+    display: grid
+    grid-template-rows: auto 1fr
+
+  &--empty-state-image
+    width: 160px
+    margin: 0 auto
+
+  &--empty-state-text
+    margin: 0 24px
+    text-align: center
+    line-height: 1.25
+
+  &--loading
+    height: 85px
+    padding: 8px 16px
+    background: white
+    border-radius: 5px
+
+  // Source card while it is being dragged onto the calendar
+  &--wp_dragging
+    opacity: 0.2
+
+  // FullCalendar's drag mirror: a body-level clone of the card that keeps
+  // this component's style-scoping attributes
+  &--wp.fc-event-dragging
+    opacity: 0.8

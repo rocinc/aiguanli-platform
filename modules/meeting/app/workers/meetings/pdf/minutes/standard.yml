@@ -1,0 +1,501 @@
+page:
+  page_size: "A4"
+  margin_top: 100
+  margin_bottom: 80
+  margin_left: 72
+  margin_right: 72
+  page_break_threshold: 100
+  link_color: "175A8E"
+
+page_header:
+  offset: 30
+  width: 150
+  size: 10.2
+  color: "484848"
+  styles: [ "bold" ]
+
+page_footer:
+  offset: -30
+  size: 8
+  spacing: 6
+
+page_logo:
+  height: 43
+  offset: 11
+  align: "right"
+
+page_heading:
+  size: 13.5
+  styles: [ "bold" ]
+  margin_top: 12
+
+page_subheading:
+  size: 12
+  margin_bottom: 20
+
+page_subtitle:
+  margin_bottom: 20
+  leading: 1
+  size: 10.2
+
+cover:
+  header:
+    logo_height: 25
+    border:
+      color: 'd3dee3'
+      height: 1
+      offset: 6
+  footer:
+    size: 10
+    color: '414d5f'
+    offset: 30
+  hero:
+    padding_right: 144
+    padding_top: 120
+    title:
+      max_height: 30
+      spacing: 10
+      font: 'SpaceMono'
+      color: '414d5f'
+      size: 10
+    heading:
+      spacing: 14
+      color: '414d5f'
+      styles:
+        - bold
+      size: 16
+    dates:
+      spacing: 4
+      max_height: 16
+      color: '414d5f'
+      size: 10
+      styles:
+        - bold
+    subheading:
+      max_height: 30
+      color: '414d5f'
+      size: 10
+
+notes:
+  markdown_margin:
+    margin_top: 4
+    margin_bottom: 0
+  markdown:
+    font:
+      size: 10.5
+      leading: 2
+    header:
+      size: 10.5
+      styles: [ "bold" ]
+      padding_top: 4
+      padding_bottom: 4
+    paragraph:
+      align: "justify"
+      padding_bottom: 6
+    unordered_list:
+      spacing: 1
+      padding_top: 10
+      padding_bottom: 10
+      padding_left: 20
+      padding_right: 20
+    unordered_list_point:
+      sign: ">"
+      spacing: 10
+    ordered_list:
+      spacing: 1
+      padding_bottom: 6
+    ordered_list_point:
+      spacing: 4
+      spanning: true
+      list_style_type: decimal
+    ordered_list_point_2:
+      list_style_type: lower-latin
+    ordered_list_point_3:
+      list_style_type: lower-roman
+    ordered_list_point_4:
+      list_style_type: upper-latin
+    ordered_list_point_5:
+      list_style_type: upper-roman
+    task_list:
+      spacing: 1
+      padding_bottom: 6
+    task_list_point:
+      spacing: 4
+      checked: "☑"
+      unchecked: "☐"
+    link:
+      color: "175A8E"
+      styles: [ ]
+    code:
+      color: "880000"
+      size: 9
+      font: "SpaceMono"
+    blockquote:
+      background_color: "f4f9ff"
+      size: 10
+      styles: [ "italic" ]
+      color: "0f3b66"
+      border_color: "b8d6f4"
+      border_width: 1
+      padding: 4
+      padding_left: 6
+      margin_bottom: 6
+      no_border_left: false
+      no_border_right: true
+      no_border_bottom: true
+      no_border_top: true
+    image:
+      align: "center"
+      margin_bottom: 4
+      caption:
+        size: 8
+        align: "center"
+    codeblock:
+      background_color: "F5F5F5"
+      color: "880000"
+      padding: 10
+      padding_top: 6
+      size: 8
+      margin_top: 2
+      margin_bottom: 10
+      font: "SpaceMono"
+    table:
+      auto_width: true
+      margin_top: 4
+      margin_bottom: 6
+      header:
+        size: 10
+        styles: [ "bold" ]
+        background_color: "F0F0F0"
+      cell:
+        size: 10
+        border_width: 0.25
+        padding: 5
+    html_table:
+      auto_width: true
+      margin_top: 4
+      margin_bottom: 10
+      header:
+        size: 10
+        styles: [ "bold" ]
+        border_width: 0.25
+        border_color: 'FFFFFF'
+        color: "FFFFFF"
+        background_color: "585858"
+        padding_left: 5
+        padding_right: 5
+        padding_top: 5
+        padding_bottom: 9
+      cell:
+        size: 10
+        border_width: 0.25
+        border_color: '000000'
+        padding_left: 5
+        padding_right: 5
+        padding_top: 5
+        padding_bottom: 8
+        valign: top
+    alerts:
+      NOTE:
+        border_color: '0969da'
+        alert_color: '0969da'
+        padding: '4mm'
+        size: 10
+        styles: [ ]
+        border_width: 2
+        no_border_right: true
+        no_border_left: false
+        no_border_bottom: true
+        no_border_top: true
+      TIP:
+        border_color: '1a7f37'
+        alert_color: '1a7f37'
+        padding: '4mm'
+        size: 10
+        styles: [ ]
+        border_width: 2
+        no_border_right: true
+        no_border_left: false
+        no_border_bottom: true
+        no_border_top: true
+      IMPORTANT:
+        border_color: '8250df'
+        alert_color: '8250df'
+        padding: '4mm'
+        size: 10
+        styles: [ ]
+        border_width: 2
+        no_border_right: true
+        no_border_left: false
+        no_border_bottom: true
+        no_border_top: true
+      WARNING:
+        border_color: 'bf8700'
+        alert_color: 'bf8700'
+        padding: '4mm'
+        size: 10
+        styles: [ ]
+        border_width: 2
+        no_border_right: true
+        no_border_left: false
+        no_border_bottom: true
+        no_border_top: true
+      CAUTION:
+        border_color: 'd1242f'
+        alert_color: 'd1242f'
+        size: 10
+        styles: [ ]
+        padding: '4mm'
+        border_width: 2
+        no_border_right: true
+        no_border_left: false
+        no_border_bottom: true
+        no_border_top: true
+
+outcome:
+  indent: 0
+  symbol:
+    size: 10
+    color: "1F883D"
+  title:
+    size: 10
+    styles: [ "bold" ]
+    margin_top: 5
+    margin_bottom: 5
+  work_package:
+    size: 10
+    margin_bottom: 5
+  markdown_margin:
+    margin_top: 4
+    margin_bottom: 8
+  markdown:
+    font:
+      size: 10
+      leading: 3
+    header:
+      size: 8
+      styles: [ "bold" ]
+      padding_top: 4
+      padding_bottom: 4
+    header_1:
+      size: 10
+    header_2:
+      size: 10
+    header_3:
+      size: 9
+    paragraph:
+      align: "left"
+      padding_bottom: 6
+    unordered_list:
+      spacing: 1
+      padding_left: 10
+      padding_right: 10
+      padding_bottom: 6
+    unordered_list_point:
+      spacing: 4
+    ordered_list:
+      spacing: 1
+      padding_left: 10
+      padding_right: 10
+      padding_bottom: 6
+    ordered_list_point:
+      spacing: 4
+      spanning: true
+      list_style_type: decimal
+    ordered_list_point_2:
+      list_style_type: lower-latin
+    ordered_list_point_3:
+      list_style_type: lower-roman
+    ordered_list_point_4:
+      list_style_type: upper-latin
+    ordered_list_point_5:
+      list_style_type: upper-roman
+    task_list:
+      spacing: 1
+      padding_left: 10
+      padding_right: 10
+      padding_bottom: 6
+    task_list_point:
+      spacing: 4
+      checked: "☑"
+      unchecked: "☐"
+    link:
+      color: "175A8E"
+      styles: [ ]
+    code:
+      color: "880000"
+      size: 9
+      font: "SpaceMono"
+    blockquote:
+      background_color: "f4f9ff"
+      size: 10
+      styles: [ "italic" ]
+      color: "0f3b66"
+      border_color: "b8d6f4"
+      border_width: 1
+      padding: 4
+      padding_left: 6
+      margin_bottom: 6
+      no_border_left: false
+      no_border_right: true
+      no_border_bottom: true
+      no_border_top: true
+    image:
+      align: "center"
+      margin_bottom: 4
+      caption:
+        size: 8
+        align: "center"
+    codeblock:
+      background_color: "F5F5F5"
+      color: "880000"
+      padding: 10
+      padding_top: 6
+      size: 8
+      margin_top: 2
+      margin_bottom: 10
+      font: "SpaceMono"
+    table:
+      auto_width: true
+      margin_top: 4
+      margin_bottom: 4
+      header:
+        size: 9
+        styles: [ "bold" ]
+        background_color: "F0F0F0"
+      cell:
+        size: 8
+        border_width: 0.25
+        padding: 5
+    html_table:
+      auto_width: true
+      margin_top: 4
+      margin_bottom: 10
+      header:
+        size: 9
+        styles: [ "bold" ]
+        no_border: true
+      cell:
+        size: 8
+        border_width: 0.25
+        padding: 5
+        no_border: true
+        valign: middle
+    alerts:
+      NOTE:
+        border_color: '0969da'
+        alert_color: '0969da'
+        padding: '4mm'
+        size: 10
+        styles: [ ]
+        border_width: 2
+        no_border_right: true
+        no_border_left: false
+        no_border_bottom: true
+        no_border_top: true
+      TIP:
+        border_color: '1a7f37'
+        alert_color: '1a7f37'
+        padding: '4mm'
+        size: 10
+        styles: [ ]
+        border_width: 2
+        no_border_right: true
+        no_border_left: false
+        no_border_bottom: true
+        no_border_top: true
+      IMPORTANT:
+        border_color: '8250df'
+        alert_color: '8250df'
+        padding: '4mm'
+        size: 10
+        styles: [ ]
+        border_width: 2
+        no_border_right: true
+        no_border_left: false
+        no_border_bottom: true
+        no_border_top: true
+      WARNING:
+        border_color: 'bf8700'
+        alert_color: 'bf8700'
+        padding: '4mm'
+        size: 10
+        styles: [ ]
+        border_width: 2
+        no_border_right: true
+        no_border_left: false
+        no_border_bottom: true
+        no_border_top: true
+      CAUTION:
+        border_color: 'd1242f'
+        alert_color: 'd1242f'
+        size: 10
+        styles: [ ]
+        padding: '4mm'
+        border_width: 2
+        no_border_right: true
+        no_border_left: false
+        no_border_bottom: true
+        no_border_top: true
+
+heading:
+  size: 11
+  styles: [ "bold" ]
+  margin_bottom: 8
+
+participants:
+  margin_bottom: 8
+  status:
+    size: 9
+    color: "636C76"
+  cell:
+    size: 10
+    padding_left: 0
+    padding_bottom: 7
+    no_border: true
+
+attachments:
+  margin_bottom: 8
+  cell:
+    size: 10
+    padding_left: 0
+    padding_bottom: 7
+    no_border: true
+
+agenda_section:
+  title:
+    size: 12
+    color: "000000"
+    styles: [ "bold" ]
+  subtitle:
+    size: 11
+    color: "636C76"
+  title_cell:
+    padding_top: 2
+    padding_bottom: 5
+    padding_left: 0
+    padding_right: 0
+    border_color: "D0D7DE"
+    border_width: 1
+    no_border: true
+  title_margins:
+    margin_bottom: 0
+
+agenda_item:
+  indent: 0
+  margin:
+    margin_bottom: 16
+  title_margin:
+    margin_bottom: 6
+  title_cell:
+    padding_top: 0
+    padding_bottom: 0
+    padding_left: 0
+    padding_right: 0
+    no_border: true
+  title:
+    styles: []
+    size: 11
+  subtitle:
+    color: "636C76"
+    size: 10

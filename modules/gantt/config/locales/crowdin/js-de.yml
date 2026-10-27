@@ -1,0 +1,7 @@
+---
+de:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Meilensteine
+      label_gantt_chart_plural: Gantt-Diagramme

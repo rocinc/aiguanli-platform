@@ -1,0 +1,234 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+require "spec_helper"
+
+RSpec.describe UpdateQueryFromParamsService,
+               type: :model do
+  let(:user) { build_stubbed(:user) }
+  let(:query) { build_stubbed(:query) }
+
+  let(:instance) { described_class.new(query, user) }
+
+  let(:params) { {} }
+
+  describe "#call" do
+    subject { instance.call(params) }
+
+    describe "group_by" do
+      context "for an existing value" do
+        let(:params) { { group_by: "status" } }
+
+        it "sets the value" do
+          subject
+
+          expect(query.group_by)
+            .to eql("status")
+        end
+      end
+
+      context "for an explicitly nil value" do
+        let(:params) { { group_by: nil } }
+
+        it "sets the value" do
+          subject
+
+          expect(query.group_by)
+            .to be_nil
+        end
+      end
+    end
+
+    describe "filters" do
+      let(:params) do
+        { filters: [{ field: "status_id", operator: "=", values: ["1", "2"] }] }
+      end
+
+      context "for a valid filter" do
+        it "sets the filter" do
+          subject
+
+          expect(query.filters.length)
+            .to be(1)
+          expect(query.filters[0].name)
+            .to be(:status_id)
+          expect(query.filters[0].operator)
+            .to eql("=")
+          expect(query.filters[0].values)
+            .to eql(["1", "2"])
+        end
+      end
+
+      context "for both interchangeable version filters",
+              with_settings: { work_package_multiple_versions: true } do
+        let(:params) do
+          { filters: [{ field: "version_id", operator: "=", values: ["1"] },
+                      { field: "target_version_id", operator: "=", values: ["2"] }] }
+        end
+
+        it "sets the available one once with the later entry's values" do
+          subject
+
+          expect(query.filters.map(&:name))
+            .to eql([:target_version_id])
+          expect(query.filters[0].values)
+            .to eql(["2"])
+        end
+      end
+
+      context "for both interchangeable version filters with multiple versions inactive",
+              with_settings: { work_package_multiple_versions: false } do
+        let(:params) do
+          { filters: [{ field: "version_id", operator: "=", values: ["1"] },
+                      { field: "target_version_id", operator: "=", values: ["2"] }] }
+        end
+
+        it "sets the available one once with the later entry's values" do
+          subject
+
+          expect(query.filters.map(&:name))
+            .to eql([:version_id])
+          expect(query.filters[0].values)
+            .to eql(["2"])
+        end
+      end
+    end
+
+    describe "sort_by" do
+      let(:params) do
+        { sort_by: [["status_id", "desc"]] }
+      end
+
+      it "sets the order" do
+        subject
+
+        expect(query.sort_criteria)
+          .to eql([["status_id", "desc"]])
+      end
+    end
+
+    describe "columns" do
+      let(:params) do
+        { columns: ["assigned_to", "author", "category", "subject"] }
+      end
+
+      it "sets the columns" do
+        subject
+
+        expect(query.column_names)
+          .to match_array(params[:columns].map(&:to_sym))
+      end
+    end
+
+    describe "display representation" do
+      let(:params) do
+        { display_representation: "list" }
+      end
+
+      it "sets the display_representation" do
+        subject
+
+        expect(query.display_representation)
+          .to eq("list")
+      end
+    end
+
+    describe "highlighting mode" do
+      let(:params) do
+        { highlighting_mode: "status" }
+      end
+
+      it "sets the highlighting_mode" do
+        subject
+
+        expect(query.highlighting_mode)
+          .to eq(:status)
+      end
+    end
+
+    describe "default highlighting mode" do
+      let(:params) do
+        {}
+      end
+
+      it "sets the highlighting_mode" do
+        subject
+
+        expect(query.highlighting_mode)
+          .to eq(:inline)
+      end
+    end
+
+    context "when using include subprojects" do
+      let(:params) do
+        { include_subprojects: }
+      end
+
+      context "when true" do
+        let(:include_subprojects) { true }
+
+        it "sets the display_representation" do
+          subject
+
+          expect(query.include_subprojects)
+            .to be true
+        end
+      end
+
+      context "when false" do
+        let(:include_subprojects) { false }
+
+        it "sets the display_representation" do
+          subject
+
+          expect(query.include_subprojects)
+            .to be false
+        end
+      end
+    end
+
+    context "when providing timestamps" do
+      let(:timestamps) do
+        [
+          Timestamp.parse("2022-10-29T23:01:23Z"),
+          Timestamp.parse("oneWeekAgo@12:00+00:00"),
+          Timestamp.parse("PT0S")
+        ]
+      end
+      let(:params) { { timestamps: } }
+
+      it "sets the timestamps" do
+        subject
+
+        expect(query.timestamps).to eq timestamps
+      end
+    end
+  end
+end

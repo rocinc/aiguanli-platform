@@ -1,0 +1,6 @@
+@if ((ndcDynamicInputs$ | async); as ndcDynamicInputs) {
+  @if (ndcDynamicInputs.workPackage && ndcDynamicInputs.tab) {
+    <ndc-dynamic [ndcDynamicComponent]="ndcDynamicInputs.tab.component"
+      [ndcDynamicInputs]="{ workPackage: ndcDynamicInputs.workPackage }" />
+  }
+}

@@ -1,0 +1,25 @@
+<ng-content select="[slot=before]" />
+<input
+  class="spot-text-field--input"
+  [attr.name]="name"
+  [attr.pattern]="pattern"
+  [attr.inputmode]="inputmode"
+  [disabled]="disabled"
+  [placeholder]="placeholder"
+  [required]="required"
+  [ngModel]="value"
+  (ngModelChange)="valueChanged($event)"
+  (focus)="onInputFocus($event)"
+  (blur)="onInputBlur($event)"
+  #input
+  />
+@if (showClearButton && value !== '' && !disabled) {
+  <button
+    (click)="valueChanged('')"
+    type="button"
+    class="spot-text-field--clear-button"
+    >
+    <svg x-icon size="small" />
+  </button>
+}
+<ng-content select="[slot=after]" />

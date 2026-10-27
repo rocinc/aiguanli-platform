@@ -1,0 +1,212 @@
+$grid--gap-width: 20px
+$grid--header-width: 20px
+
+$grid--widget-padding: 20px 20px 20px 20px
+
+@import ../openproject/mixins
+
+@mixin grid--commons
+  display: grid
+
+.grid--container
+  @include grid--commons
+
+.grid--area
+  position: relative
+  overflow: hidden
+  min-height: 30px
+  border-radius: 3px
+
+  &.-drop-target
+    &.cdk-drop-list-dragging
+      border: none
+
+  &.-widgeted
+    z-index: 10
+    @include widget-box--style
+    margin: 0
+
+    &:hover
+      @include widget-box--hover-style
+
+    .widget-box
+      min-height: 200px
+
+  &.-resizing
+    @include modifying--placeholder
+    z-index: 1000
+
+  &.-addable
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    border: 1px dashed var(--borderColor-default)
+
+  &.-placeholder
+    @include modifying--placeholder
+    background: transparent
+    z-index: 30
+
+  &.-dragged
+    display: none
+
+  &.-passive
+    pointer-events: none
+
+  &.-gap
+    &.-row
+      height: $grid--gap-width
+      min-height: $grid--gap-width
+
+    &.-column
+      width: $grid--gap-width
+
+  .op-widget-box--header:has(.grid--area-drag-handle)
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding-left: 0
+
+  &.-drop-target,
+  &.-passive
+    border-width: 1px
+    border-style: solid
+    border-color: var(--secondary-color)
+    transition: border-color 0.5s ease
+    z-index: 20
+
+  &.-resize-target
+    z-index: 1000
+
+  &.-drop-only
+    display: none
+
+.grid--resizer
+  position: absolute
+  height: 20px
+  color: var(--fgColor-muted)
+  cursor: nwse-resize
+  opacity: 0
+  right: 0
+  bottom: 0
+
+  i
+    padding: 0 3px 3px 0
+
+  .grid--area.-widgeted:hover &
+    opacity: 1
+
+.grid--area-drag-handle
+  opacity: 0
+  cursor: grab
+
+  .grid--area.-widgeted:hover &
+    opacity: 1
+
+.grid--area-content
+  height: 100%
+
+  .grid--widget-host
+    display: flex
+    flex-direction: column
+    height: 100%
+
+    > .grid--widget-content
+      display: flex
+      flex-direction: column
+      flex: 1 1 auto
+
+  &.cdk-drag-preview
+    overflow: hidden
+    background: white
+    padding: $grid--widget-padding
+    @include widget-box--style
+    @include widget-box--hover-style
+    border-radius: 3px
+    margin: 0
+
+  &.cdk-drag-placeholder
+    visibility: hidden
+
+.grid--widget-limited-text
+  max-height: 5rem
+  position: relative
+  overflow: hidden
+
+  &:before
+    content: ''
+    width: 100%
+    height: 100%
+    position: absolute
+    left: 0
+    top: 0
+    background: linear-gradient(to bottom, rgba(var(--body-background), 0) 60%, rgba(var(--body-background), 1))
+
+.grid--widget-add
+  display: flex
+  height: 100%
+  width: 100%
+  justify-content: center
+  align-items: center
+  padding: 15px
+  color: var(--fgColor-muted)
+  cursor: pointer
+
+  &.-gap
+    opacity: 0
+    width: 100%
+    height: 100%
+    display: flex
+    justify-content: center
+    align-items: center
+    padding: 0
+    border-radius: initial
+
+    svg
+      color: var(--fgColor-muted)
+
+  .grid--widget-add-help-text
+    margin-left: 4px
+
+  .grid--area.-addable &,
+  .grid--area.-addable.-help-mode &
+    opacity: 1
+
+.grid--widget-remove
+  float: right
+  margin-top: -10px
+  margin-right: -10px
+  cursor: pointer
+
+  &:before
+    @include icon-font-common
+    @include icon-mixin-remove
+    font-size: 0.75em
+
+.grid--addable-widget
+  min-width: 400px
+  padding: 20px 5px
+  cursor: pointer
+  background: none
+
+  &:last-of-type
+    border-bottom: none
+
+.cdk-drag-preview
+  background: white
+  padding: $grid--widget-padding
+  @include widget-box--style
+  margin-left: -$grid--widget-padding
+  margin-top: -$grid--widget-padding
+
+.grid--add-widget-ee
+  .op-toast
+    position: sticky
+    bottom: 0
+    margin-bottom: 0
+
+// Utility class for components that should match the grid's horizontal padding
+.grid-mx
+  margin-left: $grid--gap-width
+  margin-right: $grid--gap-width

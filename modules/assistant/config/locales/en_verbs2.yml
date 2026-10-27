@@ -1,0 +1,45 @@
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+en:
+  assistant:
+    desk:
+      agreements:
+        questions_for_me: "Questions waiting for your answer"
+        question: "%{name} asked you:"
+        question_alone: "Someone asked you:"
+    thread:
+      chips:
+        intent:
+          - "What is the best way to handle this?"
+          - "Who should I remind?"
+          - "Should it go on a meeting's agenda?"
+      material:
+        intent_lead: |
+          ## What this conversation is about
+          The person pressed "say something" on one thing someone said that you keep in the ledger (a promise, a deferral, a decision or a question). Everything you know about it is below. Never state a fact that is not here or returned by a tool.
+          - Answer about this one, not in general: name the people, the work package and the dates below.
+          - Keep it short: lead with the answer in a few sentences. For a work package the work package is the truth about dates and state; the date someone said is only what they said.
+          - "What is the best way to handle this": weigh what is below (how long it has stood, how often it moved, who is involved, what is already planned) and recommend one next step. The buttons under the line do the actual work (add to a meeting, hand to someone, remind, record the answer, set aside); say which one fits, you do not claim to have done any of them.
+          - "Who should I remind": name the person it concerns and why, from the people below; if nobody is named, say so.
+          - "Should it go on a meeting's agenda": say whether it already is, and if not, whether the meetings in the project make it worth it; use a tool only to look up meetings.
+          - Do not change anything unless the person clearly asks; then prepare it with propose and hold=true so it waits for their confirmation.
+        intent_headline: "Kept in the ledger: a %{kind} (%{strength}, status %{status}) titled \"%{title}\". Their words: \"%{quote}\""
+        intent_source: "Said in %{text} on %{day}."
+        intent_nobody: "No one is named as owner or counterparty."
+        intent_owner: "Owner (said it or has to do it): %{name}."
+        intent_other: "Other party (waiting for it or asked): %{name}."
+        intent_about: "It is about: %{text}"
+        intent_said_date: "The date they named: %{date}."
+        intent_work_package: "The work package it belongs to is the truth about dates and state: %{text}. The date they named was %{said}."
+        intent_moves:
+          one: "The date has been moved %{count} time."
+          other: "The date has been moved %{count} times."
+        intent_scheduled: "Already on the agenda of: %{text}."
+        intent_answered: "It was answered or settled by: %{text}."
+        intent_objections: "%{count} objections to it are still open."
+        intent_replaces: "It replaces an earlier one: %{text}"
+        intent_closed: "It is no longer open (status %{status})."

@@ -1,0 +1,217 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { StateService, TransitionPromise } from '@uirouter/core';
+import { UrlParamsHelperService } from 'core-app/features/work-packages/components/wp-query/url-params-helper';
+import { Injectable, inject } from '@angular/core';
+import { WorkPackageViewPagination } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-table-pagination';
+import { QueryResource } from 'core-app/features/hal/resources/query-resource';
+import { Subject } from 'rxjs';
+import * as Turbo from '@hotwired/turbo';
+
+/**
+ * Set right before pushing a self-initiated history entry below, consumed once by
+ * QueryParamListenerService's urlParams.changed$ subscriber to skip reacting to its
+ * own write (reloading there would just undo the change that triggered it).
+ *
+ * Turbo's own history object doesn't leave room for a custom flag inside the state
+ * it writes (it always writes `{ turbo: {...} }`, replacing whatever's passed in),
+ * so this can no longer live in `history.state` itself the way a plain `pushState`
+ * call could - hence the free-standing flag instead.
+ */
+let selfInitiatedUrlChange = false;
+
+export function consumeSelfInitiatedUrlChangeFlag():boolean {
+  const value = selfInitiatedUrlChange;
+  selfInitiatedUrlChange = false;
+  return value;
+}
+
+@Injectable()
+export class WorkPackagesListChecksumService {
+  protected UrlParamsHelper = inject(UrlParamsHelperService);
+  protected $state = inject(StateService);
+
+
+  public id:string|null;
+
+  public checksum:string|null;
+
+  public visibleChecksum:string|null;
+
+  /** Emits whenever visibleChecksum changes (useful for non-uiRouter pages to react to URL param changes) */
+  public readonly visibleChecksum$ = new Subject<string|null>();
+
+  public updateIfDifferent(query:QueryResource,
+    pagination:WorkPackageViewPagination):Promise<unknown> {
+    const newQueryChecksum = this.getNewChecksum(query, pagination);
+    let routePromise:Promise<unknown> = Promise.resolve();
+
+    if (this.isUninitialized()) {
+      // Do nothing
+    } else if (this.isIdDifferent(query.id)) {
+      routePromise = this.maintainUrlQueryState(query.id, null);
+
+      this.clear();
+    } else if (this.isChecksumDifferent(newQueryChecksum)) {
+      routePromise = this.maintainUrlQueryState(query.id, newQueryChecksum);
+    }
+
+    this.set(query.id, newQueryChecksum);
+    return routePromise;
+  }
+
+  public update(query:QueryResource, pagination:WorkPackageViewPagination) {
+    const newQueryChecksum = this.getNewChecksum(query, pagination);
+
+    this.set(query.id, newQueryChecksum);
+
+    this.maintainUrlQueryState(query.id, newQueryChecksum);
+  }
+
+  public setToQuery(query:QueryResource, pagination:WorkPackageViewPagination) {
+    const newQueryChecksum = this.getNewChecksum(query, pagination);
+
+    this.set(query.id, newQueryChecksum);
+
+    return this.maintainUrlQueryState(query.id, null);
+  }
+
+  public isQueryOutdated(query:QueryResource,
+    pagination:WorkPackageViewPagination) {
+    const newQueryChecksum = this.getNewChecksum(query, pagination);
+
+    return this.isOutdated(query.id, newQueryChecksum);
+  }
+
+  public executeIfOutdated(newId:string|null,
+    newChecksum:string|null,
+    callback:Function) {
+    if (this.isUninitialized() || this.isOutdated(newId, newChecksum)) {
+      this.set(newId, newChecksum);
+
+      callback();
+    }
+  }
+
+  public set(id:string|null, checksum:string|null) {
+    this.id = id;
+    this.checksum = checksum;
+  }
+
+  public clear() {
+    this.id = null;
+    this.checksum = null;
+    this.visibleChecksum = null;
+  }
+
+  public isUninitialized() {
+    return !this.id && !this.checksum;
+  }
+
+  private isIdDifferent(otherId:string|null) {
+    return this.id !== otherId;
+  }
+
+  private isChecksumDifferent(otherChecksum:string) {
+    return this.checksum && otherChecksum !== this.checksum;
+  }
+
+  private isOutdated(otherId:string|null, otherChecksum:string|null) {
+    const hasCurrentQueryID = !!this.id;
+    const hasCurrentChecksum = !!this.checksum;
+    const idChanged = (this.id !== otherId);
+
+    const checksumChanged = (otherChecksum !== this.checksum);
+    const visibleChecksumChanged = (this.checksum && !otherChecksum && this.visibleChecksum);
+
+    return (
+      // Can only be outdated if either ID or props set
+      (hasCurrentQueryID || hasCurrentChecksum)
+      && (
+        // Query ID changed
+        idChanged
+        // Query ID same + query props changed
+        || (!idChanged && checksumChanged && (otherChecksum || this.visibleChecksum))
+        // No query ID set
+        || (!hasCurrentQueryID && visibleChecksumChanged)
+      )
+    );
+  }
+
+  private getNewChecksum(query:QueryResource, pagination:WorkPackageViewPagination) {
+    return this.UrlParamsHelper.encodeQueryJsonParams(
+      query,
+      {
+        pp: pagination.perPage,
+        pa: pagination.page,
+      },
+    );
+  }
+
+  private isOnNonRouterPage():boolean {
+    if (!this.$state.current.name) return true;
+    const { pathname } = window.location;
+    return pathname.includes('/team_planners')
+      || pathname.includes('/calendars')
+      || pathname.includes('/ifc_models');
+  }
+
+  private maintainUrlQueryState(id:string|null, checksum:string|null):TransitionPromise {
+    this.visibleChecksum = checksum;
+    this.visibleChecksum$.next(checksum);
+
+    // When uiRouter is not managing the current page (e.g. calendar, team planner, BIM after Turbo migration),
+    // $state.current.name may be stale from a previous router page. Detect by URL to avoid incorrect $state.go() navigation.
+    if (this.isOnNonRouterPage()) {
+      const url = new URL(window.location.href);
+
+      if (checksum) {
+        url.searchParams.set('query_props', checksum);
+      } else {
+        url.searchParams.delete('query_props');
+      }
+
+      if (id) {
+        url.searchParams.set('query_id', id);
+      } else {
+        url.searchParams.delete('query_id');
+      }
+
+      selfInitiatedUrlChange = true;
+      Turbo.session.history.push(url);
+      return Promise.resolve() as unknown as TransitionPromise;
+    }
+
+    return this.$state.go(
+      '.',
+      { query_props: checksum, query_id: id },
+      { custom: { notify: false } },
+    );
+  }
+}

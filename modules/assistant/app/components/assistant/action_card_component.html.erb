@@ -1,0 +1,378 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= content_tag(
+      :article,
+      id:,
+      class: css_classes,
+      "aria-labelledby": title_id,
+      data: { assistant_action_id: action.id, assistant_variant: variant, test_selector: "assistant-action-card" }
+    ) do %>
+  <header class="assistant-card--header">
+    <div class="assistant-card--labels">
+      <%= render(Primer::Beta::Label.new(scheme: status_scheme, test_selector: "assistant-action-status")) do %>
+        <%= render(Primer::Beta::Octicon.new(icon: status_icon, size: :xsmall, "aria-hidden": true)) %>
+        <%= status_label %>
+      <% end %>
+      <% unless compact? && !action.proposed? %>
+        <%= render(Primer::Beta::Label.new(scheme: :secondary, inline: true, test_selector: "assistant-action-tier")) { tier_label } %>
+      <% end %>
+    </div>
+    <%= content_tag(heading_tag, id: title_id, class: "assistant-card--title") do %>
+      <% if compact? %>
+        <%= link_to(action.title, show_path, class: "assistant-card--title-link", data: { turbo_frame: "_top" }) %>
+      <% else %>
+        <%= action.title %>
+      <% end %>
+    <% end %>
+    <p class="assistant-card--meta">
+      <span><%= actor_line %></span>
+      <% if subject_link && !compact? %>
+        <span aria-hidden="true">·</span>
+        <span><%= subject_link %></span>
+      <% end %>
+      <span aria-hidden="true">·</span>
+      <%= content_tag(:time, Assistant::Text.stamp(timestamp), datetime: timestamp.iso8601) %>
+    </p>
+  </header>
+
+  <% if notice %>
+    <p class="assistant-card--notice" role="status"><%= notice %></p>
+  <% end %>
+
+  <% if status == "failed" %>
+    <p class="assistant-card--failure">
+      <%= render(Primer::Beta::Octicon.new(icon: :alert, size: :small, color: :danger, "aria-hidden": true)) %>
+      <span><%= failure_text %></span>
+    </p>
+  <% elsif spoken.any? && !choosing? && !drafting? %>
+    <section class="assistant-card--spoken" aria-label="<%= t("assistant.card.spoken.label") %>"
+             data-test-selector="assistant-action-spoken">
+      <% spoken.each do |entry| %>
+        <p class="assistant-card--spoken-lead"><%= spoken_lead(entry) %></p>
+        <blockquote class="assistant-card--spoken-text">
+          <%= simple_format(spoken_limit ? entry[:text].truncate(spoken_limit) : entry[:text], {}, wrapper_tag: :p) %>
+        </blockquote>
+      <% end %>
+      <% if compact? && spoken.any? { it[:text].length > spoken_limit } %>
+        <%= link_to(t("assistant.card.spoken.full"), show_path, class: "assistant-card--details-link", data: { turbo_frame: "_top" }) %>
+      <% end %>
+    </section>
+  <% end %>
+  <% if reminders.any? && status != "failed" %>
+    <ul class="assistant-card--reminders" aria-label="<%= t("assistant.card.reminder.label") %>"
+        data-test-selector="assistant-action-reminder">
+      <% reminders.each do |reminder| %>
+        <li class="assistant-card--reminder">
+          <%= render(Primer::Beta::Octicon.new(icon: :bell, size: :small, "aria-hidden": true)) %>
+          <span>
+            <%= t("assistant.card.reminder.at") %>
+            <time datetime="<%= reminder[:at].iso8601 %>" class="assistant-card--reminder-time"><%= reminder_time(reminder[:at]) %></time>
+            <% if reminder[:note] %>
+              <span class="assistant-card--reminder-note"><%= t("assistant.card.reminder.note", note: reminder[:note]) %></span>
+            <% end %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+  <% if status != "failed" && !preview.empty? && !choosing? %>
+    <section class="assistant-card--consequences" aria-label="<%= t("assistant.card.consequences") %>">
+      <ul class="assistant-card--changes">
+        <% preview.direct_changes.each do |change| %>
+          <li class="assistant-card--change" data-test-selector="assistant-action-change">
+            <span class="assistant-card--change-text"><%= change_line(change) %></span>
+          </li>
+        <% end %>
+      </ul>
+
+      <% if preview.cascaded_changes.any? %>
+        <div class="assistant-card--cascade" data-test-selector="assistant-action-cascade">
+          <p class="assistant-card--cascade-lead">
+            <%= render(Primer::Beta::Octicon.new(icon: :"arrow-right", size: :xsmall, "aria-hidden": true)) %>
+            <%= t("assistant.card.cascade", count: preview.cascaded_changes.size) %>
+          </p>
+          <ul class="assistant-card--changes assistant-card--changes-cascaded">
+            <% preview.cascaded_changes.first(cascade_limit).each do |change| %>
+              <li class="assistant-card--change">
+                <span class="assistant-card--change-text"><%= change_line(change) %></span>
+              </li>
+            <% end %>
+          </ul>
+          <% if preview.cascaded_changes.size > cascade_limit %>
+            <p class="assistant-card--more">
+              <%= link_to(
+                    t("assistant.card.cascade_more", count: preview.cascaded_changes.size - cascade_limit), show_path,
+                    data: { turbo_frame: "_top" }
+                  ) %>
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% preview.slips.each do |slip| %>
+        <p class="<%= class_names("assistant-card--slip", "assistant-card--slip-late" => slip.newly_late) %>"
+           data-test-selector="assistant-action-slip">
+          <%= render(
+                Primer::Beta::Octicon.new(
+                  icon: slip.newly_late ? :milestone : :calendar, size: :small,
+                  "aria-hidden": true
+                )
+              ) %>
+          <% if slip.newly_late %>
+            <strong class="assistant-card--slip-flag"><%= t("assistant.card.slip_flag") %></strong>
+          <% end %>
+          <span><%= slip_sentence(slip) %></span>
+        </p>
+      <% end %>
+
+      <% if preview.affected_users.any? %>
+        <p class="assistant-card--people" data-test-selector="assistant-action-people">
+          <%= render(Primer::Beta::Octicon.new(icon: :people, size: :small, "aria-hidden": true)) %>
+          <span><%= t("assistant.card.affects", names: affected_names) %></span>
+        </p>
+      <% end %>
+    </section>
+  <% end %>
+
+  <% if basis.any? %>
+    <details class="assistant-card--basis" data-test-selector="assistant-action-basis">
+      <summary class="assistant-card--basis-summary">
+        <%= render(
+              Primer::Beta::Octicon.new(
+                icon: :"chevron-right", size: :xsmall, classes: "assistant-card--chevron",
+                "aria-hidden": true
+              )
+            ) %>
+        <%= t("assistant.card.basis", count: basis.size) %>
+      </summary>
+      <ul class="assistant-card--basis-list">
+        <% basis.each do |entry| %>
+          <li class="assistant-card--basis-entry">
+            <%= render(
+                  Primer::Beta::Octicon.new(icon: basis_icon(entry), size: :xsmall, classes: "assistant-card--basis-icon",
+                                            "aria-hidden": true)
+                ) %>
+            <% if (url = basis_url(entry)) %>
+              <%= link_to(entry.label.presence || t("assistant.card.source"), url, data: { turbo_frame: "_top" }) %>
+            <% else %>
+              <span><%= entry.label.presence || t("assistant.card.source") %></span>
+            <% end %>
+            <% if entry.quote.present? %>
+              <blockquote class="assistant-card--quote"><%= entry.quote %></blockquote>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </details>
+  <% end %>
+
+  <% if decided_line %>
+    <p class="assistant-card--decided"><%= decided_line %></p>
+  <% end %>
+
+  <% if choosing? %>
+    <%= form_with(
+          url: approve_path, method: :post, data: { turbo_stream: true }, class: "assistant-card--choose",
+          html: { "aria-labelledby": title_id }
+        ) do %>
+      <% form_inputs.each do |input| %>
+        <%= hidden_field_tag(input[:name], input[:value], id: nil) %>
+      <% end %>
+      <fieldset class="assistant-card--options">
+        <legend class="assistant-card--options-legend"><%= t("assistant.card.choose") %></legend>
+        <% plan_options.each_with_index do |option, index| %>
+          <div class="assistant-card--option" data-test-selector="assistant-action-option">
+            <%= radio_button_tag(
+                  :option, option["key"], index.zero?, id: option_input_id(option),
+                                                       "aria-describedby": "#{option_input_id(option)}-consequence"
+                ) %>
+            <label for="<%= option_input_id(option) %>" class="assistant-card--option-label">
+              <span class="assistant-card--option-title"><%= option["label"] %></span>
+              <span class="assistant-card--option-consequence" id="<%= option_input_id(option) %>-consequence">
+                <%= option_summary(option) || t("assistant.card.nothing_changes") %>
+              </span>
+            </label>
+          </div>
+        <% end %>
+      </fieldset>
+      <div class="assistant-card--actions">
+        <%= render(
+              Primer::Beta::Button.new(
+                type: :submit, scheme: :primary, size: :small,
+                test_selector: "assistant-action-approve"
+              )
+            ) { t("assistant.card.go_with_choice") } %>
+        <%= render(
+              Primer::Beta::Button.new(
+                type: :submit, scheme: :invisible, size: :small, formaction: reject_path,
+                test_selector: "assistant-action-reject"
+              )
+            ) { t("assistant.card.decline") } %>
+      </div>
+    <% end %>
+  <% elsif drafting? %>
+    <%= render(
+          Assistant::DraftFormComponent.new(
+            action:, id:, title_id:, form_inputs:, approve_path:, reject_path:, revise_path:, confirm_label:
+          )
+        ) %>
+  <% elsif action.proposed? && decidable? %>
+    <div class="assistant-card--actions">
+      <%= form_with(url: approve_path, method: :post, data: { turbo_stream: true }, class: "d-inline") do %>
+        <% form_inputs.each do |input| %>
+          <%= hidden_field_tag(input[:name], input[:value], id: nil) %>
+        <% end %>
+        <%= render(
+              Primer::Beta::Button.new(
+                type: :submit, scheme: :primary, size: :small,
+                "aria-describedby": title_id,
+                test_selector: "assistant-action-approve"
+              )
+            ) { confirm_label } %>
+      <% end %>
+      <%= form_with(url: reject_path, method: :post, data: { turbo_stream: true }, class: "d-inline") do %>
+        <% form_inputs.each do |input| %>
+          <%= hidden_field_tag(input[:name], input[:value], id: nil) %>
+        <% end %>
+        <%= render(
+              Primer::Beta::Button.new(
+                type: :submit, scheme: :invisible, size: :small,
+                "aria-describedby": title_id,
+                test_selector: "assistant-action-reject"
+              )
+            ) { t("assistant.card.decline") } %>
+      <% end %>
+      <% if compact? %>
+        <%= link_to(
+              revisable? ? t("assistant.draft.review") : t("assistant.card.details"), show_path, class: "assistant-card--details-link",
+                                                      data: { turbo_frame: "_top" }
+            ) %>
+      <% end %>
+    </div>
+  <% elsif waiting_for_someone_else? %>
+    <p class="assistant-card--hint"><%= decider_hint %></p>
+  <% elsif undo_preview %>
+    <div class="assistant-card--conflicts" role="group" aria-labelledby="<%= id %>-undo"
+         data-test-selector="assistant-action-undo-preview">
+      <p id="<%= id %>-undo" class="assistant-card--conflicts-lead"><%= t("assistant.card.undo_preview.lead") %></p>
+      <% if undo_failed? %>
+        <p class="assistant-card--failure"><%= undo_presenter.errors.to_sentence %></p>
+      <% else %>
+        <% if undo_preview.empty? %>
+          <p class="assistant-card--hint"><%= t("assistant.card.undo_preview.nothing") %></p>
+        <% end %>
+        <ul class="assistant-card--changes">
+          <% undo_presenter.direct_changes.each do |change| %>
+            <li class="assistant-card--change" data-test-selector="assistant-action-undo-change">
+              <span class="assistant-card--change-text"><%= change_line(change, with: undo_consequences) %></span>
+            </li>
+          <% end %>
+          <% undo_preview.removed.each do |label| %>
+            <li class="assistant-card--change" data-test-selector="assistant-action-undo-change">
+              <span class="assistant-card--change-text"><%= t("assistant.card.undo_preview.removes", label:) %></span>
+            </li>
+          <% end %>
+        </ul>
+        <% if undo_presenter.cascaded_changes.any? %>
+          <p class="assistant-card--cascade-lead" data-test-selector="assistant-action-undo-cascade">
+            <%= render(Primer::Beta::Octicon.new(icon: :"arrow-right", size: :xsmall, "aria-hidden": true)) %>
+            <%= t("assistant.card.cascade", count: undo_presenter.cascaded_changes.size) %>
+          </p>
+          <ul class="assistant-card--changes assistant-card--changes-cascaded">
+            <% undo_presenter.cascaded_changes.first(cascade_limit).each do |change| %>
+              <li class="assistant-card--change">
+                <span class="assistant-card--change-text"><%= change_line(change, with: undo_consequences) %></span>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+        <% if undo_preview.kept.any? %>
+          <p class="assistant-card--conflicts-lead"><%= t("assistant.card.undo_preview.kept_lead") %></p>
+          <ul class="assistant-card--conflicts-list" data-test-selector="assistant-action-undo-kept">
+            <% undo_preview.kept.each do |conflict| %>
+              <li><%= kept_line(conflict) %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      <% end %>
+      <div class="assistant-card--actions">
+        <% unless undo_failed? %>
+          <%= form_with(url: undo_path, method: :post, data: { turbo_stream: true }, class: "d-inline") do %>
+            <% form_inputs.each do |input| %>
+              <%= hidden_field_tag(input[:name], input[:value], id: nil) %>
+            <% end %>
+            <%= hidden_field_tag(:confirm, "1", id: nil) %>
+            <%= hidden_field_tag(:keep, "1", id: nil) if undo_preview.kept.any? %>
+            <%= render(Primer::Beta::Button.new(type: :submit, size: :small, test_selector: "assistant-action-undo-confirm")) do %>
+              <%= t("assistant.card.undo_preview.confirm") %>
+            <% end %>
+          <% end %>
+        <% end %>
+        <%= form_with(url: show_path, method: :get, data: { turbo_stream: true }, class: "d-inline") do %>
+          <%= hidden_field_tag(:variant, variant, id: nil) %>
+          <%= render(Primer::Beta::Button.new(type: :submit, scheme: :invisible, size: :small)) { t("assistant.card.undo_cancel") } %>
+        <% end %>
+      </div>
+    </div>
+  <% elsif conflicts.present? %>
+    <div class="assistant-card--conflicts" role="group" aria-labelledby="<%= id %>-conflicts"
+         data-test-selector="assistant-action-conflicts">
+      <p id="<%= id %>-conflicts" class="assistant-card--conflicts-lead"><%= t("assistant.card.conflicts_lead") %></p>
+      <ul class="assistant-card--conflicts-list">
+        <% conflicts.each do |conflict| %>
+          <li><%= t("assistant.card.conflict", label: conflict["label"], attribute: attribute_label(conflict["attribute"])) %></li>
+        <% end %>
+      </ul>
+      <div class="assistant-card--actions">
+        <%= form_with(url: undo_path, method: :post, data: { turbo_stream: true }, class: "d-inline") do %>
+          <% form_inputs.each do |input| %>
+            <%= hidden_field_tag(input[:name], input[:value], id: nil) %>
+          <% end %>
+          <%= hidden_field_tag(:keep, "1", id: nil) %>
+          <%= render(Primer::Beta::Button.new(type: :submit, size: :small, test_selector: "assistant-action-undo-keep")) do %>
+            <%= t("assistant.card.undo_keep") %>
+          <% end %>
+        <% end %>
+        <%= form_with(url: show_path, method: :get, data: { turbo_stream: true }, class: "d-inline") do %>
+          <%= hidden_field_tag(:variant, variant, id: nil) %>
+          <%= render(Primer::Beta::Button.new(type: :submit, scheme: :invisible, size: :small)) { t("assistant.card.undo_cancel") } %>
+        <% end %>
+      </div>
+    </div>
+  <% elsif undoable? %>
+    <div class="assistant-card--actions">
+      <%= form_with(url: undo_path, method: :post, data: { turbo_stream: true }, class: "d-inline") do %>
+        <% form_inputs.each do |input| %>
+          <%= hidden_field_tag(input[:name], input[:value], id: nil) %>
+        <% end %>
+        <%= render(
+              Primer::Beta::Button.new(
+                type: :submit, size: :small, "aria-describedby": title_id,
+                test_selector: "assistant-action-undo"
+              )
+            ) do |button| %>
+          <% button.with_leading_visual_icon(icon: :history) %>
+          <%= t("assistant.card.undo") %>
+        <% end %>
+      <% end %>
+      <% if compact? %>
+        <%= link_to(
+              revisable? ? t("assistant.draft.review") : t("assistant.card.details"), show_path, class: "assistant-card--details-link",
+                                                      data: { turbo_frame: "_top" }
+            ) %>
+      <% end %>
+    </div>
+  <% elsif compact? %>
+    <div class="assistant-card--actions">
+      <%= link_to(t("assistant.card.details"), show_path, class: "assistant-card--details-link", data: { turbo_frame: "_top" }) %>
+    </div>
+  <% end %>
+<% end %>

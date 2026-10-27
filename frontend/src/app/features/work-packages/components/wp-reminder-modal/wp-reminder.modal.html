@@ -1,0 +1,53 @@
+<div
+  class="spot-modal op-reminder-dialog-modal"
+>
+  <div
+    class="spot-modal--header"
+  >
+    <div
+      id="spotModalTitle"
+      class="spot-modal--header-title"
+      [textContent]="(this.title$ | async) || this.text.new_title">
+    </div>
+
+    <button
+      class="button button_no-margin -transparent spot-modal--header-close-button"
+      [attr.aria-label]="text.button_close"
+      (click)="closeMe($event)"
+      data-test-selector="op-reminder-dialog-modal--close-icon"
+    >
+      <svg
+        x-icon
+        size="small"
+        class="spot-modal--header-close-button-icon"
+      ></svg>
+    </button>
+  </div>
+  <p
+    class="spot-modal--subheader fgColor-muted"
+    [textContent]="this.text.subtitle">
+  </p>
+
+  <div class="spot-modal--body spot-container">
+    <turbo-frame
+      #frameElement
+      id="reminder_modal_body"
+      src="{{this.frameSrc}}">
+      <op-content-loader
+        viewBox="0 0 180 80"
+      >
+        <svg:rect height="8" rx="2" ry="2" width="30" x="0" y="0"/>
+        <svg:rect height="10" rx="2" ry="2" width="180" x="0" y="10"/>
+
+        <svg:rect height="8" rx="2" ry="2" width="30" x="0" y="24"/>
+        <svg:rect height="10" rx="2" ry="2" width="180" x="0" y="34"/>
+
+        <svg:rect height="8" rx="2" ry="2" width="30" x="0" y="48"/>
+        <svg:rect height="10" rx="2" ry="2" width="180" x="0" y="58"/>
+
+        <svg:rect height="8" rx="2" ry="2" width="50" x="0" y="72"/>
+        <svg:rect height="8" rx="2" ry="2" width="50" x="130" y="72"/>
+      </op-content-loader>
+    </turbo-frame>
+  </div>
+</div>

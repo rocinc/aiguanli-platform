@@ -1,0 +1,96 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= content_tag(:article, id: dom_id, class: "assistant-idea", "aria-labelledby": title_id, data: { test_selector: "assistant-idea" }) do %>
+  <header class="assistant-idea--header">
+    <%= render(Primer::Beta::Octicon.new(icon: :"light-bulb", classes: "assistant-idea--mark", "aria-hidden": true)) %>
+    <h3 id="<%= title_id %>" class="assistant-idea--title"><%= title %></h3>
+    <span class="assistant-idea--who"><%= speakers_text %></span>
+  </header>
+
+  <% if latest %>
+    <blockquote class="assistant-idea--quote"><%= t("assistant.ideas.quote", text: latest.quote) %></blockquote>
+    <p class="assistant-idea--meta"><%= quote_meta(latest) %></p>
+  <% end %>
+
+  <% if more? %>
+    <details class="assistant-idea--more">
+      <summary class="assistant-card--basis-summary">
+        <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-card--chevron", "aria-hidden": true)) %>
+        <%= t("assistant.ideas.more", count: more_count) %>
+      </summary>
+      <ul class="assistant-idea--others">
+        <% others.each do |mention| %>
+          <li>
+            <blockquote class="assistant-idea--quote"><%= t("assistant.ideas.quote", text: mention.quote) %></blockquote>
+            <p class="assistant-idea--meta"><%= quote_meta(mention) %></p>
+          </li>
+        <% end %>
+        <% hidden_count.times do %>
+          <li class="assistant-idea--meta" data-test-selector="assistant-idea-hidden"><%= t("assistant.ideas.hidden") %></li>
+        <% end %>
+      </ul>
+    </details>
+  <% end %>
+
+  <% if adopted? %>
+    <p class="assistant-idea--outcome" data-test-selector="assistant-idea-adopted">
+      <% if work_package.nil? %>
+        <%= t("assistant.ideas.became_gone") %>
+      <% elsif work_package_visible? %>
+        <%= t("assistant.ideas.became_html", link: work_package_link, status: work_package.status.name) %>
+      <% else %>
+        <%= t("assistant.ideas.became_hidden") %>
+      <% end %>
+    </p>
+  <% elsif set_aside? && idea.set_aside_reason.present? %>
+    <p class="assistant-idea--outcome" data-test-selector="assistant-idea-reason"><%= t("assistant.ideas.reason", reason: idea.set_aside_reason) %></p>
+  <% end %>
+
+  <% if acting? && (convertible? || mergeable? || releasable? || restorable?) %>
+    <div class="assistant-idea--actions">
+      <% if convertible? %>
+        <%= form_with(url: action_path(:convert), method: :post, data: { turbo_stream: true }, class: "d-inline") do %>
+          <%= render(Primer::Beta::Button.new(type: :submit, size: :small, scheme: :primary, "aria-describedby": title_id,
+                                              test_selector: "assistant-idea-convert")) { t("assistant.ideas.convert") } %>
+        <% end %>
+      <% end %>
+
+      <% if mergeable? %>
+        <details class="assistant-idea--inline" data-test-selector="assistant-idea-merge">
+          <summary class="Button Button--small Button--invisible"><span class="Button-content"><span class="Button-label"><%= t("assistant.ideas.merge") %></span></span></summary>
+          <%= form_with(url: action_path(:merge), method: :post, data: { turbo_stream: true }, class: "assistant-idea--form") do %>
+            <%= select_tag(:into_id, options_for_select(ideas.merge_targets(entry).map { [it.title.truncate(60), it.idea.id] }),
+                           class: "FormControl-select FormControl-small", "aria-label": t("assistant.ideas.merge_into", title:)) %>
+            <%= render(Primer::Beta::Button.new(type: :submit, size: :small)) { t("assistant.ideas.merge_confirm") } %>
+          <% end %>
+        </details>
+      <% end %>
+
+      <% if releasable? %>
+        <details class="assistant-idea--inline" data-test-selector="assistant-idea-release">
+          <summary class="Button Button--small Button--invisible"><span class="Button-content"><span class="Button-label"><%= t("assistant.ideas.release") %></span></span></summary>
+          <%= form_with(url: action_path(:release), method: :post, data: { turbo_stream: true }, class: "assistant-idea--form") do %>
+            <%= text_field_tag(:reason, nil, maxlength: 200, autocomplete: "off", placeholder: t("assistant.ideas.release_reason"),
+                               class: "FormControl-input FormControl-small", "aria-label": t("assistant.ideas.release_reason")) %>
+            <%= render(Primer::Beta::Button.new(type: :submit, size: :small)) { t("assistant.ideas.release_confirm") } %>
+          <% end %>
+        </details>
+      <% end %>
+
+      <% if restorable? %>
+        <%= form_with(url: action_path(:restore), method: :post, data: { turbo_stream: true }, class: "d-inline") do %>
+          <%= render(Primer::Beta::Button.new(type: :submit, size: :small, "aria-describedby": title_id,
+                                              test_selector: "assistant-idea-restore")) { t("assistant.ideas.restore") } %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

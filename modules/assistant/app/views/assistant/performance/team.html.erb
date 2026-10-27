@@ -1,0 +1,30 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<% html_title(t("assistant.performance.team_title"), @project.name) -%>
+<%=
+  render(Primer::OpenProject::PageHeader.new) do |header|
+    header.with_title { t("assistant.performance.team_title") }
+    header.with_description { t("assistant.performance.team_description") }
+    header.with_breadcrumbs(
+      [{ href: project_overview_path(@project), text: @project.name },
+       { href: project_members_path(@project), text: t(:label_member_plural) },
+       t("assistant.performance.team_title")]
+    )
+    header.with_action_button(
+      tag: :a, href: project_member_performance_path(@project, current_user),
+      mobile_icon: :person, mobile_label: t("assistant.performance.own_link")
+    ) do
+      t("assistant.performance.own_link")
+    end
+  end
+%>
+
+<%= render(@page_view) %>

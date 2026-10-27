@@ -1,0 +1,24 @@
+description: |-
+  Simple response of a single item of a custom field of type hierarchy.
+value:
+  _type: HierarchyItem
+  id: 1338
+  label: Stormtroopers
+  short: ST
+  weight: null
+  formattedWeight: null
+  depth: 1
+  _links:
+    self:
+      href: /api/v3/custom_field_items/1338
+      name: Stormtroopers
+    parent:
+      href: /api/v3/custom_field_items/1337
+      name: null
+    branch:
+      href: /api/v3/custom_field_items/1338/branch
+    children:
+      - href: /api/v3/custom_field_items/1340
+        name: ST-377
+      - href: /api/v3/custom_field_items/1341
+        name: ST-422

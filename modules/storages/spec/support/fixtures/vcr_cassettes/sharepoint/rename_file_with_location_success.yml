@@ -1,0 +1,127 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://login.microsoftonline.com/e36f1dbc-fdae-427e-b61b-0d96ddfb81a4/oauth2/v2.0/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=client_credentials&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default+offline_access&client_id=404e0567-19a1-4a64-b2d1-d3b0c99f2ed9&client_secret=QRB8Q%7Ei.1rID_.MC9FTfRGq-FTE5SgWYsoeLacWf
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.1
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '199'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      X-Ms-Request-Id:
+      - 1ec259e7-7cd2-458c-9daf-9fb6fd131c00
+      X-Ms-Ests-Server:
+      - 2.1.21950.4 - FRC ProdSlices
+      X-Ms-Srs:
+      - 1.P
+      Content-Security-Policy-Report-Only:
+      - object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-fe_p4LNLwwgKBN-z2ON30w'
+        'unsafe-inline' 'unsafe-eval' https://*.msauth.net https://*.msftauth.net
+        https://*.msftauthimages.net https://*.msauthimages.net https://*.msidentity.com
+        https://*.microsoftonline-p.com https://*.microsoftazuread-sso.com https://*.azureedge.net
+        https://*.outlook.com https://*.office.com https://*.office365.com https://*.microsoft.com
+        https://*.bing.com 'report-sample'; report-uri https://csp.microsoft.com/report/ESTS-UX-All
+      Cross-Origin-Opener-Policy-Report-Only:
+      - same-origin; report-to="coop-endpoint"
+      Reporting-Endpoints:
+      - coop-endpoint="https://idux.azurewebsites.net/api/coopReport"
+      X-Xss-Protection:
+      - '0'
+      Set-Cookie:
+      - fpc=AkTzmlrwqSNJq_V9ZenzcdlZ-dCOAQAAAC67beAOAAAA; expires=Thu, 30-Oct-2025
+        11:51:11 GMT; path=/; secure; HttpOnly; SameSite=None, x-ms-gateway-slice=estsfd;
+        path=/; secure; samesite=none; httponly, stsservicecookie=estsfd; path=/;
+        secure; samesite=none; httponly
+      Date:
+      - Tue, 30 Sep 2025 11:51:11 GMT
+      Content-Length:
+      - '1932'
+    body:
+      encoding: UTF-8
+      string: '{"token_type":"Bearer","expires_in":3599,"ext_expires_in":3599,"access_token":"<ACCESS_TOKEN>"}'
+  recorded_at: Tue, 30 Sep 2025 11:51:11 GMT
+- request:
+    method: patch
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8CfNaHr_0ERYs5kgmEWFrX/items/01ANJ53W5WDLAMJBIRRVD3PK2MNCSGTJVD
+    body:
+      encoding: UTF-8
+      string: '{"name":"I❤️you death star.png"}'
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.1
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '36'
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+      Content-Encoding:
+      - gzip
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 15869c01-65c1-4aad-ac45-5a66346f5e79
+      Client-Request-Id:
+      - 15869c01-65c1-4aad-ac45-5a66346f5e79
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"006","RoleInstance":"FR1PEPF000041E1"}}'
+      Splogid:
+      - 33cacaa1-200d-0000-8a5a-695159c898b8
+      Odata-Version:
+      - '4.0'
+      Date:
+      - Tue, 30 Sep 2025 11:51:11 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#drives(''b%21FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8CfNaHr_0ERYs5kgmEWFrX'')/items/$entity","@microsoft.graph.downloadUrl":"https://ymt6d.sharepoint.com/sites/OPTest/_layouts/15/download.aspx?UniqueId=c4c01ab6-1185-478d-b7ab-4c68a469a6a3&Translate=false&tempauth=v1.eyJzaXRlaWQiOiIxMDk5ZTMxNS1kMGM3LTQ3YzctODY0MC1hYTk1MDRiNzBmZmYiLCJhcHBfZGlzcGxheW5hbWUiOiJPUCBTZWxlY3RlZCIsIm5hbWVpZCI6IjQwNGUwNTY3LTE5YTEtNGE2NC1iMmQxLWQzYjBjOTlmMmVkOUBlMzZmMWRiYy1mZGFlLTQyN2UtYjYxYi0wZDk2ZGRmYjgxYTQiLCJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAveW10NmQuc2hhcmVwb2ludC5jb21AZTM2ZjFkYmMtZmRhZS00MjdlLWI2MWItMGQ5NmRkZmI4MWE0IiwiZXhwIjoiMTc1OTIzNjY3MSJ9.CkAKDGVudHJhX2NsYWltcxIwQ0lPRzc4WUdFQUFhRmpVeGJrTklkRW80YWtWWFpISTFMVEpmVWsxalFVRXFBQT09CjIKCmFjdG9yYXBwaWQSJDAwMDAwMDAzLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMAoKCgRzbmlkEgI2NBILCOC0zO-1iMA-EAUaCzIwLjIwLjQxLjMzKix4TUt4eTZwYzRRUWdvMm5QVVBXSSs2QUdTWXNhZGFNdUdCT0JRSjBXelBBPTCBATgBQhChysozDSAAAIpaaVFZyJi4ShBoYXNoZWRwcm9vZnRva2VuegExugENc2VsZWN0ZWRzaXRlc8gBAQ.URpePpCVhRufh_huv6_UUewU33htg4v958irgi8pCAc&ApiVersion=2.0","createdDateTime":"2025-09-23T11:13:24Z","eTag":"\"{C4C01AB6-1185-478D-B7AB-4C68A469A6A3},7\"","id":"01ANJ53W5WDLAMJBIRRVD3PK2MNCSGTJVD","lastModifiedDateTime":"2025-09-30T11:47:41Z","name":"I❤️you
+        death star.png","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Marcello%20AMPF/I%20am%20the%20senat/I%E2%9D%A4%EF%B8%8Fyou%20death%20star.png","cTag":"\"c:{C4C01AB6-1185-478D-B7AB-4C68A469A6A3},4\"","size":331555,"createdBy":{"application":{"id":"404e0567-19a1-4a64-b2d1-d3b0c99f2ed9","displayName":"OP
+        Selected"},"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"lastModifiedBy":{"application":{"id":"404e0567-19a1-4a64-b2d1-d3b0c99f2ed9","displayName":"OP
+        Selected"},"user":{"displayName":"SharePoint App"}},"parentReference":{"driveType":"documentLibrary","driveId":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8CfNaHr_0ERYs5kgmEWFrX","id":"01ANJ53W7XPDQZRCOJK5CJC2M72EB6WKEG","name":"I
+        am the senat","path":"/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8CfNaHr_0ERYs5kgmEWFrX/root:/I
+        am the senat","siteId":"1099e315-d0c7-47c7-8640-aa9504b70fff"},"file":{"mimeType":"image/png","hashes":{"quickXorHash":"FmcZ5D++Y0ngYq2SasDHZHBiMx4="}},"fileSystemInfo":{"createdDateTime":"2025-09-23T11:13:24Z","lastModifiedDateTime":"2025-09-30T11:47:41Z"},"image":{"height":720,"width":1328},"photo":{},"shared":{"scope":"users"}}'
+  recorded_at: Tue, 30 Sep 2025 11:51:11 GMT
+recorded_with: VCR 6.3.1

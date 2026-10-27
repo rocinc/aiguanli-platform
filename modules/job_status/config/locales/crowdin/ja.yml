@@ -1,0 +1,25 @@
+---
+ja:
+  activerecord:
+    models:
+      job_status/status:
+        other: Background job statuses
+  job_status_dialog:
+    click_to_download: Or [click here](download_url) to download.
+    download_starts: ダウンロードは自動的に開始されます。
+    errors: エラーが発生しました
+    generic_messages:
+      cancelled: エラーのためジョブがキャンセルされました。
+      error: ジョブは失敗しました。
+      in_process: ジョブは現在実行中です。
+      in_queue: ジョブはキューに追加されました。まもなく実行されます。
+      not_found: ジョブが見つかりませんでした。
+      success: ジョブは正常終了しました。
+    redirect: リダイレクトされています。
+    redirect_errors: これらのエラーのため、自動的にリダイレクトされません。
+    redirect_link: 続行するにはここをクリックしてください。
+    title: バックグラウンドジョブの状態
+  label_job_status_plural: ジョブステータス
+  plugin_openproject_job_status:
+    description: バックグラウンドジョブのリストとステータス。
+    name: OpenProject ジョブの状態

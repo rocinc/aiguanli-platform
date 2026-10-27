@@ -1,0 +1,159 @@
+@if (workPackage) {
+  <div
+    class="work-package--single-view"
+    [ngClass]="{'work-package--single-view_with-columns': showTwoColumnLayout()}"
+    data-selector="wp-single-view">
+    @if (isNewResource) {
+      <div class="wp-new--subject-wrapper"
+        >
+        <op-editable-attribute-field [resource]="workPackage"
+          [wrapperClasses]="'-no-label'"
+        [fieldName]="'subject'" />
+      </div>
+    }
+    <div class="wp-info-wrapper">
+      @if (!isNewResource) {
+        <wp-status-button [workPackage]="workPackage" />
+      }
+      @if (!isNewResource) {
+        <attribute-help-text [attribute]="'status'"
+          [attributeScope]="'WorkPackage'"
+         />
+      }
+      @if (!isNewResource) {
+        <div class="work-packages--info-row"
+          >
+          <span
+            [ngClass]="{ '-all-text-select': selectEntireId }"
+            [textContent]="idLabel"
+          ></span>:
+          <span [textContent]="text.infoRow.createdBy"></span>
+          <!-- The space has to be in an extra span
+          because otherwise the browser would add a second space after it -->
+          <span>&nbsp;</span>
+          <op-user-link class="user-link"
+          [user]="workPackage.author" />
+          <span>.&nbsp;</span>
+          <span [textContent]="text.infoRow.lastUpdatedOn"></span>
+          <span>&nbsp;</span>
+          <op-date-time [dateTimeValue]="workPackage.updatedAt" />
+          <span>.</span>
+        </div>
+      }
+      <wp-custom-actions [workPackage]="workPackage" class="custom-actions" />
+    </div>
+    <op-wp-assistant-aside [workPackage]="workPackage" />
+    @if (projectContext && projectContext.field) {
+      <div class="attributes-group -project-context __overflowing_element_container __overflowing_project_context"
+        data-overflowing-identifier=".__overflowing_project_context">
+        <div>
+          <p class="wp-project-context--warning" [textContent]="text.project.required"></p>
+          @for (descriptor of projectContext.field; track descriptor.name) {
+            <div class="attributes-key-value"
+              [ngClass]="{'-span-all-columns': descriptor.spanAll }"
+              >
+              <div class="attributes-key-value--key">
+                <wp-replacement-label [fieldName]="descriptor.name">
+                  {{ descriptor.label }}
+                  @if (descriptor.field.required && descriptor.field.writable) {
+                    <span class="required"
+                    >*</span>
+                  }
+                </wp-replacement-label>
+                <attribute-help-text [attribute]="descriptor.name"
+                [attributeScope]="'WorkPackage'" />
+              </div>
+              <div class="attributes-key-value--value-container">
+                <op-editable-attribute-field [resource]="workPackage"
+                [fieldName]="descriptor.name" />
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    @if (showSwitchToProjectBanner()) {
+      <div
+        class="attributes-group -project-context hide-when-print"
+        >
+        <div>
+          <a
+            class="project-context--switch-link"
+            [href]="switchToProjectPath"
+            [textContent]="text.linkProject(workPackage.project.name)"
+         ></a>
+        </div>
+      </div>
+    }
+    @for (component of prependedAttributeGroupComponents(); track component) {
+      <ndc-dynamic [ndcDynamicComponent]="component"
+        [ndcDynamicInputs]="{ workPackage: workPackage }" />
+    }
+    <div class="attributes-group description-group">
+      <div class="single-attribute work-packages--details--description">
+        <op-editable-attribute-field [fieldName]="'description'"
+          [resource]="workPackage"
+          [isDropTarget]="true"
+          [wrapperClasses]="'-no-label'" />
+      </div>
+    </div>
+    @for (group of groupedFields; track group.name) {
+      <div
+        [hidden]="shouldHideGroup(group)"
+        [attr.data-group-name]="group.name"
+        [ngClass]="'__overflowing_' + group.id"
+        [attr.data-overflowing-identifier]="'.__overflowing_' + group.id"
+        class="attributes-group __overflowing_element_container"
+        >
+        @if (group.isolated) {
+          <ng-container opWorkPackageIsolatedQuerySpace>
+            <ndc-dynamic [ndcDynamicComponent]="attributeGroupComponent(group)"
+                   [ndcDynamicInputs]="{ workPackage: workPackage,
+                                         group: group,
+                                         query: group.query }" />
+          </ng-container>
+        }
+        @if (!group.isolated) {
+          <div class="attributes-group--header">
+            <div class="attributes-group--header-container">
+              <h3 class="attributes-group--header-text"
+              [textContent]="group.name"></h3>
+            </div>
+          </div>
+          <ndc-dynamic [ndcDynamicComponent]="attributeGroupComponent(group)"
+            [ndcDynamicInjector]="injector"
+            [ndcDynamicInputs]="{ workPackage: workPackage, group: group }" />
+        }
+      </div>
+    }
+  </div>
+}
+
+@if (isNewResource) {
+  <div
+    class="work-packages--storages"
+    >
+    @if (workPackage.$links.attachments) {
+      <div
+        >
+        <div class="op-tab-content--header">
+          <span class="op-tab-content--header-text" [textContent]="text.attachments.label"></span>
+        </div>
+        <ndc-dynamic [ndcDynamicComponent]="attachmentListComponent()"
+          [ndcDynamicInputs]="{ resource: workPackage }" />
+        @if (workPackage.canAddAttachments) {
+          <ndc-dynamic [ndcDynamicComponent]="attachmentUploadComponent()"
+            [ndcDynamicInputs]="{ resource: workPackage }"
+             />
+        }
+      </div>
+    }
+    @for (storage of projectStorages | async; track storage.id) {
+      <op-storage [resource]="workPackage"
+        [projectStorage]="storage"
+        [allowLinking]="true"
+        [allowUploading]="true"
+       />
+    }
+  </div>
+}

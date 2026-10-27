@@ -1,0 +1,7 @@
+---
+ja:
+  js:
+    work_packages:
+      default_queries:
+        milestones: マイルストーン
+      label_gantt_chart_plural: ガントチャート

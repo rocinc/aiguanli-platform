@@ -1,0 +1,63 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+Copyright (C) 2006-2013 Jean-Philippe Lang
+Copyright (C) 2010-2013 the ChiliProject Team
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+See COPYRIGHT and LICENSE files for more details.
+
+++#%>
+
+<% html_title t(:label_register) %>
+<% @user ||= User.new %>
+
+<%= render(Primer::BaseComponent.new(tag: :div, classes: "op-account-registration")) do %>
+  <%= render(Primer::Beta::Text.new(tag: :p, classes: "op-account-registration--subtitle")) do %>
+    <%= t("account.signup_title", app_title: Setting.app_title) %>
+  <% end %>
+
+  <%# Field errors render inline in the form. Errors not tied to a specific
+      field (e.g. user limit reached) are shown in a banner above the form. %>
+  <% if @user.errors[:base].present? %>
+    <%= render(Primer::Alpha::Banner.new(mb: 3, icon: :stop, scheme: :danger)) do %>
+      <%= safe_join(@user.errors[:base], tag.br) %>
+    <% end %>
+  <% end %>
+
+  <%= primer_form_with(
+        model: @user,
+        url: account_register_path,
+        id: "new_user",
+        data: { turbo: false, test_selector: "registration-form" }
+      ) do |form| %>
+    <%= back_url_hidden_field_tag use_referer: false %>
+    <%= render(RegistrationForm.new(form)) %>
+  <% end %>
+
+  <% unless @user.uses_external_authentication? %>
+    <%= render("account/auth_providers", omniauth_title: I18n.t("account.signup_with_external_account"), wide: true) %>
+  <% end %>
+
+  <div class="op-account-registration--signin">
+    <%= link_to t(:button_login), signin_path %>
+  </div>
+<% end %>

@@ -1,0 +1,25 @@
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    restart: no
+    volumes:
+      - gitlab-etc:/etc/gitlab
+      - gitlab-logs:/var/log/gitlab
+      - gitlab-opt:/var/opt/gitlab
+    networks:
+      - external
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gitlab.rule=Host(`gitlab.${OPENPROJECT_DOCKER_DEV_TLD:-local}`)"
+      - "traefik.http.routers.gitlab.entrypoints=websecure"
+      - "traefik.http.services.gitlab.loadbalancer.server.port=80"
+
+volumes:
+  gitlab-etc:
+  gitlab-logs:
+  gitlab-opt:
+
+networks:
+  external:
+    name: gateway
+    external: true

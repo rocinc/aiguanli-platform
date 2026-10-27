@@ -1,0 +1,87 @@
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+zh-CN:
+  assistant:
+    notice:
+      label: "助理的提示"
+      guess: "这是推测"
+      basis: "依据（%{count}）"
+      basis_kinds:
+        quote: "原话"
+        chain: "关系链"
+        history: "字段历史"
+        calculation: "计算"
+        external: "外部事件"
+        statistic: "统计"
+      options: "你可以"
+      leave: "先不动"
+      got_it: "知道了"
+      go_confirm: "去确认…"
+      pairs_label: "决定原文与文件原文对照"
+      snooze: "稍后"
+      snooze_choices:
+        afternoon: "今天下午"
+        tomorrow: "明天上午"
+        monday: "下周一"
+        before_due: "到期前一天"
+      mute: "这类事不用告诉我"
+      mute_scopes:
+        project: "在这个项目"
+        all: "所有项目"
+      wrong: "这不对"
+      reasons:
+        wrong: "事实错了"
+        known: "我已经知道"
+        not_mine: "不是我的事"
+        bad_timing: "时机不对"
+      why:
+        owns: "因为你负责它"
+        awaits: "因为你在等它"
+        awaited: "因为它在等你"
+        leads: "因为你是 %{name} 的负责人"
+        editing: "因为你正在改它"
+        duty: "因为你让我盯着它"
+        watches: "因为你关注了它"
+        returned: "因为你刚回来"
+        hosts: "因为这场会议由你主持"
+        member: "因为你在这个项目里"
+      replies:
+        rejected: "好，先不动。"
+        snoozed: "好，%{when} 再提醒你。"
+        muted: "好，%{rule}以后不再告诉你。在助理设置里可以恢复。"
+        muted_in_project: "好，在 %{project} 里，%{rule}以后不再告诉你。在助理设置里可以恢复。"
+        wrong: "谢谢，我把这条收回了。"
+        known: "好。"
+        not_mine: "好，我改问 %{name}。"
+        not_mine_nobody: "好。我没找到更合适的人，这条先收起来。"
+        timing: "什么时候再提醒你？"
+        adopted: "好了，谢谢。"
+        edited: "按你改过的做好了。"
+        ignored: "这件事已经不需要了。"
+        resolved: "这件事已经处理好了。"
+        undone: "已撤销。"
+      stale: "已不需要：%{reason}"
+      stale_subject: "%{ref} 已经处理好了"
+      stale_generic: "这件事已经处理好了"
+      handled: "已处理：%{what}"
+      handled_in: "已在 %{ref} 处理"
+      handled_generic: "已处理"
+      stale_reasons:
+        change: "%{ref} 之后有了新动静"
+        status: "%{ref} 的状态已经变了"
+        done_as_said: "%{ref} 已经手工改好了"
+      mistakes:
+        gone: "我说的那件事已经不在了。"
+        closed: "%{ref} 已经关闭，我还在提它。"
+        moved: "我说的时候 %{ref} 的%{field}是 %{was}，现在是 %{now}。"
+      handover:
+        label: "撤销之后"
+        ask: "已撤销。以后这类情况要我先问你吗？"
+        yes_button: "要"
+        no_button: "不用，这次是例外"
+        "yes": "好，以后这类情况我先问你。"
+        "no": "好，这次当作例外。"

@@ -1,0 +1,9 @@
+---
+hu:
+  js:
+    calendar:
+      create_new: Új naptár létrehozása
+      label_calendar_plural: Naptárak
+      title: Naptár
+      too_many: Összesen %{count} munkacsomag van, de csak %{max} jeleníthető meg.
+      unsaved_title: Névtelen naptár

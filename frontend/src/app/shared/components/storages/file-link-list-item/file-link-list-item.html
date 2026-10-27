@@ -1,0 +1,155 @@
+<spot-tooltip
+  [disabled]="!hasTooltip"
+  [alignment]="tooltipAlignment"
+  class="spot-list--item-floating-wrapper op-file-list--item-floating-wrapper"
+  [ngClass]="{ 'spot-list--item-floating-wrapper_disabled op-file-list--item-floating-wrapper__disabled': floatingActions.length === 0 }"
+>
+  <p
+    slot="body"
+    class="spot-body-small"
+  >{{ tooltip }}</p>
+
+  <ng-container
+    slot="trigger"
+  >
+    <a
+      class="spot-list--item-action spot-list--item-action_link op-file-list--item-action"
+      [ngClass]="{
+        'spot-list--item-action_disabled': disabled,
+        'op-file-list--item-action_disabled': !clickable,
+        'op-file-list--item-action_faulty-status': hasFaultyStatus
+      }"
+      [href]="fileLink._links.staticOriginOpen.href"
+      target="_blank"
+    >
+      <div class="spot-list--item-title op-file-list--item-title">
+        @switch (fileLinkIcon.icon) {
+          @case ('file-media') {
+            <svg
+              file-media-icon
+              size="small"
+              class="op-files-tab--icon op-files-tab--icon_{{fileLinkIcon.clazz}}"
+            ></svg>
+          }
+          @case ('file-directory-fill') {
+            <svg
+              file-directory-fill-icon
+              size="small"
+              class="op-files-tab--icon op-files-tab--icon_{{fileLinkIcon.clazz}}"
+            ></svg>
+          }
+          @case ('op-file-csv') {
+            <svg
+              op-file-csv-icon
+              size="small"
+              class="op-files-tab--icon op-files-tab--icon_{{fileLinkIcon.clazz}}"
+            ></svg>
+          }
+          @case ('op-file-doc') {
+            <svg
+              op-file-doc-icon
+              size="small"
+              class="op-files-tab--icon op-files-tab--icon_{{fileLinkIcon.clazz}}"
+            ></svg>
+          }
+          @case ('op-file-presentation') {
+            <svg
+              op-file-presentation-icon
+              size="small"
+              class="op-files-tab--icon op-files-tab--icon_{{fileLinkIcon.clazz}}"
+            ></svg>
+          }
+          @case ('op-file-sheet') {
+            <svg
+              op-file-sheet-icon
+              size="small"
+              class="op-files-tab--icon op-files-tab--icon_{{fileLinkIcon.clazz}}"
+            ></svg>
+          }
+          @case ('op-file-text') {
+            <svg
+              op-file-text-icon
+              size="small"
+              class="op-files-tab--icon op-files-tab--icon_{{fileLinkIcon.clazz}}"
+            ></svg>
+          }
+          @case ('op-pdf') {
+            <svg
+              op-pdf-icon
+              size="small"
+              class="op-files-tab--icon op-files-tab--icon_{{fileLinkIcon.clazz}}"
+            ></svg>
+          }
+          @case ('server') {
+            <svg
+              server-icon
+              size="small"
+              class="op-files-tab--icon op-files-tab--icon_{{fileLinkIcon.clazz}}"
+            ></svg>
+          }
+          @default {
+            <svg
+              file-icon
+              size="small"
+              class="op-files-tab--icon op-files-tab--icon_{{fileLinkIcon.clazz}}"
+            ></svg>
+          }
+        }
+        <span class="ellipsis" [textContent]="fileLink.originData.name"></span>
+      </div>
+
+      <span
+        class="op-file-list--item-text"
+        [textContent]="infoTimestampText"
+      ></span>
+
+      <div
+        #avatar
+        class="op-file-list--item-avatar"
+      ></div>
+    </a>
+
+    @if (floatingActions.length > 0) {
+      <div class="spot-list--item-floating-actions op-file-list--item-floating-actions hidden-for-mobile">
+        @for (action of floatingActions; track action.iconClass) {
+          @if (!!action.href) {
+            <a
+              class="spot-link spot-link_octicon"
+              [title]="action.title"
+              [href]="action.href.url"
+              [target]="action.href.target"
+            >
+              <ng-container [ngTemplateOutlet]="floatingAction"
+                [ngTemplateOutletContext]="{icon:action.iconClass}"
+               />
+            </a>
+          } @else if (!!action.action) {
+            <button
+              class="spot-link spot-link_octicon"
+              [title]="action.title"
+              (click)="action.action()"
+            >
+              <ng-container [ngTemplateOutlet]="floatingAction"
+                [ngTemplateOutletContext]="{icon:action.iconClass}"
+               />
+            </button>
+          }
+        }
+
+        <ng-template #floatingAction let-iconClass="icon">
+          @switch (iconClass) {
+            @case ('remove-link') {
+              <svg unlink-icon size="small" class="octicon"></svg>
+            }
+            @case ('download') {
+              <svg download-icon size="small" class="octicon"></svg>
+            }
+            @case ('folder-open') {
+              <svg file-directory-open-fill-icon size="small" class="octicon"></svg>
+            }
+          }
+        </ng-template>
+      </div>
+    }
+  </ng-container>
+</spot-tooltip>

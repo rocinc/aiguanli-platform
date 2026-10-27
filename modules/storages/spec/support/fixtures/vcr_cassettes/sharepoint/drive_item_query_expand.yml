@@ -1,0 +1,118 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://login.microsoftonline.com/e36f1dbc-fdae-427e-b61b-0d96ddfb81a4/oauth2/v2.0/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=client_credentials&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default+offline_access&client_id=2a513d01-4e57-4c05-99fd-5cea98ec2c9a&client_secret=<CLIENT_SECRET>
+    headers:
+      User-Agent:
+      - OpenProject 17.1.0 HTTPX Client
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '199'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      X-Ms-Request-Id:
+      - 1540c046-d5fa-4e0c-978a-3773e61a1f00
+      X-Ms-Ests-Server:
+      - 2.1.22943.6 - SEC ProdSlices
+      X-Ms-Srs:
+      - 1.P
+      Content-Security-Policy-Report-Only:
+      - object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-0OFDuFbfgMolLDBfr9HYLw'
+        'unsafe-inline' 'unsafe-eval' https://*.msauth.net https://*.msftauth.net
+        https://*.msftauthimages.net https://*.msauthimages.net https://*.msidentity.com
+        https://*.microsoftonline-p.com https://*.microsoftazuread-sso.com https://*.azureedge.net
+        https://*.outlook.com https://*.office.com https://*.office365.com https://*.microsoft.com
+        https://*.bing.com 'report-sample'; report-uri https://csp.microsoft.com/report/ESTS-UX-All
+      X-Xss-Protection:
+      - '0'
+      Set-Cookie:
+      - fpc=AiSJZu2kRFVBrjXZhFhBw5_517U2AQAAABtB_OAOAAAA; expires=Sun, 15-Feb-2026
+        14:24:28 GMT; path=/; secure; HttpOnly; SameSite=None, x-ms-gateway-slice=estsfd;
+        path=/; secure; samesite=none; httponly, stsservicecookie=estsfd; path=/;
+        secure; samesite=none; httponly
+      Date:
+      - Fri, 16 Jan 2026 14:24:27 GMT
+      Content-Length:
+      - '2156'
+    body:
+      encoding: UTF-8
+      string: '{"token_type":"Bearer","expires_in":3599,"ext_expires_in":3599,"access_token":"<ACCESS_TOKEN>"}'
+  recorded_at: Fri, 16 Jan 2026 14:24:28 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8Qconfm2i6SKEoCmuGYqQK/items/01ANJ53W6FB7TEDYKAZVCKYK5WKIX66ZTF?$expand=listItem&$select=id,name
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - OpenProject 17.1.0 HTTPX Client
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <SECRET>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+      Content-Encoding:
+      - gzip
+      Etag:
+      - '"{41E60FC5-40E1-44CD-AC2B-B6522FEF6665},1"'
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 8b7412d0-a4d2-4b4e-92e4-2ba473f7121c
+      Client-Request-Id:
+      - 8b7412d0-a4d2-4b4e-92e4-2ba473f7121c
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"West Europe","Slice":"E","Ring":"5","ScaleUnit":"002","RoleInstance":"AM2PEPF0000BE2A"}}'
+      Splogid:
+      - e595eda1-506e-0000-a47e-72495139f86e
+      Odata-Version:
+      - '4.0'
+      Date:
+      - Fri, 16 Jan 2026 14:24:27 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#drives(''b%21FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8Qconfm2i6SKEoCmuGYqQK'')/items(id,name,listItem())/$entity","@odata.etag":"\"{41E60FC5-40E1-44CD-AC2B-B6522FEF6665},1\"","id":"01ANJ53W6FB7TEDYKAZVCKYK5WKIX66ZTF","name":"Berlin''s
+        office Christmas","listItem@odata.context":"https://graph.microsoft.com/v1.0/$metadata#drives(''b%21FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8Qconfm2i6SKEoCmuGYqQK'')/items(''01ANJ53W6FB7TEDYKAZVCKYK5WKIX66ZTF'')/listItem/$entity","listItem":{"@odata.etag":"\"41e60fc5-40e1-44cd-ac2b-b6522fef6665,1\"","createdDateTime":"2025-12-23T14:10:51Z","eTag":"\"41e60fc5-40e1-44cd-ac2b-b6522fef6665,1\"","id":"40","lastModifiedDateTime":"2025-12-23T14:10:51Z","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/OpenProject/Berlin%27s%20office%20Christmas","parentReference":{"id":"0c9632a6-7219-4422-b66f-324a6f61eecd","siteId":"ymt6d.sharepoint.com,1099e315-d0c7-47c7-8640-aa9504b70fff,6af246f0-e3be-45ef-b91a-8eca4dcc5d8f"},"contentType":{"id":"0x012000F2C2A3E43101E445BCBD5F092B9417E8","name":"Folder"},"fields@odata.context":"https://graph.microsoft.com/v1.0/$metadata#drives(''b%21FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8Qconfm2i6SKEoCmuGYqQK'')/items(''01ANJ53W6FB7TEDYKAZVCKYK5WKIX66ZTF'')/listItem/fields/$entity","fields":{"@odata.etag":"\"41e60fc5-40e1-44cd-ac2b-b6522fef6665,1\"","FileLeafRef":"Berlin''s
+        office Christmas","MediaServiceImageTags":[],"id":"40","ContentType":"Folder","Created":"2025-12-23T14:10:51Z","AuthorLookupId":"9","Modified":"2025-12-23T14:10:51Z","EditorLookupId":"9","_CheckinComment":"","LinkFilenameNoMenu":"Berlin''s
+        office Christmas","LinkFilename":"Berlin''s office Christmas","ItemChildCount":"8","FolderChildCount":"0","_ComplianceFlags":"","_ComplianceTag":"","_ComplianceTagWrittenTime":"","_ComplianceTagUserId":"","_CommentCount":"","_LikeCount":"","_DisplayName":"","Edit":"0","_UIVersionString":"1.0","ParentVersionStringLookupId":"40","ParentLeafNameLookupId":"40"}}}'
+  recorded_at: Fri, 16 Jan 2026 14:24:28 GMT
+recorded_with: VCR 6.3.1

@@ -1,0 +1,7 @@
+---
+pt-PT:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Marcos
+      label_gantt_chart_plural: Gráficos de Gantt

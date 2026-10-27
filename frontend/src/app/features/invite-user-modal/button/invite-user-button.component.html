@@ -1,0 +1,13 @@
+@if (canInviteUsersToProject$ | async) {
+  <button
+    class="op-select-footer--label"
+    type="button"
+    (click)="onAddNewClick($event)"
+    >
+    <span class="icon-context">
+      <op-icon icon-classes="icon-user-plus icon-context" />
+      {{text.button}}
+    </span>
+  </button>
+}
+

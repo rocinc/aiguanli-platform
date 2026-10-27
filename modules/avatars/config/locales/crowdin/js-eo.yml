@@ -1,0 +1,11 @@
+---
+eo:
+  js:
+    avatars:
+      empty_file_error: Bonvolu alŝuti validan bildon (jpg, png, gif)
+      error_image_too_large: La bildo estas tro granda.
+      label_choose_avatar: Elektu avataron el dosiero
+      uploading_avatar: Alŝutas vian avataron.
+      wrong_file_format: Permesitaj formatoj estas jpg, png, gif
+    button_update: Ĝisdatigi
+    label_preview: Antaŭrigardo

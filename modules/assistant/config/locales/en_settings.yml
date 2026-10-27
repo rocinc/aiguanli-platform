@@ -1,0 +1,94 @@
+en:
+  label_assistant_my_settings: "Assistant settings"
+  label_assistant_my_performance: "My performance"
+  label_assistant_project_settings: "AI assistant"
+  assistant:
+    settings:
+      title: "Assistant settings"
+      lede: "How forward I am, when I may interrupt you and what I do for you is up to you."
+      save: "Save"
+      saved: "Saved."
+      unknown_rule: "(this kind of notice is no longer used)"
+      level:
+        heading: "How forward I am"
+        follow: "Follow the project"
+        follow_caption: "A project's default if it has one, otherwise the site default (%{site})."
+        names:
+          quiet: "Quiet"
+          standard: "Standard"
+          active: "Active"
+        captions:
+          quiet: "I speak only when you are called on, assigned or a duty is due; at most %{count} interruption a day."
+          standard: "Plus what is on the page and concerns you; at most %{count} interruptions a day."
+          active: "Plus openings and ideas while you decide; at most %{count} interruptions a day."
+      projects:
+        heading: "Different in this project"
+        caption: "These are the projects where I work with you. A level chosen here wins over the one above."
+        follow: "Follow the choice above"
+      cap:
+        heading: "Interruptions per day, at most"
+        follow: "Follow the level"
+        times:
+          one: "1 time"
+          other: "%{count} times"
+        caption: "Following the level: quiet %{quiet}, standard %{standard}, active %{active}. A number you choose is used as chosen; the rest goes into the brief."
+      brief:
+        heading: "Brief"
+        time: "Every day at %{time} what has piled up is gathered into the brief on your My page."
+        change_html: "The time follows your daily reminder time; change it in %{link}."
+        reminder_settings: "the reminder settings"
+        email: "Also email me the brief"
+      mutes:
+        heading: "Things you need not hear about"
+        empty: "You have not turned off any kind of notice."
+        in_project: "(in “%{project}”)"
+      restore: "Turn back on"
+      restored: "Turned “%{rule}” back on. I will tell you about these again."
+      grants:
+        heading: "What I do for you"
+        lede: "These are the things you told me to do without asking."
+        empty: "You have not let me do anything without asking; I ask before everything that needs your yes."
+        in_project: "(in “%{project}”)"
+      revoke: "Take back"
+      revoked: "Taken back. In “%{project}” I will ask first about “%{kind}”."
+    brief_mail:
+      subject: "Today · %{day}"
+      settings: "To stop this email, turn it off in the assistant settings"
+      deferred:
+        one: "1 less urgent thing is on your page."
+        other: "%{count} less urgent things are on your page."
+      open: "Handle it on your page"
+      sections:
+        away: "While you were away"
+        decisions: "To decide"
+        drafts: "Written, waiting for you to send"
+        done: "What I did for you"
+    project_settings:
+      title: "AI assistant"
+      lede: "In this project, how forward the assistant is, what it speaks up about and which duties it takes is decided by project admins."
+      levels:
+        quiet: "Quiet"
+        standard: "Standard"
+        active: "Active"
+      level:
+        heading: "Project default level"
+        effect: "Applies to members who have not chosen their own level; a member's own choice wins."
+        follow: "Follow the site default (%{site})"
+      roles:
+        heading: "Default level by role"
+        effect: "Applies to members without a level of their own who hold the role here, over the project default; with several roles the quietest wins."
+        follow: "Follow the project default"
+      rules:
+        heading: "Notices that are on in the project"
+        effect: "A kind left unchecked stays quiet for everyone in this project; what people turned off themselves is not affected."
+      leads:
+        heading: "Project leads"
+        effect: "These people receive project-level notices such as schedule drift and team load; with nobody chosen, project admins by role are used."
+      duties:
+        heading: "Duties that may be handed to me"
+        effect: "Only checked duties can be handed over under Duties on the desk; unchecking one that is running pauses it first."
+        in_use: "Someone uses it now."
+      budget:
+        heading: "Monthly usage limit"
+        effect: "For this project only, in tokens, never above the site limit (%{site}). This project has used %{used} this month."
+        none: "No limit"

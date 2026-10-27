@@ -1,0 +1,12 @@
+<input
+  type="text"
+  class="inline-edit--field op-input"
+  autocomplete="off"
+  [opAutofocus]="shouldFocus"
+  [attr.aria-required]="required"
+  [attr.required]="required"
+  [disabled]="inFlight"
+  [(ngModel)]="value"
+  (keydown)="handler.handleUserKeydown($event)"
+  [id]="handler.htmlId"
+/>

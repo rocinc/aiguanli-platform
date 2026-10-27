@@ -1,0 +1,54 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) 2023 Ben Tey
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See docs/COPYRIGHT.rdoc for more details.
+#++
+---
+fr:
+  js:
+    gitlab_integration:
+      gitlab_pipelines: Pipelines
+      tab_header_issue:
+        title: Tickets
+      tab_header_mr:
+        copy_menu:
+          description: Copier les extraits de code git dans le presse-papiers
+          label: Extraits de code Git
+        create_mr:
+          description: Créer une requête de fusion
+          label: Créer une MR
+        git_actions:
+          branch_name: Nom de la branche
+          cmd: Créer une branche avec un commit vide
+          commit_message: Message de commit
+          copy_error: "❌ La copie a échoué !"
+          copy_success: "✅ Copié !"
+          title: Extraits de code rapides pour Git
+        title: Requêtes de fusion
+      tab_issue:
+        empty: Aucun ticket n'a encore été associé. Associez un ticket existant en utilisant le code <code>OP#%{wp_id}</code> (ou <code>PP#%{wp_id}</code> pour les liens privés) dans le titre ou la description du ticket ou créez un nouveau ticket.
+      tab_mrs:
+        empty: Aucune requête de fusion (MR) n'a encore été associée. Associez une MR existante en utilisant le code <code>OP#%{wp_id}</code> (ou <code>PP#%{wp_id}</code> pour les liens privés) dans le titre ou la description de la MR ou créez une nouvelle MR.
+      updated_on: Mis à jour le
+      work_packages:
+        tab_name: GitLab
+    work_packages:
+      tabs:
+        gitlab: GitLab

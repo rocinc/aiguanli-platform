@@ -1,0 +1,32 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= component_wrapper(class: ["assistant-reading", "assistant-reading--#{state}"], data: wrapper_data) do %>
+  <% case state %>
+  <% when :reading %>
+    <p class="assistant-reading--line" role="status">
+      <span class="assistant-reading--pulse" aria-hidden="true"></span>
+      <span><%= t("assistant.reading.reading", name:) %></span>
+    </p>
+  <% when :noted %>
+    <% receipts.each do |action| %>
+      <%= render(Assistant::ReceiptComponent.new(action:, user:, density: :line)) %>
+    <% end %>
+    <% if intent_line || generic_line? %>
+      <p class="assistant-reading--line" role="status">
+        <%= render(Primer::Beta::Octicon.new(icon: :"sparkle-fill", size: :xsmall, color: :accent, "aria-hidden": true)) %>
+        <span><%= intent_line || noted_text %></span>
+      </p>
+    <% end %>
+    <% if proposals.any? %>
+      <%= render(Assistant::SourceSignalsComponent.new(source: journal, user:, signals: proposals)) %>
+    <% end %>
+  <% end %>
+<% end %>

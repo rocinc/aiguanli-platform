@@ -1,0 +1,342 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+.assistant-card
+  --assistant-card-accent: var(--borderColor-accent-emphasis)
+  position: relative
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-8)
+  padding: var(--base-size-12) var(--base-size-16)
+  border: var(--borderWidth-thin) solid var(--borderColor-default)
+  border-left: var(--borderWidth-thick) solid var(--assistant-card-accent)
+  border-radius: var(--borderRadius-medium)
+  background: var(--bgColor-default)
+  color: var(--fgColor-default)
+  font-size: var(--text-body-size-medium)
+  line-height: var(--text-body-lineHeight-medium)
+
+  &--executed
+    --assistant-card-accent: var(--borderColor-success-emphasis)
+  &--rejected,
+  &--undone
+    --assistant-card-accent: var(--borderColor-muted)
+    background: var(--bgColor-muted)
+  &--failed
+    --assistant-card-accent: var(--borderColor-danger-emphasis)
+
+  &--compact
+    padding: var(--base-size-8) var(--base-size-12)
+    gap: var(--base-size-4)
+    font-size: var(--text-body-size-small)
+
+  &--header
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+
+  &--labels
+    display: flex
+    flex-wrap: wrap
+    gap: var(--base-size-4)
+
+  &--title
+    margin: 0
+    font-size: var(--text-title-size-small)
+    font-weight: var(--base-text-weight-semibold)
+    line-height: var(--text-title-lineHeight-small)
+    overflow-wrap: anywhere
+
+  &--compact &--title
+    font-size: var(--text-body-size-medium)
+
+  &--title-link
+    color: inherit
+
+  &--meta
+    display: flex
+    flex-wrap: wrap
+    gap: var(--base-size-4)
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--notice,
+  &--failure
+    display: flex
+    gap: var(--base-size-8)
+    align-items: flex-start
+    margin: 0
+    padding: var(--base-size-8)
+    border-radius: var(--borderRadius-small)
+
+  &--notice
+    background: var(--bgColor-attention-muted)
+    color: var(--fgColor-default)
+
+  &--failure
+    background: var(--bgColor-danger-muted)
+
+  &--reminders
+    list-style: none
+    margin: 0
+    padding: 0
+
+  &--reminder
+    display: flex
+    align-items: flex-start
+    gap: var(--base-size-8)
+    color: var(--fgColor-muted)
+
+  &--reminder-time
+    color: var(--fgColor-default)
+    font-weight: var(--base-text-weight-semibold)
+
+  &--reminder-note
+    display: block
+
+  &--spoken
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+
+  &--spoken-lead
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--spoken-text
+    margin: 0
+    padding: var(--base-size-8) var(--base-size-12)
+    border-inline-start: var(--borderWidth-thick) solid var(--borderColor-accent-muted)
+    background: var(--bgColor-muted)
+    border-radius: 0 var(--borderRadius-small) var(--borderRadius-small) 0
+    overflow-wrap: anywhere
+    white-space: normal
+
+    p
+      margin: 0 0 var(--base-size-4)
+
+      &:last-child
+        margin-bottom: 0
+
+  &--consequences
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+
+  &--changes
+    list-style: none
+    margin: 0
+    padding: 0
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-2)
+
+  &--change
+    display: flex
+    flex-wrap: wrap
+    column-gap: var(--base-size-8)
+
+  &--change-label
+    font-weight: var(--base-text-weight-semibold)
+    overflow-wrap: anywhere
+
+  &--change-text
+    color: var(--fgColor-muted)
+    font-variant-numeric: tabular-nums
+
+  &--cascade
+    padding-left: var(--base-size-12)
+    border-left: var(--borderWidth-thin) dashed var(--borderColor-default)
+
+  &--cascade-lead,
+  &--more
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--slip,
+  &--people
+    display: flex
+    gap: var(--base-size-8)
+    align-items: flex-start
+    margin: 0
+    color: var(--fgColor-muted)
+
+    .octicon
+      flex-shrink: 0
+      margin-top: var(--base-size-2)
+
+  &--slip-late
+    padding: var(--base-size-4) var(--base-size-8)
+    border-radius: var(--borderRadius-small)
+    background: var(--bgColor-attention-muted)
+    color: var(--fgColor-default)
+
+    .octicon
+      color: var(--fgColor-attention)
+
+  &--slip-flag
+    font-weight: var(--base-text-weight-semibold)
+
+  &--basis
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+    &[open] .assistant-card--chevron
+      transform: rotate(90deg)
+
+  &--basis-summary
+    display: inline-flex
+    align-items: center
+    gap: var(--base-size-4)
+    cursor: pointer
+    list-style: none
+    border-radius: var(--borderRadius-small)
+
+    &::-webkit-details-marker
+      display: none
+
+    &:focus-visible
+      outline: var(--focus-outline)
+      outline-offset: var(--base-size-2)
+
+  &--chevron
+    transition: transform 120ms ease-out
+
+  &--basis-list
+    list-style: none
+    margin: var(--base-size-4) 0 0
+    padding: 0 0 0 var(--base-size-16)
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+
+  &--basis-entry
+    position: relative
+
+  &--basis-icon
+    position: absolute
+    inset-inline-start: calc(-1 * var(--base-size-16))
+    top: var(--base-size-4)
+    color: var(--fgColor-muted)
+
+  &--quote
+    margin: var(--base-size-4) 0 0
+    padding: 0 0 0 var(--base-size-8)
+    border-left: var(--borderWidth-thick) solid var(--borderColor-muted)
+    color: var(--fgColor-default)
+    font-style: italic
+
+  &--decided,
+  &--hint
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--actions
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: var(--base-size-8)
+
+  &--details-link
+    margin-left: auto
+    font-size: var(--text-body-size-small)
+
+  &--choose
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+
+  &--options
+    margin: 0
+    padding: 0
+    border: 0
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+
+  &--options-legend
+    margin-bottom: var(--base-size-4)
+    font-weight: var(--base-text-weight-semibold)
+
+  &--option
+    display: flex
+    align-items: flex-start
+    gap: var(--base-size-8)
+    padding: var(--base-size-8)
+    border: var(--borderWidth-thin) solid var(--borderColor-muted)
+    border-radius: var(--borderRadius-medium)
+
+    &:has(input:checked)
+      border-color: var(--borderColor-accent-emphasis)
+      background: var(--bgColor-accent-muted)
+
+    input
+      margin-top: var(--base-size-4)
+
+  &--option-label
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-2)
+    font-weight: var(--base-text-weight-normal)
+    cursor: pointer
+
+  &--option-title
+    font-weight: var(--base-text-weight-semibold)
+
+  &--option-consequence
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--conflicts
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+    padding: var(--base-size-8)
+    border: var(--borderWidth-thin) solid var(--borderColor-attention-muted)
+    border-radius: var(--borderRadius-medium)
+    background: var(--bgColor-attention-muted)
+
+  &--conflicts-lead
+    margin: 0
+    font-weight: var(--base-text-weight-semibold)
+
+  &--conflicts-list
+    margin: 0
+    padding-left: var(--base-size-20)
+
+@media (prefers-reduced-motion: reduce)
+  .assistant-card--chevron
+    transition: none
+
+.assistant-draft
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-12)
+
+  &--lead,
+  &--revised
+    margin: 0
+    color: var(--fgColor-muted)
+
+  &--revised
+    font-size: var(--text-body-size-small)
+
+  &--text
+    width: 100%
+    resize: vertical
+    font-family: var(--fontStack-monospace)
+    font-size: var(--text-body-size-small)
+
+  &--acknowledge
+    padding: var(--base-size-8) var(--base-size-12)
+    background: var(--bgColor-attention-muted)
+    border: var(--borderWidth-thin) solid var(--borderColor-attention-muted)
+    border-radius: var(--borderRadius-medium)

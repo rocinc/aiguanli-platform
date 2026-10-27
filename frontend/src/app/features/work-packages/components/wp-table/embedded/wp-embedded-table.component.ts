@@ -1,0 +1,237 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { OpTableActionFactory } from 'core-app/features/work-packages/components/wp-table/table-actions/table-action';
+import {
+  OpTableActionsService,
+} from 'core-app/features/work-packages/components/wp-table/table-actions/table-actions.service';
+import { QueryResource } from 'core-app/features/hal/resources/query-resource';
+import {
+  WpTableConfigurationModalComponent,
+} from 'core-app/features/work-packages/components/wp-table/configuration-modal/wp-table-configuration.modal';
+import { OpModalService } from 'core-app/shared/components/modal/modal.service';
+import {
+  WorkPackageEmbeddedBaseComponent,
+} from 'core-app/features/work-packages/components/wp-table/embedded/wp-embedded-base.component';
+import { QueryFormResource } from 'core-app/features/hal/resources/query-form-resource';
+import { distinctUntilChanged, map, take, withLatestFrom } from 'rxjs/operators';
+import {
+  KeepTabService,
+} from 'core-app/features/work-packages/components/wp-single-view-tabs/keep-tab/keep-tab.service';
+import { resolveRoutingId } from 'core-app/features/work-packages/helpers/work-package-id-resolvers';
+import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
+import { firstValueFrom } from 'rxjs';
+import { QueryRequestParams } from 'core-app/features/work-packages/components/wp-query/url-params-helper';
+import { PortalOutletTarget } from 'core-app/shared/components/modal/portal-outlet-target.enum';
+import { UrlParamsService } from 'core-app/core/navigation/url-params.service';
+
+@Component({
+  selector: 'wp-embedded-table',
+  templateUrl: './wp-embedded-table.html',
+  standalone: false,
+  // TODO: This component has been partially migrated to be zoneless-compatible.
+  // After testing, this should be updated to ChangeDetectionStrategy.OnPush.
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+export class WorkPackageEmbeddedTableComponent extends WorkPackageEmbeddedBaseComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input() public queryId?:string;
+
+  @Input() public queryProps:Partial<QueryRequestParams> = {};
+
+  @Input() public tableActions:OpTableActionFactory[] = [];
+
+  @Input() public externalHeight = false;
+
+  /** Inform about loading errors */
+  @Output() public onError = new EventEmitter<string>();
+
+  /** Inform about loaded query */
+  @Output() public onQueryLoaded = new EventEmitter<QueryResource>();
+
+  readonly apiv3Service = inject(ApiV3Service);
+
+  readonly opModalService = inject(OpModalService);
+
+  readonly tableActionsService = inject(OpTableActionsService);
+
+  readonly keepTab = inject(KeepTabService);
+
+  readonly urlParams = inject(UrlParamsService);
+
+  // Cache the form promise
+  private formPromise:Promise<QueryFormResource|undefined>|undefined;
+
+  // If the query was provided to use via the query space,
+  // use it to cache first loading
+  private loadedQuery:QueryResource|undefined;
+
+  ngOnInit() {
+    super.ngOnInit();
+    this.loadedQuery = this.querySpace.query.value;
+  }
+
+  ngAfterViewInit():void {
+    super.ngAfterViewInit();
+
+    // Provision embedded table actions
+    if (this.tableActions) {
+      this.tableActionsService.setActions(...this.tableActions);
+    }
+
+    // Reload results on changes to pagination (Regression #29845)
+    this.wpTablePagination
+      .updates$()
+      .pipe(
+        map((pagination) => [pagination.page, pagination.perPage]),
+        distinctUntilChanged(),
+        this.untilDestroyed(),
+        withLatestFrom(this.querySpace.query.values$()),
+      ).subscribe(([_, query]) => {
+      const pagination = this.wpTablePagination.paginationObject;
+      const params = this.urlParamsHelper.buildV3GetQueryFromQueryResource(query, pagination);
+
+      this.loadingIndicator = firstValueFrom(
+        this
+          .wpListService
+          .loadQueryFromExisting(query, params, this.queryProjectScope),
+      )
+        .then((query) => {
+          this.initializeStates(query);
+          this.cdRef.markForCheck();
+        });
+    });
+  }
+
+  public async openConfigurationModal(onUpdated:() => void):Promise<void> {
+    await this.querySpace.query.valuesPromise();
+
+    const target = document.querySelector('opce-custom-modal-overlay') ? PortalOutletTarget.Custom : PortalOutletTarget.Default;
+    this.opModalService
+      .show(WpTableConfigurationModalComponent, this.injector, {}, false, false, target)
+      // Detach this component when the modal closes and pass along the query data
+      .subscribe((modal) => modal.onDataUpdated.subscribe(onUpdated));
+  }
+
+  protected initializeStates(query:QueryResource) {
+    super.initializeStates(query);
+
+    this.querySpace
+      .initialized
+      .values$()
+      .pipe(take(1))
+      .subscribe(() => {
+        this.showTablePagination = query.results.total > query.results.count;
+        this.setLoaded();
+
+        // Disable compact mode when timeline active
+        if (this.wpTableTimeline.isVisible) {
+          this.configuration = { ...this.configuration, compactTableStyle: false };
+        }
+      });
+  }
+
+  public loadQuery(visible = true, firstPage = false):Promise<QueryResource> {
+
+    if (this.loadedQuery) {
+      const query = this.loadedQuery;
+      this.loadedQuery = undefined;
+      this.initializeStates(query);
+      return Promise.resolve(query);
+    }
+
+    // HACK: Decrease loading time of queries when results are not needed.
+    // We should allow the backend to disable results embedding instead.
+    if (!this.configuration.tableVisible) {
+      this.queryProps.pageSize = 1;
+      // Also use a valid subset to ensure we get a valid response.
+      this.queryProps.valid_subset = true;
+    }
+
+    // Set first page
+    if (firstPage) {
+      this.queryProps.page = 1;
+    }
+
+    this.error = null;
+    const promise = this
+      .apiv3Service
+      .queries
+      .find(
+        this.queryProps,
+        this.queryId,
+        this.queryProjectScope,
+      )
+      .toPromise()
+      .then((query:QueryResource) => {
+        this.initializeStates(query);
+        this.onQueryLoaded.emit(query);
+        this.cdRef.markForCheck();
+        return query;
+      })
+      .catch((error:unknown) => {
+        const message = (error as { message?:unknown } | null | undefined)?.message;
+        this.error = this.I18n.t(
+          'js.error.embedded_table_loading',
+          { message: message !== undefined ? message : error },
+        );
+        this.cdRef.markForCheck();
+        this.onError.emit(error as string);
+      });
+
+    if (visible) {
+      this.loadingIndicator = promise;
+    }
+
+    return promise as Promise<QueryResource>;
+  }
+
+  handleWorkPackageClicked(event:{ workPackageId:string; double:boolean }) {
+    if (event.double) {
+      const routingId = resolveRoutingId(this.states, event.workPackageId);
+      const projectIdentifier = this.currentProject.identifier;
+      const link = this.pathHelper.genericWorkPackagePath(projectIdentifier, routingId) + window.location.search;
+      Turbo.visit(link, { action: 'advance' });
+    }
+  }
+
+  openStateLink(event:{ workPackageId:string; requestedState:'show'|'split' }) {
+    const routingId = resolveRoutingId(this.states, event.workPackageId);
+
+    if (event.requestedState === 'split') {
+      const basePath = this.urlParams.basePathWithoutDetails();
+      Turbo.visit(
+        `${basePath}/details/${routingId}/${this.keepTab.currentDetailsTab}${window.location.search}`,
+        { frame: 'content-bodyRight', action: 'advance' },
+      );
+    } else {
+      this.keepTab.goCurrentShowState(routingId);
+    }
+  }
+}

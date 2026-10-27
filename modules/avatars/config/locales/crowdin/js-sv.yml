@@ -1,0 +1,11 @@
+---
+sv:
+  js:
+    avatars:
+      empty_file_error: Vänligen ladda upp en giltig bild (jpg, png, gif)
+      error_image_too_large: Bilden är för stor.
+      label_choose_avatar: Välj profilbild från fil
+      uploading_avatar: Ladda upp din avatar.
+      wrong_file_format: Tillåtna format är jpg, png, gif
+    button_update: Uppdatera
+    label_preview: Förhandsgranska

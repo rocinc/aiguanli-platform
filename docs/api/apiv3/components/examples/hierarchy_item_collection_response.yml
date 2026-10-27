@@ -1,0 +1,62 @@
+description: |-
+  Simple response of a hierarchy structure starting at root.
+value:
+  _type: Collection
+  total: 37
+  count: 37
+  _embedded:
+    elements:
+      - _type: HierarchyItem
+        id: 1337
+        label: null
+        short: null
+        weight: null
+        formattedWeight: null
+        depth: 0
+        _links:
+          self:
+            href: /api/v3/custom_field_items/1337
+          branch:
+            href: /api/v3/custom_field_items/1337/branch
+          children:
+            - href: /api/v3/custom_field_items/1338
+              name: Stormtroopers
+            - href: /api/v3/custom_field_items/1339
+              name: Dark Troopers
+      - _type: HierarchyItem
+        id: 1338
+        label: Stormtroopers
+        short: ST
+        weight: null
+        formattedWeight: null
+        depth: 1
+        _links:
+          self:
+            href: /api/v3/custom_field_items/1338
+            name: Stormtroopers
+          parent:
+            href: /api/v3/custom_field_items/1337
+            name: Imperial Troopers
+          branch:
+            href: /api/v3/custom_field_items/1338/branch
+          children:
+            - href: /api/v3/custom_field_items/1340
+              name: ST-377
+            - href: /api/v3/custom_field_items/1341
+              name: ST-422
+      - _type: HierarchyItem
+        id: 1340
+        label: ST-377
+        short: null
+        weight: null
+        formattedWeight: null
+        depth: 2
+        _links:
+          self:
+            href: /api/v3/custom_field_items/1340
+          branch:
+            href: /api/v3/custom_field_items/1340/branch
+          children: []
+  _links:
+    self:
+      href: /api/v3/custom_field/42/items

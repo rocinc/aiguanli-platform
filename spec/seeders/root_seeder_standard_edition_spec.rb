@@ -1,0 +1,566 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+require "spec_helper"
+require_relative "root_seeder_shared_examples"
+
+RSpec.describe RootSeeder,
+               "standard edition",
+               with_config: { edition: "standard" } do
+  include RootSeederTestHelpers
+
+  before_all do
+    week_with_saturday_and_sunday_as_weekend
+    clear_enqueued_jobs
+    clear_performed_jobs
+  end
+
+  shared_examples "creates standard demo data" do
+    it "creates the system user" do
+      expect(SystemUser.where(admin: true).count).to eq 1
+    end
+
+    it "creates an admin user" do
+      expect(User.not_builtin.where(admin: true).count).to eq 1
+    end
+
+    it "creates neither users nor departments" do
+      # Both are development data: instances that re-run the seeders on every deploy would
+      # otherwise get them back after an administrator deleted them.
+      expect(User.not_builtin.pluck(:login)).to eq [root_seeder.admin_user.login]
+      expect(Group.organizational_units).to be_empty
+    end
+
+    it "creates the demo data" do # rubocop:disable RSpec/MultipleExpectations
+      expect(Project.count).to eq 2
+      expect(EnabledModule.count).to eq 17
+      expect(WorkPackage.count).to eq 37
+      expect(Wiki.count).to eq 2
+      expect(Query.having_views.count).to eq 8
+      expect(View.where(type: "work_packages_table").count).to eq 5
+      expect(View.where(type: "team_planner").count).to eq 1
+      expect(View.where(type: "gantt").count).to eq 2
+      expect(Query.count).to eq 28
+      expect(ProjectRole.count).to eq 5
+      expect(WorkPackageRole.count).to eq 3
+      expect(GlobalRole.count).to eq 2
+      expect(Grids::Overview.count).to eq 2
+      expect(Version.count).to eq 3
+      expect(Boards::Grid.count).to eq 5
+      expect(Boards::Grid.count { |grid| grid.options.has_key?(:filters) }).to eq 1
+      expect(Project::PhaseDefinition.count).to eq 4
+      expect(DocumentType.count).to be >= 3 # at least the 3 default types
+    end
+
+    it "dates the versions like their release milestones" do
+      monday = Date.current.monday
+
+      expect(Version.pluck(:name, :start_date, :effective_date))
+        .to contain_exactly(["1.0", monday + 14.days, monday + 18.days],
+                            ["1.1", monday + 21.days, monday + 25.days],
+                            ["2.0", monday + 28.days, monday + 32.days])
+    end
+
+    it "links work packages to their target version" do
+      count_by_version = WorkPackage.joins(:target_versions).group("versions.name").count
+
+      expect(count_by_version).to eq("1.0" => 9, "1.1" => 5, "2.0" => 5)
+    end
+
+    it "links bugs to the versions they were observed in" do
+      count_by_version = WorkPackage.joins(:observed_in_versions).group("versions.name").count
+
+      expect(count_by_version).to eq("1.0" => 2, "1.1" => 1)
+    end
+
+    it "adds the backlogs, board, costs, meetings, and reporting modules to the default_projects_modules setting" do
+      default_modules = Setting.find_by(name: "default_projects_modules").value
+      expect(default_modules).to include("backlogs")
+      expect(default_modules).to include("board_view")
+      expect(default_modules).to include("costs")
+      expect(default_modules).to include("meetings")
+      expect(default_modules).to include("reporting_module")
+    end
+
+    it "creates a weekly recurring meeting with several instances" do
+      expect(RecurringMeeting.count).to eq 1
+
+      # The template is created and is no longer in draft state.
+      expect(Meeting.templated.count).to eq 1
+      template = Meeting.templated.first
+      expect(template).not_to be_draft
+      expect(template.duration).to eq 1.0
+      expect(template.agenda_items.count).to eq 6
+      expect(template.agenda_items.sum(:duration_in_minutes)).to eq 60
+
+      # The meeting organizer (admin) is the author of every item.
+      expect(template.agenda_items.pluck(:author_id).uniq).to eq([root_seeder.admin_user.id])
+
+      # The first two instances come from the finalizer seeder (and its chained job), the rest
+      # are instantiated by the MeetingOccurrencesSeeder.
+      expect(Meeting.where(template: false).count).to eq 5
+      Meeting.not_templated.find_each do |instance|
+        expect(instance.duration).to eq 1.0
+        expect(instance.agenda_items.count).to eq 6
+        expect(instance.agenda_items.sum(:duration_in_minutes)).to eq 60
+      end
+    end
+
+    it "creates different types of queries" do
+      count_by_type = View.group(:type).count
+      expect(count_by_type).to eq(
+        "work_packages_table" => 5,
+        "gantt" => 2,
+        "team_planner" => 1
+      )
+    end
+
+    it "adds additional permissions from modules" do
+      # do not test for all permissions but only some of them to ensure each
+      # module got processed for a standard edition
+      work_package_editor_role = root_seeder.seed_data.find_reference(:default_role_work_package_editor)
+      expect(work_package_editor_role.permissions).to include(
+        :view_work_packages, # from common basic data
+        :view_own_time_entries, # from costs module
+        :view_file_links, # from storages module
+        :show_github_content # from github_integration module
+      )
+      member_role = root_seeder.seed_data.find_reference(:default_role_member)
+      expect(member_role.permissions).to include(
+        :view_work_packages, # from common basic data
+        :view_sprints, # from backlogs module
+        :show_board_views, # from board module
+        :view_documents, # from documents module
+        :view_budgets, # from costs module
+        :view_meetings, # from meeting module
+        :view_file_links # from storages module
+      )
+    end
+
+    it "seeds the epic type with embedded query in its form configuration while keeping the default attribute groups" do
+      epic = root_seeder.seed_data.find_reference(:default_type_epic).default_variant
+      query_group = epic.attribute_groups[0]
+      default_groups = epic.attribute_groups[1..]
+
+      expect(query_group).to be_a Type::QueryGroup
+      expect(default_groups).to all(be_a Type::AttributeGroup)
+
+      # Filters on children (templated parent) that are user stories or bugs.
+      query = query_group.query
+      expect(query.column_names).to eq(%i[id subject status assigned_to story_points sprint])
+      expect(query.sort_criteria).to eq([["status", "desc"], ["sprint", "asc"], ["position", "asc"]])
+      expect(query.hidden).to be(true)
+      expect(query.find_active_filter(:parent)).to be_present
+      expect(query.find_active_filter(:parent).operator).to eql "="
+      expect(query.find_active_filter(:parent).values).to eql ["{id}"]
+      expect(query.find_active_filter(:type_id)).to be_present
+      expect(query.find_active_filter(:type_id).operator).to eql "="
+      expect(query.find_active_filter(:type_id).values)
+        .to eql [root_seeder.seed_data.find_reference(:default_type_user_story).id.to_s,
+                 root_seeder.seed_data.find_reference(:default_type_bug).id.to_s]
+
+      # The other attribute groups are kept
+      expect(default_groups.map { [it.key, it.attributes] }).to eql epic.default_attribute_groups
+    end
+
+    it "seeds the user story type with embedded query in its form configuration while keeping the default attribute groups" do
+      user_story = root_seeder.seed_data.find_reference(:default_type_user_story).default_variant
+      query_group = user_story.attribute_groups[0]
+      default_groups = user_story.attribute_groups[1..]
+
+      expect(query_group).to be_a Type::QueryGroup
+      expect(default_groups).to all(be_a Type::AttributeGroup)
+
+      # Filters on children (templated parent) that are user stories or bugs.
+      query = query_group.query
+      expect(query.column_names).to eq(%i[id subject type status assigned_to sprint])
+      expect(query.sort_criteria).to eq([["status", "desc"], ["id", "asc"]])
+      expect(query.hidden).to be(true)
+      expect(query.find_active_filter(:parent)).to be_present
+      expect(query.find_active_filter(:parent).operator).to eql "="
+      expect(query.find_active_filter(:parent).values).to eql ["{id}"]
+
+      # The other attribute groups are kept
+      expect(default_groups.map { [it.key, it.attributes] }).to eql user_story.default_attribute_groups
+    end
+
+    include_examples "it creates records", model: Color, expected_count: 148
+    include_examples "it creates records", model: DocumentType, expected_count: 6
+    include_examples "it creates records", model: GlobalRole, expected_count: 2
+    include_examples "it creates records", model: WorkPackageRole, expected_count: 3
+    include_examples "it creates records", model: ProjectRole, expected_count: 5
+    include_examples "it creates records", model: ProjectQueryRole, expected_count: 2
+    include_examples "it creates records", model: IssuePriority, expected_count: 4
+    include_examples "it creates records", model: Status, expected_count: 14
+    include_examples "it creates records", model: TimeEntryActivity, expected_count: 6
+    include_examples "it creates records", model: Workflow, expected_count: 1758
+    include_examples "it creates records", model: RecurringMeeting, expected_count: 1
+    include_examples "it creates records", model: AI::TextTransformAction, expected_count: 4
+    include_examples "it is compatible with the automatic scheduling mode"
+  end
+
+  # The fictional company staff is development data, and the demo data referencing it (project
+  # members, work package assignees, meeting participants) only materialises alongside it.
+  shared_examples "creates the company staff and the demo data referencing it" do
+    it "creates the company departments with their member users" do
+      departments = Group.organizational_units
+      expect(departments.count).to eq 7
+      expect(departments.where_detail(parent_id: nil).count).to eq 5
+
+      # Compare records, not names: the names are translatable (t_name) and get prefixed in the
+      # translated language test contexts.
+      marketing = root_seeder.seed_data.find_reference(:department__marketing_communications)
+      expect(marketing.children).to contain_exactly(
+        root_seeder.seed_data.find_reference(:department__public_relations),
+        root_seeder.seed_data.find_reference(:department__design_content)
+      )
+
+      fritz = root_seeder.seed_data.find_reference(:user__fritz_finance)
+      expect(fritz).to have_attributes(login: "fritz.finance", mail: "fritz.finance@example.com", status: "invited")
+      expect(root_seeder.seed_data.find_reference(:department__finance_administration).users)
+        .to include(fritz)
+    end
+
+    it "assigns job title, languages, skills and a job start date to the member users" do
+      fritz = root_seeder.seed_data.find_reference(:user__fritz_finance)
+      job_title = UserCustomField.find_by!(name: "Job title")
+      languages = UserCustomField.find_by!(name: "Spoken languages")
+      skills = UserCustomField.find_by!(name: "Key skills")
+      job_start_date = UserCustomField.find_by!(name: "Job start date")
+
+      expect(fritz.typed_custom_value_for(job_title)).to eq("Project Manager")
+      expect(fritz.typed_custom_value_for(languages)).to contain_exactly("English", "German")
+      expect(fritz.typed_custom_value_for(skills)).to contain_exactly("Budgeting", "Stakeholder Management")
+      expect(fritz.typed_custom_value_for(job_start_date)).to eq(Date.new(2017, 7, 3))
+    end
+
+    it "adds members to the demo project directly and through their department" do
+      demo_project = Project.find_by(identifier: "demo-project")
+
+      marko = root_seeder.seed_data.find_reference(:user__marko_marketing) # direct member
+      finance = root_seeder.seed_data.find_reference(:department__finance_administration) # group member
+      fritz = root_seeder.seed_data.find_reference(:user__fritz_finance) # member via Finance department
+
+      # Direct member: roles assigned directly, not inherited from a group.
+      marko_member = demo_project.members.find_by(user_id: marko.id)
+      expect(marko_member.member_roles.map(&:inherited_from)).to all(be_nil)
+
+      # The department group itself is a member (groups are excluded from #members, hence #memberships),
+      # and its users inherit the role from it.
+      expect(demo_project.memberships.exists?(user_id: finance.id)).to be true
+      fritz_member = demo_project.members.find_by(user_id: fritz.id)
+      expect(fritz_member.member_roles.map(&:inherited_from)).to all(be_present)
+    end
+
+    it "assigns demo work packages to individual users and to whole departments" do
+      data = root_seeder.seed_data
+
+      # Assigned to an individual user (direct project member).
+      expect(data.find_reference(:setup_conference_website).assigned_to)
+        .to eq(data.find_reference(:user__wanda_web))
+
+      # Assigned to a whole department (group member of the project).
+      expect(data.find_reference(:organize_open_source_conference).assigned_to)
+        .to eq(data.find_reference(:department__events_operations))
+    end
+
+    it "seeds working hours and vacations for the member users" do
+      data = root_seeder.seed_data
+
+      # Schedule change: three dated schedules for the same user.
+      expect(data.find_reference(:user__dora_design).working_hours.count).to eq 3
+      # Single schedule.
+      expect(data.find_reference(:user__marko_marketing).working_hours.count).to eq 1
+      # No schedule.
+      expect(data.find_reference(:user__connie_comms).working_hours).to be_empty
+      # Vacation seeded.
+      expect(data.find_reference(:user__wanda_web).non_working_times.count).to eq 1
+    end
+
+    it "includes a QA department with a QA user and a QA work package" do
+      data = root_seeder.seed_data
+
+      qa_department = data.find_reference(:department__quality_assurance)
+      tessa = data.find_reference(:user__tessa_tester)
+      expect(qa_department).to be_organizational_unit
+      expect(qa_department.users).to include(tessa)
+
+      qa_work_package = WorkPackage.find_by(assigned_to: tessa)
+      expect(qa_work_package).to be_present
+      # The QA task follows the website setup task.
+      website = data.find_reference(:setup_conference_website)
+      expect(Relation.follows.exists?(from_id: qa_work_package.id, to_id: website.id)).to be true
+    end
+
+    it "lets several different participants present the meeting agenda items" do
+      template = Meeting.templated.first
+
+      expect(template.agenda_items.pluck(:presenter_id).uniq.count).to be > 1
+    end
+
+    it "adds a resource planner with its views and allocations to the demo project" do
+      demo_project = Project.find_by(identifier: "demo-project")
+
+      expect(demo_project.enabled_module_names).to include("resource_management")
+      planners = ResourcePlanner.where(project: demo_project)
+      expect(planners.count).to eq 1
+      expect(planners.first.children.count).to eq 4
+      # Four allocations for individual users and one filter-based allocation.
+      expect(ResourceAllocation.count).to eq 5
+    end
+
+    it "gives the meeting participants and varies their responses across occurrences" do
+      series = RecurringMeeting.first
+
+      # The template carries the regular attendees, all accepting by default.
+      expect(series.template.participants.count).to eq 5
+      expect(series.template.participants).to all(be_participation_accepted)
+
+      occurrences = series.meetings.not_templated.order(:start_time).to_a
+
+      # The first occurrence inherited the template participants, everybody accepted.
+      expect(occurrences.first.participants.count).to eq 5
+      expect(occurrences.first.participants).to all(be_participation_accepted)
+
+      # A later occurrence has declined/tentative responses and extra one-off guests.
+      second = occurrences.second
+      expect(second.participants.count).to eq 7 # 5 regulars + 2 one-off guests
+      statuses = second.participants.pluck(:participation_status)
+      expect(statuses).to include("declined", "tentative")
+    end
+  end
+
+  describe "demo data" do
+    shared_let(:root_seeder) { described_class.new }
+
+    before_all do
+      with_edition("standard") do
+        root_seeder.seed!
+
+        # Run background jobs as those are also triggered by seeding.
+        # But since those background jobs retrigger themselves, don't wrap the seeding inside a block.
+        perform_enqueued_jobs
+      end
+    end
+
+    include_examples "creates standard demo data"
+
+    include_examples "no email deliveries"
+
+    context "when run a second time in a different language", :settings_reset do
+      before_all do
+        with_locale_env("de") do
+          described_class.new.seed!
+        end
+      end
+
+      it "does not create additional data and does not raise any errors" do
+        expect(Project.count).to eq 2
+        expect(WorkPackage.count).to eq 37
+        expect(Wiki.count).to eq 2
+        expect(Query.having_views.count).to eq 8
+        expect(View.where(type: "work_packages_table").count).to eq 5
+        expect(View.where(type: "team_planner").count).to eq 1
+        expect(View.where(type: "gantt").count).to eq 2
+        expect(Query.count).to eq 28
+        expect(ProjectRole.count).to eq 5
+        expect(WorkPackageRole.count).to eq 3
+        expect(GlobalRole.count).to eq 2
+        expect(Grids::Overview.count).to eq 2
+        expect(Version.count).to eq 3
+        expect(Boards::Grid.count).to eq 5
+        expect(Project::PhaseDefinition.count).to eq 4
+      end
+    end
+
+    context "when run a second time in a different language with some color data deleted", :settings_reset do
+      before_all do
+        with_locale_env("de") do
+          # Simulate a user having deleted the seeded colors.
+          # Could also be the user changing the hexcode of the colors, making lookup by hexcode fail.
+          Color.where(name: ["Grey", "Blue", "Black"]).delete_all
+          described_class.new.seed!
+        end
+      end
+
+      it "does not create additional data and does not raise any errors" do
+        expect(Project.count).to eq 2
+        expect(WorkPackage.count).to eq 37
+        expect(Wiki.count).to eq 2
+      end
+    end
+
+    context "when run a second time after all demo projects and original statuses " \
+            "and workflows are deleted (Bug #65138)", :settings_reset do
+      before_all do
+        # Simulate a user having created new statuses, and deleted all default
+        # statuses and workflows (making looking up statuses by name impossible)
+        new_status = create(:default_status, name: "My own default status")
+        Project.destroy_all
+        # destroying all statuses will destroy all workflows by cascade
+        Status.where.not(id: new_status.id).destroy_all
+        described_class.new.seed!
+      end
+
+      it "does not create additional data and does not raise any errors" do
+        # seeding recreates 2 demo projects
+        expect(Project.count).to eq 2
+        # but they're mostly empty because of the missing default statuses
+        expect(WorkPackage.count).to eq 0
+      end
+
+      it "keeps the epic form configuration from the initial seeding" do
+        expect(Type.find_by(name: "Epic").default_variant.attribute_groups)
+          .to include(an_instance_of(Type::QueryGroup))
+      end
+    end
+  end
+
+  describe "demo data mock-translated in another language" do
+    shared_let(:root_seeder) { described_class.new }
+
+    before_all do
+      with_edition("standard") do
+        # simulate a translation by changing the returned string on `I18n#t` calls
+        allow(I18n).to receive(:t).and_wrap_original do |m, *args, **kw|
+          original_translation = m.call(*args, **kw)
+          "tr: #{original_translation}"
+        end
+        root_seeder.seed!
+
+        # Run background jobs as those are also triggered by seeding.
+        # But since those background jobs retrigger themselves, don't wrap the seeding inside a block.
+        perform_enqueued_jobs
+      end
+    end
+
+    include_examples "creates standard demo data"
+
+    it "has all Query.name translated" do
+      expect(Query.pluck(:name)).to all(start_with("tr: "))
+    end
+  end
+
+  [
+    "OPENPROJECT_SEED_LOCALE",
+    "OPENPROJECT_DEFAULT_LANGUAGE"
+  ].each do |env_var_name|
+    describe "demo data with a non-English language set with #{env_var_name}",
+             :settings_reset do
+      shared_let(:root_seeder) { described_class.new }
+
+      before_all do
+        with_locale_env("de", env_var_name:) do
+          with_edition("standard") do
+            root_seeder.seed!
+
+            # Run background jobs as those are also triggered by seeding.
+            # But since those background jobs retrigger themselves, don't wrap the seeding inside a block.
+            perform_enqueued_jobs
+          end
+        end
+      end
+
+      it "seeds with the specified language" do
+        willkommen = I18n.t("#{Source::Translate::I18N_PREFIX}.standard.welcome.title", locale: "de")
+        expect(Setting.welcome_title).to eq(willkommen)
+        expect(Status.where(name: "Neu")).to exist
+        expect(Type.where(name: "Meilenstein")).to exist
+        expect(Color.where(name: "Gelb")).to exist
+      end
+
+      it "sets Setting.default_language to the given language" do
+        expect(Setting.find_by(name: "default_language")).to have_attributes(value: "de")
+      end
+
+      include_examples "creates standard demo data"
+    end
+  end
+
+  describe "demo data with development data" do
+    shared_let(:root_seeder) { described_class.new(seed_development_data: true) }
+
+    before_all do
+      RSpec::Mocks.with_temporary_scope do
+        # opportunistic way to add a test for bug #53611 without extending the testing time
+        allow(Settings::Definition["default_projects_modules"])
+          .to receive(:writable?).and_return(false)
+
+        root_seeder.seed!
+      end
+    end
+
+    it "creates 1 additional admin user with German locale" do
+      admins = User.not_builtin.where(admin: true)
+      expect(admins.count).to eq 2
+      expect(admins.pluck(:language)).to match_array(%w[en de])
+    end
+
+    it "creates 5 additional projects for development" do
+      expect(Project.count).to eq 7
+    end
+
+    it "creates 4 additional work packages for development" do
+      expect(WorkPackage.count).to eq 41
+    end
+
+    it "creates 1 project with custom fields" do
+      # 13 development work package custom fields + 4 development user custom fields
+      expect(CustomField.count).to eq 17
+    end
+
+    include_examples "creates the company staff and the demo data referencing it"
+
+    include_examples "no email deliveries"
+  end
+
+  context "when admin user creation is locked with OPENPROJECT_SEED_ADMIN_USER_LOCKED=true",
+          :settings_reset do
+    shared_let(:root_seeder) { described_class.new }
+
+    before_all do
+      with_env("OPENPROJECT_SEED_ADMIN_USER_LOCKED" => "true") do
+        with_edition("standard") do
+          reset(:seed_admin_user_locked)
+          root_seeder.seed!
+        end
+      end
+    ensure
+      reset(:seed_admin_user_locked)
+      RequestStore.clear! # resets `User.current` cached result
+    end
+
+    it "seeds without any errors, but locks the admin user", :aggregate_failures do
+      expect(Project.count).to eq 2
+      expect(WorkPackage.count).to eq 37
+      expect(root_seeder.admin_user).to be_locked
+    end
+  end
+end

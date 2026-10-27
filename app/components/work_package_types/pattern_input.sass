@@ -1,0 +1,22 @@
+$pattern-input-height: calc(3*var(--base-size-20) + var(--control-medium-paddingInline-condensed))
+
+.op-pattern-input
+  &--text-field
+    white-space: pre-wrap
+    overflow: hidden
+    height: $pattern-input-height
+
+    &:focus,
+    &:focus-visible
+      border-color: var(--focus-outlineColor) !important
+      box-shadow: inset 0 0 0 1px var(--focus-outlineColor)
+      outline: none
+
+  &--suggestions-dropdown
+    position: absolute
+    top: $pattern-input-height
+    background: var(--body-background)
+    z-index: 1
+    width: 100%
+    max-height: 300px
+    overflow: auto

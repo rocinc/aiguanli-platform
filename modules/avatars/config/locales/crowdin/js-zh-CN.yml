@@ -1,0 +1,11 @@
+---
+zh-CN:
+  js:
+    avatars:
+      empty_file_error: 请上传一个有效的图像 (jpg, png, gif)
+      error_image_too_large: 图像太大。
+      label_choose_avatar: 从文件中选择头像
+      uploading_avatar: 上传您的头像。
+      wrong_file_format: 允许的格式是 jpg、png、gif
+    button_update: 更新
+    label_preview: 预览

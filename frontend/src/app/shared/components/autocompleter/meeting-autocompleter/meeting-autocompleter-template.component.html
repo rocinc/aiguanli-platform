@@ -1,0 +1,25 @@
+<ng-template #labelTemplate let-item>
+  {{ item.name }} - {{ item.start_date }} {{ item.start_time }} - {{ item.project }}
+</ng-template>
+
+<ng-template #optionTemplate let-item let-search="search">
+  <div class="op-meeting-autocompleter">
+    <div class="op-meeting-autocompleter--name" [opSearchHighlight]="search">
+      {{ item.name }}
+    </div>
+    <div class="op-meeting-autocompleter--date">
+      {{ item.start_date }}
+    </div>
+    <div class="op-meeting-autocompleter--project-label">Project:</div>
+
+    @if (item.frequency) {
+      <div class="op-meeting-autocompleter--frequency">
+        {{ item.frequency }}
+      </div>
+    }
+    <div class="op-meeting-autocompleter--time">
+      {{ item.start_time }}
+    </div>
+    <div class="op-meeting-autocompleter--project">{{ item.project }}</div>
+  </div>
+</ng-template>

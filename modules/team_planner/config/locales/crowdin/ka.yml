@@ -1,0 +1,21 @@
+---
+ka:
+  ee:
+    feature_names:
+      team_planner_view: გუნდის მგეგმავი
+    upsell:
+      team_planner_view:
+        description: მიიღეთ მთელი თქვენი გუნდის გეგმების მიმოხილვა მგეგმავთან ერთად. გაწელეთ, შეამოკლეთ და გადაათრიეთ სამუშაოს პაკეტები, მათი თარიღების შესაცვლელად, გადასაადგილებლად ან მიმნიჭებლის შესაცვლელად.
+        title: გუნდის მგეგმავი
+  permission_manage_team_planner: გუნდის მგეგმავის მართვა
+  permission_view_team_planner: გუნდის მგეგმავის ნახვა
+  plugin_openproject_team_planner:
+    description: Provides team planner views.
+    name: OpenProject Team Planner
+  project_module_team_planner_view: გუნდის მგეგმავები
+  team_planner:
+    label_assignees: მიმნიჭებლები
+    label_create_new_team_planner: ახალი გუნდის მგეგმავის შექმნა
+    label_new_team_planner: ახალი გუნდის მგეგმავი
+    label_team_planner: გუნდის მგეგმავი
+    label_team_planner_plural: გუნდის მგეგმავები

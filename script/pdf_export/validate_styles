@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+require "md_to_pdf/core"
+require "md_to_pdf/style/validation"
+require "yaml"
+require "json"
+
+class SchemaValidator
+  include MarkdownToPDF::StyleValidation
+
+  def validate
+    root = File.expand_path("../../", __dir__)
+    config = YAML.load_file(File.join(__dir__, "styles.yml"))
+    config["styles"].each do |entry|
+      validate_styles(entry, root)
+    end
+  end
+
+  def validate_styles(entry, root)
+    puts "Validating #{entry['name']} styles"
+    schema = JSON::load_file(File.join(root, entry["path"], "schema.json"))
+    styles_file = File.join(root, entry["path"], "standard.yml")
+    styles = YAML.load_file(styles_file)
+    validate_schema!(styles, schema)
+    puts "Valid: #{styles_file}"
+  end
+end
+
+SchemaValidator.new.validate

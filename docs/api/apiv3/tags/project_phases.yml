@@ -1,0 +1,31 @@
+---
+description: |-
+  Project phases separate the whole of the project's duration into smaller, distinct parts where each phase has its own start and end date.
+  Such a phase will then have different focus on certain aspects of project management. E.g. while the first phase might be about gathering requirements, the second phase might be about implementing the requirements
+  and the third phase might be about testing the implementation.
+
+  Phases within a project are concrete instances of a phase definition. That way, one or a number of project life cycles can be defined throughout the OpenProject instance and then be reused in different projects.
+  Projects can enable or disable the use of a phase definition in a project and assign dates to the phase instances.
+
+  ## Actions
+
+  * None currently
+
+  ## Linked Properties
+
+  | Link         | Description                                                                                  | Type                   | Constraints | Supported operations |Condition                                                                                  |
+  | :----------: | -------------                                                                                | ----                   | ----------- | -------------------- |-----------------------------------------                                                  |
+  | self         | This project phase                                                                           | ProjectPhase           | not null    | READ                 |                                                                                           |
+  | definition   | This definition this phase relies on                                                         | ProjectPhaseDefinition | not null    | READ                 |                                                                                           |
+  | project      | This project this phase is instantiated in                                                   | Project                | not null    | READ                 |                                                                                           |
+
+  ## Local Properties
+
+  | Property               | Description                                                                        | Type              | Constraints                          | Supported operations |
+  | :---------------------:| -------------                                                                      | ----              | -----------                          | -------------------- |
+  | id                     | Project phase's id                                                                 | Integer           | x > 0                                | READ                 |
+  | name                   |                                                                                    | String            |                                      | READ                 |
+  | active                 | Indicates whether the project phase is currently active within the project         | Boolean           |                                      | READ                 |
+  | createdAt              | Time of creation                                                                   | DateTime          |                                      | READ                 |
+  | updatedAt              | Time of the most recent change to the project phase                                | DateTime          |                                      | READ                 |
+name: Project Phases

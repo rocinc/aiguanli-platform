@@ -1,0 +1,28 @@
+---
+de:
+  are_you_sure_delete_avatar: Sind Sie sicher, dass Sie das Profilbild löschen möchten?
+  avatar_deleted: Profilbild erfolgreich gelöscht.
+  avatars:
+    label_avatar: Profilfoto
+    label_gravatar: Gravatar
+    label_local_avatar: Selbsterstelltes Profilbild
+    settings:
+      enable_gravatars: Aktiviere Gravatare
+      enable_local_avatars: Selbsterstellte Profilbilder aktivieren
+      gravatar_default: Standard-Gravatar-Bild
+    text_avatar_gravatar_html: OpenProject verwendet Ihr Gravatar-Bild, sofern eines unter %{gravatar_url} registriert ist, andernfalls ein Standardbild oder -symbol, sofern vorhanden.
+    text_avatar_local: Sie können ein eigenes Profilbild hochladen, welches Gravatar überschreibt, indem Sie auf das Bild klicken. Wir empfehlen ein Bild mit einer Größe von 128 × 128 Pixel.
+    text_avatar_local_only: Sie können ein eigenes Profilbild hochladen, indem Sie auf das Bild klicken. Wir empfehlen ein Bild mit einer Größe von 128 × 128 Pixel.
+  empty_file_error: Bitte laden Sie ein gültiges Bild hoch (JPG, PNG, GIF)
+  error_image_size: Das Bild ist zu groß.
+  error_image_upload: Fehler beim Speichern des Bildes.
+  label_avatar: Profilfoto
+  label_avatar_plural: Avatars
+  label_choose_avatar: Profilbild aus Datei auswählen
+  label_current_avatar: Aktuelles Profilbild
+  message_avatar_uploaded: Das Porfilbild wurde erfolgreich geändert.
+  plugin_openproject_avatars:
+    description: Dieses Plugin erlaubt es OpenProject-Benutzern, Avatare hochzuladen oder von Gravatar zu übernehmen.
+    name: Avatars
+  unable_to_delete_avatar: Profilbild konnte nicht gelöscht werden.
+  wrong_file_format: Erlaubte Formate sind JPG, PNG und GIF

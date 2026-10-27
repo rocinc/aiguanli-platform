@@ -1,0 +1,89 @@
+# Some containers (e.g. backend and workers) need some variables to be configured properly
+x-op-env-override: &environment
+  OPENPROJECT_CLI_PROXY: "${OPENPROJECT_DEV_URL}"
+  OPENPROJECT_DEV_EXTRA_HOSTS: "${OPENPROJECT_DEV_HOST}"
+  OPENPROJECT_HOST__NAME: "${OPENPROJECT_DEV_HOST}"
+  OPENPROJECT_HTTPS: true
+  SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+  # uncomment and set all the envs below to integrate keycloak with OpenProject
+  # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_DISPLAY__NAME: Keycloak
+  # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_HOST: keycloak.${OPENPROJECT_DOCKER_DEV_TLD:-local}
+  # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_IDENTIFIER: https://openproject.${OPENPROJECT_DOCKER_DEV_TLD:-local}
+  # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_SECRET: <The client secret you copied from keycloak>
+  # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_ISSUER: https://keycloak.${OPENPROJECT_DOCKER_DEV_TLD:-local}/realms/<REALM>
+  # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_AUTHORIZATION__ENDPOINT: /realms/<REALM>/protocol/openid-connect/auth
+  # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_TOKEN__ENDPOINT: /realms/<REALM>/protocol/openid-connect/token
+  # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_USERINFO__ENDPOINT: /realms/<REALM>/protocol/openid-connect/userinfo
+  # OPENPROJECT_OPENID__CONNECT_KEYCLOAK_END__SESSION__ENDPOINT: https://keycloak.${OPENPROJECT_DOCKER_DEV_TLD:-local}/realms/<REALM>/protocol/openid-connect/logout
+  # uncomment the following for using minio (local S3) as file storage with TLS support:
+  # OPENPROJECT_ATTACHMENTS__STORAGE: "fog"
+  # OPENPROJECT_FOG_DIRECTORY: "openproject-uploads"
+  # OPENPROJECT_FOG_CREDENTIALS_PROVIDER: "AWS" # Minio is S3 compliant, so we can use the AWS provider
+  # OPENPROJECT_FOG_CREDENTIALS_ENDPOINT: "https://minio.${OPENPROJECT_DOCKER_DEV_TLD:-local}"
+  # OPENPROJECT_FOG_CREDENTIALS_AWS__ACCESS__KEY__ID: "minioadmin"
+  # OPENPROJECT_FOG_CREDENTIALS_AWS__SECRET__ACCESS__KEY: "minioadmin"
+  # OPENPROJECT_FOG_CREDENTIALS_PATH__STYLE: "true"
+  # OPENPROJECT_FOG_CREDENTIALS_REGION: "us-east-1"
+  # OPENPROJECT_DEV_EXTRA_HOSTS: "${OPENPROJECT_DEV_HOST},minio.${OPENPROJECT_DOCKER_DEV_TLD:-local}"
+
+services:
+  backend:
+    environment:
+      <<: *environment
+      OPENPROJECT_CLI_PROXY: "https://openproject-assets.${OPENPROJECT_DOCKER_DEV_TLD:-local}"
+    networks:
+      - external
+    volumes:
+      # Debian/Arch
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
+      # Fedora
+      - /etc/pki/tls/certs/ca-bundle.crt:/etc/ssl/certs/ca-certificates.crt:ro
+      # Mac OS
+      # - ~/.step/certs:/etc/ssl/certs
+      # - ~/.step/certs:/usr/local/share/ca-certificates
+    labels:
+    - "traefik.enable=true"
+    - "traefik.http.routers.openproject.rule=Host(`openproject.${OPENPROJECT_DOCKER_DEV_TLD:-local}`)"
+    - "traefik.http.routers.openproject.entrypoints=websecure"
+
+  worker:
+    environment:
+      <<: *environment
+    networks:
+      - external
+    volumes:
+      # Debian/Arch
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
+      # Fedora
+      - /etc/pki/tls/certs/ca-bundle.crt:/etc/ssl/certs/ca-certificates.crt:ro
+      # Mac OS
+      # - ~/.step/certs:/etc/ssl/certs
+      # - ~/.step/certs:/usr/local/share/ca-certificates
+
+  backend-test:
+    # Connect the backend-test container to the same network as the backend for nextcloud HTTP interactions
+    networks:
+      - external
+    volumes:
+      # Debian/Arch
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
+      # Fedora
+      - /etc/pki/tls/certs/ca-bundle.crt:/etc/ssl/certs/ca-certificates.crt:ro
+      # Mac OS
+      # - ~/.step/certs:/etc/ssl/certs
+      # - ~/.step/certs:/usr/local/share/ca-certificates
+
+  frontend:
+    networks:
+      - external
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openproject-assets.rule=Host(`openproject-assets.${OPENPROJECT_DOCKER_DEV_TLD:-local}`)"
+      - "traefik.http.routers.openproject-assets.entrypoints=websecure"
+
+# You need to define the same external network
+# that is defined in the TLS proxy compose file
+networks:
+  external:
+    name: gateway
+    external: true

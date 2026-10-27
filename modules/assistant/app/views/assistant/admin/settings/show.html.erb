@@ -1,0 +1,102 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+<% html_title t(:label_administration), t(:label_assistant_settings) %>
+
+<%=
+  render(Primer::OpenProject::PageHeader.new) do |header|
+    header.with_title { t(:label_assistant_settings) }
+    header.with_description { t("assistant.admin.lead") }
+    header.with_breadcrumbs([{ href: admin_index_path, text: t("label_administration") }, t(:label_assistant_settings)])
+  end
+%>
+
+<% if !@configured %>
+  <%= render(Primer::Alpha::Banner.new(scheme: :warning, icon: :alert, mb: 3)) do %>
+    <%= @consent ? t("assistant.admin.not_configured") : t("assistant.admin.state_off") %>
+  <% end %>
+<% elsif @budget.positive? && @total >= @budget %>
+  <%= render(Primer::Alpha::Banner.new(scheme: :danger, icon: :stop, mb: 3)) { t("assistant.admin.over_budget") } %>
+<% end %>
+<% if @configured && !Setting.assistant_read_attachments? %>
+  <%= render(Primer::Alpha::Banner.new(icon: :paperclip, mb: 3, test_selector: "assistant-admin-attachments-off")) do %>
+    <%= t("assistant.admin.read_attachments_off") %>
+  <% end %>
+<% end %>
+
+<%= render(Primer::Beta::Subhead.new) { |c| c.with_heading(tag: :h3, size: :medium) { t("assistant.admin.what_leaves") } } %>
+<ul class="mb-4">
+  <li><%= t("assistant.admin.leaves_comment") %></li>
+  <li><%= t("assistant.admin.leaves_context") %></li>
+  <li><%= t("assistant.admin.leaves_not") %></li>
+</ul>
+
+<%= settings_primer_form_with(url: admin_settings_assistant_path, scope: :settings, method: :patch) do |f| %>
+  <%= render(Primer::Forms::FormList.new(Assistant::Admin::SettingsForm.new(f), Admin::Settings::Save.new(f))) %>
+<% end %>
+
+<p class="color-fg-muted mt-3">
+  <% unless @key_present %>
+    <%= render(Primer::Beta::Octicon.new(icon: :alert, color: :attention)) %>
+  <% end %>
+  <%= @key_present ? t("assistant.admin.key_present") : t("assistant.admin.key_missing") %>
+</p>
+
+<%= render("assistant/admin/settings/connection_test", results: nil) %>
+
+<%= render(Primer::Beta::Subhead.new(mt: 4)) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.admin.usage") } } %>
+<p data-test-selector="assistant-admin-usage">
+  <% if @budget.positive? %>
+    <%= t(
+          "assistant.admin.usage_line", used: number_with_delimiter(@total), budget: number_with_delimiter(@budget),
+                                        percent: (@total * 100.0 / @budget).round
+        ) %>
+  <% else %>
+    <%= t("assistant.admin.usage_unlimited", used: number_with_delimiter(@total)) %>
+  <% end %>
+</p>
+<% if @by_purpose.any? %>
+  <%= render(Primer::Beta::BorderBox.new(mb: 3)) do |box| %>
+    <% box.with_header { t("assistant.admin.by_purpose") } %>
+    <% @by_purpose.each do |purpose, calls, tokens, failed| %>
+      <% box.with_row(display: :flex, justify_content: :space_between) do %>
+        <span>
+          <% if purpose.to_s.start_with?("duty_") %>
+            <%= t("assistant.duties.kinds.#{purpose.to_s.delete_prefix('duty_')}.title", default: purpose.to_s.humanize) %>
+          <% else %>
+            <%= t("assistant.admin.purposes.#{purpose}", default: purpose.to_s.humanize) %>
+          <% end %>
+        </span>
+        <span class="color-fg-muted">
+          <%= t("assistant.admin.purpose_line", calls:, tokens: number_with_delimiter(tokens.to_i)) %>
+          <% if failed.to_i.positive? %>
+            · <%= t("assistant.admin.failed", count: failed.to_i) %>
+          <% end %>
+        </span>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= render(Primer::Beta::Subhead.new(mt: 4)) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.admin.projects") } } %>
+<% if @projects.any? %>
+  <ul class="mb-3">
+    <% @projects.each do |project| %>
+      <li>
+        <%= link_to(project.name, project_overview_path(project)) %>
+        <% if current_user.allowed_in_project?(:manage_assistant, project) %>
+          · <%= link_to(t("assistant.insights.title"), project_assistant_desk_path(project, tab: "insights")) %>
+        <% end %>
+        · <%= link_to(t("assistant.admin.modules"), project_settings_modules_path(project)) %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="color-fg-muted"><%= t("assistant.admin.projects_none") %></p>
+<% end %>

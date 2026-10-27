@@ -1,0 +1,77 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+module OmniauthHelper
+  def omniauth_direct_login?
+    direct_login_provider.is_a? String
+  end
+
+  def omniauth_start_url_options
+    { script_name: OpenProject::Configuration.rails_relative_url_root }.compact
+  end
+
+  def omniauth_provider_button(name, display_name: nil, icon: false)
+    classes = ["auth-provider", "auth-provider-#{name}", "button"]
+    classes << "auth-provider--imaged" if icon
+
+    url_opts = omniauth_start_url_options
+    url_opts[:origin] = params["back_url"] if params["back_url"]
+
+    button_to(
+      omni_auth_start_path(name, url_opts),
+      method: :post,
+      data: { turbo: false },
+      class: classes.join(" ")
+    ) do
+      tag.span(display_name.presence || name, class: "auth-provider-name")
+    end
+  end
+
+  ##
+  # Per default the user may choose the usual password login as well as several omniauth providers
+  # on the login page and in the login drop down menu.
+  #
+  # With his configuration option you can set a specific omniauth provider to be
+  # used for direct login. Meaning that the login provider selection is skipped and
+  # the configured provider is used directly instead.
+  #
+  # If this option is active /login will lead directly to the configured omniauth provider,
+  # with a temporary form in between so that we can ensure we only POST to the provider (CVE-2015-9284).
+  # a click on 'Sign in' (as opposed to opening the drop down menu) brings them directly there using POST
+  def direct_login_provider
+    Setting.omniauth_direct_login_provider.presence
+  end
+
+  # Uses the controller-assigned flag so /login/internal can still render the
+  # password form when instance-wide password login is off.
+  def show_password_login_form?
+    @force_password_login_form || Users::PasswordLogin.enabled? # rubocop:disable Rails/HelperInstanceVariable
+  end
+end

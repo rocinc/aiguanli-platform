@@ -1,0 +1,7 @@
+---
+ms:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Pencapaian
+      label_gantt_chart_plural: Carta Gantt

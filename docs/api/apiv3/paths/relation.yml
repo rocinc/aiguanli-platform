@@ -1,0 +1,177 @@
+# /api/v3/relations/{id}
+---
+get:
+  summary: Get Relation
+  operationId: get_relation
+  tags:
+    - Relations
+  description: Get a single relation specified by its unique identifier.
+  parameters:
+    - description: Relation id
+      example: 1
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          examples:
+            response:
+              $ref: '../components/examples/relation_response.yml'
+          schema:
+            $ref: '../components/schemas/relation_read_model.yml'
+    '404':
+      description: |-
+        Returned if the relation does not exist or the client does not have sufficient permissions to see it.
+
+        **Required permission:** view work packages for the involved work packages
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The specified relation does not exist.
+
+delete:
+  summary: Delete Relation
+  operationId: delete_relation
+  tags:
+    - Relations
+  description: Deletes the relation.
+  parameters:
+    - description: The unique identifier of the relation resource
+      example: 1
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  responses:
+    '204':
+      description: Returned if the relation was deleted successfully. The response body is empty.
+    '403':
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** manage work package relations
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not allowed to delete this relation.
+    '404':
+      description: |-
+        Returned if the relation does not exist or the client does not have sufficient permissions to see it.
+
+        **Required permission:** view work packages
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The specified relation does not exist.
+    '406':
+      $ref: '../components/responses/missing_content_type.yml'
+    '415':
+      $ref: '../components/responses/unsupported_media_type.yml'
+
+patch:
+  summary: Update Relation
+  operationId: update_relation
+  tags:
+    - Relations
+  description: |-
+    When calling this endpoint the client provides a single object, containing the properties and links that it wants
+    to change, in the body. It is only allowed to provide properties or links supporting the **write** operation.
+
+    Note that changing the `type` of a relation invariably also changes the respective `reverseType` as well as the
+    "name" of it. The returned Relation object will reflect that change. For instance if you change a Relation's
+    `type` to "follows" then the `reverseType` will be changed to `precedes`.
+    
+    It is not allowed to change a relation's involved work packages.
+  parameters:
+    - description: Relation ID
+      example: 1
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../components/schemas/relation_write_model.yml'
+        examples:
+          request:
+            $ref: '../components/examples/relation_update_request.yml'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/relation_read_model.yml'
+          examples:
+            response:
+              $ref: '../components/examples/relation_response.yml'
+    '400':
+      $ref: '../components/responses/invalid_request_body.yml'
+    '404':
+      description: |-
+        Returned if the relation does not exist or the client does not have sufficient permissions to see it.
+
+        **Required permission:** view work packages
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The specified relation does not exist.
+    '406':
+      $ref: '../components/responses/missing_content_type.yml'
+    '415':
+      $ref: '../components/responses/unsupported_media_type.yml'
+    '422':
+      description: |-
+        Returned if:
+
+        - the client tries to modify a read-only property (`PropertyIsReadOnly`)
+        - a constraint for a property was violated (`PropertyConstraintViolation`)
+        - the client provides a link to an invalid resource (`ResourceTypeMismatch`) or a
+          work package that does not exist or for which the client does not have sufficient permissions
+          to see it (**required permissions**: `view work packages` for the involved work packages).
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _embedded:
+                  details:
+                    attribute: lag
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:PropertyConstraintViolation
+                message: Lag must be a number greater than or equal to 0

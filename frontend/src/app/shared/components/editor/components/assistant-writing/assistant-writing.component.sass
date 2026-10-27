@@ -1,0 +1,270 @@
+.op-assistant-writing
+  display: flex
+  flex-direction: column
+  align-items: flex-end
+  gap: var(--base-size-4)
+  margin-top: var(--base-size-4)
+
+  &--panel
+    position: relative
+    align-self: stretch
+    min-width: 0
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+    padding: var(--base-size-12)
+    background: var(--bgColor-default)
+    border: var(--borderWidth-thin) solid var(--borderColor-default)
+    border-radius: var(--borderRadius-medium)
+    box-shadow: var(--shadow-resting-small)
+    animation: op-assistant-writing-in 120ms ease-out
+
+  &--scope,
+  &--note,
+  &--status
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--title
+    margin: 0
+    min-width: 0
+    font-size: var(--text-body-size-medium)
+    font-weight: var(--base-text-weight-semibold)
+
+  &--head
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    justify-content: space-between
+    gap: var(--base-size-4) var(--base-size-8)
+
+  &--versions
+    display: inline-flex
+    align-items: center
+    gap: var(--base-size-4)
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+    font-variant-numeric: tabular-nums
+
+  &--step
+    min-width: var(--base-size-24)
+    height: var(--base-size-24)
+    padding: 0
+    color: var(--fgColor-default)
+    background: transparent
+    border: 0
+    border-radius: var(--borderRadius-medium)
+    font-size: var(--text-body-size-large)
+    line-height: 1
+    cursor: pointer
+
+    &:hover:not(:disabled)
+      background: var(--bgColor-neutral-muted)
+
+    &:disabled
+      color: var(--fgColor-disabled)
+      cursor: default
+
+    &:focus-visible
+      outline: 2px solid var(--focus-outlineColor)
+      outline-offset: 1px
+
+  &--choices
+    display: flex
+    flex-wrap: wrap
+    gap: var(--base-size-4)
+    margin: 0
+    padding: 0
+    list-style: none
+
+  &--choice
+    display: inline-flex
+    align-items: baseline
+    gap: var(--base-size-4)
+    min-height: var(--control-small-size, 28px)
+    padding: var(--base-size-4) var(--base-size-8)
+    color: var(--fgColor-default)
+    background: var(--bgColor-muted)
+    border: var(--borderWidth-thin) solid var(--borderColor-muted)
+    border-radius: var(--borderRadius-medium)
+    font-size: var(--text-body-size-small)
+    cursor: pointer
+
+    &:hover
+      background: var(--bgColor-neutral-muted)
+
+    &:focus-visible
+      outline: 2px solid var(--focus-outlineColor)
+      outline-offset: 1px
+
+  &--hint
+    color: var(--fgColor-muted)
+
+  &--instruction,
+  &--draft
+    width: 100%
+    min-width: 0
+    resize: vertical
+
+  &--draft
+    max-height: 18rem
+    field-sizing: content
+    white-space: pre-wrap
+    overflow-wrap: anywhere
+    line-height: var(--text-body-lineHeight-medium, 1.5)
+
+    &.-swap
+      animation: op-assistant-writing-swap 160ms ease-out
+
+  &--revise
+    display: flex
+    gap: var(--base-size-8)
+    align-items: center
+
+  &--revise-input
+    flex: 1 1 auto
+    min-width: 0
+
+  &--link
+    padding: 0
+    color: var(--fgColor-accent)
+    background: transparent
+    border: 0
+    cursor: pointer
+    font: inherit
+
+    &:hover
+      text-decoration: underline
+
+    &:focus-visible
+      outline: 2px solid var(--focus-outlineColor)
+      outline-offset: 1px
+
+  &--refined
+    display: flex
+    flex-wrap: wrap
+    gap: var(--base-size-8)
+
+  &--mark
+    padding: 0
+    color: inherit
+    background: var(--bgColor-attention-muted)
+    border-radius: var(--borderRadius-small)
+    transition: background-color 160ms ease-out
+
+    &.-waiting
+      animation: op-assistant-writing-pulse 1.2s ease-in-out infinite
+
+  &--bar
+    position: absolute
+    z-index: 2
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+    box-sizing: border-box
+    padding: var(--base-size-8)
+    background: var(--overlay-bgColor, var(--bgColor-default))
+    border: var(--borderWidth-thin) solid var(--borderColor-default)
+    border-radius: var(--borderRadius-medium)
+    box-shadow: var(--shadow-floating-small)
+    animation: op-assistant-writing-in 120ms ease-out
+
+    &.-below
+      animation-name: op-assistant-writing-in-below
+
+  &--bar-row
+    display: flex
+    gap: var(--base-size-4)
+    align-items: center
+
+  &--bar-input
+    flex: 1 1 auto
+    min-width: 0
+
+  &--bar-chips
+    display: flex
+    flex-wrap: wrap
+    gap: var(--base-size-4)
+
+  &--chip
+    padding: 0 var(--base-size-8)
+    color: var(--fgColor-default)
+    background: var(--bgColor-muted)
+    border: var(--borderWidth-thin) solid var(--borderColor-muted)
+    border-radius: var(--borderRadius-full, 999px)
+    font-size: var(--text-body-size-small)
+    line-height: var(--base-size-24)
+    cursor: pointer
+
+    &:hover
+      background: var(--bgColor-neutral-muted)
+
+    &:focus-visible
+      outline: 2px solid var(--focus-outlineColor)
+      outline-offset: 1px
+
+  &--preview
+    max-height: 16rem
+    min-height: 3rem
+    overflow-y: auto
+    padding: var(--base-size-8)
+    white-space: pre-wrap
+    overflow-wrap: anywhere
+    background: var(--bgColor-muted)
+    border-radius: var(--borderRadius-medium)
+    font-size: var(--text-body-size-medium)
+
+    &:focus-visible
+      outline: 2px solid var(--focus-outlineColor)
+      outline-offset: 1px
+
+  &--status
+    display: flex
+    align-items: center
+    gap: var(--base-size-8)
+
+  &--pulse
+    width: var(--base-size-8)
+    height: var(--base-size-8)
+    border-radius: 50%
+    background: var(--fgColor-accent)
+    animation: op-assistant-writing-pulse 1.2s ease-in-out infinite
+
+  &--error
+    margin: 0
+    color: var(--fgColor-danger)
+
+  &--footer
+    display: flex
+    flex-wrap: wrap
+    justify-content: flex-end
+    gap: var(--base-size-8)
+
+@keyframes op-assistant-writing-in
+  from
+    opacity: 0
+    transform: translateY(var(--base-size-4))
+
+@keyframes op-assistant-writing-in-below
+  from
+    opacity: 0
+    transform: translateY(calc(-1 * var(--base-size-4)))
+
+@keyframes op-assistant-writing-swap
+  from
+    opacity: 0.35
+
+@keyframes op-assistant-writing-pulse
+  0%, 100%
+    opacity: 0.3
+  50%
+    opacity: 1
+
+@media (prefers-reduced-motion: reduce)
+  .op-assistant-writing--pulse,
+  .op-assistant-writing--panel,
+  .op-assistant-writing--bar,
+  .op-assistant-writing--draft,
+  .op-assistant-writing--mark
+    animation: none

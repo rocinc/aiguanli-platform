@@ -1,0 +1,11 @@
+---
+kk:
+  js:
+    avatars:
+      empty_file_error: Талапқа сай суретті жүктеуіңізді сұраймыз (jpg, png, gif)
+      error_image_too_large: Сурет тым үлкен.
+      label_choose_avatar: Аватарды файлдан таңдау
+      uploading_avatar: Өз аватарыңызды жүктеу.
+      wrong_file_format: 'Рұқсат етілен форматтар: jpg, png, gif'
+    button_update: Жаңарту
+    label_preview: Алдын-ала көру

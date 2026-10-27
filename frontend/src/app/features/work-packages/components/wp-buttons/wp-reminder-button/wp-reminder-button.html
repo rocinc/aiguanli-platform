@@ -1,0 +1,21 @@
+@if ((hasReminder$ | async)) {
+  <button
+    class="button toolbar-icon"
+    data-test-selector="op-wp-reminder-button"
+    [attr.title]="buttonTitle"
+    (click)="openModal()"
+    >
+    <svg op-alarm-set-icon class="button--icon" size="small"></svg>
+  </button>
+} @else {
+  <button
+    class="button toolbar-icon"
+    data-test-selector="op-wp-reminder-button"
+    [attr.title]="buttonTitle"
+    wpReminderContextMenu
+    [wpReminderContextMenu-workPackage]="workPackage"
+    >
+    <svg op-alarm-icon class="button--icon" size="small"></svg>
+  </button>
+}
+

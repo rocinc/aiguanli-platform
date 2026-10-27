@@ -1,0 +1,11 @@
+---
+lt:
+  js:
+    avatars:
+      empty_file_error: Prašome įkelti tinkamą piešinį (jpg, png, gif)
+      error_image_too_large: Paveikslas per didelis.
+      label_choose_avatar: Parinkite nuotrauką iš failo
+      uploading_avatar: Įkeliamas jūsų avataras
+      wrong_file_format: Leidžiami formatai yra jpg, png, gif
+    button_update: Atnaujinti
+    label_preview: Peržiūra

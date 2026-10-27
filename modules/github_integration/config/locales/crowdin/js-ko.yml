@@ -1,0 +1,55 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+ko:
+  js:
+    github_integration:
+      github_actions: 작업
+      pull_requests:
+        merged_message: "%{repository_link}에 대한 풀 리퀘스트 #%{pr_number} %{pr_link}은(는) %{github_user_link}에 의해 %{pr_state} 상태가 되었습니다."
+        message: "%{github_user_link} 님이 작성한 %{repository_link}에 대한 풀 리퀘스트 #%{pr_number} %{pr_link}은(는) %{pr_state} 상태입니다."
+        referenced_message: "%{github_user_link} 님이 작성한 %{repository_link}에 대한 풀 리퀘스트 #%{pr_number} %{pr_link}은(는) 이 작업 패키지를 참조했습니다."
+        states:
+          closed: 닫음
+          draft: 드래프트
+          merged: 합병됨
+          opened: 열림
+          ready_for_review: 검토 준비 표시됨
+      tab_header:
+        copy_menu:
+          description: 클립보드에 Git 코드 조각 복사됨
+          label: Git 코드 조각
+        git_actions:
+          branch_name: 브랜치 이름
+          cmd: 빈 커밋으로 브랜치 생성
+          commit_message: 커밋 메시지
+          copy_error: "❌ 복사 실패!"
+          copy_success: "✅ 복사됨!"
+          title: Git용 빠른 코드 조각
+        title: 끌어오기 요청
+      tab_prs:
+        empty: 아직 연결된 끌어오기 요청이 없습니다. 끌어오기 요청 설명란에서 코드 <code>OP#%{wp_id}</code>(을)를 사용하여 기존 끌어오기 요청을 연결하거나 새 끌어오기 요청을 만드십시오.
+      work_packages:
+        tab_name: GitHub
+    work_packages:
+      tabs:
+        github: GitHub

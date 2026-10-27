@@ -1,0 +1,104 @@
+# /api/v3/workspaces/{id}/favorite
+---
+delete:
+  parameters:
+    - description: Workspace id
+      example: 1
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  responses:
+    '204':
+      description: |-
+        Returned if the workspace was successfully removed from favorites.
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: |-
+        Returned if the workspace does not exist or the client does not have sufficient permissions
+        to see it.
+
+        **Required permission:** view workspace
+    '403':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not authorized to access this resource.
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** logged in
+  tags:
+    - Workspaces
+    - Favorites
+  description: |-
+    Removes the workspace from the current user's favorites.
+  operationId: Unfavorite_Workspace
+  summary: Unfavorite Workspace
+post:
+  parameters:
+    - description: Workspace id
+      example: 1
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  responses:
+    '204':
+      description: |-
+        Returned if the workspace was successfully added to favorites.
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: |-
+        Returned if the workspace does not exist or the client does not have sufficient permissions
+        to see it.
+
+        **Required permission:** view workspace
+    '403':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not authorized to access this resource.
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** logged in
+  tags:
+    - Workspaces
+    - Favorites
+  description: |-
+    Adds the workspace to the current user's favorites.
+  operationId: Favorite_Workspace
+  summary: Favorite Workspace

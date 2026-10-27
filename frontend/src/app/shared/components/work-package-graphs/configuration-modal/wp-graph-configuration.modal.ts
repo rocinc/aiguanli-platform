@@ -1,0 +1,136 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { ApplicationRef, ChangeDetectionStrategy, Component, ElementRef, InjectionToken, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { OpModalComponent } from 'core-app/shared/components/modal/modal.component';
+import { ConfigurationService } from 'core-app/core/config/configuration.service';
+import {
+  ActiveTabInterface,
+  TabComponent,
+  TabInterface,
+  TabPortalOutlet,
+} from 'core-app/features/work-packages/components/wp-table/configuration-modal/tab-portal-outlet';
+import { LoadingIndicatorService } from 'core-app/core/loading-indicator/loading-indicator.service';
+import { I18nService } from 'core-app/core/i18n/i18n.service';
+import { ComponentType } from '@angular/cdk/portal';
+import { WpGraphConfigurationService } from 'core-app/shared/components/work-package-graphs/configuration/wp-graph-configuration.service';
+import { WpGraphConfiguration } from 'core-app/shared/components/work-package-graphs/configuration/wp-graph-configuration';
+import { WorkPackageNotificationService } from 'core-app/features/work-packages/services/notifications/work-package-notification.service';
+
+export const WpTableConfigurationModalPrependToken = new InjectionToken<ComponentType<any>>('WpTableConfigurationModalPrependComponent');
+
+@Component({
+  templateUrl: '../../../../features/work-packages/components/wp-table/configuration-modal/wp-table-configuration.modal.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
+})
+export class WpGraphConfigurationModalComponent extends OpModalComponent implements OnInit, OnDestroy {
+  prependModalComponent = inject<ComponentType<unknown> | null>(WpTableConfigurationModalPrependToken, { optional: true });
+  readonly I18n = inject(I18nService);
+  readonly injector = inject(Injector);
+  readonly appRef = inject(ApplicationRef);
+  readonly loadingIndicator = inject(LoadingIndicatorService);
+  readonly notificationService = inject(WorkPackageNotificationService);
+  readonly configurationService = inject(ConfigurationService);
+  readonly graphConfiguration = inject(WpGraphConfigurationService);
+
+  public text = {
+    title: this.I18n.t('js.chart.modal_title'),
+    closePopup: this.I18n.t('js.close_popup_title'),
+
+    applyButton: this.I18n.t('js.modals.button_apply'),
+    cancelButton: this.I18n.t('js.modals.button_cancel'),
+  };
+
+  public configuration:WpGraphConfiguration;
+
+  // Get the view child we'll use as the portal host
+  @ViewChild('tabContentOutlet', { static: true }) tabContentOutlet:ElementRef<HTMLElement>;
+
+  // And a reference to the actual portal host interface
+  public tabPortalHost:TabPortalOutlet;
+
+  ngOnInit():void {
+    this.element = this.elementRef.nativeElement;
+
+    this.loadingIndicator.indicator('modal').promise = this.graphConfiguration.loadForms()
+      .then(() => {
+        this.tabPortalHost = new TabPortalOutlet(
+          this.graphConfiguration.tabs,
+          this.tabContentOutlet.nativeElement,
+          this.appRef,
+          this.injector,
+        );
+
+        const initialTabName = this.locals.initialTab;
+        const initialTab = this.availableTabs.find((el) => el.id === initialTabName);
+        this.cdRef.markForCheck();
+        this.switchTo(initialTab || this.availableTabs[0]);
+      });
+  }
+
+  ngOnDestroy():void {
+    this.tabPortalHost.dispose();
+  }
+
+  public get availableTabs():TabInterface[] {
+    return this.tabPortalHost.availableTabs;
+  }
+
+  public get currentTab():ActiveTabInterface|null {
+    return this.tabPortalHost.currentTab;
+  }
+
+  public switchTo(tab:TabInterface):void {
+    this.tabPortalHost.switchTo(tab);
+  }
+
+  public saveChanges():void {
+    this.tabPortalHost.activeComponents.forEach((component:TabComponent) => {
+      component.onSave();
+    });
+
+    this.configuration = this.graphConfiguration.configuration;
+
+    this.service.close();
+  }
+
+  /**
+   * Called when the user attempts to close the modal window.
+   * The service will close this modal if this method returns true
+   * @returns {boolean}
+   */
+  public onClose():boolean {
+    this.afterFocusOn.focus();
+    return true;
+  }
+
+  protected get afterFocusOn():HTMLElement {
+    return this.element;
+  }
+}

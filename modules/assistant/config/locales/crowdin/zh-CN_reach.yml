@@ -1,0 +1,13 @@
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+zh-CN:
+  assistant:
+    reach:
+      mention_hint: "想让助理看看？写 @%{login}"
+    insights:
+      held_reasons:
+        cold_start: "还在熟悉期，先不打扰你"

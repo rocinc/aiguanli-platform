@@ -1,0 +1,7 @@
+---
+da:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Milepæle
+      label_gantt_chart_plural: Gantt-diagrammer

@@ -1,0 +1,14 @@
+development:
+  adapter: postgresql
+
+test:
+  adapter: test
+
+production:
+<% if ENV["REDIS_URL"].present? %>
+  adapter: redis
+  url: <%= ENV["REDIS_URL"] %>
+  channel_prefix: open_project_production
+<% else %>
+  adapter: postgresql
+<% end %>

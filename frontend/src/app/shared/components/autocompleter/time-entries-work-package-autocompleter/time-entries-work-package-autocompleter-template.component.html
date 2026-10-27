@@ -1,0 +1,38 @@
+<ng-template #headerTemplate>
+  <div class="scrollable-tabs">
+    <div class="op-scrollable-tabs--tab-container">
+      <ul class="op-tab-row">
+        <li
+          class="op-tab-row--tab"
+          tabindex="0"
+          (click)="autocompleter.changeMode('all')"
+          (keydown.enter)="$event.preventDefault(); autocompleter.changeMode('all')"
+          (keydown.space)="$event.preventDefault(); autocompleter.changeMode('all')"
+        >
+          <a
+            href="#"
+            class="op-tab-row--link"
+            [class.op-tab-row--link_selected]="autocompleter.mode === 'all'"
+            [textContent]="autocompleter.labelAll"
+          >
+          </a>
+        </li>
+        <li
+          class="op-tab-row--tab"
+          tabindex="0"
+          (click)="autocompleter.changeMode('recent')"
+          (keydown.space)="$event.preventDefault(); autocompleter.changeMode('recent')"
+          (keydown.enter)="$event.preventDefault(); autocompleter.changeMode('recent')"
+        >
+          <a
+            href="#"
+            class="op-tab-row--link"
+            [class.op-tab-row--link_selected]="autocompleter.mode === 'recent'"
+            [textContent]="autocompleter.labelRecent"
+          >
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,70 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+.assistant-source-signals
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-8)
+  margin-top: var(--base-size-8)
+  max-width: 48rem
+
+.assistant-recap
+  margin-bottom: var(--base-size-12)
+  max-width: 48rem
+
+  &--title
+    margin: 0
+    font-size: var(--text-body-size-medium)
+    font-weight: var(--base-text-weight-semibold)
+
+  &--group
+    margin-top: var(--base-size-8)
+
+  &--group-title
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+    font-weight: var(--base-text-weight-normal)
+
+  &--list
+    margin: var(--base-size-4) 0 0
+    padding-left: var(--base-size-20)
+
+  &--older
+    margin-top: var(--base-size-4)
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+    summary
+      cursor: pointer
+
+  &--quiet
+    margin: var(--base-size-4) 0 0
+    color: var(--fgColor-muted)
+
+  &--minutes
+    margin-bottom: var(--base-size-12)
+    max-width: 48rem
+
+.assistant-source-hint
+  display: flex
+  align-items: baseline
+  gap: var(--base-size-8)
+  margin: var(--base-size-4) 0 0
+  color: var(--fgColor-muted)
+  font-size: var(--text-body-size-small)
+
+.assistant-answer
+  margin: var(--base-size-4) 0 0
+  color: var(--fgColor-muted)
+  font-size: var(--text-body-size-small)
+
+  &--summary
+    cursor: pointer
+
+  &--rest
+    margin: var(--base-size-4) 0 var(--base-size-8) var(--base-size-16)

@@ -1,0 +1,56 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+// Scroll header on mobile in and out when user scrolls the container
+export function scrollHeaderOnMobile() {
+  const headerHeight = 55;
+  let prevScrollPos = window.scrollY;
+
+  const scrollableElement = document.getElementById('content-body');
+
+  if (scrollableElement) {
+    scrollableElement.addEventListener('scroll', () => {
+      // Condition needed for safari browser to avoid negative positions
+      const currentScrollPos = scrollableElement.scrollTop < 0 ? 0 : scrollableElement.scrollTop;
+      // Only if sidebar is not opened or search bar is opened
+      if (!(document.querySelector('#main')!.classList.contains('hidden-navigation'))
+        || document.querySelector('.op-app-header')?.classList.contains('op-app-header_search-open')
+        || Math.abs(currentScrollPos - prevScrollPos) <= headerHeight) { // to avoid flickering at the end of the page
+        return;
+      }
+
+      if (prevScrollPos !== undefined && currentScrollPos !== undefined && (prevScrollPos > currentScrollPos)) {
+        // Slide top menu in or out of viewport and change viewport height
+        document.querySelector('#wrapper')!.classList.remove('_header-scrolled');
+      } else {
+        document.querySelector('#wrapper')!.classList.add('_header-scrolled');
+      }
+      prevScrollPos = currentScrollPos;
+    });
+  }
+}

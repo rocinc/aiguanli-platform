@@ -1,0 +1,39 @@
+# Schema: PrincipalCollectionModel
+---
+allOf:
+  - $ref: './offset_paginated_collection_model.yml'
+  - type: object
+    required:
+      - _embedded
+    properties:
+      _embedded:
+        type: object
+        required:
+          - elements
+        properties:
+          elements:
+            type: array
+            items:
+              anyOf:
+                - $ref: './user_model.yml'
+                - $ref: './placeholder_user_model.yml'
+                - $ref: './group_model.yml'
+
+example:
+  _type: Collection
+  total: 3
+  count: 3
+  _links:
+    self:
+      href: '/api/v3/principals'
+  _embedded:
+    elements:
+      - _abbreviated: User resource shortened for brevity
+        _type: User
+        id: 1337
+      - _abbreviated: Group resource shortened for brevity
+        _type: Group
+        id: 1338
+      - _abbreviated: PlaceholderUser resource shortened for brevity
+        _type: PlaceholderUser
+        id: 1339

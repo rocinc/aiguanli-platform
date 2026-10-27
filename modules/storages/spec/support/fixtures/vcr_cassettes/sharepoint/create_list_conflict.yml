@@ -1,0 +1,507 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://login.microsoftonline.com/e36f1dbc-fdae-427e-b61b-0d96ddfb81a4/oauth2/v2.0/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=client_credentials&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default+offline_access&client_id=404e0567-19a1-4a64-b2d1-d3b0c99f2ed9&client_secret=QRB8Q%7Ei.1rID_.MC9FTfRGq-FTE5SgWYsoeLacWf
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '199'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      X-Ms-Request-Id:
+      - 3d88a603-c05e-467a-a42d-09c32e9a1e00
+      X-Ms-Ests-Server:
+      - 2.1.22549.3 - WEULR1 ProdSlices
+      X-Ms-Srs:
+      - 1.P
+      Content-Security-Policy-Report-Only:
+      - object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-zfpS2reCWvHxuiMIt2W6OA'
+        'unsafe-inline' 'unsafe-eval' https://*.msauth.net https://*.msftauth.net
+        https://*.msftauthimages.net https://*.msauthimages.net https://*.msidentity.com
+        https://*.microsoftonline-p.com https://*.microsoftazuread-sso.com https://*.azureedge.net
+        https://*.outlook.com https://*.office.com https://*.office365.com https://*.microsoft.com
+        https://*.bing.com 'report-sample'; report-uri https://csp.microsoft.com/report/ESTS-UX-All
+      X-Xss-Protection:
+      - '0'
+      Set-Cookie:
+      - fpc=AicaGAt6mUlHrGCJrSsav-BZ-dCOAQAAALoaseAOAAAA; expires=Sat, 20-Dec-2025
+        14:20:42 GMT; path=/; secure; HttpOnly; SameSite=None, x-ms-gateway-slice=estsfd;
+        path=/; secure; samesite=none; httponly, stsservicecookie=estsfd; path=/;
+        secure; samesite=none; httponly
+      Date:
+      - Thu, 20 Nov 2025 14:20:42 GMT
+      Content-Length:
+      - '2045'
+    body:
+      encoding: UTF-8
+      string: '{"token_type":"Bearer","expires_in":3599,"ext_expires_in":3599,"access_token":"<ACCESS_TOKEN>"}'
+  recorded_at: Thu, 20 Nov 2025 14:20:42 GMT
+- request:
+    method: post
+    uri: https://graph.microsoft.com/v1.0/sites/ymt6d.sharepoint.com:/sites/OPTest:/lists
+    body:
+      encoding: UTF-8
+      string: '{"displayName":"OpenProject Test","description":"A document library
+        used in testing the Create List Command","list":{"template":"documentLibrary"}}'
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '147'
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+      Content-Encoding:
+      - gzip
+      Etag:
+      - 553f19c7-d049-4826-8047-b9b66c80473d,0
+      Location:
+      - https://ymt6d.sharepoint.com/_api/v2.0/sites('ymt6d.sharepoint.com')/lists('553f19c7-d049-4826-8047-b9b66c80473d')
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - ee4fab20-74c6-425f-b748-3f549ee2b380
+      Client-Request-Id:
+      - ee4fab20-74c6-425f-b748-3f549ee2b380
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"008","RoleInstance":"FR3PEPF00000F2D"}}'
+      Splogid:
+      - 063ddba1-60a8-0000-9865-0c50e6dcbcc9
+      Odata-Version:
+      - '4.0'
+      Date:
+      - Thu, 20 Nov 2025 14:20:43 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)/$entity","@odata.etag":"553f19c7-d049-4826-8047-b9b66c80473d,0","eTag":"553f19c7-d049-4826-8047-b9b66c80473d,0","lastModifiedDateTime":"2025-11-20T14:20:43Z","createdDateTime":"2025-11-20T14:20:43Z","description":"A
+        document library used in testing the Create List Command","id":"553f19c7-d049-4826-8047-b9b66c80473d","name":"OpenProject
+        Test","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/OpenProject%20Test","displayName":"OpenProject
+        Test","parentReference":{"siteId":"ymt6d.sharepoint.com,1099e315-d0c7-47c7-8640-aa9504b70fff,6af246f0-e3be-45ef-b91a-8eca4dcc5d8f"},"list":{"contentTypesEnabled":false,"hidden":false,"template":"documentLibrary"}}'
+  recorded_at: Thu, 20 Nov 2025 14:20:43 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/sites/ymt6d.sharepoint.com:/sites/OPTest:/lists/OpenProject%20Test?$expand=drive&$select=id,name,drive
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+      Content-Encoding:
+      - gzip
+      Etag:
+      - '"553f19c7-d049-4826-8047-b9b66c80473d,0"'
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 5a61405b-993e-4b50-884a-3266d2f24ec6
+      Client-Request-Id:
+      - 5a61405b-993e-4b50-884a-3266d2f24ec6
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"008","RoleInstance":"FR3PEPF00000F2D"}}'
+      Splogid:
+      - 063ddba1-50c8-0000-9865-0d69dc935dd1
+      Odata-Version:
+      - '4.0'
+      Date:
+      - Thu, 20 Nov 2025 14:20:43 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)(id,name,drive,drive())/$entity","@odata.etag":"\"553f19c7-d049-4826-8047-b9b66c80473d,0\"","id":"553f19c7-d049-4826-8047-b9b66c80473d","name":"OpenProject
+        Test","drive@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)(''553f19c7-d049-4826-8047-b9b66c80473d'')/drive/$entity","drive":{"createdDateTime":"2025-11-20T14:20:43Z","description":"A
+        document library used in testing the Create List Command","id":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY_HGT9VSdAmSIBHubZsgEc9","lastModifiedDateTime":"2025-11-20T14:20:43Z","name":"OpenProject
+        Test","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/OpenProject%20Test","driveType":"documentLibrary","createdBy":{"user":{"displayName":"SharePoint
+        App"}},"owner":{"group":{"email":"OPTest@ymt6d.onmicrosoft.com","id":"5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb","displayName":"OP
+        Test Owners"}},"quota":{"deleted":6683269,"remaining":27487613169971,"state":"normal","total":27487790694400,"used":170841160}}}'
+  recorded_at: Thu, 20 Nov 2025 14:20:43 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY_HGT9VSdAmSIBHubZsgEc9/root/permissions
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+      Content-Encoding:
+      - gzip
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 37e54dee-af23-426f-9c37-a2bb1d4b9927
+      Client-Request-Id:
+      - 37e54dee-af23-426f-9c37-a2bb1d4b9927
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"008","RoleInstance":"FR3PEPF00000F2D"}}'
+      Link:
+      - <https://developer.microsoft-tst.com/en-us/graph/changes?$filterby=v1.0,Removal&from=2021-09-01&to=2021-10-01>;rel="deprecation";type="text/html",
+        <https://developer.microsoft-tst.com/en-us/graph/changes?$filterby=v1.0,Removal&from=2021-09-01&to=2021-10-01>;rel="deprecation";type="text/html"
+      Deprecation:
+      - Fri, 03 Sep 2021 23:59:59 GMT
+      Sunset:
+      - Sun, 01 Oct 2023 23:59:59 GMT
+      Splogid:
+      - 063ddba1-20d4-0000-9963-7960aad7b4fb
+      Odata-Version:
+      - '4.0'
+      Date:
+      - Thu, 20 Nov 2025 14:20:43 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#drives(''b%21FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY_HGT9VSdAmSIBHubZsgEc9'')/root/permissions","value":[{"id":"T1AgVGVzdCBPd25lcnM","roles":["owner"],"shareId":"T1AgVGVzdCBPd25lcnM","grantedToV2":{"siteGroup":{"displayName":"OP
+        Test Owners","id":"3","loginName":"OP Test Owners"}},"grantedTo":{"user":{"displayName":"OP
+        Test Owners"}},"inheritedFrom":{}},{"id":"T1AgVGVzdCBWaXNpdG9ycw","roles":["read"],"shareId":"T1AgVGVzdCBWaXNpdG9ycw","grantedToV2":{"siteGroup":{"displayName":"OP
+        Test Visitors","id":"4","loginName":"OP Test Visitors"}},"grantedTo":{"user":{"displayName":"OP
+        Test Visitors"}},"inheritedFrom":{}},{"id":"T1AgVGVzdCBNZW1iZXJz","roles":["write"],"shareId":"T1AgVGVzdCBNZW1iZXJz","grantedToV2":{"siteGroup":{"displayName":"OP
+        Test Members","id":"5","loginName":"OP Test Members"}},"grantedTo":{"user":{"displayName":"OP
+        Test Members"}},"inheritedFrom":{}},{"id":"Yzowby5jfGZlZGVyYXRlZGRpcmVjdG9yeWNsYWltcHJvdmlkZXJ8NWRmYjQyNjktZDNlMy00YzcwLTgzZjUtYzQ5MzdmZjZkY2RiX28","roles":["owner"],"shareId":"Yzowby5jfGZlZGVyYXRlZGRpcmVjdG9yeWNsYWltcHJvdmlkZXJ8NWRmYjQyNjktZDNlMy00YzcwLTgzZjUtYzQ5MzdmZjZkY2RiX28","grantedToV2":{"group":{"@odata.type":"#microsoft.graph.sharePointIdentity","displayName":"OP
+        Test Owners","email":"OPTest@ymt6d.onmicrosoft.com","id":"5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb"},"siteUser":{"displayName":"OP
+        Test Owners","email":"OPTest@ymt6d.onmicrosoft.com","id":"6","loginName":"c:0o.c|federateddirectoryclaimprovider|5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb_o"}},"grantedTo":{"user":{"displayName":"OP
+        Test Owners","email":"OPTest@ymt6d.onmicrosoft.com","id":"5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb"}},"inheritedFrom":{}}]}'
+  recorded_at: Thu, 20 Nov 2025 14:20:43 GMT
+- request:
+    method: delete
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY_HGT9VSdAmSIBHubZsgEc9/root/permissions/T1AgVGVzdCBPd25lcnM
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 161aadeb-3b68-4246-af06-cc1781c53627
+      Client-Request-Id:
+      - 161aadeb-3b68-4246-af06-cc1781c53627
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"008","RoleInstance":"FR3PEPF00000F2D"}}'
+      Link:
+      - <https://developer.microsoft-tst.com/en-us/graph/changes?$filterby=v1.0,Removal&from=2021-09-01&to=2021-10-01>;rel="deprecation";type="text/html",
+        <https://developer.microsoft-tst.com/en-us/graph/changes?$filterby=v1.0,Removal&from=2021-09-01&to=2021-10-01>;rel="deprecation";type="text/html"
+      Deprecation:
+      - Fri, 03 Sep 2021 23:59:59 GMT
+      Sunset:
+      - Sun, 01 Oct 2023 23:59:59 GMT
+      Splogid:
+      - 063ddba1-80de-0000-8a2e-06d135fb33dc
+      Date:
+      - Thu, 20 Nov 2025 14:20:43 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Thu, 20 Nov 2025 14:20:44 GMT
+- request:
+    method: delete
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY_HGT9VSdAmSIBHubZsgEc9/root/permissions/T1AgVGVzdCBWaXNpdG9ycw
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 1f82ecf1-a58b-4891-9dc9-3d61ecee54fd
+      Client-Request-Id:
+      - 1f82ecf1-a58b-4891-9dc9-3d61ecee54fd
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"008","RoleInstance":"FR3PEPF00000F2D"}}'
+      Link:
+      - <https://developer.microsoft-tst.com/en-us/graph/changes?$filterby=v1.0,Removal&from=2021-09-01&to=2021-10-01>;rel="deprecation";type="text/html",
+        <https://developer.microsoft-tst.com/en-us/graph/changes?$filterby=v1.0,Removal&from=2021-09-01&to=2021-10-01>;rel="deprecation";type="text/html"
+      Deprecation:
+      - Fri, 03 Sep 2021 23:59:59 GMT
+      Sunset:
+      - Sun, 01 Oct 2023 23:59:59 GMT
+      Splogid:
+      - 063ddba1-20ef-0000-97a9-abe029fdcc1d
+      Date:
+      - Thu, 20 Nov 2025 14:20:43 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Thu, 20 Nov 2025 14:20:44 GMT
+- request:
+    method: delete
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY_HGT9VSdAmSIBHubZsgEc9/root/permissions/T1AgVGVzdCBNZW1iZXJz
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - f0598ffc-9d34-4dc2-ad52-420fc3bdbe7e
+      Client-Request-Id:
+      - f0598ffc-9d34-4dc2-ad52-420fc3bdbe7e
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"008","RoleInstance":"FR3PEPF00000F2D"}}'
+      Link:
+      - <https://developer.microsoft-tst.com/en-us/graph/changes?$filterby=v1.0,Removal&from=2021-09-01&to=2021-10-01>;rel="deprecation";type="text/html",
+        <https://developer.microsoft-tst.com/en-us/graph/changes?$filterby=v1.0,Removal&from=2021-09-01&to=2021-10-01>;rel="deprecation";type="text/html"
+      Deprecation:
+      - Fri, 03 Sep 2021 23:59:59 GMT
+      Sunset:
+      - Sun, 01 Oct 2023 23:59:59 GMT
+      Splogid:
+      - 063ddba1-10fa-0000-8a2e-0793fdba5069
+      Date:
+      - Thu, 20 Nov 2025 14:20:44 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Thu, 20 Nov 2025 14:20:44 GMT
+- request:
+    method: delete
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY_HGT9VSdAmSIBHubZsgEc9/root/permissions/Yzowby5jfGZlZGVyYXRlZGRpcmVjdG9yeWNsYWltcHJvdmlkZXJ8NWRmYjQyNjktZDNlMy00YzcwLTgzZjUtYzQ5MzdmZjZkY2RiX28
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 2ad71bb9-f343-402d-9b4f-3e6768353220
+      Client-Request-Id:
+      - 2ad71bb9-f343-402d-9b4f-3e6768353220
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"008","RoleInstance":"FR3PEPF00000F2D"}}'
+      Link:
+      - <https://developer.microsoft-tst.com/en-us/graph/changes?$filterby=v1.0,Removal&from=2021-09-01&to=2021-10-01>;rel="deprecation";type="text/html",
+        <https://developer.microsoft-tst.com/en-us/graph/changes?$filterby=v1.0,Removal&from=2021-09-01&to=2021-10-01>;rel="deprecation";type="text/html"
+      Deprecation:
+      - Fri, 03 Sep 2021 23:59:59 GMT
+      Sunset:
+      - Sun, 01 Oct 2023 23:59:59 GMT
+      Splogid:
+      - 073ddba1-f00b-0000-9865-00e42b74f8be
+      Date:
+      - Thu, 20 Nov 2025 14:20:44 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Thu, 20 Nov 2025 14:20:44 GMT
+- request:
+    method: post
+    uri: https://graph.microsoft.com/v1.0/sites/ymt6d.sharepoint.com:/sites/OPTest:/lists
+    body:
+      encoding: UTF-8
+      string: '{"displayName":"OpenProject Test","description":"A document library
+        used in testing the Create List Command","list":{"template":"documentLibrary"}}'
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '147'
+  response:
+    status:
+      code: 409
+      message: Conflict
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/json
+      Content-Encoding:
+      - gzip
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 740d636b-a9e9-4eee-9eb9-80fd16cf74aa
+      Client-Request-Id:
+      - 740d636b-a9e9-4eee-9eb9-80fd16cf74aa
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"008","RoleInstance":"FR3PEPF00000CAE"}}'
+      Splogid:
+      - 073ddba1-8025-0000-8a2e-00fbea3d7fe0
+      Date:
+      - Thu, 20 Nov 2025 14:20:45 GMT
+    body:
+      encoding: UTF-8
+      string: '{"error":{"code":"nameAlreadyExists","message":"Name already exists","innerError":{"date":"2025-11-20T14:20:45","request-id":"740d636b-a9e9-4eee-9eb9-80fd16cf74aa","client-request-id":"740d636b-a9e9-4eee-9eb9-80fd16cf74aa"}}}'
+  recorded_at: Thu, 20 Nov 2025 14:20:45 GMT
+- request:
+    method: delete
+    uri: https://graph.microsoft.com/v1.0/sites/ymt6d.sharepoint.com:/sites/OPTest:/lists/OpenProject%20Test
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - b74a37c8-75b0-4c7c-aae3-bad8b66aef61
+      Client-Request-Id:
+      - b74a37c8-75b0-4c7c-aae3-bad8b66aef61
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"008","RoleInstance":"FR3PEPF00000CB9"}}'
+      Splogid:
+      - 073ddba1-b03f-0000-9865-0bd200327e72
+      Date:
+      - Thu, 20 Nov 2025 14:20:45 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Thu, 20 Nov 2025 14:20:45 GMT
+recorded_with: VCR 6.3.1

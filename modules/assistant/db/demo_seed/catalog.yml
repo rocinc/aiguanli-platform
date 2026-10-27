@@ -1,0 +1,232 @@
+# 演示数据主干（backbone）目录：本步骤新增的每个工作包一条。第一版，后续改动会通知 main。
+#
+# 约定
+# - id 固定（201 起），重建后编号不变；其余步骤既可按 id 引用，也可按 subject 查找（subject 在 quill 内唯一）。
+# - 既有 #42–#121 编号不变；#122–#124 属于 research-notes 项目，不动。
+# - 日期全部相对：sprint 内用 s/d（迭代内第几个工作日，0=迭代第一天、9=最后一天）；backlog 用 born（相对本周一 M 的天数）。
+# - type: epic feature story task bug milestone；status: 终态（closed=已关闭）。
+# - points 只落在 story 与 bug 上（斐波那契）；task/feature/epic 不挂点数（其工时在 est）。
+# - est=估算工时(小时)，actual=实际工时(小时，仅已关闭条目)。工时记录(TimeEntry)由 ledger 依据 actual 生成，backbone 不造。
+# - Ben 的 RAG/续写类任务 actual≈1.6×est（标 T3，共 12 个样本）；其余人 0.9–1.2×。
+# - 速度：S1 18、S2 22、S3 25（本文件）；S4 27、S5 31（既有条目补点，见 existing）；S6 承诺 38 完成 29。
+# - 迭代日期：S1 M-77…M-66、S2 M-63…M-52、S3 M-49…M-38（S4 起沿用既有 M-35…）。
+# - 版本：v0.9 内部预览版（S1–S3 历史条目，生效日 M-38，已关闭）；既有 21=v1.1 商业化版(M+11)、22=v2.0 团队版(M+67)。
+
+sprints:
+  - { name: "Sprint 1", from: -77, to: -66, velocity: 18, goal: "推理服务与网关可跑通" }
+  - { name: "Sprint 2", from: -63, to: -52, velocity: 22, goal: "文档上传与解析" }
+  - { name: "Sprint 3", from: -49, to: -38, velocity: 25, goal: "向量库与切片基线" }
+  - { name: "Sprint 4", from: -35, to: -24, velocity: 27, goal: "对话主链路与知识库入库：单轮生成与流式输出打通，文档解析、切片、向量化入库跑起来" }
+  - { name: "Sprint 5", from: -21, to: -10, velocity: 31, goal: "引用溯源与幻觉拦截，风格指令：每个论断能点回原文，无依据时不硬编，用户可按语气改写" }
+  - { name: "Sprint 6", from: -7, to: 4, commit: 38, velocity: 29, goal: "商业化闭环与协作编辑起步：用量、套餐、配额跑通，多人同时编辑与评论可用", status: "active（周一关闭）" }
+  - { name: "Sprint 7", from: 7, to: 18, goal: "守住 v1.1 发布：收尾用量统计、并发超扣与配额告警等商业化未完成项，其余范围按容量取舍", status: "in_planning" }
+
+# ---------------------------------------------------------------------------
+# 对既有 #42–#121 的改动（backbone 负责，其余步骤据此对齐叙事）
+#   points：补故事点；S6 末周（M..M+4）补状态迁移；69 与 81 移出 S6。
+# ---------------------------------------------------------------------------
+existing:
+  points:
+    S4: { 43: 8, 44: 5, 58: 8, 59: 5, 47: 1 }                      # 27
+    S5: { 48: 5, 49: 3, 52: 5, 63: 5, 64: 5, 65: 5, 62: 3 }        # 31
+    S6: { 54: 5, 55: 5, 74: 5, 82: 5, 68: 2, 79: 2, 94: 1, 108: 1, 73: 8, 100: 1 }   # 29+9；另有新增 342(2)、343(1) 已在迭代前期关闭，合计 38
+    S7: { 56: 5, 70: 5, 77: 5, 91: 3, 93: 3, 112: 3 }              # 112 由 S6 改入 S7（待产品确认封面是否算页）
+    backlog: { 71: 8, 78: 8, 83: 8, 84: 5, 69: 8, 81: 13 }
+  moved_out_of_s6:
+    69: "进入 下一迭代(Next Up) 桶；S6 计划会决定不排入本迭代，Ben 仍在做，8 点"
+    81: "进入 待打磨(Refinement) 桶；13 点过大，待拆分"
+    112: "S6 → S7"
+  s6_final_week:      # 末周状态迁移：工作包 => [[相对 M 的天数, 新状态], ...]；时间会截断到"此刻"之前
+    86: [[0, closed]]
+    54: [[1, closed]]
+    68: [[1, closed]]
+    104: [[1, closed]]
+    103: [[1, doing], [2, closed]]
+    87: [[0, doing], [1, closed]]
+    99: [[1, doing], [2, devdone], [3, closed]]
+    110: [[1, devdone], [2, closed]]
+    108: [[1, testing], [2, closed]]
+    74: [[2, closed]]
+    79: [[2, closed]]
+    94: [[2, testing], [3, closed]]
+    89: [[2, devdone], [3, closed]]
+    55: [[3, testing], [4, closed]]
+    82: [[3, testing], [4, closed]]
+  s6_progress:        # 仍未完成的任务在末周的剩余工时变化：工作包 => [[天数, 剩余小时]]
+    88: [[3, 5]]
+    75: [[3, 8]]
+    116: [[3, 3]]
+  s6_unfinished:      # 带入 S7 的 9 点
+    73: "8 点，Bob，进展停滞（T1 主线）"
+    100: "1 点，Bob，并发超扣缺陷"
+  s6_still_open_no_points: [75, 88, 116]   # 任务，不计点
+
+# ---------------------------------------------------------------------------
+# S1–S3 历史条目（全部已关闭）
+# ---------------------------------------------------------------------------
+history:
+  # --- 工程基础设施（新史诗）---
+  - { id: 200, key: epic-infra, subject: "工程基础设施与质量保障", type: epic, status: doing, sprint: ~, assignee: sam, points: ~, parent: ~, version: ~, born: -80, desc: "流水线、监控、日志与开发环境，让团队每次合并都有底。", commenters: [ada, sam] }
+
+  # --- Sprint 1：推理服务与网关可跑通（18 点）---
+  - { id: 201, key: s1-inference-feature, subject: "推理服务与模型网关（基础版）", type: feature, status: closed, sprint: 1, assignee: frank, points: ~, parent: 42, version: v0.9, s: 0, d: 9, est: ~, desc: "把基座模型包成可调用的服务，并在前面放一层统一入口。", commenters: [ada, frank, sam] }
+  - { id: 202, key: s1-local-inference, subject: "本地部署开源基座模型并跑通推理", type: story, status: closed, sprint: 1, assignee: frank, points: 5, parent: 201, version: v0.9, s: 0, d: 6, est: 20, actual: 22, desc: "在内网 GPU 机器上部署一个开源基座模型，命令行能完成一次完整推理。", commenters: [frank, ada, bob] }
+  - { id: 203, key: s1-container, subject: "编写推理服务容器镜像与启动脚本", type: task, status: closed, sprint: 1, assignee: bob, parent: 202, version: v0.9, s: 0, d: 2, est: 6, actual: 7, desc: "把推理服务打成镜像，一条命令启动，环境变量可配置。", commenters: [bob, frank] }
+  - { id: 204, key: s1-quant, subject: "模型量化方案与显存占用测算", type: task, status: closed, sprint: 1, assignee: mia, parent: 202, version: v0.9, s: 1, d: 4, est: 8, actual: 9, desc: "比较几种量化方案在显存和输出质量上的差异，给出建议配置。", commenters: [mia, frank] }
+  - { id: 218, key: s1-selection-review, subject: "技术选型评审：基座模型与推理框架", type: task, status: closed, sprint: 1, assignee: frank, parent: 201, version: v0.9, s: 0, d: 1, est: 6, actual: 6, desc: "评审结论写入维基，推理框架选定，基座模型先用同一量级的开源模型。", commenters: [frank, bob] }
+  - { id: 205, key: s1-gateway, subject: "网关骨架：请求转发、健康检查与超时处理", type: story, status: closed, sprint: 1, assignee: bob, points: 5, parent: 201, version: v0.9, s: 1, d: 7, est: 20, actual: 23, desc: "网关能把请求转发给推理服务，上游不健康时快速失败，超时有明确错误。", commenters: [bob, ada, frank] }
+  - { id: 206, key: s1-gw-routing, subject: "网关路由与上游健康探测", type: task, status: closed, sprint: 1, assignee: bob, parent: 205, version: v0.9, s: 1, d: 4, est: 8, actual: 9, desc: "按路径转发，定时探测上游，摘除不健康节点。", commenters: [bob, frank] }
+  - { id: 207, key: s1-gw-log, subject: "网关请求与响应日志规范", type: task, status: closed, sprint: 1, assignee: bob, parent: 205, version: v0.9, s: 4, d: 6, est: 4, actual: 4, desc: "统一请求编号、耗时、状态码的日志字段，方便后面排查。", commenters: [bob, frank] }
+  - { id: 208, key: s1-loadtest, subject: "压测脚本初版（并发 20）", type: task, status: closed, sprint: 1, assignee: bob, parent: 205, version: v0.9, s: 6, d: 8, est: 6, actual: 7, desc: "用并发 20 的脚本跑网关，记录延迟分布和错误率。", commenters: [bob, frank] }
+  - { id: 213, key: s1-gw-leak, subject: "网关在上游超时后不释放连接", type: bug, status: closed, sprint: 1, assignee: bob, points: 1, parent: 205, version: v0.9, s: 6, d: 8, est: 4, actual: 5, desc: "压测中发现上游超时后连接一直占着，十几分钟后网关耗尽连接。", commenters: [bob, sam, frank] }
+  - { id: 209, key: s1-chat-panel, subject: "编辑器内最小对话面板（可发送、可展示回复）", type: story, status: closed, sprint: 1, assignee: fiona, points: 5, parent: 42, version: v0.9, s: 1, d: 8, est: 18, actual: 19, desc: "编辑器侧边栏里能输入一句话、收到完整回复，先不做流式。", commenters: [fiona, ada, ben] }
+  - { id: 210, key: s1-panel-ui, subject: "对话面板静态界面与消息气泡", type: task, status: closed, sprint: 1, assignee: fiona, parent: 209, version: v0.9, s: 1, d: 4, est: 8, actual: 8, desc: "面板布局、输入框、消息气泡的静态样式。", commenters: [fiona, ben] }
+  - { id: 211, key: s1-panel-integ, subject: "对话面板对接网关联调", type: task, status: closed, sprint: 1, assignee: fiona, parent: 209, version: v0.9, s: 5, d: 8, est: 6, actual: 8, desc: "面板通过网关调用推理服务，联调鉴权头与错误码。", commenters: [fiona, ben] }
+  - { id: 212, key: s1-panel-states, subject: "对话面板错误态与空态", type: task, status: closed, sprint: 1, assignee: fiona, parent: 209, version: v0.9, s: 7, d: 8, est: 4, actual: 4, desc: "网络失败、超时、无历史时分别给出可理解的提示。", commenters: [fiona, ben] }
+  - { id: 214, key: s1-ci, subject: "CI 流水线与代码规范落地", type: story, status: closed, sprint: 1, assignee: sam, points: 2, parent: 200, version: v0.9, s: 0, d: 3, est: 8, actual: 8, desc: "每次提交自动跑 lint 与单测，主干保护生效。", commenters: [sam, ada] }
+  - { id: 215, key: s1-ci-backend, subject: "后端 lint 与单测接入流水线", type: task, status: closed, sprint: 1, assignee: sam, parent: 214, version: v0.9, s: 0, d: 2, est: 4, actual: 4, desc: "后端仓库流水线：格式检查、静态检查、单测。", commenters: [sam, ada] }
+  - { id: 216, key: s1-ci-frontend, subject: "前端 lint 与构建缓存", type: task, status: closed, sprint: 1, assignee: fiona, parent: 214, version: v0.9, s: 1, d: 3, est: 4, actual: 5, desc: "前端仓库流水线接入 lint，并缓存依赖，把构建时间压到可接受。", commenters: [fiona, sam, ben] }
+  - { id: 217, key: s1-devenv-doc, subject: "开发环境一键搭建文档", type: task, status: closed, sprint: 1, assignee: sam, parent: 200, version: v0.9, s: 3, d: 5, est: 4, actual: 4, desc: "新成员按文档半小时内能把本地环境跑起来。", commenters: [sam, ada] }
+  - { id: 219, key: s1-metrics, subject: "监控埋点：请求耗时与错误率面板", type: task, status: closed, sprint: 1, assignee: sam, parent: 200, version: v0.9, s: 7, d: 9, est: 6, actual: 7, desc: "网关与推理服务的耗时、错误率接入监控面板。", commenters: [sam, ada] }
+
+  # --- Sprint 2：文档上传与解析（22 点）---
+  - { id: 220, key: s2-doc-intake-feature, subject: "文档接入（原型）", type: feature, status: closed, sprint: 2, assignee: ben, points: ~, parent: 57, version: v0.9, s: 0, d: 9, desc: "先能上传、能解析出正文，格式和表格的细节留给后面。", commenters: [ada, ben, sam] }
+  - { id: 221, key: s2-pdf-parse, subject: "PDF 上传与文本层解析", type: story, status: closed, sprint: 2, assignee: ben, points: 5, parent: 220, version: v0.9, s: 0, d: 7, est: 16, actual: 26, tags: [T3], desc: "用户上传带文本层的 PDF，系统解析出正文并保存。", commenters: [ben, ada, frank] }
+  - { id: 222, key: s2-upload-api, subject: "上传接口与对象存储", type: task, status: closed, sprint: 2, assignee: bob, parent: 221, version: v0.9, s: 0, d: 3, est: 8, actual: 9, desc: "分片上传接口，文件落对象存储，返回文档编号。", commenters: [bob, ben, frank] }
+  - { id: 223, key: s2-pdf-text, subject: "PDF 文本层提取与清洗", type: task, status: closed, sprint: 2, assignee: ben, parent: 221, version: v0.9, s: 1, d: 5, est: 6, actual: 10, tags: [T3], desc: "提取正文，去页眉页脚与断行连字符。", commenters: [ben, frank] }
+  - { id: 224, key: s2-parse-store, subject: "解析结果入库与状态回写", type: task, status: closed, sprint: 2, assignee: ben, parent: 221, version: v0.9, s: 4, d: 7, est: 4, actual: 7, tags: [T3], desc: "解析完成后写库，并把处理状态回写给上传方。", commenters: [ben, frank] }
+  - { id: 225, key: s2-parse-tests, subject: "解析服务单元测试补齐", type: task, status: closed, sprint: 2, assignee: ben, parent: 221, version: v0.9, s: 6, d: 8, est: 4, actual: 5, desc: "补齐解析服务的单元测试，覆盖空文件、加密文件、超长文件。", commenters: [ben, frank] }
+  - { id: 226, key: s2-docx-md, subject: "DOCX 与 Markdown 解析", type: story, status: closed, sprint: 2, assignee: ben, points: 5, parent: 220, version: v0.9, s: 2, d: 9, est: 14, actual: 23, tags: [T3], desc: "另外两种常见格式也能解析出正文和标题层级。", commenters: [ben, ada, frank] }
+  - { id: 227, key: s2-docx-heading, subject: "DOCX 标题层级识别", type: task, status: closed, sprint: 2, assignee: ben, parent: 226, version: v0.9, s: 2, d: 6, est: 6, actual: 10, tags: [T3], desc: "按样式识别一到四级标题，样式缺失时按字号推断。", commenters: [ben, frank] }
+  - { id: 228, key: s2-md-links, subject: "Markdown 解析与链接保留", type: task, status: closed, sprint: 2, assignee: ben, parent: 226, version: v0.9, s: 5, d: 7, est: 4, actual: 6, tags: [T3], desc: "解析 Markdown 并保留链接、代码块与列表结构。", commenters: [ben, frank] }
+  - { id: 229, key: s2-parse-metrics, subject: "解析耗时统计埋点", type: task, status: closed, sprint: 2, assignee: ben, parent: 226, version: v0.9, s: 7, d: 8, est: 4, actual: 5, desc: "按格式统计解析耗时，接入监控面板。", commenters: [ben, frank] }
+  - { id: 236, key: s2-docx-filename, subject: "DOCX 中文文件名解析后乱码", type: bug, status: closed, sprint: 2, assignee: ben, points: 1, parent: 226, version: v0.9, s: 7, d: 9, est: 3, actual: 5, tags: [T3], desc: "上传的文件名含中文时，解析结果里的标题字段出现乱码。", commenters: [ben, sam, frank] }
+  - { id: 230, key: s2-upload-ux, subject: "上传进度与失败重试交互", type: story, status: closed, sprint: 2, assignee: fiona, points: 3, parent: 220, version: v0.9, s: 2, d: 7, est: 12, actual: 13, desc: "上传时看得到进度，失败后能一键重试，不用重新选文件。", commenters: [fiona, ada, ben] }
+  - { id: 231, key: s2-upload-widget, subject: "上传组件与进度条", type: task, status: closed, sprint: 2, assignee: fiona, parent: 230, version: v0.9, s: 2, d: 5, est: 6, actual: 7, desc: "拖拽上传组件，分片进度汇总成一条进度条。", commenters: [fiona, ben] }
+  - { id: 232, key: s2-upload-retry, subject: "上传失败重试与错误文案", type: task, status: closed, sprint: 2, assignee: fiona, parent: 230, version: v0.9, s: 5, d: 7, est: 4, actual: 4, desc: "失败原因分类提示：网络、过大、格式不支持。", commenters: [fiona, ben] }
+  - { id: 233, key: s2-doc-list, subject: "文档库列表与状态展示", type: story, status: closed, sprint: 2, assignee: fiona, points: 3, parent: 220, version: v0.9, s: 5, d: 9, est: 10, actual: 11, desc: "文档库列表显示名称、格式、大小与解析状态。", commenters: [fiona, ada, ben] }
+  - { id: 234, key: s2-doc-paging, subject: "文档库列表分页", type: task, status: closed, sprint: 2, assignee: fiona, parent: 233, version: v0.9, s: 7, d: 8, est: 3, actual: 3, desc: "列表分页与按状态筛选。", commenters: [fiona, ben] }
+  - { id: 235, key: s2-upload-20mb, subject: "超过 20MB 的文件上传静默失败", type: bug, status: closed, sprint: 2, assignee: bob, points: 2, parent: 222, version: v0.9, s: 3, d: 5, est: 5, actual: 5, desc: "上传超过 20MB 的文件，进度走完后没有任何提示，文档也没出现。", commenters: [bob, sam, frank] }
+  - { id: 240, key: s2-upload-whitelist, subject: "上传限流与文件类型白名单", type: task, status: closed, sprint: 2, assignee: bob, parent: 222, version: v0.9, s: 6, d: 8, est: 4, actual: 4, desc: "限制单用户上传频率，只放行 PDF、DOCX、MD。", commenters: [bob, frank] }
+  - { id: 237, key: s2-session-model, subject: "对话会话基础数据模型与存储", type: story, status: closed, sprint: 2, assignee: frank, points: 3, parent: 42, version: v0.9, s: 0, d: 5, est: 12, actual: 12, desc: "会话与消息的数据模型，支撑后面的多轮对话。", commenters: [frank, ada, bob] }
+  - { id: 238, key: s2-session-migration, subject: "会话表结构与迁移脚本", type: task, status: closed, sprint: 2, assignee: bob, parent: 237, version: v0.9, s: 0, d: 2, est: 6, actual: 6, desc: "会话、消息两张表，含索引与回滚脚本。", commenters: [bob, frank] }
+  - { id: 239, key: s2-parse-alert, subject: "解析失败日志与告警接入", type: task, status: closed, sprint: 2, assignee: sam, parent: 200, version: v0.9, s: 6, d: 9, est: 5, actual: 6, desc: "解析失败率超过阈值时在群里告警。", commenters: [sam, ada] }
+
+  # --- Sprint 3：向量库与切片基线（25 点）---
+  - { id: 241, key: s3-vector-feature, subject: "向量检索基线", type: feature, status: closed, sprint: 3, assignee: mia, points: ~, parent: 57, version: v0.9, s: 0, d: 9, desc: "用本地索引把检索链路先跑通，选型和调优留给后面的迭代。", commenters: [ada, mia, sam] }
+  - { id: 242, key: s3-embedding, subject: "文本嵌入模型选型与评估", type: story, status: closed, sprint: 3, assignee: mia, points: 5, parent: 241, version: v0.9, s: 0, d: 5, est: 16, actual: 17, desc: "比较几种嵌入模型在中文语料上的召回，给出推荐。", commenters: [mia, ada, frank] }
+  - { id: 243, key: s3-embed-compare, subject: "三种嵌入模型召回对比实验", type: task, status: closed, sprint: 3, assignee: mia, parent: 242, version: v0.9, s: 0, d: 3, est: 10, actual: 11, desc: "同一批问题、三个模型，比较召回率和延迟。", commenters: [mia, frank] }
+  - { id: 244, key: s3-evalset-v0, subject: "评测集初版整理（50 题）", type: task, status: closed, sprint: 3, assignee: mia, parent: 242, version: v0.9, s: 2, d: 5, est: 6, actual: 7, desc: "整理 50 个真实问题和标准答案，作为后续评测的起点。", commenters: [mia, frank] }
+  - { id: 245, key: s3-faiss, subject: "本地向量索引原型（Faiss）与检索接口", type: story, status: closed, sprint: 3, assignee: ben, points: 5, parent: 241, version: v0.9, s: 1, d: 9, est: 20, actual: 33, tags: [T3], desc: "文档切片向量化后写入本地索引，提供按问题检索的接口。", commenters: [ben, ada, frank] }
+  - { id: 246, key: s3-faiss-build, subject: "Faiss 索引构建与持久化", type: task, status: closed, sprint: 3, assignee: ben, parent: 245, version: v0.9, s: 1, d: 5, est: 8, actual: 14, tags: [T3], desc: "批量构建索引并落盘，重启后可加载。", commenters: [ben, frank] }
+  - { id: 247, key: s3-search-api, subject: "检索接口与参数校验", type: task, status: closed, sprint: 3, assignee: ben, parent: 245, version: v0.9, s: 5, d: 7, est: 6, actual: 9, tags: [T3], desc: "按问题返回前 N 条片段，N 与阈值可配置并做校验。", commenters: [ben, frank] }
+  - { id: 248, key: s3-embed-batch, subject: "嵌入批处理与失败重试", type: task, status: closed, sprint: 3, assignee: ben, parent: 245, version: v0.9, s: 6, d: 8, est: 4, actual: 5, desc: "批量请求嵌入服务，失败片段按退避重试。", commenters: [ben, frank] }
+  - { id: 249, key: s3-reindex-script, subject: "索引重建脚本", type: task, status: closed, sprint: 3, assignee: bob, parent: 245, version: v0.9, s: 4, d: 6, est: 4, actual: 4, desc: "切片策略变化后一键重建整个索引。", commenters: [bob, ben, frank] }
+  - { id: 250, key: s3-search-doc, subject: "检索接口使用说明（内部）", type: task, status: closed, sprint: 3, assignee: ben, parent: 245, version: v0.9, s: 8, d: 9, est: 2, actual: 2, desc: "给前端和网关同事看的接口说明与示例。", commenters: [ben, frank] }
+  - { id: 259, key: s3-index-race, subject: "检索接口并发下索引读写冲突", type: bug, status: closed, sprint: 3, assignee: ben, points: 2, parent: 245, version: v0.9, s: 7, d: 9, est: 6, actual: 11, tags: [T3], desc: "重建索引时并发检索会读到半成品，偶发返回空结果。", commenters: [ben, sam, frank] }
+  - { id: 251, key: s3-chunk-baseline, subject: "定长切片基线与重叠窗口", type: story, status: closed, sprint: 3, assignee: mia, points: 3, parent: 241, version: v0.9, s: 1, d: 6, est: 12, actual: 13, desc: "按固定长度加重叠窗口切片，作为后面按标题切片的对照基线。", commenters: [mia, ada, frank] }
+  - { id: 252, key: s3-chunk-report, subject: "切片参数对比报告", type: task, status: closed, sprint: 3, assignee: mia, parent: 251, version: v0.9, s: 5, d: 6, est: 4, actual: 4, desc: "不同长度和重叠比例下召回的对比，结论写进维基。", commenters: [mia, frank] }
+  - { id: 253, key: s3-context-rag, subject: "对话上下文拼接与简单检索增强", type: story, status: closed, sprint: 3, assignee: frank, points: 5, parent: 42, version: v0.9, s: 3, d: 9, est: 18, actual: 20, desc: "对话时把检索到的片段拼进提示词，回答带上依据（原型）。", commenters: [frank, ada, bob] }
+  - { id: 254, key: s3-prompt-template, subject: "上下文拼接模板与长度预算", type: task, status: closed, sprint: 3, assignee: frank, parent: 253, version: v0.9, s: 3, d: 6, est: 8, actual: 9, desc: "提示词模板与各段长度预算，超限时优先裁掉哪一段。", commenters: [frank, bob] }
+  - { id: 255, key: s3-inject-cite, subject: "检索结果注入与引用标记（原型）", type: task, status: closed, sprint: 3, assignee: ben, parent: 253, version: v0.9, s: 6, d: 9, est: 8, actual: 13, tags: [T3], desc: "把检索片段注入对话，并在回答里标出引用的片段编号。", commenters: [ben, frank] }
+  - { id: 256, key: s3-apikey, subject: "账号体系与 API Key 管理", type: story, status: closed, sprint: 3, assignee: bob, points: 5, parent: 72, version: v0.9, s: 0, d: 7, est: 20, actual: 22, desc: "团队账号下可以创建、停用 API Key，为后面的计量打基础。", commenters: [bob, ada, frank] }
+  - { id: 257, key: s3-apikey-hash, subject: "API Key 哈希存储与轮换", type: task, status: closed, sprint: 3, assignee: bob, parent: 256, version: v0.9, s: 0, d: 3, est: 8, actual: 9, desc: "Key 只存哈希，支持轮换并让旧 Key 有宽限期。", commenters: [bob, frank] }
+  - { id: 258, key: s3-apikey-ui, subject: "API Key 管理界面", type: task, status: closed, sprint: 3, assignee: fiona, parent: 256, version: v0.9, s: 3, d: 6, est: 8, actual: 9, desc: "创建、复制、停用 Key 的界面，创建后只展示一次明文。", commenters: [fiona, bob, ben] }
+  - { id: 260, key: s3-log-format, subject: "统一日志格式（技术债）", type: task, status: closed, sprint: 3, assignee: sam, parent: 200, version: v0.9, s: 2, d: 4, est: 6, actual: 6, desc: "把 S1、S2 各写各的日志统一成同一套字段。", commenters: [sam, ada] }
+
+# ---------------------------------------------------------------------------
+# 待办池（未排入任何迭代；readiness: ready=已就绪(需求已明确/已确认/待排期)、refine=仍需梳理）
+# bucket: refinement=待打磨、next_up=下一迭代、icebox=Icebox（暂缓）
+# ---------------------------------------------------------------------------
+backlog:
+  # --- 史诗与特性 ---
+  - { id: 301, key: bl-epic-security, subject: "安全与合规", type: epic, status: confirmed, assignee: ada, parent: ~, version: ~, bucket: ~, readiness: ready, born: -50, desc: "企业客户上线前绕不开的审计、单点登录与数据合规。", commenters: [ada, sam] }
+  - { id: 302, key: bl-epic-analytics, subject: "数据分析与运营看板", type: epic, status: new, assignee: ada, parent: ~, version: ~, bucket: ~, readiness: refine, born: -40, desc: "让团队和我们自己都能看见用量与效果。", commenters: [ada, sam] }
+  - { id: 303, key: bl-feat-audit, subject: "审计日志与操作留痕", type: feature, status: confirmed, assignee: ada, parent: 301, version: 22, bucket: ~, readiness: ready, born: -45, desc: "关键操作留痕，管理员可查询。", commenters: [ada, sam] }
+  - { id: 304, key: bl-feat-sso, subject: "单点登录与账号集成", type: feature, status: new, assignee: ada, parent: 301, version: ~, bucket: ~, readiness: refine, born: -38, desc: "对接企业已有的身份系统。", commenters: [ada, sam] }
+  - { id: 305, key: bl-feat-quality, subject: "写作质量检查", type: feature, status: clarifying, assignee: ada, parent: 42, version: ~, bucket: ~, readiness: refine, born: -33, desc: "生成内容的安全与质量把关。", commenters: [ada, sam] }
+  - { id: 306, key: bl-feat-admin, subject: "团队版管理后台", type: feature, status: clarifying, assignee: ada, parent: 72, version: 22, bucket: ~, readiness: refine, born: -30, desc: "团队管理员的席位、用量与成员管理入口。", commenters: [ada, sam] }
+  # --- 对话引擎 ---
+  - { id: 307, key: bl-quote-snippet, subject: "对话中引用本文档片段", type: story, status: clear, assignee: ben, points: 5, parent: 42, version: 22, bucket: next_up, readiness: ready, est: 16, born: -28, tags: [T3], desc: "用户在文档里选中一段，直接带着这段内容向模型提问。", commenters: [ben, ada, frank] }
+  - { id: 308, key: bl-slash, subject: "斜杠命令快捷面板", type: story, status: backlog, assignee: fiona, points: 3, parent: 42, version: ~, bucket: next_up, readiness: ready, est: 10, born: -27, desc: "输入斜杠弹出常用指令：改写、扩写、总结。", commenters: [fiona, ada, ben] }
+  - { id: 309, key: bl-compare-models, subject: "多模型并排对比生成", type: story, status: clarifying, assignee: ben, points: 8, parent: 42, version: ~, bucket: refinement, readiness: refine, est: 28, born: -26, tags: [T3], desc: "同一问题发给两个模型并排展示，用户挑一个。", commenters: [ben, ada, frank, sam] }
+  - { id: 310, key: bl-sensitive-filter, subject: "生成内容敏感信息过滤", type: story, status: clarifying, assignee: mia, points: 5, parent: 305, version: ~, bucket: refinement, readiness: refine, est: 16, born: -25, desc: "生成内容里出现身份证号、手机号等敏感信息时给出提示或遮盖。", commenters: [mia, ada, frank, sam] }
+  - { id: 311, key: bl-style-learning, subject: "从历史文档学习作者写作风格", type: story, status: new, assignee: ben, points: 13, parent: 42, version: ~, bucket: refinement, readiness: refine, est: 40, born: -24, tags: [T2, T3], desc: "读取作者历史文档，抽出风格特征供续写时使用；范围很大，需要拆分后再估。", commenters: [ben, ada, frank, sam] }
+  - { id: 340, key: bl-history-retention, subject: "对话历史保留期限策略", type: story, status: clear, assignee: ada, points: 3, parent: 42, version: 22, bucket: next_up, readiness: ready, est: 10, born: -22, tags: [T8], edited_after_decision: -6, desc: "对话历史保留多久、到期后怎么处理。初稿写的是默认保留 90 天（决定记录据此而写），M-6 起改为按套餐区分 30/90/365 天，决定记录因此过时。", commenters: [ada, sam] }
+  - { id: 334, key: bl-reconnect-loss, subject: "对话中断重连后丢失最后一句", type: bug, status: confirmed, assignee: bob, points: 3, parent: 42, version: ~, bucket: next_up, readiness: ready, est: 8, born: -12, desc: "流式生成中断后重连，最后一句回复没有补回来。", commenters: [bob, sam, frank] }
+  # --- RAG ---
+  - { id: 312, key: bl-rerank, subject: "检索结果重排序（rerank）", type: story, status: clear, assignee: mia, points: 5, parent: 57, version: 22, bucket: next_up, readiness: ready, est: 16, born: -23, desc: "召回后再用精排模型重排，提升前三条的命中率。", commenters: [mia, ada, frank] }
+  - { id: 313, key: bl-fulltext, subject: "文档库搜索改用全文检索", type: story, status: confirmed, assignee: ada, points: 8, parent: 57, version: ~, bucket: refinement, readiness: ready, est: 24, born: -36, author: fiona, confirmed_at: -36, tags: [T5], desc: "9 月 13 日 Fiona 提出并确认：文档库搜索由向量初筛改为全文检索，负责人 Ada。确认后没有任何更新。", commenters: [ada, sam] }
+  - { id: 314, key: bl-empty-recall, subject: "召回为空时的兜底回复与追问", type: story, status: clarifying, assignee: mia, points: 3, parent: 57, version: ~, bucket: refinement, readiness: refine, est: 10, born: -20, desc: "检索不到依据时，不只说没找到，还追问用户想查哪份文档。", commenters: [mia, ada, frank, sam] }
+  - { id: 315, key: bl-bulk-import, subject: "知识库批量导入（压缩包）", type: story, status: backlog, assignee: ben, points: 5, parent: 57, version: 22, bucket: next_up, readiness: ready, est: 16, born: -19, tags: [T3], desc: "上传压缩包，系统解压后逐个解析入库。", commenters: [ben, ada, frank] }
+  - { id: 316, key: bl-trust-label, subject: "引用来源可信度标注", type: story, status: new, assignee: frank, points: 3, parent: 57, version: ~, bucket: icebox, readiness: refine, born: -55, desc: "按来源类型给引用打可信度标签。", commenters: [frank, ada, bob] }
+  - { id: 330, key: bl-mem-parse, subject: "超长文档解析时内存占用过高导致服务重启", type: bug, status: confirmed, assignee: ben, points: 3, parent: 57, version: ~, bucket: next_up, readiness: ready, est: 8, born: -9, tags: [T3], desc: "几百页的 PDF 解析时内存涨到上限，解析服务被重启。", commenters: [ben, sam, frank] }
+  # --- 商业化（v1.1 范围候选，S7 计划会"砍范围"时的备选）---
+  - { id: 317, key: bl-trial-mail, subject: "试用到期前提醒邮件", type: story, status: clear, assignee: fiona, points: 3, parent: 72, version: 21, bucket: next_up, readiness: ready, est: 10, born: -18, tags: [T1], desc: "试用到期前三天给团队管理员发提醒邮件。", commenters: [fiona, ada, ben, sam] }
+  - { id: 318, key: bl-plan-preview, subject: "套餐变更账单预览", type: story, status: clarifying, assignee: fiona, points: 5, parent: 72, version: 21, bucket: refinement, readiness: refine, est: 16, born: -17, tags: [T1], desc: "升降级前先展示本期和下期会收多少钱。", commenters: [fiona, ada, ben, sam] }
+  - { id: 319, key: bl-invoice-mail, subject: "发票邮件自动发送", type: story, status: backlog, assignee: bob, points: 3, parent: 72, version: 21, bucket: next_up, readiness: ready, est: 10, born: -16, tags: [T1], desc: "账单生成后自动把发票发到财务邮箱。", commenters: [bob, ada, frank, sam] }
+  - { id: 320, key: bl-upgrade-hint, subject: "用量接近上限时的升级建议", type: story, status: new, assignee: fiona, points: 3, parent: 72, version: 22, bucket: refinement, readiness: refine, born: -14, desc: "用量超过 80% 时，在界面上推荐合适的更高套餐。", commenters: [fiona, ada, ben, sam] }
+  - { id: 335, key: bl-quota-dup-mail, subject: "额度告警邮件重复发送", type: bug, status: confirmed, assignee: bob, points: 2, parent: 72, version: 21, bucket: next_up, readiness: ready, est: 5, born: -8, tags: [T1], desc: "额度越过 80% 后每次调用都发一封告警邮件。", commenters: [bob, sam, frank] }
+  # --- 协作与分享 ---
+  - { id: 321, key: bl-presence, subject: "实时在线成员头像条", type: story, status: backlog, assignee: fiona, points: 3, parent: 80, version: 22, bucket: next_up, readiness: ready, est: 10, born: -21, desc: "文档顶部显示此刻在看这篇文档的成员头像。", commenters: [fiona, ada, ben] }
+  - { id: 322, key: bl-history-rollback, subject: "文档版本历史与回滚", type: story, status: clarifying, assignee: frank, points: 8, parent: 80, version: 22, bucket: refinement, readiness: refine, est: 28, born: -20, desc: "查看历史版本、对比差异、一键回滚。", commenters: [frank, ada, bob, sam] }
+  - { id: 323, key: bl-export-comments, subject: "导出时保留批注", type: story, status: new, assignee: fiona, points: 5, parent: 80, version: 22, bucket: refinement, readiness: refine, est: 16, born: -13, tags: [T6], desc: "用户反馈：导出 Word 时希望保留批注。来自论坛「用户反馈」版块。", commenters: [fiona, ada, ben, sam] }
+  - { id: 324, key: bl-comment-digest, subject: "每日评论邮件摘要", type: story, status: new, assignee: fiona, points: 3, parent: 80, version: ~, bucket: icebox, readiness: refine, born: -58, desc: "每天汇总一次未读评论发邮件。", commenters: [fiona, ada, ben] }
+  - { id: 331, key: bl-mobile-cursor, subject: "移动端浏览器里编辑器光标跳动", type: bug, status: new, assignee: fiona, points: 2, parent: 80, version: ~, bucket: refinement, readiness: refine, born: -6, desc: "手机浏览器输入中文时，光标会跳到段首。", commenters: [fiona, sam, ben] }
+  - { id: 332, key: bl-docx-footnote, subject: "导出 Word 后脚注编号错位", type: bug, status: confirmed, assignee: fiona, points: 3, parent: 83, version: 22, bucket: next_up, readiness: ready, est: 8, born: -11, desc: "文档里有脚注时，导出的 Word 中脚注编号从第二条开始错位。", commenters: [fiona, sam, ben] }
+  - { id: 333, key: bl-share-cache, subject: "分享链接过期后仍可打开缓存页", type: bug, status: confirmed, assignee: ~, points: 2, parent: 84, version: ~, bucket: next_up, readiness: ready, est: 5, born: -5, tags: [T4], desc: "链接过期后，浏览器缓存的页面仍能打开。范围小、边界清楚，适合新人上手。", commenters: [sam, ada] }
+  # --- 安全与数据 ---
+  - { id: 325, key: bl-audit-query, subject: "操作审计日志查询", type: story, status: clear, assignee: frank, points: 5, parent: 303, version: 22, bucket: next_up, readiness: ready, est: 16, born: -34, desc: "管理员按人、按时间、按操作类型查询审计日志。", commenters: [frank, ada, bob] }
+  - { id: 326, key: bl-saml, subject: "SAML 单点登录", type: story, status: new, assignee: frank, points: 13, parent: 304, version: ~, bucket: refinement, readiness: refine, est: 44, born: -32, tags: [T2], desc: "对接企业 SAML 身份提供方；范围大，需要拆成配置、登录、账号映射几块再估。", commenters: [frank, ada, bob, sam] }
+  - { id: 327, key: bl-privacy-export, subject: "数据导出与删除（隐私合规）", type: story, status: clarifying, assignee: frank, points: 8, parent: 301, version: ~, bucket: refinement, readiness: refine, est: 28, born: -31, desc: "用户可以导出自己的全部数据，也可以申请删除。", commenters: [frank, ada, bob, sam] }
+  - { id: 328, key: bl-team-usage, subject: "团队用量看板", type: story, status: new, assignee: fiona, points: 5, parent: 302, version: ~, bucket: refinement, readiness: refine, born: -15, desc: "按成员、按天展示调用量与花费。", commenters: [fiona, ada, ben, sam] }
+  - { id: 329, key: bl-adoption-stat, subject: "生成内容采纳率统计", type: story, status: new, assignee: mia, points: 5, parent: 302, version: ~, bucket: icebox, readiness: refine, born: -48, desc: "统计生成内容被用户采纳、修改、丢弃的比例。", commenters: [mia, ada, frank] }
+  # --- 技术债（T7）---
+  - { id: 336, key: bl-error-codes, subject: "统一错误码规范（网关/后端/前端）", type: story, status: clarifying, assignee: frank, points: 5, parent: 200, version: ~, bucket: refinement, readiness: refine, est: 16, born: -36, tags: [T7], desc: "三端各有一套错误码，排查时要对照三张表。", commenters: [frank, ada, bob, sam] }
+  - { id: 337, key: bl-runtime-upgrade, subject: "推理服务运行时与驱动升级", type: story, status: backlog, assignee: bob, points: 5, parent: 200, version: ~, bucket: icebox, readiness: ready, est: 16, born: -44, tags: [T7], desc: "推理运行时和显卡驱动落后两个版本，升级要停服演练。", commenters: [bob, ada, frank] }
+  - { id: 338, key: bl-session-cleanup, subject: "旧版会话数据迁移与清理", type: story, status: backlog, assignee: bob, points: 3, parent: 200, version: ~, bucket: icebox, readiness: ready, est: 10, born: -46, tags: [T7], desc: "S2 的旧会话表结构还有一批历史数据没迁。", commenters: [bob, ada, frank] }
+  - { id: 339, key: bl-fe-deps, subject: "前端依赖升级与构建提速", type: story, status: clear, assignee: fiona, points: 3, parent: 200, version: ~, bucket: next_up, readiness: ready, est: 10, born: -37, tags: [T7], desc: "前端依赖落后，构建要七八分钟。", commenters: [fiona, ada, ben] }
+  # --- 里程碑 ---
+  - { id: 341, key: bl-milestone-v2-ga, subject: "里程碑：v2.0 正式发布", type: milestone, status: new, assignee: sam, parent: ~, version: 22, bucket: ~, readiness: ready, due: 67, born: -20, desc: "团队版正式发布（Beta 为 #120，M+39）。", commenters: [sam, ada] }
+
+# ---------------------------------------------------------------------------
+# S6 迭代前期已关闭的两个缺陷（为燃尽曲线补前期下降；S6 合计 38 点）
+# ---------------------------------------------------------------------------
+sprint6_early:
+  - { id: 342, key: s6-undo-stack, subject: "流式渲染结束后撤销栈被清空", type: bug, status: closed, sprint: 6, born: -10, assignee: fiona, points: 2, parent: 46, version: ~, s: 0, d: 2, est: 5, actual: 5, desc: "S5 评审会上发现：流式输出完成后按撤销，之前的编辑全没了。", commenters: [fiona, sam, ben] }
+  - { id: 343, key: s6-ratelimit-copy, subject: "限流错误码文案与对外文档不一致", type: bug, status: closed, sprint: 6, born: -10, assignee: bob, points: 1, parent: 89, version: ~, s: 1, d: 3, est: 3, actual: 3, desc: "网关返回的限流提示和 OpenAPI 文档里写的不是同一句话。", commenters: [bob, sam, frank] }
+
+# 新增依赖（Relation，follows = 后者排在前者之后）
+relations:
+  - [76, 73, follows]    # T1：配额告警 UI 排在用量统计之后
+  - [119, 76, follows]
+  - [119, 116, follows]
+  - [104, 100, relates]
+  - [341, 120, follows]
+  - [120, 70, follows]
+  - [322, 81, follows]
+  - [323, 83, relates]
+  - [337, 121, relates]  # T7
+  - [311, 92, relates]
+  - [313, 71, relates]   # T5
+  - [318, 74, relates]
+  - [326, 78, relates]
+
+# 关键缺陷的发现者与修复者（供评论与 PR 对齐；found_on 为相对 M 的天数）
+bugs:
+  - { id: 47, found_by: fiona, found_on: -29, fixed_by: bob, note: "长文本断流，Fiona 在联调时发现，Bob 修网关超时" }
+  - { id: 62, found_by: sam, found_on: -20, fixed_by: ben, note: "扫描版 PDF 解析为空，Sam 整理用户反馈时发现" }
+  - { id: 68, found_by: frank, found_on: -12, fixed_by: quinn, note: "同名章节溯源跳错，Frank 评审时发现，Quinn 入项后认领" }
+  - { id: 79, found_by: sam, found_on: -9, fixed_by: quinn, note: "试用到期仍可调用，Sam 在核对试用账号时发现，紧急" }
+  - { id: 94, found_by: mia, found_on: -11, fixed_by: ben, note: "DOCX 合并单元格丢失，Mia 跑评测集时发现" }
+  - { id: 100, found_by: mia, found_on: -4, fixed_by: bob, note: "并发超扣，Mia 做压测时发现；S6 未修完，带入 S7" }
+  - { id: 108, found_by: ada, found_on: -9, fixed_by: fiona, note: "协同光标延迟，Ada 试用时发现" }
+  - { id: 213, found_by: sam, found_on: -71, fixed_by: bob, note: "S1 压测发现连接泄漏" }
+  - { id: 235, found_by: fiona, found_on: -60, fixed_by: bob, note: "S2 联调 20MB 上传无提示" }
+  - { id: 236, found_by: sam, found_on: -55, fixed_by: ben, note: "S2 中文文件名乱码" }
+  - { id: 259, found_by: mia, found_on: -42, fixed_by: ben, note: "S3 重建索引时并发检索返回空" }
+  - { id: 342, found_by: ada, found_on: -10, fixed_by: fiona, note: "S5 评审会上 Ada 现场演示时发现" }
+  - { id: 343, found_by: frank, found_on: -10, fixed_by: bob, note: "S5 评审后 Frank 对照 OpenAPI 文档时发现" }
+  - { id: 330, found_by: mia, found_on: -9, fixed_by: ben, note: "待办：超长文档解析内存过高；Ben 的 RAG 类活，估算易偏低（T3）" }
+  - { id: 333, found_by: sam, found_on: -5, fixed_by: quinn, note: "待办：适合 Quinn 上手的小缺陷（T4）" }
+  - { id: 335, found_by: sam, found_on: -8, fixed_by: bob, note: "待办：额度告警邮件重复；v1.1 范围候选（T1）" }

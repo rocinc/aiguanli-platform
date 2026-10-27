@@ -1,0 +1,29 @@
+---
+lt:
+  js:
+    team_planner:
+      add_assignee: Paskirtas
+      add_existing: Pridėti esamą
+      add_existing_title: Pridėti esamus darbų paketus
+      cannot_drag_here: Cannot move the work package due to permissions or editing restrictions.
+      cannot_drag_to_non_working_day: Šis darbo paketas negali prasidėti/pasibaigti nedarbo dieną.
+      create_label: Komandos planas
+      create_title: Kurti naują komandos planą
+      drag_here_to_remove: Pertempkite čia, kad išimtumėte paskirtąjį ir pradžios bei pabaigos datas.
+      eight_weeks: 8-savaitės
+      four_weeks: 4-savaitės
+      label_team_planner_plural: Komandos planai
+      modify:
+        errors:
+          fallback: Šio darbų paketo keisti negalima.
+          permission_denied: Jūs neturite teisių tai keisti.
+      no_data: Komandos plano sudarymui pridėkite paskirtųjų.
+      one_week: 1-savaitė
+      quick_add:
+        empty_state: Naudokite paieškos lauką darbo paketų paieškai, nutempkite juos į planą, kad priskirtumėte kažkam ir nustatytumėte pradžios bei pabaigos datas.
+        search_placeholder: Ieškoti...
+      remove_assignee: Išimti paskirtąjį
+      today: Šiandien
+      two_weeks: 2-savaitės
+      unsaved_title: Nepavadintas komandos planas
+      work_week: Darbo savaitė

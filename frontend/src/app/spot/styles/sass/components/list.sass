@@ -1,0 +1,143 @@
+@use "sass:list"
+
+@import '../../../../../global_styles/content/_autocomplete.sass'
+
+.spot-list
+  display: flex
+  flex-direction: column
+  list-style: none
+  margin: 0
+
+  &--item
+    display: flex
+    flex-direction: column
+
+    &-action
+      @include spot-body-small
+
+      color: var(--body-font-color)
+      display: flex
+      align-items: flex-start
+      justify-content: flex-start
+      padding: $spot-spacing-0_5 $spot-spacing-1
+      width: 100%
+      background-color: transparent
+      margin: 0
+      border: 1px solid transparent
+      cursor: pointer
+      scroll-margin-top: $spot-spacing-5
+
+      &:focus
+        @include focus
+
+      &:hover
+        background-color: var(--control-transparent-bgColor-hover)
+        text-decoration: none
+        border-color: var(--list-item-hover--border-color)
+        color: var(--list-item-hover--color)
+
+      &_disabled
+        &,
+        &:hover
+          background-color: transparent
+          cursor: not-allowed
+          color: var(--list-item-hover--color)
+
+      &_active#{&}_disabled
+        color: var(--fgColor-default)
+        background-color: var(--control-transparent-bgColor-hover)
+
+      &_link:not(&_disabled)
+        color: var(--accent-color)
+
+    &-floating-wrapper
+      position: relative
+      display: flex
+
+      &:hover,
+      &:focus-within
+        background-color: var(--control-transparent-bgColor-hover)
+        text-decoration: none
+        border-color: var(--list-item-hover--border-color)
+
+      &_disabled
+        color: var(--body-font-color)
+
+        &:hover
+          background: none
+          cursor: not-allowed
+
+    &-floating-actions
+      opacity: 0
+      position: absolute
+      right: 0
+      height: 100%
+      padding: $spot-spacing-0_5 $spot-spacing-1
+      background: linear-gradient(90deg, rgba(var(--body-background), 0) 0%, var(--body-background) 1rem)
+
+      > .spot-link
+        &:not(:first-child)
+          margin-left: $spot-spacing-0_5
+
+    &-title
+      margin-right: auto
+      word-break: break-word
+      align-self: center
+
+      &:not(:first-child),
+      :not(:first-child)
+        margin-left: $spot-spacing-0_5
+
+      &_ellipse-text
+        text-overflow: ellipsis
+        white-space: nowrap
+        overflow: hidden
+        max-width: 100%
+        width: 100%
+
+        &:has(.description),
+        &:has(.op-primer--star-icon)
+          display: flex
+          align-items: center
+
+          > span:first-child
+            text-overflow: ellipsis
+            white-space: nowrap
+            overflow: hidden
+
+        .description
+          @extend %autocomplete-description
+
+    &-remove
+      margin-left: $spot-spacing-0_5
+      display: flex
+      align-self: center
+
+    &-action_disabled &-title
+      opacity: 0.5
+
+    &-floating-wrapper:hover > &-floating-actions,
+    &-floating-wrapper:focus-within > &-floating-actions,
+    &-floating-actions:focus-within,
+    &-floating-actions:hover
+      opacity: 1
+
+  &_compact &--item
+    margin-top: $spot-spacing-0_25
+
+  &_compact &--item-action,
+  &_compact &--item-floating-actions
+    padding: $spot-spacing-0_25 $spot-spacing-1
+
+  &_active &--item-action_active
+    font-weight: var(--base-text-weight-bold)
+    background-color: var(--control-transparent-bgColor-hover)
+    text-decoration: none
+    border-color: var(--list-item-hover--border-color)
+
+$item-list: ""
+@for $i from 0 through 10
+  $item-list: list.append($item-list, ".spot-list--item")
+
+  #{$item-list} .spot-list--item-action
+    padding-left: $spot-spacing-1 + ($i * $spot-spacing-1)

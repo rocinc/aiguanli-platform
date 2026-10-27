@@ -1,0 +1,92 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%
+  data = { assistant_signal_id: signal.id, assistant_density: density, test_selector: "assistant-notice" }
+%>
+<% if signal.stale? %>
+  <%= content_tag(:p, id:, class: "assistant-notice assistant-notice--stale", data:) do %>
+    <%= mark %>
+    <span data-test-selector="assistant-notice-stale"><%= stale_text %></span>
+  <% end %>
+<% elsif handled? %>
+  <%= content_tag(:p, id:, class: "assistant-notice assistant-notice--stale assistant-notice--handled", data:) do %>
+    <%= mark %>
+    <span data-test-selector="assistant-notice-handled"><%= handled_html %></span>
+  <% end %>
+<% elsif timing? %>
+  <%= content_tag(:article, id:, class: css_classes, "aria-label": t("assistant.notice.label"), data:) do %>
+    <div class="assistant-notice--row">
+      <%= mark %>
+      <p class="assistant-notice--reply-text" role="status" data-test-selector="assistant-notice-timing"><%= reply_text %></p>
+    </div>
+    <div class="assistant-notice--choices">
+      <% snooze_choices.each do |choice, at| %>
+        <%= control_form("snoozed", snooze_label(choice), scheme: :default, hint: snooze_hint(at), until: choice, reason: "bad_timing") %>
+      <% end %>
+    </div>
+  <% end %>
+<% elsif settled? || fading? %>
+  <%= content_tag(:article, id:, class: [css_classes, "assistant-notice--settled"], "aria-label": t("assistant.notice.label"), data:) do %>
+    <%= content_tag(:p, class: ["assistant-notice--reply", ("assistant-notice--fading" if fading?)], role: "status",
+                        data: { test_selector: "assistant-notice-reply" }) do %>
+      <%= mark %>
+      <span class="assistant-notice--reply-text"><%= reply_text %></span>
+    <% end %>
+    <% if receipt_action %>
+      <%= render(Assistant::ReceiptComponent.new(action: receipt_action, user:, density: :line)) %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= content_tag(:article, id:, class: css_classes, "aria-labelledby": title_id, data:) do %>
+    <% if card? %>
+      <div class="assistant-notice--row">
+        <%= mark %>
+        <div class="assistant-notice--body">
+          <%= headline_block %>
+        </div>
+      </div>
+      <div class="assistant-notice--main">
+        <%= basis_block %>
+        <%= options_block(visible_choices, leave: true) %>
+        <% if foot? %>
+          <div class="assistant-notice--foot">
+            <p class="assistant-notice--why" data-test-selector="assistant-notice-why"><%= why %></p>
+            <%= controls_block if controls? %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <details class="assistant-notice--fold">
+        <summary class="assistant-notice--row assistant-notice--summary">
+          <%= mark %>
+          <div class="assistant-notice--body">
+            <%= headline_block %>
+          </div>
+          <%= options_block(visible_choices, inline: true) %>
+          <span class="assistant-notice--toggle"><%= chevron %></span>
+        </summary>
+        <div class="assistant-notice--main">
+          <%= basis_block %>
+          <% if line? %>
+            <%= options_block(hidden_choices, leave: true) %>
+            <% if foot? %>
+              <div class="assistant-notice--foot">
+                <p class="assistant-notice--why" data-test-selector="assistant-notice-why"><%= why %></p>
+                <%= controls_block if controls? %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </details>
+    <% end %>
+    <%= asks_block %>
+  <% end %>
+<% end %>

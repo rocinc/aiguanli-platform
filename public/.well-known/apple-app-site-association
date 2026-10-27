@@ -1,0 +1,16 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "3YGZQ7TQ78.org.openproject.app",
+        "paths": [ "*" ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "3YGZQ7TQ78.org.openproject.app"
+    ]
+  }
+}

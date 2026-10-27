@@ -1,0 +1,24 @@
+inherit_from: ../../../../../.rubocop.yml
+
+Metrics/AbcSize:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
+Metrics/ClassLength:
+  Enabled: false
+Metrics/BlockLength:
+  Enabled: false
+Layout/LineLength:
+  Max: 160
+Naming/MethodParameterName:
+  Enabled: false
+Naming/PredicateMethod:
+  Enabled: false
+Rails/Output:
+  Enabled: false
+Style/NumberedParametersLimit:
+  Enabled: false

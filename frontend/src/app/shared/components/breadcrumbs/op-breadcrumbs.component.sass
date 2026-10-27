@@ -1,0 +1,42 @@
+@import "helpers"
+
+.op-breadcrumbs
+  // Match the height of the Primer breadcrumb which itself takes the height of the small action button it can have on mobile
+  line-height: var(--control-small-size)
+
+  .Truncate > .Truncate-text
+    max-width: 200px
+
+  .op-breadcrumbs--items
+    margin-left: 0
+  .op-breadcrumbs--item
+    display: inline-block
+    list-style: none
+    margin-left: 0
+    &:after
+      border-right: 0.1em solid var(--borderColor-neutral-emphasis)
+      content: ""
+      display: inline-block
+      height: 0.8em
+      margin: 0 0.5em
+      transform: rotate(15deg) translateY(0.0625em)
+    &:last-child:after
+      content: none
+  .op-breadcrumbs--section
+    font-weight: normal
+
+  .op-breadcrumbs--current, .op-breadcrumbs--text
+    text-decoration: none
+    color: inherit
+
+  @media (max-width: $breakpoint-sm)
+    .op-breadcrumbs--mobile
+      display: flex
+      align-items: center
+
+    .op-breadcrumbs--back
+      display: flex
+      align-items: center
+      text-decoration: none
+      color: var(--fgColor-muted)
+      gap: 0.5rem

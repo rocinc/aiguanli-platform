@@ -1,0 +1,202 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "OpenProject": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular-builders/custom-esbuild:application",
+          "options": {
+            "plugins": ["./esbuild/plugins.ts"],
+            "allowedCommonJsDependencies": [
+              "dom-plane",
+              "pako",
+              "moment-timezone",
+              "observable-array",
+              "dragula",
+              "contra/emitter",
+              "crossvent",
+              "create-point-cb",
+              "core-vendor/enjoyhint",
+              "tablesorter"
+            ],
+            "preserveSymlinks": true,
+            "outputPath": {
+              "base": "../public/assets/frontend",
+              "browser": ""
+            },
+            "index": false,
+            "browser": "src/main.ts",
+            "polyfills": ["src/polyfills.ts"],
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "sass",
+            "assets": [
+              "src/assets"
+            ],
+            "styles": [
+              {
+                "input": "src/spot.scss",
+                "bundleName": "spot"
+              },
+              {
+                "input": "node_modules/@blocknote/mantine/src/style.css",
+                "bundleName": "blocknote"
+              },
+              "src/styles.scss",
+              "node_modules/codemirror/lib/codemirror.css",
+              "node_modules/flatpickr/dist/flatpickr.min.css",
+              "src/vendor/ckeditor/ckeditor.css"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/assets/sass"
+              ],
+              "sass": {
+                "silenceDeprecations": [
+                  "color-functions",
+                  "global-builtin",
+                  "import"
+                ]
+              }
+            },
+            "scripts": [
+              {
+                "input": "node_modules/openapi-explorer/dist/browser/openapi-explorer.min.js",
+                "inject": false,
+                "bundleName": "openapi-explorer"
+              }
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kB"
+                }
+              ],
+              "preserveSymlinks": true,
+              "optimization": {
+                "scripts" : false,
+                "styles" : true,
+                "fonts" : true
+              },
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "define": { "process.env.NODE_ENV": "'production'" }
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "define": { "process.env.NODE_ENV": "'development'" }
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-builders/custom-esbuild:dev-server",
+          "options": {
+            "servePath": "/assets/frontend"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "OpenProject:build:production"
+            },
+            "development": {
+              "buildTarget": "OpenProject:build:development",
+              "proxyConfig": "src/proxy.conf.mjs",
+              "headers": {
+                "Access-Control-Allow-Origin": "*"
+              }
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "OpenProject:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/custom-esbuild:unit-test",
+          "options": {
+            "tsConfig": "tsconfig.spec.json",
+            "buildTarget": "OpenProject:build",
+            "runnerConfig": true,
+            "providersFile": "src/test-providers.ts",
+            "setupFiles": ["src/test-browser-polyfills.ts", "src/test-setup.ts"],
+            "browsers": ["chromium"],
+            "reporters": ["dot"]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "prefix": "op",
+      "style": "sass",
+      "changeDetection": "OnPush",
+      "skipTests": true,
+      "flat": true,
+      "type": "component"
+    },
+    "@schematics/angular:directive": {
+      "prefix": "op",
+      "skipTests": true,
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
+    }
+  },
+  "cli": {
+    "analytics": false,
+    "cache": {
+      "environment": "all"
+    }
+  }
+}

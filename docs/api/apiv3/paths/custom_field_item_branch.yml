@@ -1,0 +1,65 @@
+# /api/v3/custom_field_items/{id}/branch
+---
+get:
+  summary: Get a custom field hierarchy item's branch
+  operationId: get_custom_field_item_branch
+  description: |-
+    Retrieves the branch of a single custom field item specified by its unique identifier.
+
+    A branch is list of all ancestors, starting with the root item and finishing with the item itself.
+  tags:
+    - Custom Fields
+  parameters:
+    - name: id
+      description: The custom field item's unique identifier
+      in: path
+      example: 42
+      required: true
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/hierarchy_item_collection_model.yml'
+          examples:
+            'simple response':
+              $ref: '../components/examples/hierarchy_item_collection_response.yml'
+    '403':
+      description: Returned if the user is not logged in.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not authorized to access this resource.
+    '404':
+      description: Returned if the custom field does not exist or the user lacks permission to view it.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+    '422':
+      description: Returned if the custom field is not of type hierarchy.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:UnprocessableContent
+                message: The requested custom field resource is of wrong type.

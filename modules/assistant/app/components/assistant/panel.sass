@@ -1,0 +1,438 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+:root
+  --assistant-panel-width: 440px
+
+@media (min-width: 768px)
+  .assistant-panel-dialog.Overlay--placement-right
+    top: var(--header-height)
+    height: calc(100dvh - var(--header-height))
+    width: min(var(--assistant-panel-width), 100vw)
+    z-index: 11
+
+@media (min-width: 1100px)
+  body.has-assistant-panel #main
+    padding-right: var(--assistant-panel-width)
+
+.assistant-panel-dialog
+  &--body
+    display: flex
+    flex-direction: column
+    padding: 0
+    min-width: 0
+    overflow-x: hidden
+
+  &--frame
+    display: flex
+    flex-direction: column
+    flex: 1
+    min-height: 100%
+
+  &--failed
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    gap: var(--base-size-8)
+    padding: var(--base-size-16)
+
+  &--failed-text
+    margin: 0
+
+  &--loading
+    display: flex
+    align-items: center
+    gap: var(--base-size-8)
+    padding: var(--base-size-16)
+    color: var(--fgColor-muted)
+
+.assistant-panel
+  display: flex
+  flex-direction: column
+  flex: 1
+  min-width: 0
+  min-height: 100%
+
+  &--context
+    position: sticky
+    top: 0
+    z-index: 1
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: var(--base-size-8)
+    padding: var(--base-size-8) var(--base-size-16)
+    background: var(--overlay-bgColor, var(--bgColor-default))
+    border-bottom: var(--borderWidth-thin) solid var(--borderColor-muted)
+
+    &:empty
+      display: none
+
+  &--tag
+    display: inline-flex
+    align-items: center
+    gap: var(--base-size-4)
+    min-width: 0
+    padding: var(--base-size-2) var(--base-size-4) var(--base-size-2) var(--base-size-8)
+    border-radius: var(--borderRadius-full)
+    background: var(--bgColor-accent-muted)
+    font-size: var(--text-body-size-small)
+
+  &--tag-lead
+    color: var(--fgColor-muted)
+    white-space: nowrap
+
+  &--tag-subject
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+  &--tools
+    display: flex
+    align-items: center
+    gap: var(--base-size-12)
+    flex: none
+    margin-left: auto
+    font-size: var(--text-body-size-small)
+
+  &--history
+    summary
+      cursor: pointer
+      color: var(--fgColor-accent)
+
+  &--history-list
+    position: absolute
+    top: 100%
+    left: var(--base-size-8)
+    right: var(--base-size-8)
+    z-index: 2
+    list-style: none
+    margin: var(--base-size-4) 0 0
+    padding: var(--base-size-4)
+    max-height: min(24rem, 60dvh)
+    overflow-y: auto
+    border: var(--borderWidth-thin) solid var(--borderColor-default)
+    border-radius: var(--borderRadius-medium)
+    background: var(--overlay-bgColor, var(--bgColor-default))
+    box-shadow: var(--shadow-floating-small)
+
+  &--history-item
+    display: flex
+    flex-direction: column
+    min-width: 0
+    padding: var(--base-size-6) var(--base-size-8)
+    border-radius: var(--borderRadius-medium)
+    color: var(--fgColor-default)
+
+    &:hover
+      background: var(--bgColor-muted)
+      text-decoration: none
+
+    &[aria-current="true"]
+      background: var(--bgColor-accent-muted)
+
+  &--history-title
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+  &--history-meta
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--field
+    position: relative
+
+  &--references
+    position: absolute
+    left: 0
+    right: 0
+    bottom: 100%
+    z-index: 2
+    list-style: none
+    margin: 0 0 var(--base-size-4)
+    padding: var(--base-size-4)
+    max-height: 14rem
+    overflow-y: auto
+    border: var(--borderWidth-thin) solid var(--borderColor-default)
+    border-radius: var(--borderRadius-medium)
+    background: var(--overlay-bgColor, var(--bgColor-default))
+    box-shadow: var(--shadow-floating-small)
+
+  &--reference
+    padding: var(--base-size-4) var(--base-size-8)
+    border-radius: var(--borderRadius-medium)
+    cursor: pointer
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
+    &[aria-selected="true"], &:hover
+      background: var(--bgColor-accent-muted)
+
+  &--reference-none
+    padding: var(--base-size-4) var(--base-size-8)
+    color: var(--fgColor-muted)
+
+  &--new
+    font-size: var(--text-body-size-small)
+
+  &--messages
+    list-style: none
+    flex: 1
+    min-width: 0
+    margin: 0
+    padding: var(--base-size-16)
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-16)
+
+  &--welcome
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-12)
+    color: var(--fgColor-muted)
+
+  &--welcome-lead,
+  &--notice
+    margin: 0
+
+  &--notice
+    padding: var(--base-size-8) var(--base-size-12)
+    border-radius: var(--borderRadius-medium)
+    background: var(--bgColor-attention-muted)
+    color: var(--fgColor-default)
+
+  &--form
+    position: sticky
+    bottom: 0
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+    padding: var(--base-size-12) var(--base-size-16)
+    background: var(--overlay-bgColor, var(--bgColor-default))
+    border-top: var(--borderWidth-thin) solid var(--borderColor-muted)
+
+  &--input
+    width: 100%
+    min-height: calc(var(--base-size-24) * 2)
+    max-height: 12rem
+    resize: vertical
+    field-sizing: content
+
+  &--form-footer
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: var(--base-size-8)
+
+  &--hint
+    min-width: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--chips
+    display: flex
+    flex-wrap: wrap
+    gap: var(--base-size-8)
+    margin: 0 0 var(--base-size-4)
+    padding: 0
+    list-style: none
+
+  &--chip
+    padding: var(--base-size-4) var(--base-size-12)
+    border: var(--borderWidth-thin) solid var(--borderColor-default)
+    border-radius: var(--borderRadius-full)
+    background: var(--bgColor-default)
+    color: var(--fgColor-default)
+    font-size: var(--text-body-size-small)
+    cursor: pointer
+
+    &:hover
+      background: var(--control-transparent-bgColor-hover, var(--bgColor-muted))
+
+    &:disabled
+      cursor: default
+      opacity: 0.6
+
+  &--actions
+    display: flex
+    flex: none
+    align-items: center
+    gap: var(--base-size-8)
+
+  &--sending
+    display: inline-flex
+    color: var(--fgColor-muted)
+
+    &[hidden]
+      display: none
+
+  &--send-failed
+    margin: 0
+    color: var(--fgColor-danger)
+    font-size: var(--text-body-size-small)
+
+    &[hidden]
+      display: none
+
+  &--unavailable
+    padding: var(--base-size-16)
+    color: var(--fgColor-muted)
+
+.assistant-message
+  display: flex
+  flex-direction: column
+  gap: var(--base-size-8)
+  max-width: 100%
+
+  &--user
+    align-self: flex-end
+    max-width: 85%
+    padding: var(--base-size-8) var(--base-size-12)
+    border-radius: var(--borderRadius-large)
+    background: var(--bgColor-accent-muted)
+    color: var(--fgColor-default)
+
+    .assistant-message--content p:last-child
+      margin-bottom: 0
+
+  &--content
+    overflow-wrap: anywhere
+
+    > :last-child
+      margin-bottom: 0
+
+  &--streaming &--content
+    white-space: pre-wrap
+
+  &--status
+    display: flex
+    align-items: center
+    gap: var(--base-size-8)
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+    &:empty
+      display: none
+
+  &--dots
+    display: inline-flex
+    gap: 3px
+
+    span
+      width: 5px
+      height: 5px
+      border-radius: 50%
+      background: currentColor
+      opacity: 0.35
+      animation: assistant-dot 1.2s ease-in-out infinite
+
+      &:nth-child(2)
+        animation-delay: 0.2s
+      &:nth-child(3)
+        animation-delay: 0.4s
+
+  &--failure
+    display: flex
+    gap: var(--base-size-4)
+    align-items: center
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--failed &--content
+    color: var(--fgColor-danger)
+
+  &--stopped
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--sentence
+    animation: assistant-sentence 0.25s ease-out
+
+  &--cards
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+
+@keyframes assistant-sentence
+  from
+    opacity: 0
+
+@keyframes assistant-dot
+  0%, 80%, 100%
+    opacity: 0.35
+  40%
+    opacity: 1
+
+.assistant-fact,
+.assistant-options
+  padding: var(--base-size-8) var(--base-size-12)
+  border: var(--borderWidth-thin) solid var(--borderColor-muted)
+  border-radius: var(--borderRadius-medium)
+
+  &--title
+    margin: 0 0 var(--base-size-8)
+    font-size: var(--text-body-size-medium)
+    font-weight: var(--base-text-weight-semibold)
+
+.assistant-fact
+  &--rows
+    margin: 0
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+
+  &--row
+    display: grid
+    grid-template-columns: minmax(6rem, 1fr) 2fr
+    gap: var(--base-size-8)
+
+    dt
+      color: var(--fgColor-muted)
+    dd
+      margin: 0
+      display: flex
+      flex-direction: column
+
+  &--value
+    font-variant-numeric: tabular-nums
+    font-weight: var(--base-text-weight-semibold)
+
+  &--because
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+.assistant-options
+  &--list
+    list-style: none
+    margin: 0
+    padding: 0
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+
+  &--label,
+  &--consequence
+    margin: 0
+
+  &--consequence
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+@media (prefers-reduced-motion: reduce)
+  .assistant-message--dots span
+    animation: none
+    opacity: 0.7
+
+  .assistant-message--sentence
+    animation: none

@@ -1,0 +1,143 @@
+<ng-container>
+  <!-- Name -->
+  <label
+    for="operators-{{filter.id}}"
+    class="advanced-filters--filter-name"
+    [class.op-query-filter--icon-label]="baselineIncompatibleFilter"
+    >
+    <span [textContent]="filter.name" [attr.title]="filter.name"></span>
+    @if (baselineIncompatibleFilter) {
+      <span
+        [title]="text.incompatible_filter"
+        data-test-selector="query-filter-baseline-incompatible">
+        <svg alert-icon size="small" />
+      </span>
+    }
+  </label>
+
+  <!-- Operator -->
+  <div class="advanced-filters--filter-operator">
+
+    <label
+      for="operators-{{filter.id}}"
+      class="sr-only"
+      >
+      {{ filter.name }}
+      {{ text.open_filter }}
+    </label>
+
+    @if (valueType !== '[1]Boolean') {
+      <select
+        required
+        class="advanced-filters--select"
+        id="operators-{{filter.id}}"
+        name="op[{{filter.id}}]"
+        [(ngModel)]="filter.operator"
+        (ngModelChange)="onFilterUpdated(filter)"
+        [compareWith]="compareByHref"
+        style="vertical-align: top;"
+        >
+        @for (operator of availableOperators; track operator.href) {
+          <option
+            [textContent]="operator.name"
+            [ngValue]="operator"
+            >
+          </option>
+        }
+      </select>
+    }
+
+    @if (valueType === '[1]Boolean') {
+      <op-filter-boolean-value (filterChanged)="onFilterUpdated($event)"
+        [shouldFocus]="shouldFocus"
+        [filter]="filter"
+       />
+    }
+  </div>
+  <!-- Values -->
+  @if (showValuesInput && valueType) {
+    <div class="advanced-filters--filter-value">
+      @switch (valueType) {
+        @case ('[1]Integer') {
+          <op-filter-integer-value (filterChanged)="onFilterUpdated($event)"
+            [shouldFocus]="shouldFocus"
+            [filter]="filter"
+           />
+        }
+        @case ('[1]Date') {
+          <op-filter-date-value (filterChanged)="onFilterUpdated($event)"
+            [shouldFocus]="shouldFocus"
+            [filter]="filter"
+           />
+        }
+        @case ('[2]Date') {
+          <op-filter-dates-value (filterChanged)="onFilterUpdated($event)"
+            [shouldFocus]="shouldFocus"
+            [filter]="filter"
+           />
+        }
+        @case ('[1]DateTime') {
+          <op-filter-date-time-value (filterChanged)="onFilterUpdated($event)"
+            [shouldFocus]="shouldFocus"
+            [filter]="filter"
+           />
+        }
+        @case ('[2]DateTime') {
+          <op-filter-date-times-value [shouldFocus]="shouldFocus"
+            (filterChanged)="onFilterUpdated($event)"
+            [filter]="filter"
+           />
+        }
+        @case ('[1]String') {
+          <op-filter-string-value (filterChanged)="onFilterUpdated($event)"
+            [shouldFocus]="shouldFocus"
+            [filter]="filter"
+           />
+        }
+        @case ('[1]Float') {
+          <op-filter-string-value (filterChanged)="onFilterUpdated($event)"
+            [shouldFocus]="shouldFocus"
+            [filter]="filter"
+           />
+        }
+        @case ('[]Project') {
+          <op-filter-project (filterChanged)="onFilterUpdated($event)"
+            [shouldFocus]="shouldFocus"
+            [filter]="filter"
+           />
+        }
+        @default {
+          @if (filter.currentSchema.loadedAllowedValues()) {
+            <op-filter-toggled-multiselect-value (filterChanged)="onFilterUpdated($event)"
+              [shouldFocus]="shouldFocus"
+              [filter]="filter"
+             />
+          }
+          @if (!filter.currentSchema.loadedAllowedValues()) {
+            <op-filter-searchable-multiselect-value (filterChanged)="onFilterUpdated($event)"
+              [shouldFocus]="shouldFocus"
+              [filter]="filter"
+             />
+          }
+        }
+      }
+    </div>
+  }
+
+  @if (!showValuesInput) {
+    <div
+      class="advanced-filters--filter-value"
+    ></div>
+  }
+
+  <div class="advanced-filters--remove-filter">
+    <button
+      type="button"
+      class="spot-link"
+      [title]="text.button_delete"
+      (click)="removeThisFilter()"
+      >
+      <op-icon icon-classes="icon-close advanced-filters--remove-filter-icon" />
+    </button>
+  </div>
+</ng-container>

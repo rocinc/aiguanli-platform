@@ -1,0 +1,43 @@
+# /api/v3/reminders
+---
+get:
+  summary: List all active reminders
+  operationId: list_reminders
+  tags:
+    - Reminders
+  description: |-
+    Gets a list of all active reminders for the user.
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            type: object
+            required:
+              - _type
+              - total
+              - count
+              - _embedded
+            properties:
+              _type:
+                type: string
+                enum:
+                  - Collection
+              total:
+                type: integer
+                description: The total amount of elements available in the collection.
+                minimum: 0
+              count:
+                type: integer
+                description: Actual amount of elements in this response.
+                minimum: 0
+              _embedded:
+                type: object
+                required:
+                  - elements
+                properties:
+                  elements:
+                    type: array
+                    items:
+                      $ref: '../components/schemas/reminder_model.yml'

@@ -1,0 +1,51 @@
+@if (!hidden) {
+  <!-- eslint-disable-next-line @angular-eslint/template/label-has-associated-control -->
+  <label class="spot-form-field--label-wrap">
+    <div class="spot-form-field--label">
+      @if (showErrorMessage) {
+        <span
+          class="sr-only"
+          >
+          {{ text.invalid }}
+        </span>
+      }
+      {{ label }}
+      @if (required) {
+        <span class="spot-form-field--label-indicator">*</span>
+      }
+      <ng-content select="[slot=help-text]" />
+    </div>
+    @if (!noWrapLabel) {
+      <ng-container *ngTemplateOutlet="inputTemplate" />
+    }
+  </label>
+  @if (noWrapLabel) {
+    <ng-container *ngTemplateOutlet="inputTemplate" />
+  }
+  <div
+    class="spot-form-field--description"
+    [id]="descriptionID"
+    >
+    <ng-content select="[slot=description]" />
+  </div>
+  @if (showErrorMessage) {
+    <div
+      class="spot-form-field--errors"
+      [id]="errorsID"
+      >
+      <ng-content select="[slot=errors]" />
+    </div>
+  }
+  <div class="spot-form-field--actions">
+    <ng-content select="[slot=action]" />
+  </div>
+}
+
+<ng-template #inputTemplate>
+  <div
+    class="spot-form-field--input"
+    [attr.aria-describedby]="describedByID"
+    >
+    <ng-content select="[slot=input]" />
+  </div>
+</ng-template>

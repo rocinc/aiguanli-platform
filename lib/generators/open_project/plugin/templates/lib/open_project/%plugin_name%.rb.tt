@@ -1,0 +1,8 @@
+# frozen_string_literal: true
+
+require "open_project/<%= plugin_name %>/engine"
+
+module OpenProject
+  module <%= plugin_name.camelcase %>
+  end
+end

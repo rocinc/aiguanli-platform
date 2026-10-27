@@ -1,0 +1,84 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://nextcloud.local/ocs/v1.php/cloud/user
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Ocs-Apirequest:
+      - 'true'
+      Authorization:
+      - Bearer <BEARER TOKEN>
+      User-Agent:
+      - httpx.rb/1.4.0
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      Content-Security-Policy:
+      - default-src 'none';base-uri 'none';manifest-src 'self';frame-ancestors 'none'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Tue, 11 Feb 2025 08:56:04 GMT
+      Feature-Policy:
+      - autoplay 'none';camera 'none';fullscreen 'none';geolocation 'none';microphone
+        'none';payment 'none'
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - oci9gtsdjpci=6e7c780f6af8bb0d346094b71255ee4b; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=n7qCYbFI%2B3TYcpOpD3q9YHxgqtvhBKT5MhfWYS6y7%2FBuJuvyVb2S02AnoMl3gyOy%2FRtjqtOE2E5sQROIqeSLhq1V%2B1XtnGVBp2fO5GUOF7nNxdw113EbgcRlo3SvuUul;
+        path=/; secure; HttpOnly; SameSite=Lax, oci9gtsdjpci=6e7c780f6af8bb0d346094b71255ee4b;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, oci9gtsdjpci=6e7c780f6af8bb0d346094b71255ee4b;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.2.27
+      X-Request-Id:
+      - NwKLa7eSZZu9COPzO421
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '230'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <ocs>
+         <meta>
+          <status>failure</status>
+          <statuscode>997</statuscode>
+          <message>Current user is not logged in</message>
+          <totalitems></totalitems>
+          <itemsperpage></itemsperpage>
+         </meta>
+         <data/>
+        </ocs>
+  recorded_at: Tue, 11 Feb 2025 08:56:04 GMT
+recorded_with: VCR 6.3.1

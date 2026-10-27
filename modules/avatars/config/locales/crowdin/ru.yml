@@ -1,0 +1,30 @@
+---
+ru:
+  are_you_sure_delete_avatar: Вы уверены, что хотите удалить свой аватар?
+  avatar_deleted: Аватар успешно удален.
+  avatars:
+    label_avatar: Аватар
+    label_gravatar: 'Gravatar
+
+      '
+    label_local_avatar: Пользовательский аватар
+    settings:
+      enable_gravatars: Использовать Gravatar
+      enable_local_avatars: Включить пользовательские аватары
+      gravatar_default: Gravatar по умолчанию
+    text_avatar_gravatar_html: OpenProject использует ваш Gravatar если вы зарегистрировали его на %{gravatar_url}, или изображение или значок по умолчанию, если таковой существует.
+    text_avatar_local: Вы также можете загрузить пользовательский аватар, который переопределяет Gravatar нажав на изображение. Мы рекомендуем изображение 128 на 128 пикселей.
+    text_avatar_local_only: Вы можете загрузить свой аватар, нажав на изображение. Мы рекомендуем изображение размером 128 на 128 пикселей.
+  empty_file_error: Пожалуйста, загрузите корректное изображение (jpg, png, gif)
+  error_image_size: Изображение слишком большое.
+  error_image_upload: Ошибка сохранения изображения.
+  label_avatar: Аватар
+  label_avatar_plural: Аватары
+  label_choose_avatar: Выберите аватар из файла
+  label_current_avatar: Текущий аватар
+  message_avatar_uploaded: Аватар успешно загружен.
+  plugin_openproject_avatars:
+    description: Этот плагин позволяет пользователям OpenProject загрузить изображение, которое будет использоваться в качестве аватара или использовать зарегистрированные изображения с Gravatar.
+    name: Аватары
+  unable_to_delete_avatar: Аватар не может быть удалён.
+  wrong_file_format: 'Допустимые форматы: jpg, png, gif'

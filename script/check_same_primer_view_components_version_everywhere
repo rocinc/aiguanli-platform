@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -e
+
+VERSION_REGEXP='\d+\.\d+\.\d+(-[0-9A-Za-z-]+)?'
+
+echo "Checking for same primer view components version in Gemfile.lock and frontend/package.json"
+
+versions=$(grep --color=never primer.view.components frontend/package.json Gemfile.lock \
+          | grep --extended-regexp --only-matching "$VERSION_REGEXP" \
+          | sort --unique --version-sort)
+
+if [ -z "$versions" ]
+then
+  echo "Skipping check. Unable to detect Primer view components version."
+  exit
+fi
+
+version_count=$(echo "$versions" | wc -l)
+if [ $version_count -eq 1 ]
+then
+  echo "Ok. Primer view components version is $versions everywhere"
+  exit
+fi
+
+grep --color=never primer.view.components frontend/package.json Gemfile.lock \
+  | grep --color=always --extended-regexp "$VERSION_REGEXP"
+
+echo "Error. Different Primer view components versions are used ($(echo $versions))"
+echo "Please use only one version in both Gemfile.lock and frontend/package.json"
+exit 1

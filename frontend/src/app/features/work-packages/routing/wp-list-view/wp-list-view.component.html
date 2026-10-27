@@ -1,0 +1,37 @@
+@if ((showResultOverlay$ | async) && showTableView) {
+  <div class="op-wp-list-view--result-overlay"
+  ></div>
+}
+@if (baselineEnabled) {
+  <op-baseline-legends />
+}
+<!-- TABLE + TIMELINE horizontal split -->
+@if (tableInformationLoaded && showTableView) {
+  <wp-table [projectIdentifier]="CurrentProject.identifier"
+    [configuration]="wpTableConfiguration"
+    (itemClicked)="handleWorkPackageClicked($event)"
+    (stateLinkClicked)="openStateLink($event)"
+    class="work-packages-split-view--tabletimeline-content" />
+}
+
+<!-- GRID representation of the WP -->
+@if (!showTableView) {
+  <div
+    class="op-wp-list-view--card-view-container"
+    [ngClass]="{ '-with-resizer': showResizerInCardView() }" >
+    <wp-grid [configuration]="wpTableConfiguration"
+      [showResizer]="showResizerInCardView()"
+      (itemClicked)="handleWorkPackageCardClicked($event)"
+      (stateLinkClicked)="openStateLink($event)"
+      resizerClass="work-packages-partitioned-page--content-right"
+      resizerStorageKey="openProject-splitViewFlexBasis" />
+  </div>
+}
+
+<!-- Footer -->
+@if (tableInformationLoaded) {
+  <div class="work-packages-split-view--tabletimeline-footer hide-when-print"
+    >
+    <wp-table-pagination />
+  </div>
+}

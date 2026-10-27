@@ -1,0 +1,18 @@
+@import "helpers"
+
+.op-wp-breadcrumb
+  @include global-breadcrumb-styles
+  height: initial
+
+  &--ellipsed
+    max-width: 600px
+    @include text-shortener
+
+  &--active-parent-select
+    width: 500px
+
+  ul.op-breadcrumb li wp-breadcrumb-parent
+    white-space: initial
+
+  .ng-placeholder
+    @include text-shortener

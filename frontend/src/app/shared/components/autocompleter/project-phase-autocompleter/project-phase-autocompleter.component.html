@@ -1,0 +1,48 @@
+<!-- This is mostly the same template as the one for the create-autocompleter but with the icons prepended -->
+
+<ng-select #ngSelectComponent
+  [(ngModel)]="model"
+  [items]="availableValues"
+  [ngClass]="classes"
+  [groupBy]="groupByFn"
+  [addTag]="createAllowed"
+  [virtualScroll]="true"
+  [required]="required"
+  [clearable]="!required"
+  [disabled]="disabled"
+  [typeahead]="typeahead"
+  [clearOnBackspace]="false"
+  [clearSearchOnAdd]="false"
+  [appendTo]="appendTo"
+  [hideSelected]="hideSelected"
+  [compareWith]="compareByHref"
+  [id]="id"
+  (change)="changeModel($event)"
+  (open)="opened()"
+  (close)="closed()"
+  (keydown)="keyPressed($event)"
+  bindLabel="name">
+  <ng-template ng-label-tmp let-item="item">
+    @if (isPhase(item)) {
+      <span
+        [innerHtml]="phaseIcon"
+        [classList]="iconClasses(item)">
+      </span>
+    }
+    <span [textContent]="item.name"></span>
+  </ng-template>
+
+  <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+    @if (isPhase(item)) {
+      <span
+        [innerHtml]="phaseIcon"
+        [classList]="iconClasses(item)">
+      </span>
+    }
+    <span [ngOptionHighlight]="search"
+      [textContent]="item.name"
+      [ngStyle]="{'padding-left.px': item.depth * 16}"
+      class="ng-option-label ellipsis">
+    </span>
+  </ng-template>
+</ng-select>

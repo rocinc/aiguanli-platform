@@ -1,0 +1,48 @@
+<%=
+  component_wrapper do
+    flex_layout do |container|
+      if @meeting.errors[:base].present?
+        container.with_row(mb: 3) do
+          render(Primer::Alpha::Banner.new(mb: 3, icon: :stop, scheme: :danger)) { @meeting.errors[:base].join("\n") }
+        end
+      end
+      container.with_row do
+        render(
+          OpenProject::Common::BorderBoxListComponent.new(
+            container: "op-meeting-participants-#{@meeting.id}"
+          )
+        ) do |list|
+          list.with_header(
+            title: t("meeting.participants.label.participants"),
+            count: @meeting.participants.count,
+            color: :muted
+          ) do |header|
+            if show_mark_all_attended?
+              header.with_action_button(
+                tag: :a,
+                scheme: :invisible,
+                href: mark_all_attended_project_meeting_participants_path(@meeting.project, @meeting),
+                data: { turbo_method: :post }
+              ) do |button|
+                button.with_leading_visual_icon(icon: :"op-people-all-assigned")
+                t("meeting.participants.label.mark_all_as_attended")
+              end
+            end
+          end
+
+          list.with_empty_state(
+            title: I18n.t("meeting.participants.blankslate.heading"),
+            description: I18n.t("meeting.participants.blankslate.description"),
+            icon: :people
+          )
+
+          @meeting_participants.each do |participant|
+            list.with_item do
+              render(Meetings::Participants::BoxRowComponent.new(meeting: @meeting, participant:))
+            end
+          end
+        end
+      end
+    end
+  end
+%>

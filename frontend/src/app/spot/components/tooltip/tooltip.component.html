@@ -1,0 +1,8 @@
+<ng-content select="[slot=trigger]" />
+@if (!disabled) {
+  <div
+    [ngClass]="['spot-tooltip--body', 'spot-container', alignmentClass]"
+    >
+    <ng-content select="[slot=body]" />
+  </div>
+}

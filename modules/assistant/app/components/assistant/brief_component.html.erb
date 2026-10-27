@@ -1,0 +1,113 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<section class="assistant-brief" aria-labelledby="assistant-brief-title" data-test-selector="assistant-brief">
+  <h2 id="assistant-brief-title" class="assistant-brief--title">
+    <%= render(Primer::Beta::Octicon.new(icon: :"sparkle-fill", size: :small, color: :muted, "aria-hidden": true)) %>
+    <%= title %>
+  </h2>
+
+  <% if away %>
+    <details class="assistant-brief--group assistant-brief--away" open data-test-selector="assistant-brief-away">
+      <summary class="assistant-brief--group-title">
+        <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-brief--chevron", "aria-hidden": true)) %>
+        <%= t("assistant.away.title") %>
+        <span class="assistant-brief--muted"><%= away_range %></span>
+      </summary>
+      <% if away_lines.empty? %>
+        <p class="assistant-brief--muted"><%= t("assistant.away.quiet") %></p>
+      <% else %>
+        <ul class="assistant-brief--away-list">
+          <% away_lines.each do |line| %>
+            <li>
+              <% if (name = away_project(line)) %>
+                <span class="assistant-brief--project"><%= name %></span>
+              <% end %>
+              <% if (url = line.dig("subject", "url")) %>
+                <%= link_to(line["headline"], url, data: { turbo_frame: "_top" }) %>
+              <% else %>
+                <%= line["headline"] %>
+              <% end %>
+              <% if (because = away_because(line)) %>
+                <span class="assistant-brief--muted"><%= because %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </details>
+  <% end %>
+
+  <% if empty? && handled.empty? %>
+    <p class="assistant-brief--quiet" data-test-selector="assistant-brief-empty"><%= quiet_text %></p>
+  <% end %>
+
+  <% if decision_lines.any? %>
+    <section class="assistant-brief--group" aria-labelledby="assistant-brief-decisions" data-test-selector="assistant-brief-decisions">
+      <h3 id="assistant-brief-decisions" class="assistant-brief--group-title"><%= t("assistant.brief.groups.decisions") %></h3>
+      <% decision_lines.each do |signal| %>
+        <div class="assistant-brief--entry">
+          <% if (name = project_name(signal)) %>
+            <p class="assistant-brief--project"><%= name %></p>
+          <% end %>
+          <%= render(Assistant::NoticeComponent.new(signal:, user:, density: :card, heading_level: 4, handled: signal.outcome.present?)) %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+
+  <% if drafts.any? %>
+    <section class="assistant-brief--group" aria-labelledby="assistant-brief-drafts" data-test-selector="assistant-brief-drafts">
+      <h3 id="assistant-brief-drafts" class="assistant-brief--group-title"><%= t("assistant.brief.groups.drafts") %></h3>
+      <% drafts.each do |item| %>
+        <div class="assistant-brief--entry">
+          <% if (name = project_name(item.action)) %>
+            <p class="assistant-brief--project"><%= name %></p>
+          <% end %>
+          <%= render(Assistant::DraftComponent.new(action: item.action, user:, density: :card, heading_level: 4)) %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+
+  <% if done.any? %>
+    <section class="assistant-brief--group" aria-labelledby="assistant-brief-done" data-test-selector="assistant-brief-done">
+      <h3 id="assistant-brief-done" class="assistant-brief--group-title"><%= t("assistant.brief.groups.done") %></h3>
+      <% done.each do |action| %>
+        <div class="assistant-brief--entry">
+          <% if (name = project_name(action)) %>
+            <p class="assistant-brief--project"><%= name %></p>
+          <% end %>
+          <%= render(Assistant::ReceiptComponent.new(action:, user:, density: :line)) %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+
+  <% if deferred.any? %>
+    <details class="assistant-brief--group assistant-brief--deferred" data-test-selector="assistant-brief-deferred">
+      <summary class="assistant-brief--group-title">
+        <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-brief--chevron", "aria-hidden": true)) %>
+        <%= deferred_title %>
+      </summary>
+      <% deferred.each do |entry| %>
+        <div class="assistant-brief--entry">
+          <% if (name = project_name(entry)) %>
+            <p class="assistant-brief--project"><%= name %></p>
+          <% end %>
+          <% if entry.is_a?(Assistant::Signal) %>
+            <%= render(Assistant::NoticeComponent.new(signal: entry, user:, density: :line, heading_level: 4)) %>
+          <% else %>
+            <%= render(Assistant::DraftComponent.new(action: entry.action, user:, density: :line)) %>
+          <% end %>
+        </div>
+      <% end %>
+    </details>
+  <% end %>
+</section>

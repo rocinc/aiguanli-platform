@@ -1,0 +1,84 @@
+---
+uk:
+  activerecord:
+    attributes:
+      webhooks/log:
+        event_name: Назва події
+        response_body: Відповідь
+        response_code: Код відповіді
+        url: URL корисних даних
+      webhooks/webhook:
+        enabled: Увімкнено
+        events: Події
+        projects: Включені проєкти
+        secret: Секретний ключ підпису
+        url: URL корисних даних
+    models:
+      webhooks/log:
+        one: Журнал вебхуків
+        few: Журнали вебхуків
+        many: Журнали вебхуків
+        other: Журнали вебхуків
+      webhooks/webhook:
+        one: Вебхук
+        few: Вебхуки
+        many: Вебхуки
+        other: Вебхуки
+  plugin_openproject_webhooks:
+    description: Надає плагіну API для підтримки вебгуків OpenProject для кращої інтеграції сторонніх розробників.
+    name: Вебгуки OpenProject
+  webhooks:
+    outgoing:
+      deliveries:
+        no_results_table: Для цього вебгуку не виконано жодної доставки.
+        time: Час доставки
+        title: Останні події
+      events:
+        comment: Коментар
+        created: Створено
+        internal_comment: Внутрішній коментар
+        updated: Оновлено
+      explanation_html: 'У разі такої події, як створення пакета робіт або оновлення проєкту, OpenProject надсилає POST-запит налаштованим кінцевим точкам мережі. Здебільшого подія надсилається після того, як мине [налаштований період агрегації](aggregation_path).
+
+        '
+      form:
+        apiv3_doc_url: Щоб дізнатися більше, ознайомтеся з документацією API
+        description:
+          placeholder: Необов’язковий опис вебгуку.
+        enabled:
+          description: 'Якщо цей прапорець установлено, вебгук запускатиме вибрані події. Зніміть його, щоб вимкнути вебгук.
+
+            '
+        events:
+          title: Увімкнені події
+        introduction: 'Надішліть запит POST на URL-адресу корисних даних нижче для будь-якої події в проєкті, на яку ви підписані. Корисні дані збігатимуться з представленням APIv3 зміненого об’єкта.
+
+          '
+        project_ids:
+          all: Всі проекти
+          description: Виберіть, для яких проєктів виконуватиметься цей вебгук.
+          selected: Тільки обрані проекти
+          title: Включені проєкти
+        secret:
+          description: 'Якщо встановлено, корисні дані вебгуку підписуватимуться за допомогою секретного значення.
+
+            '
+        selected_project_ids:
+          title: Вибрані проекти
+      label_add_new: Додати новий вебхук
+      label_edit: Редагувати вебхук
+      label_x_events:
+        one: 1 подія
+        other: "%{count} події(-й)"
+        zero: Немає подій
+      no_results_table: Немає доданих вебхуків.
+      status:
+        disabled: Вебхук вимкнений
+        disabled_text: Натисніть кнопку редагування, щоб активувати вебгук.
+        enabled: Вебхук увімкнено
+        enabled_text: Вебгук випускатиме корисні дані для визначених подій нижче.
+    plural: Вебхуки
+    resources:
+      time_entry:
+        name: Запис часу
+    singular: Вебхук

@@ -1,0 +1,197 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+.assistant-recap--item
+  margin-bottom: var(--base-size-8)
+
+.assistant-recap--who
+  color: var(--fgColor-muted)
+
+.assistant-verbs
+  display: block
+  margin: var(--base-size-4) 0 0
+
+  &--bar
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: var(--base-size-4)
+    margin-left: calc(-1 * var(--base-size-8))
+
+  &--state
+    display: flex
+    align-items: center
+    gap: var(--base-size-4)
+    margin: var(--base-size-4) 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--refused
+    color: var(--fgColor-attention)
+
+  &--inline-form
+    display: inline-flex
+    margin: 0
+
+  &--more
+    position: relative
+
+    > summary
+      list-style: none
+
+      &::-webkit-details-marker
+        display: none
+
+  &--menu
+    position: absolute
+    z-index: 20
+    display: flex
+    flex-direction: column
+    min-width: 7rem
+    padding: var(--base-size-4)
+    border: var(--borderWidth-thin) solid var(--borderColor-default)
+    border-radius: var(--borderRadius-medium)
+    background: var(--overlay-bgColor)
+    box-shadow: var(--shadow-floating-small)
+
+    .Button, form
+      justify-content: flex-start
+      width: 100%
+
+  &--panel
+    display: grid
+    grid-template-rows: 0fr
+    opacity: 0
+    transition: grid-template-rows 150ms ease-out, opacity 150ms ease-out
+
+    &.is-open
+      grid-template-rows: 1fr
+      opacity: 1
+
+    @media (prefers-reduced-motion: reduce)
+      transition: none
+
+  &--panel-inner
+    min-height: 0
+    overflow: hidden
+
+  &--form
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+    margin-top: var(--base-size-4)
+    padding: var(--base-size-8) var(--base-size-12)
+    max-width: 30rem
+    border: var(--borderWidth-thin) solid var(--borderColor-muted)
+    border-radius: var(--borderRadius-medium)
+    background: var(--bgColor-muted)
+
+  &--lead
+    margin: var(--base-size-4) 0 0
+    font-weight: var(--base-text-weight-semibold)
+
+  &--help
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--choices
+    display: flex
+    flex-direction: column
+    margin: 0
+    padding: 0
+    border: 0
+    min-width: 0
+
+    legend
+      padding: 0
+      margin-bottom: var(--base-size-4)
+      color: var(--fgColor-muted)
+      font-size: var(--text-body-size-small)
+
+  &--people
+    max-height: 14rem
+    overflow-y: auto
+
+  &--choice
+    display: flex
+    align-items: center
+    gap: var(--base-size-8)
+    padding: var(--base-size-4) var(--base-size-8)
+    border-radius: var(--borderRadius-medium)
+    cursor: pointer
+
+    &:hover, &:focus-within
+      background: var(--control-transparent-bgColor-hover)
+
+    &[hidden]
+      display: none
+
+  &--choice-label
+    font-weight: var(--base-text-weight-medium)
+
+  &--choice-hint
+    margin-left: auto
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+    white-space: nowrap
+
+  &--find
+    display: flex
+    align-items: center
+    gap: var(--base-size-8)
+
+    input
+      flex: 1
+
+  &--where
+    display: flex
+    align-items: center
+    gap: var(--base-size-8)
+
+  &--actions
+    display: flex
+    align-items: center
+    gap: var(--base-size-8)
+
+.assistant-source-line
+  max-width: 30rem
+
+  .assistant-notice
+    border-color: var(--borderColor-muted)
+    border-radius: var(--borderRadius-medium)
+    background: var(--bgColor-muted)
+
+.assistant-verbs--compact
+  margin-top: 0
+
+  .assistant-verbs--form
+    max-width: 100%
+    box-sizing: border-box
+
+  .assistant-verbs--choice-hint
+    white-space: normal
+    text-align: right
+
+.assistant-promises--item
+  flex-wrap: wrap
+
+  .assistant-verbs
+    flex-basis: 100%
+
+.assistant-promises--sentence
+  display: flex
+  align-items: center
+  gap: var(--base-size-8)
+  margin: 0
+
+.assistant-marks--entry .assistant-verbs
+  margin-top: 0
+
+.assistant-person-load
+  color: var(--fgColor-muted)
+  font-size: var(--text-body-size-small)

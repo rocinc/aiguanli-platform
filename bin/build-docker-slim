@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker build -t openproject/openproject:$(git rev-parse --abbrev-ref HEAD | tr '/' '-')-slim --build-arg BIM_SUPPORT=false --target slim -f docker/prod/Dockerfile .
+

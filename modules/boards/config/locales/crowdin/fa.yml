@@ -1,0 +1,51 @@
+---
+fa:
+  activerecord:
+    models:
+      boards/grid:
+        one: برد
+        other: بردها
+  boards:
+    board_type_attributes:
+      assignee: مسئول انجام
+      basic: پایه
+      status: Kanban
+      subproject: زیرپروژه
+      subtasks: والد-فرزند
+      version: نسخه
+    board_type_descriptions:
+      assignee: 'تابلویی با ستون‌های خودکار براساس کاربران تخصیص‌یافته. مناسب برای توزیع بسته‌های کاری.
+
+        '
+      basic: 'با یک تابلوی خالی از ابتدا شروع کنید. کارت‌ها و ستون‌ها را دستی به این تابلو اضافه کنید.
+
+        '
+      status: 'تابلوی ساده سبک Kanban با ستون‌هایی برای وضعیت‌هایی مانند «برای انجام»، «در حال انجام» و «انجام‌شده».
+
+        '
+      subproject: 'تابلویی با ستون‌های خودکار برای زیرپروژه‌ها. کشیدن بسته‌های کاری به فهرست‌های دیگر، (زیر)پروژه را متناسب با آن به‌روزرسانی می‌کند.
+
+        '
+      subtasks: 'تابلویی با ستون‌های خودکار برای زیراجزا. کشیدن بسته‌های کاری به فهرست‌های دیگر، والد را متناسب با آن به‌روزرسانی می‌کند.
+
+        '
+      version: 'تابلویی با ستون‌های خودکار براساس ویژگی نسخه. مناسب برای برنامه‌ریزی توسعه محصول.
+
+        '
+    board_types:
+      action: تابلوی اقدام (%{attribute})
+      free: پایه
+    label_board: برد
+    label_board_type: نوع برد
+    label_boards: بردها
+    label_create_new_board: ایجاد تابلوی جدید
+  ee:
+    upsell:
+      board_view:
+        description: می‌خواهید گردش‌کارهای خود را با بردها خودکار کنید؟ بردهای پیشرفته یک افزونه Enterprise هستند. لطفاً به طرح پولی ارتقا دهید.
+  permission_manage_board_views: مدیریت تابلو ها
+  permission_show_board_views: مشاهده تابلو ها
+  plugin_openproject_boards:
+    description: نماهای برد را فراهم می‌کند.
+    name: تابلوهای  OpenProject
+  project_module_board_view: بردها

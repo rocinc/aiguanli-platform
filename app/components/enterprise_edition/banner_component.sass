@@ -1,0 +1,163 @@
+/*!
+ / -- copyright
+ / OpenProject is an open source project management software.
+ / Copyright (C) the OpenProject GmbH
+ /
+ / This program is free software; you can redistribute it and/or
+ / modify it under the terms of the GNU General Public License version 3.
+ /
+ / OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+ / Copyright (C) 2006-2013 Jean-Philippe Lang
+ / Copyright (C) 2010-2013 the ChiliProject Team
+ /
+ / This program is free software; you can redistribute it and/or
+ / modify it under the terms of the GNU General Public License
+ / as published by the Free Software Foundation; either version 2
+ / of the License, or (at your option) any later version.
+ /
+ / This program is distributed in the hope that it will be useful,
+ / but WITHOUT ANY WARRANTY; without even the implied warranty of
+ / MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ / GNU General Public License for more details.
+ /
+ / You should have received a copy of the GNU General Public License
+ / along with this program; if not, write to the Free Software
+ / Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ /
+ / See COPYRIGHT and LICENSE files for more details.
+ / ++
+ /
+
+$op-enterprise-banner-fixed-height-medium: 220px
+$op-enterprise-banner-fixed-height-large: 320px
+
+.op-enterprise-banner-container
+  container-name: banner
+  container-type: inline-size
+
+// Hide the medium banner image when the container is smaller than 1000px
+@container banner (max-width: 1000px)
+  .op-enterprise-banner.op-enterprise-banner_medium
+    grid-template-columns: 1fr
+    height: auto
+
+  .op-enterprise-banner--image
+    background-image: none !important
+
+@container banner (max-width: 1300px)
+  .op-enterprise-banner .op-enterprise-banner--image
+    background-size: cover
+
+.op-enterprise-banner
+  display: grid
+  grid-auto-flow: column
+  grid-template-areas: "visual content dismiss"
+  grid-template-columns: min-content 1fr min-content
+  grid-template-rows: min-content
+  border: var(--borderWidth-thin) solid var(--enterprise-upsell-color)
+  border-radius: var(--borderRadius-medium)
+  background: var(--body-background)
+  padding: var(--base-size-8)
+  overflow: hidden
+
+  &_medium
+    position: relative
+    padding: 0
+    grid-template-areas: "content graphic"
+    grid-template-columns: 2fr 1fr
+    height: $op-enterprise-banner-fixed-height-medium
+
+  &_medium &
+    padding: 0
+    grid-template-areas: "content graphic"
+    grid-template-columns: 1fr 1fr
+
+    &--content
+      height: $op-enterprise-banner-fixed-height-medium
+      z-index: 1
+      align-self: center
+      padding: var(--base-size-16)
+
+  &_large
+    position: relative
+    padding: 0
+    display: flex
+    justify-content: center
+    grid-template-areas: "content"
+    grid-template-columns: 100%
+
+  &_large &
+    &--title-wrapper
+      justify-content: center
+
+    &--description
+      text-align: center
+
+  &--image
+    @include upsell-image
+    background-image: var(--op-enterprise-banner--image)
+
+  &--media
+    display: block
+    margin: 0 auto
+    max-width: 50vw
+    object-fit: contain
+    box-shadow: var(--shadow-floating-small)
+    border-radius: 25px
+    border: 1px solid var(--borderColor-default)
+
+    @media screen and (max-width: $breakpoint-md)
+      max-width: unset
+      width: 100%
+      border-radius: 15px
+
+    &_dark
+      display: none
+
+  &--visual
+    display: grid
+    align-self: start
+    padding: var(--base-size-6) var(--base-size-8)
+
+  &--icon
+    color: var(--enterprise-upsell-color)
+    margin-block: var(--base-size-2)
+
+  &--close-icon
+    .Button-visual
+      color: var(--enterprise-upsell-color)
+
+    &_hovering
+      position: absolute
+      top: var(--base-size-24)
+      right: var(--base-size-24)
+
+  &--description
+    flex-grow: 1
+
+  &--content
+    padding: var(--base-size-6) var(--base-size-8)
+
+  &--upsell-buttons
+    gap: var(--base-size-8)
+
+  &--dismiss
+    margin-left: var(--controlStack-medium-gap-condensed)
+
+// With a dedicated dark image there is no need for the invert-filter fallback
+// coming from the upsell-image mixin. The gradient is redefined as the inverted
+// white would no longer match the (non-inverted) dark image.
+body[data-color-mode="dark"]
+  .op-enterprise-banner--image_dark-variant
+    background-image: var(--op-enterprise-banner--image-dark)
+    filter: none
+    -webkit-filter: none
+
+    &:after
+      background: linear-gradient(to left, transparent 0%, var(--body-background) 100%)
+
+  .op-enterprise-banner--media_light
+    display: none
+
+  .op-enterprise-banner--media_dark
+    display: block

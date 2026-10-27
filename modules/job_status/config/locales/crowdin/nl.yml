@@ -1,0 +1,26 @@
+---
+nl:
+  activerecord:
+    models:
+      job_status/status:
+        one: Background job status
+        other: Background job statuses
+  job_status_dialog:
+    click_to_download: Or [click here](download_url) to download.
+    download_starts: De download zou automatisch moeten starten.
+    errors: Something went wrong
+    generic_messages:
+      cancelled: De taak is geannuleerd wegens een fout
+      error: De taak is niet voltooid.
+      in_process: De taak wordt momenteel verwerkt.
+      in_queue: De taak is in de wachtrij geplaatst en zal binnenkort worden verwerkt.
+      not_found: Deze taak werd niet gevonden.
+      success: De taak is voltooid.
+    redirect: U wordt omgeleid.
+    redirect_errors: Door deze fouten wordt u niet automatisch doorgestuurd.
+    redirect_link: Klik hier om door te gaan.
+    title: Achtergrond-taak status
+  label_job_status_plural: Baanstatussen
+  plugin_openproject_job_status:
+    description: Lijst en status van achtergrondtaken.
+    name: OpenProject status Taak

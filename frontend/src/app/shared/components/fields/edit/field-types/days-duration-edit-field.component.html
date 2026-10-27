@@ -1,0 +1,8 @@
+<input
+  type="number"
+  class="inline-edit--field op-input"
+  [ngModel]="formattedValue"
+  (click)="onInputClick($event)"
+  (focus)="showDatePickerModal()"
+  [id]="handler.htmlId"
+/>

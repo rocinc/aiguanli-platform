@@ -1,0 +1,38 @@
+# /api/v3/project_phases/{id}
+---
+get:
+  summary: Get a project phase
+  operationId: get_project_phase
+  tags:
+    - Project Phases
+  description: |-
+    Gets a project phase resource. This resource contains an instance of a ProjectPhaseDefinition within a project which can
+    then have project specific dates.
+  parameters:
+    - name: id
+      description: Project phase id
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 1337
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/project_phase_model.yml'
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          example:
+            _type: Error
+            errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+            message: The requested resource could not be found.
+      description: |-
+        Returned if the project phase does not exist or the client does not have sufficient permissions to see it.
+
+        **Required permission:** view project phase

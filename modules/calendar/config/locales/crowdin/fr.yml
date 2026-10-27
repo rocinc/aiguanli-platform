@@ -1,0 +1,12 @@
+---
+fr:
+  label_calendar: Calendrier
+  label_calendar_plural: Calendriers
+  label_new_calendar: Nouveau calendrier
+  permission_manage_calendars: Gérer les calendriers
+  permission_share_calendars: S'abonner à iCalendars
+  permission_view_calendar: Voir les calendriers
+  plugin_openproject_calendar:
+    description: Fournit des vues du calendrier.
+    name: Calendrier OpenProject
+  project_module_calendar_view: Calendriers

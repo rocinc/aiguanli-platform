@@ -1,0 +1,58 @@
+# /api/v3/relations
+---
+get:
+  summary: List Relations
+  operationId: list_relations
+  tags:
+    - Relations
+  description: |-
+    Lists all relations according to the given (optional, logically conjunctive) filters and ordered by ID.
+    The response only includes relations between work packages which the user is allowed to see.
+  parameters:
+    - name: filters
+      description: |-
+        JSON specifying filter conditions. Accepts the same format as returned by
+        the [queries](https://www.openproject.org/docs/api/endpoints/queries/) endpoint. Valid fields to filter by are:
+        
+        - id - ID of relation
+        - from - ID of work package from which the filtered relations emanates.
+        - to - ID of work package to which this related points.
+        - involved - ID of either the `from` or the `to` work package.
+        - type - The type of relation to filter by, e.g. "follows".
+      example: '[{ "from": { "operator": "=", "values": 42 } }]'
+      in: query
+      required: false
+      schema:
+        type: string
+    - name: sortBy
+      description: |-
+        JSON specifying sort criteria.
+        Accepts the same format as returned by the [queries](https://www.openproject.org/docs/api/endpoints/queries/) endpoint.
+      example: '[["type", "asc"]]'
+      in: query
+      required: false
+      schema:
+        type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/relation_collection_model.yml'
+          examples:
+            response:
+              $ref: '../components/examples/relation_collection_response.yml'
+    '400':
+      description: Returned if the client provides invalid filter parameters.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:InvalidQuery
+                message:
+                  - Filters Type filter has invalid values.

@@ -1,0 +1,38 @@
+# /api/v3/project_phase_definitions/{id}
+---
+get:
+  summary: Get a project phase definition
+  operationId: get_project_phase_definition
+  tags:
+    - Project Phase Definitions
+  description: |-
+    Gets a project phase definition resource. This resource is part of the abstract definition of a project life
+    cycle shaping the phases of a project. 
+  parameters:
+    - name: id
+      description: Project phase definition id
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 1337
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/project_phase_definition_model.yml'
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          example:
+            _type: Error
+            errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+            message: You are not authorized to access this resource.
+      description: |-
+        Returned if the user does not have permission to see project phases.
+
+        **Required permission:** view project phase OR select project phase

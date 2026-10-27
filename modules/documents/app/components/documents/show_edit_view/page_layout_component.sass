@@ -1,0 +1,43 @@
+.document-page-layout
+  display: grid
+  grid-template-columns: 3fr 1fr
+  grid-template-rows: auto 1fr
+  grid-template-areas: "header right" "left right"
+  height: 100%
+  overflow: hidden
+
+  &--left
+    overflow-x: hidden
+    overflow-y: auto
+    position: relative
+    @include styled-scroll-bar
+    @include no-visible-scroll-bar
+
+  &--right
+    border-left: 1px solid var(--borderColor-default)
+    display: flex
+    flex-direction: column
+    overflow: hidden
+    position: relative
+
+    @media screen and (max-width: $breakpoint-lg)
+      border-left: none
+
+  &--right-content
+    overflow: auto
+    @include styled-scroll-bar
+    @include no-visible-scroll-bar
+
+  // This check is a fallback for accessible users who zoom in heavily.
+  // Since the logic of this component depends on the browser gem detecting real devices,
+  // the layout would break on zoomed screens heavily which would make the module basically unusable.
+  &:not(.document-page-layout_desktop-device)
+    @media screen and (max-width: $breakpoint-lg)
+      grid-template-columns: unset
+      grid-template-areas: "header" "right"
+
+  &--underline-panels
+    display: flex
+    flex-direction: column
+    height: 100%
+    overflow: hidden

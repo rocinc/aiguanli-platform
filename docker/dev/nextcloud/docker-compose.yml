@@ -1,0 +1,35 @@
+services:
+  nextcloud:
+    image: nextcloud:stable
+    restart: unless-stopped
+    networks:
+      - gateway
+    volumes:
+      - nextcloud:/var/www/html
+      #   If you want to use a local version of a plugin, mount a local folder
+      #   more detailed instructions available at https://github.com/nextcloud/integration_openproject/blob/master/docs/setup_via_docker.md
+      # - ../nextcloud_apps:/var/www/html/custom_apps
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.${OPENPROJECT_DOCKER_DEV_TLD:-local}`)"
+      - "traefik.http.routers.nextcloud.entrypoints=websecure"
+
+  cron:
+    image: nextcloud:stable
+    restart: unless-stopped
+    volumes:
+      - nextcloud:/var/www/html
+      #   If you want to use a local version of a plugin, mount a local folder
+      #   more detailed instructions available at https://github.com/nextcloud/integration_openproject/blob/master/docs/setup_via_docker.md
+      # - ../nextcloud_apps:/var/www/html/custom_apps
+    networks:
+      - gateway
+    entrypoint: /cron.sh
+
+networks:
+  gateway:
+    external: true
+    name: gateway
+
+volumes:
+  nextcloud:

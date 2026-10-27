@@ -1,0 +1,55 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+ms:
+  js:
+    github_integration:
+      github_actions: Tindakan
+      pull_requests:
+        merged_message: 'Tarik permintaan #%{pr_number} %{pr_link} untuk %{repository_link} telah %{pr_state} oleh %{github_user_link}.'
+        message: 'Tarik permintaan #%{pr_number}%{pr_link} untuk %{repository_link} dikarang oleh %{github_user_link} telah %{pr_state}.'
+        referenced_message: 'Tarik permintaan #%{pr_number} %{pr_link} untuk %{repository_link} dikarang oleh %{github_user_link} merujuk kepada pakej kerja ini.'
+        states:
+          closed: ditutup
+          draft: dirangka
+          merged: digabungkan
+          opened: dibuka
+          ready_for_review: sedia untuk disemak
+      tab_header:
+        copy_menu:
+          description: Salin potongan git ke papan klip
+          label: Potongan git
+        git_actions:
+          branch_name: Nama cabang
+          cmd: Cipta cabang dengan komit kosong
+          commit_message: Mesej komit
+          copy_error: "❌ Salinan gagal!"
+          copy_success: "✅ Disalin!"
+          title: Potongan cepat untuk Git
+        title: Tarik permintaan
+      tab_prs:
+        empty: Masih belum ada tarik permintaan yang dipautkan lagi. Pautkan PR yang sedia ada menggunakan kod <code>OP#%{wp_id}</code> di deskripsi PR atau ciptakan PR baru.
+      work_packages:
+        tab_name: GitHub
+    work_packages:
+      tabs:
+        github: GitHub

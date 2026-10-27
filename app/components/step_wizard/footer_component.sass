@@ -1,0 +1,64 @@
+// -- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+// ++
+
+.op-step-wizard-footer
+  height: 56px
+  background: var(--display-gray-bgColor-muted)
+  border: var(--borderWidth-thin, 1px) solid var(--borderColor-default)
+  border-radius: var(--borderRadius-medium)
+  padding: var(--base-size-8, 0.5rem) var(--base-size-16, 1rem)
+  display: grid
+  grid-template-columns: 1fr 2fr 1fr
+  gap: var(--base-size-16, 1rem)
+  align-items: center
+
+  @media screen and (max-width: $breakpoint-sm)
+    grid-template-columns: 1fr 1fr
+
+  &--actions-left,
+  &--actions-right
+    display: flex
+    gap: var(--base-size-8, 0.5rem)
+
+  &--actions-left
+    justify-content: flex-start
+
+  &--actions-right
+    justify-content: flex-end
+
+  &--progress
+    display: flex
+    justify-content: center
+    align-items: center
+    margin: 0 auto
+
+    @media screen and (max-width: $breakpoint-sm)
+      display: none
+
+  &--progress-bar
+    width: 200px

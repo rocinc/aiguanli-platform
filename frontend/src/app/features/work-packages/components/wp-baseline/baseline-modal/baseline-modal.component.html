@@ -1,0 +1,24 @@
+<spot-drop-modal
+  [opened]="opened"
+  (closed)="opened = false"
+  class="op-baseline-modal"
+>
+  <button
+    slot="trigger"
+    type="button"
+    class="button"
+    [class.-active]="opened"
+    (click)="toggleOpen()"
+    [title]="text.toggle_title"
+    data-test-selector="baseline-button"
+  >
+    <svg op-baseline-icon size="small"/>
+    <span class="button--text">{{ text.toggle_title }}</span>
+    <svg triangle-down-icon size="small"/>
+  </button>
+  <op-baseline [visible]="opened"
+    [showActionBar]="true"
+    slot="body"
+    (submitted)="opened = false"
+   />
+</spot-drop-modal>

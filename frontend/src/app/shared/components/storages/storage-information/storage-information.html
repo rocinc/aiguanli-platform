@@ -1,0 +1,28 @@
+@switch (content.iconClass) {
+  @case ('warning') {
+    <svg alert-fill-icon class="info-icon-box"></svg>
+  }
+  @case ('info') {
+    <svg info-icon class="info-icon-box"></svg>
+  }
+  @default {
+    <svg question-icon class="info-icon-box"></svg>
+  }
+}
+
+<div class="text-box">
+  <div class="text-box-header">
+    <span [textContent]="content.header"></span>
+  </div>
+  <div class="text-box-content">
+    <span [textContent]="content.content"></span>
+  </div>
+</div>
+
+@if (content.login) {
+  <div class="button-box">
+    <op-storage-login-button class="op-files-tab--storage-info-box-button"
+      [input]="content.login"
+     />
+  </div>
+}

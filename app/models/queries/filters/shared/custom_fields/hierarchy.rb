@@ -1,0 +1,71 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+module Queries
+  module Filters
+    module Shared
+      module CustomFields
+        class Hierarchy < Base
+          def ar_object_filter?
+            true
+          end
+
+          def autocomplete_options
+            items = allowed_values.map do |name, id|
+              path = name.split(" / ")
+              { name: path.last, id:, depth: path.length - 1 }
+            end
+
+            # `values` are stored as strings while the item ids are integers, so
+            # compare as strings to pre-select the current values (e.g. when
+            # editing an existing filter).
+            selected_ids = Array(values).map(&:to_s)
+
+            {
+              component: "opce-autocompleter",
+              bindValue: "id",
+              bindLabel: "name",
+              hideSelected: true,
+              defaultData: false,
+              items:,
+              model: items.select { |item| selected_ids.include?(item[:id].to_s) }
+            }
+          end
+
+          def value_objects
+            CustomField::Hierarchy::Item
+              .where(id: @values)
+              .map { |item| CustomField::Hierarchy::HierarchyItemAdapter.new(item:) }
+          end
+        end
+      end
+    end
+  end
+end

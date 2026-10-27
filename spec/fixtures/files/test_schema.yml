@@ -1,0 +1,15 @@
+type: object
+required: foo
+properties:
+  foo:
+    type: string
+    enum:
+    - one
+    - two
+    - three
+  referenced:
+    $ref: "./test_schema_reference.yml"
+  combined:
+    allOf:
+    - type: string
+    - $ref: "./test_schema_reference.yml"

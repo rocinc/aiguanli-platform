@@ -1,0 +1,1134 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+fi:
+  js:
+    admin:
+      type_form:
+        edit_query: Edit query
+      work_packages_settings:
+        warning_progress_calculation_mode_change_from_field_to_status_html: Changing progress calculation mode from work-based to status-based will result in all existing <i>% Complete</i> values to be lost and replaced with values associated with each status. Existing values for <i>Remaining work</i> may also be recalculated to reflect this change. This action is not reversible.
+        warning_progress_calculation_mode_change_from_status_to_field_html: Changing progress calculation mode from status-based to work-based will make the <i>% Complete</i> field freely editable. If you optionally enter values for <i>Work</i> or <i>Remaining work</i>, they will also be linked to <i>% Complete</i>. Changing <i>Remaining work</i> can then update <i>% Complete</i>.
+      working_days:
+        add_non_working_day: Non-working day
+        already_added_error: A non-working day for this date exists already. There can only be one non-working day created for each unique date.
+        calendar:
+          empty_state_description: No specific non-working days are defined for this year. Click on "+ Non-working day" below to add a date.
+          empty_state_header: Non-working days
+          new_date: "(new)"
+    ajax:
+      hide: Piilota
+      loading: Loading…
+      updating: Updating…
+    attachments:
+      delete: Delete attachment
+      delete_confirmation: 'Are you sure you want to delete this file? This action is not reversible.
+
+        '
+      draggable_hint: 'Drag on editor field to inline image or reference attachment. Closed editor fields will be opened while you keep dragging.
+
+        '
+      quarantined_hint: The file is quarantined, as a virus was found. It is not available for download.
+    autocomplete_ng_select:
+      add_tag: Add item
+      clear_all: Clear all
+      loading: Lataa...
+      not_found: No items found
+      type_to_search: Haku
+    autocomplete_select:
+      active: Active %{label} %{name} Aktiivinen
+      placeholder:
+        multi: Add "%{name}"Lisää
+        single: Select "%{name}"Valitse
+      remove: Remove %{name} Poista
+    autocompleter:
+      notFoundText: No items found
+      placeholder: Haku
+      project:
+        placeholder: Select project
+      search: Haku
+    backup:
+      attachments_disabled: Attachments may not be included since they exceed the maximum overall size allowed. You can change this via the configuration (requires a server restart).
+      download_backup: Download backup
+      include_attachments: Include attachments
+      info: 'You can trigger a backup here. The process can take some time depending on the amount of data (especially attachments) you have. You will receive an email once it''s ready.
+
+        '
+      last_backup: Last backup
+      last_backup_from: Last backup from
+      note: 'A new backup will override any previous one. Only a limited number of backups per day can be requested.
+
+        '
+      options: Valinnat
+      request_backup: Request backup
+      title: Backup OpenProject
+    baseline:
+      apply: Ota käyttöön
+      clear: Tyhjennä
+      drop_down:
+        a_specific_date: a specific date
+        between_two_specific_dates: between two specific dates
+        last_month: viime kuussa
+        last_week: viime viikolla
+        last_working_day: last working day
+        none: "-"
+        yesterday: eilen
+      from: Alkaen
+      header_description: Highlight changes made to this list since any point in the past.
+      help_description: Reference time zone for the baseline.
+      icon_tooltip:
+        added: Added to view within the comparison time period
+        changed: Maintained with modifications
+        removed: Removed from view within the comparison time period
+      legends:
+        changes_between: Changes between
+        changes_since: Changes since
+        in_your_timezone: 'In your local timezone:'
+        maintained_with_changes: Maintained with changes
+        no_longer_meets_filter_criteria: No longer meets filter criteria
+        now_meets_filter_criteria: Now meets filter criteria
+      show_changes_since: Show changes since
+      time: Aika
+      time_description: 'In your local time: %{datetime}'
+      to: Päättyen
+      toggle_title: Baseline
+    breadcrumb: Breadcrumb
+    button_add: Lisää
+    button_add_watcher: Lisää seuraaja
+    button_advanced_filter: Edistynyt suodatin
+    button_back: Takaisin
+    button_back_to_list_view: Takaisin listaan
+    button_cancel: Peruuta
+    button_change_project: Move to another project
+    button_check_all: Valitse kaikki
+    button_clear: Clear
+    button_close: Sulje
+    button_close_details: Sulje tarkemmat tiedot
+    button_collapse_all: Tiivistä kaikki
+    button_configure-form: Lomakkeen asetukset
+    button_confirm: Vahvista
+    button_continue: Jatka
+    button_copy: Kopioi
+    button_copy_link_to_clipboard: Copy link to clipboard
+    button_copy_numeric_id_to_clipboard: Copy numeric ID to clipboard
+    button_copy_to_clipboard: Kopioi leikepöydälle
+    button_copy_to_other_project: Duplicate in another project
+    button_create: Uusi
+    button_custom-fields: Mukautetut kentät
+    button_delete: Poista
+    button_delete_watcher: Poista seuraaja
+    button_details_view: Tiedot-näkymä
+    button_duplicate: Luo kopio
+    button_edit: Muokkaa
+    button_expand_all: Laajenna kaikki
+    button_export-atom: Lataa Atom
+    button_filter: Suodata
+    button_generate_pdf: Generate PDF
+    button_list_view: Luettelonäkymä
+    button_log_time: Kirjaa työaika
+    button_more: Lisää
+    button_more_actions: More actions
+    button_open_details: Avaa tiedot
+    button_open_fullscreen: Avaa kokonäyttötila
+    button_quote: Siteeraa
+    button_save: Tallenna
+    button_settings: Asetukset
+    button_show_cards: Korttinäkymä
+    button_show_fullscreen: Show fullscreen view
+    button_show_gantt: Show Gantt view
+    button_show_list: Listanäkymä
+    button_show_table: Show table view
+    button_show_view: Koko näytön tila
+    button_start_timer: Start timer
+    button_stop_timer: Stop timer
+    button_uncheck_all: Poista valinnat
+    button_update: Päivitä
+    caption_rate_history: Tuntihinnan historia
+    card:
+      add_new: Uusi kortti
+      highlighting:
+        entire_card_by: Kortti
+        inline: 'Korostus:'
+      remove_from_list: Poista listalta
+    chart:
+      axis_criteria: Lisää kriteeri
+      errors:
+        could_not_load: The data to display the graph could not be loaded. The necessary permissions may be lacking.
+      modal_title: Work package graph configuration
+      tabs:
+        dataset: Aineisto %{number}
+        graph_settings: Yleinen
+      type: Kaaviotyyppi
+      types:
+        bar: Pylväs
+        doughnut: Rengaskaavio
+        horizontal_bar: Vaakasuora pylväs
+        line: Viiva
+        pie: Ympyrä
+        polar_area: Polar-kaavio
+        radar: Tutka-kaavio
+    clipboard:
+      browser_error: 'Your browser doesn''t support copying to clipboard. Please copy it manually: %{content}'
+      copied_successful: Successfully copied to clipboard!
+    close_filter_title: Sulje suodatin
+    close_form_title: Sulje lomake
+    close_popup_title: Sulje ponnahdus-ikkuna
+    custom_actions:
+      date:
+        current_date: Current date
+        specific: päälle
+    description_available_columns: Käytettävissä olevat sarakkeet
+    description_current_position: 'You are here: '
+    description_select_work_package: 'Valitse tehtävä #%{id}'
+    description_subwork_package: 'Tehtävän #%{id} alitehtävä'
+    editor:
+      ckeditor_error: An error occurred within CKEditor
+      error_saving_failed: 'Tallennus epäonnistui: %{error}'
+      macro:
+        attribute_reference:
+          aria_label_project_attribute: A dynamic project attribute placed using a macro.
+          aria_label_with_name: "%{name}: %{description}"
+          aria_label_work_package_attribute: A dynamic work package attribute placed using a macro.
+          aria_label_work_package_link: A dynamic link to a work package placed using a macro.
+          invalid_attribute: The selected attribute '%{name}' does not exist.
+          nested_macro: This macro is recursively referencing %{model} %{id}.
+          not_found: Requested resource could not be found
+        child_pages:
+          button: List of sub-pages
+          hint: 'Leave this field empty to list all child pages of the current page. If you want to reference a different page, provide its title or slug.
+
+            '
+          include_parent: Include parent
+          page: Wiki-sivu
+          text: "[Placeholder] List of sub-pages of"
+          this_page: tämä sivu
+        code_block:
+          button: Lisää lähdekoodi
+          language: Formatting language
+          language_hint: Enter the formatting language that will be used for highlighting (if supported).
+          title: Lisää / muokkaa lähdekoodia
+        embedded_calendar:
+          text: "[Placeholder] Embedded calendar"
+        embedded_table:
+          button: Embed work package table
+          text: "[Placeholder] Embedded work package table"
+        error: 'Cannot expand macro: %{message}'
+        macro_dropdown:
+          caption: Insert
+        toc: Sisällysluettelo
+        toolbar_help: Click to select widget and show the toolbar. Double-click to edit widget
+        wiki_page_include:
+          button: Include content of another wiki page
+          hint: |
+            Include the content of another wiki page by specifying its title or slug.
+            You can include the wiki page of another project by separating them with a colon like the following example.
+          not_set: "(Page not yet set)"
+          page: Wiki-sivu
+          text: "[Placeholder] Included wiki page of"
+        work_package_button:
+          button: Insert create work package button
+          button_style: Valitse painiketyyli
+          button_style_hint: 'Optional: Check to make macro appear as a button, not as a link.'
+          type: Tehtävätyyppi
+          with_type: 'Luo tehtävä (tyyppi: %{typename})'
+          without_type: Luo tehtävä
+      mode:
+        manual: Lähdekoodi
+        wysiwyg: Muokkaustila
+      no_revisions: No local modifications found
+      preview: Esikatselutila
+      revisions: Show local modifications
+      source_code: Lähdekoodi
+    enumeration_activities: Tyypit (työajanseuranta)
+    enumeration_doc_categories: Tiedostoluokat
+    enumeration_work_package_priorities: Work package priorities
+    error:
+      cannot_save_changes_with_message: 'Cannot save your changes due to the following error: %{error}'
+      embedded_table_loading: 'The embedded view could not be loaded: %{message}'
+      internal: Tapahtui sisäinen virhe.
+      query_saving: The view could not be saved.
+    error_attachment_upload: 'File failed to upload: %{error}'
+    error_attachment_upload_permission: You don't have the permission to upload files on this resource.
+    error_could_not_resolve_user_name: Käyttäjän nimeä ei voitu ratkaista
+    error_could_not_resolve_version_name: Version nimeä ei voitu ratkaista
+    exclusion_info:
+      modal:
+        content: The status '%{status_name}' has been configured to be excluded from hierarchy totals of Work, Remaining work, and % Complete. The totals do not take this value into account.
+        title: Status excluded from hierarchy totals
+    favorite_projects:
+      no_results: You have no favorite projects
+      no_results_subtext: Add one or multiple projects as favorite through their overview or in a project list.
+    field_value_enter_prompt: Syötä arvo kenttään "%{field}"
+    filter:
+      description:
+        text_close_filter: To select an entry leave the focus for example by pressing enter. To leave without filter select the first (empty) entry.
+        text_open_filter: Avaa suodatin "Alt"-näppäintä ja nuolinäppäimiä käyttämällä.
+      more_values_not_shown: There are %{total} more results, search to filter results.
+      noneElement: "(none)"
+      sorting:
+        criteria:
+          one: Ensimmäinen lajitteluperuste
+          three: Kolmas lajitteluperuste
+          two: Toinen lajitteluperuste
+      time_zone_converted:
+        only_end: Till %{to} in your local time.
+        only_start: From %{from} in your local time.
+        two_values: "%{from} - %{to} in your local time."
+      value_spacer: "-"
+    forms:
+      advanced_settings: Lisäasetukset
+      load_error_message: There was an error loading the form
+      submit_success_message: The form was successfully submitted
+      validation_error_message: Please fix the errors present in the form
+    gantt_chart:
+      button_activate: Näytä gantt kaavio
+      button_deactivate: Hide Gantt chart
+      filter:
+        noneSelection: "(none)"
+      label: Gantt-kaavio
+      labels:
+        bar: Bar labels
+        description: 'Select the attributes you want to be shown in the respective positions of the Gantt chart at all times. Note that when hovering over an element, its date labels will be shown instead of these attributes.
+
+          '
+        farRight: Far right
+        left: Vasen
+        right: Oikea
+        title: Label configuration
+      quarter_label: Q%{quarter_number}
+      selection_mode:
+        notification: Click on any highlighted work package to create the relation. Press escape to cancel.
+      zoom:
+        auto: Auto zoom
+        days: Päivää
+        description: 'Select the initial zoom level that should be shown when autozoom is not available.
+
+          '
+        in: Lähennä
+        months: Kuukautta
+        out: Loitonna
+        quarters: Quarters
+        weeks: Viikkoa
+        years: Vuotta
+    general_text_No: Ei
+    general_text_Yes: Kyllä
+    general_text_no: ei
+    general_text_yes: kyllä
+    global_search:
+      all_projects: Kaikista projekteista
+      close_search: Close search
+      current_project: Tästä projektista
+      current_project_and_all_descendants: Tästä projektista + aliprojekteista
+      direct_hit_available: Work package with exact ID found. Press Enter to open it.
+      items_available: "%{count} items available"
+      recently_viewed: Recently viewed
+      search_placeholder_expanded: Search work packages by subject, project, type, status or ID
+      title:
+        all_projects: kaikki projektit
+        project_and_subprojects: and all subprojects
+        search_for: Search for
+    hal:
+      error:
+        edit_prohibited: Editing %{attribute} is blocked for this resource. Either this attribute is derived from relations (e.g, children) or otherwise not configurable.
+        format:
+          date: "%{attribute} ei ole kelvollinen päivämäärä - käytä muotoa VVVV-KK-PP."
+        general: On tapahtunut virhe.
+        update_conflict_refresh: Click here to refresh the resource and update to the newest version.
+    help_texts:
+      show_modal: Show help text
+    ical_sharing_modal:
+      copy_url_label: Copy URL
+      description: You can use the URL (iCalendar) to subscribe to this calendar in an external client and view up-to-date work package information from there.
+      ical_generation_error_text: An error occured while generating the calendar URL.
+      inital_setup_error_message: An error occured while fetching data.
+      success_message: The URL "%{name}" was successfully copied to your clipboard. Paste it in your calendar client to complete the subscription.
+      title: Subscribe to calendar
+      token_name_description_text: If you subscribe to this calendar from multiple devices, this name will help you distinguish between them in your <a href="%{myAccessTokensUrl}" target="_blank">access tokens</a> list.
+      token_name_label: Where will you be using this?
+      token_name_placeholder: Type a name, e.g. "Phone"
+      warning: Please don't share this URL with other users. Anyone with this link will be able to view work package details without an account or password.
+    include_projects:
+      apply: Ota käyttöön
+      clear_selection: Clear selection
+      include_subprojects: Include all sub-projects
+      no_results: No project matches your search criteria.
+      search_placeholder: Search projects...
+      selected_filter:
+        all: All projects
+        selected: Only selected
+      title: Projektit
+      toggle_title: Include projects
+      tooltip:
+        current_project: This is the current project you are in.
+        does_not_match_search: Project does not match the search criteria.
+        include_all_selected: Project already included since Include all sub-projects is enabled.
+    include_workspaces:
+      types:
+        portfolio: Portfolio
+        program: Program
+    inplace:
+      btn_preview_disable: Esikatselu pois päältä
+      btn_preview_enable: Esikatselu
+      button_cancel: "%{attribute}: Tallenna"
+      button_cancel_all: Peruuta
+      button_edit: "%{attribute}: Muokkaa"
+      button_save: "%{attribute}: Tallenna"
+      button_save_all: Tallenna
+      clear_value_label: "-"
+      errors:
+        maxlength: "%{field} saa sisältää enintään %{maxLength} merkkiä"
+        messages_on_field: 'Tämä kenttä on virheellinen: %{messages}'
+        minlength: "%{field} täytyy koostua vähintään %{minLength} merkistä"
+        number: "%{field} ei ole kelvollinen luku"
+        required: "%{field} ei voi olla tyhjä"
+      link_formatting_help: Text formatting help
+      null_value_label: Ei arvoa
+    invalid_job_response: Invalid response from server.
+    invite_user_modal:
+      invite: Invite
+      placeholder_add_tag: Create placeholder user
+    label_activate: Aktivoi
+    label_activity_show_all: Näytä kaikki tapahtumat
+    label_activity_show_only_comments: Näytä vain kommentit
+    label_add_attachments: Attach files
+    label_add_column_after: Add column after
+    label_add_column_before: Add column before
+    label_add_columns: Lisää sarakkeita
+    label_add_comment: Lisää kommentti
+    label_add_comment_title: Lisää kommentti (käytä @ -merkkiä käyttäjätunnusten edessä)
+    label_add_description: Lisää kuvaus tiedostolle %{file}
+    label_add_row_after: Add row after
+    label_add_row_before: Add row before
+    label_add_selected_columns: Lisää valitut sarakkeet
+    label_added_by: lisännyt
+    label_added_time_by: Added by <a href="%{authorLink}">%{author}</a> at %{age}
+    label_ago: päiviä sitten
+    label_all: kaikki
+    label_all_projects: All projects
+    label_all_uppercase: Kaikki
+    label_all_work_packages: kaikki tehtävät
+    label_and: and
+    label_ascending: Nouseva
+    label_assignee: Työn suorittaja
+    label_assignee_alt_text: This work package is assigned to %{name}
+    label_attachments: Liitteet
+    label_author: 'Tekijä: %{user}'
+    label_avatar: Kuva
+    label_between: välillä
+    label_board: Taulu
+    label_board_locked: Lukittu
+    label_board_plural: Taulut
+    label_board_sticky: Pysyvä
+    label_cancel_comment: Peruuta kommentti
+    label_change: Muuta
+    label_children_derived_duration: Work package's children derived duration
+    label_closed_work_packages: suljettu
+    label_collapse: Pienennä
+    label_collapse_all: Tiivistä kaikki
+    label_collapse_text: Collapse text
+    label_collapsed: pienennetty
+    label_columns: Sarakkeet
+    label_comment: Kommentti
+    label_contains: sisältää
+    label_create: Uusi
+    label_create_work_package: Uusi tehtävä
+    label_created_by: Luonut
+    label_created_on: luotu
+    label_current: current
+    label_custom_queries: Private
+    label_date: Päivämäärä
+    label_date_with_format: 'Kirjoita %{date_attribute} seuraavassa muodossa: %{format}'
+    label_deactivate: Poistaa käytöstä
+    label_default_queries: Oletus
+    label_descending: Laskeva
+    label_description: Kuvaus
+    label_details: Yksityiskohdat
+    label_display: Näytä
+    label_drop_files: Drop files here to attach files.
+    label_drop_folders_hint: You cannot upload folders as an attachment. Please select single files.
+    label_drop_or_click_files: Drop files here or click to attach files.
+    label_edit_comment: Muokkaa tätä kommenttia
+    label_edit_status: Edit the status of the work package
+    label_email: Sähköposti
+    label_equals: 'on'
+    label_expand: Laajenna
+    label_expand_all: Laajenna kaikki
+    label_expand_project_menu: Avaa projektivalikko
+    label_expand_text: Show full text
+    label_expanded: laajennettu
+    label_export: Vie
+    label_export_preparing: The export is being prepared and will be downloaded shortly.
+    label_favorites: Favorites
+    label_filename: Tiedosto
+    label_files_to_upload: 'Nämä tiedostot lähetetään:'
+    label_filesize: Koko
+    label_formattable_attachment_hint: Attach and link files by dropping on this field, or pasting from the clipboard.
+    label_general: Yleinen
+    label_global_queries: Julkinen
+    label_greater_or_equal: ">="
+    label_group: Ryhmä
+    label_group_by: Ryhmittely
+    label_group_plural: Ryhmät
+    label_hide_attributes: Näytä vähemmän
+    label_hide_column: Piilota sarake
+    label_hide_project_menu: Sulje projektivalikko
+    label_import: Tuo
+    label_in: tässä
+    label_in_less_than: pienempi kuin
+    label_in_more_than: suurempi kuin
+    label_incoming_emails: Saapuvat sähköpostiviestit
+    label_infinity: Infinity
+    label_information_plural: Tieto
+    label_invalid: Invalid
+    label_last_updated_on: Viimeisin päivitys
+    label_latest_activity: Viimeisimmät tapahtumat
+    label_learn_more_link: Learn more
+    label_less_or_equal: "<="
+    label_less_than_ago: vähemmän kuin päivää sitten
+    label_loading: Lataa...
+    label_mail_notification: Sähköposti-ilmoitukset
+    label_manage_columns: Manage and reorder columns
+    label_me: minä
+    label_meeting_agenda: Esityslista
+    label_meeting_minutes: Pöytäkirja
+    label_moderate_comment: Moderate comment
+    label_more_than_ago: enemän kuin päivää sitten
+    label_next: Seuraava
+    label_no_color: Ei väriä
+    label_no_data: Ei tietoja
+    label_no_date: no date
+    label_no_due_date: no finish date
+    label_no_start_date: ei aloituspäivää
+    label_no_value: Ei arvoa
+    label_none: ei mitään
+    label_not_available: Not available
+    label_not_contains: ei sisällä
+    label_not_equals: ei ole
+    label_on: päälle
+    label_open_context_menu: Avaa valikko
+    label_open_menu: Avaa valikko
+    label_open_work_packages: avoin
+    label_password: Salasana
+    label_per_page: 'Sivulla:'
+    label_please_wait: Odota hetki
+    label_press_enter_to_save: Tallenna painamalla ENTER
+    label_previous: Edellinen
+    label_project: Projekti
+    label_project_plural: Projektit
+    label_public_query: Julkinen
+    label_quote_comment: Lainaa tämä kommentti
+    label_recent: Viimeisin
+    label_rejected_files: 'Näitä tiedostoja ei voida lähettää:'
+    label_rejected_files_reason: Näitä tiedostoja ei voi lähettää, koska niiden koko on suurempi kuin %{maximumFilesize}
+    label_remove: Poista
+    label_remove_all_files: Poista kaikki tiedostot
+    label_remove_column: Poista sarake
+    label_remove_columns: Poista valitut sarakkeet
+    label_remove_file: Poista %{fileName}
+    label_remove_row: Poista rivi
+    label_remove_watcher: Poista seuraaja %{name}
+    label_report: Raportti
+    label_repository_plural: Tietovarastot
+    label_reset: Nollaus
+    label_resize_project_menu: Resize project menu
+    label_save_as: Tallenna nimellä
+    label_search_columns: Search a column
+    label_select_watcher: Valitse seuraaja...
+    label_selected_filter_list: Valitut suodattimet
+    label_show_attributes: Näytä kaikki määritteet
+    label_show_in_menu: Näytä näkymä valikossa
+    label_sort_by: Lajitteluperuste
+    label_sort_higher: Siirrä ylös
+    label_sort_lower: Siirrä alas
+    label_sorted_by: lajiteltu
+    label_sorting: Lajittelu
+    label_spent_time: Käytetty aika
+    label_star_query: Favorited
+    label_starred_queries: Favorite
+    label_subject: Aihe
+    label_sum: Yhteensä
+    label_sum_for: Summa
+    label_this_week: tällä viikolla
+    label_time_entry_plural: Käytetty aika
+    label_today: Tänään
+    label_total_amount: 'Yhteensä: %{amount}'
+    label_total_progress: "%{percent} % eteneminen"
+    label_total_sum: Total sum
+    label_unwatch: Älä seuraa
+    label_unwatch_work_package: Lopeta tehtävän seuraaminen
+    label_up: Ylös
+    label_updated_on: päivitetty
+    label_upload_counter: "%{done} tiedostoa %{count} tiedostosta valmiina"
+    label_upload_notification: Siirretään tiedostoa...
+    label_uploaded_by: Lataaja
+    label_user_plural: Käyttäjät
+    label_validation_error: 'Tehtävää ei voitu tallentaa seuraavien virheiden takia:'
+    label_value_derived_from_children: "(value derived from children)"
+    label_version_plural: Versiot
+    label_view_has_changed: Tallenna muutokset tarvittaessa
+    label_visibility_settings: Näkyvyysasetukset
+    label_wait: Odota kokoonpanoa...
+    label_warning: Varoitus
+    label_watch: Seuraa
+    label_watch_work_package: Seuraa tehtävää
+    label_watcher_added_successfully: Seuraaja lisätty!
+    label_watcher_deleted_successfully: Seuraaja poistettu!
+    label_work_package: Työpaketti
+    label_work_package_context_menu: Work package context menu
+    label_work_package_details_you_are_here: You are on the %{tab} tab for %{type} %{subject}.
+    label_work_package_parent: Parent work package
+    label_work_package_plural: Tehtävät
+    label_work_package_upload_notification: 'Lisätään tiedostoja tehtävään #%{id}: %{subject}'
+    label_wp_id_added_by: "#%{id} lisännyt %{author}"
+    modals:
+      button_apply: Ota käyttöön
+      button_cancel: Peruuta
+      button_delete: Poista
+      button_save: Tallenna
+      button_submit: Lähetä
+      destroy_time_entry:
+        text: Haluatko varmasti poistaa tämän aikakirjauksen?
+        title: Vahvista
+      form_submit:
+        text: Oletko varma, että haluat suorittaa tämän toiminnon?
+        title: Vahvista jatkaaksesi
+      label_delete_page: Poista nykyinen sivu
+      label_name: Nimi
+    no_job_id: No job ID returned from server.
+    notice_bad_request: Bad Request.
+    notice_job_started: job started.
+    notice_no_results_to_display: No visible results to display.
+    notice_successful_create: Luonti onnistui.
+    notice_successful_delete: Poisto onnistui.
+    notice_successful_update: Päivitys onnistui.
+    notifications:
+      center:
+        and_more_users:
+          one: and 1 other
+          other: and %{count} others
+        empty_state:
+          no_notification: Looks like you are all caught up.
+          no_notification_for_filter: Looks like you are all caught up for this filter.
+          no_notification_with_current_filter: Looks like you are all caught up for %{filter} filter.
+          no_notification_with_current_project_filter: Looks like you are all caught up with the selected project.
+          no_selection: Click on a notification to view all activity details.
+        label_actor_and: and
+        mark_all_read: Mark all as read
+        mark_all_read_confirmation: This will mark all notifications in this view as read. Are you sure you want to do this?
+        mark_as_read: Mark as read
+        new_notifications:
+          link_text: Click here to load them.
+          message: There are new notifications.
+        no_results:
+          at_all: New notifications will appear here when there is activity that concerns you.
+          with_current_filter: There are no notifications in this view at the moment
+        text_update_date_by: "%{date} by"
+        total_count_warning: Showing the %{newest_count} most recent notifications. %{more_count} more are not displayed.
+      date_alerts:
+        milestone_date: Milestone date
+        overdue: Overdue
+        overdue_since: for %{difference_in_days}.
+        property_is: is in %{difference_in_days}.
+        property_is_deleted: is deleted.
+        property_today: is today.
+        property_was: was %{difference_in_days} ago.
+      no_unread: No unread notifications
+      reasons:
+        assigned: Työn suorittaja
+        commented: Kommentoitu
+        created: Luotu
+        dateAlert: Date alert
+        mentioned: Mentioned
+        prioritized: Prioritized
+        processed: Processed
+        reminder: Reminder
+        responsible: Vastuuhenkilö
+        scheduled: Ajoitettu
+        shared: Shared
+        watched: Seuraajat
+      reminders:
+        note: 'Note: “%{note}”'
+      settings:
+        change_notification_settings: You can modify your <a target="_blank" href="%{url}">notification settings</a> to ensure you never miss an important update.
+        title: Notification settings
+      title: Notifications
+    onboarding:
+      buttons:
+        got_it: Selvä
+        next: Seuraava
+        skip: Ohita
+      steps:
+        boards:
+          add: Click on the plus (+) icon to <b>create a new card</b> or <b>add an existing card</b> to the list on the board.
+          drag: Drag and drop your cards within a given list to reorder them, or to move them to another list. <br> You can click the info (i) icon in the upper right-hand corner or double-click a card to open its details.
+          lists_basic: Here you can create multiple lists (columns) within your agile board.
+          lists_kanban: Here you can create multiple lists (columns) within your board. This feature allows you to create a <b>Kanban board</b>, for example.
+          overview: Select <b>boards</b> to shift the view and manage your project using the agile boards view.
+        help_menu: The Help (?) menu provides <b>additional help resources</b>. Here you can find a user guide, helpful how-to videos and more. <br> Enjoy your work with OpenProject!
+        members: Invite new <b>members</b> to join your project.
+        quick_add_button: Click on the plus (+) icon in the header navigation to <b>create a new project</b> or to <b>invite coworkers</b>.
+        sidebar_arrow: Use the return arrow in the top left corner to return to the project’s <b>main menu</b>.
+        team_planner:
+          add_assignee: To get started, add assignees to the team planner.
+          add_existing: Search for existing work packages and drag them to the team planner to instantly assign them to a team member and define start and end dates.
+          calendar: The weekly or biweekly planning board displays all work packages assigned to your team members.
+          card: Drag work packages horizontally to move them backwards or forwards in time, drag the edges to change start and end dates and even drag them vertically to a different row to assign them to another member.
+          overview: The team planner lets you visually assign tasks to team members and get an overview of who is working on what.
+        welcome: Take a three-minute introduction tour to learn the most <b>important features</b>. <br> We recommend completing the steps until the end. You can restart the tour any time.
+        wiki: Within the <b>wiki</b> you can document and share knowledge together with your team.
+        wp:
+          back_button: Use the return arrow in the top left corner to exit and return to the work package list.
+          create_button: The <b>+ Create</b> button will add a new work package to your project.
+          full_view: The <b>work package details</b> view provides all the relevant information pertaining to a given work package, such as its description, status, priority, activities, dependencies, and comments.
+          gantt_menu: Create project schedules and timelines effortlessly using the Gantt chart module.
+          list: This <b>work</b> package overview provides a list of all the work in your project, such as tasks, milestones, phases, and more. <br> Work packages can be created and edited directly from this view. To access the details of a particular work package, simply double-click its row.
+          timeline: Here you can <b>edit your project plan</b>, create new work packages, such as tasks, milestones, phases, and more, as well as <b>add dependencies</b>. All team members can see and update the latest plan at any time.
+          toggler: Now let's have a look at the <b>work package</b> section, which gives you a more detailed view of your work.
+    open_project_storage_modal:
+      waiting_subtitle:
+        network_off: There is a network problem.
+        network_on: Network is back. We are trying.
+      waiting_title:
+        timeout: Timeout
+    pagination:
+      no_other_page: Olet jo ainoalla sivulla.
+      page_navigation: Pagination navigation
+      pages:
+        page_number: Page %{number}
+        show_per_page: Show %{number} per page
+      pages_skipped: Pages skipped.
+      per_page_navigation: Items per page selection
+    placeholders:
+      default: "-"
+      description: 'Description: Click to edit...'
+      relation_description: Painamalla tästä voit lisätä kuvauksen tälle suhteelle
+      selection: Valitse
+      subject: Lisää aihe
+    project:
+      autocompleter:
+        label: Project autocompletion
+      click_to_switch_to_project: 'Project: %{projectname}'
+      context: Project context
+      not_available: Project N/A
+      required_outside_context: 'Please choose a project to create the work package in to see all attributes. You can only select projects which have the type above activated.
+
+        '
+    project_menu_details: Yksityiskohdat
+    projects:
+      identifier_suggestion:
+        loading: Loading suggestion...
+        set_name_first: Please set the name first.
+    relation_buttons:
+      abort: Keskeytä
+      add_existing: Lisää olemassaoleva
+      add_existing_child: Lisää alikohde
+      add_existing_relation: Lisää olemassa oleva suhde
+      add_new_child: Luo uusi alitehtävä
+      add_new_relation: Luo uusi riippuvuus
+      add_parent: Lisää olemassaoleva ylätaso
+      add_predecessor: Add predecessor
+      add_successor: Add successor
+      change_parent: Vaihda pääkohdetta
+      create_new: Create new
+      group_by_relation_type: Ryhmittele suhteen tyypin mukaan
+      group_by_wp_type: Ryhmittele tehtävät tyypeittäin
+      hierarchy_indent: Indent hierarchy
+      hierarchy_outdent: Outdent hierarchy
+      remove: Remove relation
+      remove_child: Poista alitehtävä
+      remove_parent: Poista ylätaso
+      save: Tallenna riippuvuus
+      set_parent: Aseta ylätehtävä
+      show_relations: Show relations
+      toggle_description: Toggle relation description
+      update_description: Määritä tai päivitä tämän suhteen kuvaus
+      update_relation: Click to change the relation type
+    relation_labels:
+      blocked: Estetty
+      blocks: Estää
+      child: Child
+      children: Alitehtävä
+      duplicated: Kopio
+      duplicates: Alkuperäinen
+      follows: Seuraa
+      includes: Sisältää
+      parent: Ylätaso
+      partof: Osa
+      precedes: Edeltää
+      relates: Liittyy
+      relation_type: riippuvuuden tyyppi
+      required: Edellyttämä
+      requires: Edellyttää
+    relations:
+      empty: Ei suhteita muihin
+      remove: Remove relation
+    relations_autocomplete:
+      parent_placeholder: Choose new parent or press escape to cancel.
+      placeholder: Haku
+    relations_hierarchy:
+      children_headline: Alitehtävä
+      hierarchy_headline: Hierarkia
+      parent_headline: Ylätaso
+    repositories:
+      select_branch: Valitse haara
+      select_tag: Valitse tunniste
+    sharing:
+      selected_count: "%{count} selected"
+      selection:
+        mixed: Mixed
+      share: Jaa
+    sort:
+      activate_asc: activate to apply an ascending sort
+      activate_dsc: activate to apply a descending sort
+      activate_no: activate to remove the sort
+      sorted_asc: 'Ascending sort applied, '
+      sorted_dsc: 'Descending sort applied, '
+      sorted_no: 'No sort applied, '
+      sorting_disabled: lajittelu on poistettu käytöstä
+    sortable_lists:
+      announcements:
+        fallback_item_label: Item
+        fallback_list_name: another list
+        move_failed_check_position: Move failed. Check the item's current position.
+        move_failed_rolled_back: Move failed. %{label} returned to its previous position.
+        moved: "%{label} moved to position %{position} of %{total}"
+        moved_to_list: "%{label} moved to %{list}, position %{position} of %{total}"
+      selection:
+        cleared: Selection cleared.
+        not_selectable: Selection unchanged. This item takes no part in this list's ordering.
+        range_blocked: Selection unchanged. That range contains an item that takes no part in this list's ordering.
+        range_restarted:
+          one: Could not extend the range. 1 item selected.
+          other: Could not extend the range. %{count} items selected.
+        range_unavailable: Selection unchanged. Expand this list to select that range.
+        selected:
+          one: 1 item selected.
+          other: "%{count} items selected."
+    spot:
+      drop_modal:
+        close: Close modal
+        focus_grab: This is a focus anchor for modals. Press shift+tab to go back to the modal trigger element.
+      filter_chip:
+        remove: Poista
+    text_are_you_sure: Oletko varma?
+    text_are_you_sure_to_cancel: You have unsaved changes on this page. Are you sure you want to discard them?
+    text_data_lost: All entered data will be lost.
+    text_query_destroy_confirmation: Are you sure you want to delete the selected view?
+    text_user_wrote: "%{value} kirjoitti:"
+    text_work_packages_destroy_confirmation: Are you sure you want to delete the selected work package(s)?
+    time_entry:
+      stop: Stop
+      title: Kirjaa työaika
+      tracking: Työajanseuranta
+      work_package_required: Requires selecting a work package first.
+    timer:
+      button_stop: Stop current timer
+      start_new_timer: Start new timer
+      timer_already_running: 'To start a new timer, you must first stop the current timer:'
+      timer_already_stopped: No active timer for this work package, have you stopped it in another window?
+      tracking_time: Tracking time
+    tl_toolbar:
+      outlines: Hierarkian taso
+      zooms: Lähennyksen taso
+    toolbar:
+      filter: Suodata
+      search_query_label: Hae näkymistä
+      settings:
+        columns: Sarakkeet
+        configure_view: Configure view
+        delete: Poista
+        display_hierarchy: Näytä hierarkia
+        display_sums: Näytä summat
+        export: Vie
+        group_by: Ryhmittely
+        hide_hierarchy: Piilota hierarkia
+        hide_sums: Piilottaa summat
+        page_settings: Nimeä näkymä
+        save: Tallenna
+        save_as: Tallenna nimellä
+        share_calendar: Subscribe to calendar
+        sort_by: Lajitteluperuste
+        visibility_settings: Näkyvyysasetukset
+      unselected_title: Työpaketti
+    two_factor_authentication:
+      label_two_factor_authentication: Kaksivaiheinen tunnistautuminen
+    units:
+      child_work_packages:
+        one: one child work package
+        other: "%{count} work package children"
+      day:
+        one: päivä
+        other: "%{count} päivää"
+        zero: 0 days
+      hour:
+        one: 1 t
+        other: "%{count} t"
+        zero: 0 t
+      hour_string: "%{hours} h"
+      word:
+        one: 1 word
+        other: "%{count} words"
+      workPackage:
+        one: work package
+        other: tehtävät
+    upsell:
+      ee_only: Enterprise edition add-on
+    views:
+      card: Kortit
+      list: Taulukko
+      timeline: Gantt
+    watchers:
+      label_add: Lisää seuraajia
+      label_discard: Poista valinta
+      label_error_loading: Virhe ladattaessa seuraajia
+      label_loading: ladataan seuraajia...
+      label_search_watchers: Etsi seuraajia
+      typeahead_placeholder: Etsi mahdollisia seuraajia
+    wiki_formatting:
+      code: Koodi
+      deleted: Poistettu
+      heading1: Otsikko 1
+      heading2: Otsikko 2
+      heading3: Otsikko 3
+      image: Kuva
+      italic: Kursivoitu
+      ordered_list: Numerointi
+      preformatted_text: Muotoiltu teksti
+      quote: Siteeraa
+      strong: Lihavoitu
+      underline: Alleviivattu
+      unordered_list: Luettelomerkit
+      unquote: Poista lainaus
+      wiki_link: Linkitys Wiki-sivulle
+    work_packages:
+      baseline:
+        addition_label: Added to view within the comparison time period
+        column_incompatible: This column does not show changes in Baseline mode.
+        modification_label: Modified within the comparison time period
+        removal_label: Removed from view within the comparison time period
+      bulk_actions:
+        delete: Bulk delete
+        duplicate: Bulk duplicate
+        edit: Bulk edit
+        move: Bulk change of project
+      button_clear: Tyhjennä
+      comment_added: Kommentin lisääminen onnistui.
+      comment_send_failed: On tapahtunut virhe. Kommenttia ei voitu lähettää.
+      comment_updated: Kommentti päivitettiin onnistuneesti.
+      confirm_edit_cancel: Oletko varma, että haluat peruuttaa tehtävän muokkauksen?
+      create:
+        button: Uusi
+        header: Uusi %{type}
+        header_no_type: Uusi tehtävä (tyyppi määrittelemättä)
+        header_with_parent: 'Uusi %{type} (Ylätaso %{parent_type} #%{id})'
+        title: Uusi tehtävä
+      default_queries:
+        all_open: Avoimet tehtävät
+        assigned_to_me: Minulle määritetyt
+        created_by_me: Itse luodut
+        latest_activity: Viimeisimmät tapahtumat
+        manually_sorted: New manually sorted query
+        overdue: Overdue
+        recently_created: Äskettäin luodut
+        shared_with_me: Shared with me
+        shared_with_users: Shared with users
+        summary: Yhteenveto
+      description_enter_text: Enter text
+      description_filter: Suodata
+      description_options_hide: Piilota valinnat
+      description_options_show: Näytä asetukset
+      duplicate:
+        title: Duplicate work package
+      edit_attribute: "%{attribute} - Muokkaa"
+      faulty_query:
+        description: Your view is erroneous and could not be processed.
+        title: Tehtävää ei voitu ladata.
+      filters:
+        baseline_incompatible: This filter attribute is not taken into consideration in Baseline mode.
+        baseline_warning: Baseline mode is on but some of your active filters are not included in the comparison.
+        title: Filter work packages
+      hierarchy:
+        children_collapsed: Hierarchy level %{level}, collapsed. Click to show the filtered children
+        children_expanded: Hierarchy level %{level}, expanded. Click to collapse the filtered children
+        hide: Piilota hierarkia tila
+        leaf: Work package leaf at level %{level}.
+        show: Näytä hierarkia tila
+        toggle_button: Paina vaihtaaksesi hierarkia tilaan.
+      inline_create:
+        title: Klikkaa lisätäksesi tehtävä luetteloon
+      jump_marks:
+        content: Siirry sisältöön
+        label_content: Paina tästä siirtyäksesi suoraan sisältöön
+        label_pagination: Click here to skip over the work packages table and go to pagination
+        pagination: Jump to table pagination
+      key_value: "%{key}: %{value}"
+      label_column_multiselect: 'Yhdistetty avattava kenttä: Valitse nuolinäppäimillä, vahvista Enter, backspace poistaa'
+      label_disable_multi_select: Poista monivalinta käytöstä
+      label_enable_multi_select: Ota monivalinta käyttöön
+      label_filter_add: Lisää suodatin
+      label_filter_by_text: Suodata tekstin perusteella
+      label_options: Valinnat
+      limited_results: Only %{count} work packages can be shown in manual sorting mode. Please reduce the results by filtering, or switch to automatic sorting.
+      message_error_during_bulk_delete: Tehtävän poistossa tapahtui virhe.
+      message_successful_bulk_delete: Poistetut tehtävät.
+      message_successful_show_in_fullscreen: Klikkaa avataksesi tehtävä kokonäyttöön.
+      message_view_spent_time: Näytä tehtävään käytetty aika
+      message_work_package_read_only: Work package is locked in this status. No attribute other than status can be altered.
+      message_work_package_status_blocked: Work package status is not writable due to closed status and closed version being assigned.
+      no_results:
+        description: Yhtään ei ole luotu tai sitten kaikki on suodatettu pois.
+        title: Ei tehtäviä.
+      placeholder_filter_by_text: Aihe, kuvaus, kommentit, ...
+      placeholders:
+        date: Select date
+        default: "-"
+      progress:
+        title: Work estimates and progress
+      properties:
+        assignee: Työn suorittaja
+        author: Tekijä
+        category: Kategoria
+        createdAt: Luotu
+        date: Päivämäärä
+        description: Kuvaus
+        dueDate: Päättymispäivä
+        duration: Kesto
+        percentComplete: "% Complete"
+        percentCompleteAlternative: Progress
+        percentageDone: Osuus tehnyt
+        priority: Prioriteetti
+        projectName: Projekti
+        remainingTime: Remaining work
+        remainingWork: Remaining work
+        remainingWorkAlternative: Jäljellä olevat tunnit
+        responsible: Vastuullinen
+        spentTime: Käytetty aika
+        startDate: Aloituspäivä
+        status: Tila
+        subject: Aihe
+        subproject: Aliprojekti
+        title: Otsikko
+        type: Tyyppi
+        updatedAt: Päivitetty
+        version: Versio
+        versionName: Versio
+        work: Work
+        workAlternative: Työmääräarvio
+      property_groups:
+        details: Yksityiskohdat
+        estimatesAndTime: Arviot ja ajankäyttö
+        other: Muut
+        people: Henkilöt
+      query:
+        click_to_edit_query_name: Click to edit title of this view.
+        column_names: Sarakkeet
+        confirm_edit_cancel: Are you sure you want to cancel editing the name of this view? Title will be set back to previous value.
+        display_sums: Näytä summat
+        errors:
+          duplicate_query_title: Name of this view already exists. Change anyway?
+          not_found: There is no such view
+          unretrievable_query: Unable to retrieve view from URL
+        filters: Suodattimet
+        group: Ryhmittely
+        group_by: Ryhmittele tulokset
+        group_by_disabled_by_hierarchy: Group by is disabled due to the hierarchy mode being active.
+        hide_column: Piilota sarake
+        hierarchy_disabled_by_group_by: Hierarchy mode is disabled due to results being grouped by %{column}.
+        insert_columns: Insert columns
+        move_column_left: Siirrä saraketta vasemmalle
+        move_column_right: Siirrä saraketta oikealle
+        public_text: 'Julkaise tämä näkymä ja salli muiden käyttäjien nähdä se. Käyttäjät joilla on ''Muokkaa julkisia näkymiä'' -oikeus voivat muokata tai poistaa julkisia näkymiä. Tämä ei vaikuta tehtävien näkyvyyteen ja riippuen niiden oikeuksista, käyttäjät voivat nähdä eri tehtävänäkymän.
+
+          '
+        rename_query_placeholder: Name of this view
+        sort_ascending: Lajittele nousevasti
+        sort_descending: Lajittele laskevasti
+        star_text: Merkitse tämä näkymä suosikkeihin ja lisää se vasempaan sivupalkkiin.
+        text_no_results: No matching views were found.
+      reminders:
+        button_label: Set reminder
+        presets:
+          custom: At a particular date/time
+          month: In a month
+          three_days: In 3 days
+          tomorrow: Tomorrow
+          week: In a week
+        subtitle: You will receive a notification for this work package at the chosen time.
+        title:
+          edit: Edit reminder
+          new: Set a reminder
+      scheduling:
+        is_parent: The dates of this work package are automatically deduced from its children. Activate 'Manual scheduling' to set the dates.
+        is_switched_from_manual_to_automatic: The dates of this work package may need to be recalculated after switching from manual to automatic scheduling due to relationships with other work packages.
+      sharing:
+        show_all_users: Show all users with whom the work package has been shared with
+        title: Share work package
+      table:
+        configure_button: Configure work package table
+        summary: Taulukko jossa tehtävät riveinä ja ominaisuudet sarakkeina.
+        text_inline_edit: Useimmat tämän taulukon soluista ovat nappeja jotka aktivoivat suoran syöttömahdollisuuden kentän arvoon.
+        text_select_hint: Valintalaatikot tulisi avata "Alt" tai nuolinäppäimillä.
+        text_sort_hint: Taulukon otsikon linkkien avulla voit lajitella, ryhmitellä, järjestellä, poistaa ja lisätä taulukon sarakkeita.
+      table_configuration:
+        button: Configure this work package table
+        choose_display_mode: Näytä tehtävät
+        columns_help_text: Use the input field above to add columns to your table view. You can drag and drop the columns to reorder them.
+        default: oletus
+        default_mode: Listanäkymä
+        display_settings: Näyttöasetukset
+        display_sums_hint: Näytä kokonaismäärät taulukon alapuolella.
+        embedded_tab_disabled: This configuration tab is not available for the embedded view you are editing.
+        hierarchy_hint: Kaikki suoratetut tulokset näytetään taulukossa ylätehtävän kera. Hierarkioita voidaan avata ja sulkea.
+        hierarchy_mode: Hierarkia
+        highlighting: Korostus
+        highlighting_mode:
+          description: Korosta värillä
+          entire_row_by: Koko rivi
+          inline: Korostetut määritteet
+          inline_all: All attributes
+          none: Ei korostusta
+          priority: Prioriteetti
+          status: Tila
+          type: Tyyppi
+        modal_title: Tehtävien taulukkonäkymän konfigurointi
+        relation_filters:
+          filter_work_packages_by_relation_type: Filter work packages by relation type
+        show_timeline_hint: Näytä interaktiivinen gantt kaavio taulukon oikealla puolella. Voit muuttaa leveyttä raahaamalla jakajaa taulukon ja kaavion välillä.
+        sorting_mode:
+          automatic: Automaattinen
+          description: Valitse tehtävien lajittelutapa
+          manually: Käsin
+          warning: Automaattinen lajittelutapa korvaa nykyiset asetukset
+      tabs:
+        activity: Tapahtumat
+        files: Tiedostot
+        overview: Yleiskatsaus
+        project_attributes: Project attributes
+        relations: Riippuvuudet
+        watchers: Seuraajat
+      time_relative:
+        days: päivää
+        months: kuukautta
+        weeks: viikkoa
+    zen_mode:
+      button_activate: Koko näyttö
+      button_deactivate: Sulje koko näyttö

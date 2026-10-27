@@ -1,0 +1,162 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { Injectable, inject } from '@angular/core';
+import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
+import { WorkPackageViewHierarchiesService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-hierarchy.service';
+import { IsolatedQuerySpace } from 'core-app/features/work-packages/directives/query-space/isolated-query-space';
+import { WorkPackageRelationsHierarchyService } from 'core-app/features/work-packages/components/wp-relations/wp-relations-hierarchy/wp-relations-hierarchy.service';
+import { States } from 'core-app/core/states/states.service';
+import { WorkPackageViewDisplayRepresentationService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-display-representation.service';
+import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
+import { firstValueFrom } from 'rxjs';
+
+@Injectable()
+export class WorkPackageViewHierarchyIdentationService {
+  private wpViewHierarchies = inject(WorkPackageViewHierarchiesService);
+  private wpDisplayRepresentation = inject(WorkPackageViewDisplayRepresentationService);
+  private states = inject(States);
+  private wpRelationHierarchy = inject(WorkPackageRelationsHierarchyService);
+  private apiV3Service = inject(ApiV3Service);
+  private querySpace = inject(IsolatedQuerySpace);
+
+
+  /**
+   * Return whether the current hierarchy mode is active
+   */
+  public get applicable():boolean {
+    return this.wpViewHierarchies.isEnabled && this.wpDisplayRepresentation.isList;
+  }
+
+  /**
+   * Returns whether the given work package can be indented in the current render order
+   * @param workPackage
+   */
+  public canIndent(workPackage:WorkPackageResource):boolean {
+    if (!workPackage.changeParent || !this.applicable) {
+      return false;
+    }
+
+    const rendered = this.renderedWorkPackageIds;
+    const index = rendered.indexOf(workPackage.id!);
+
+    // We can never indent the first item
+    if (index === 0) {
+      return false;
+    }
+
+    // We can not indent work packages whose predecessors are already their ancestors
+    const ancestors = workPackage.ancestorIds;
+    const ancestorCount = ancestors.length;
+
+    // We can always indent if the ancestor count is 0
+    if (ancestorCount === 0) {
+      return true;
+    }
+
+    // Otherwise, we can only indent if the predecessor is NOT the last ancestor
+    const lastAncestor:string = ancestors[ancestorCount - 1];
+    const predecessorId:string = rendered[index - 1];
+
+    return predecessorId !== lastAncestor;
+  }
+
+  /**
+   * Returns whether the given work package can be outdented
+   * @param workPackage
+   */
+  public canOutdent(workPackage:WorkPackageResource):boolean {
+    if (!workPackage.changeParent || !this.applicable) {
+      return false;
+    }
+
+    // We can always outdent if the work package has a parent
+    return !!workPackage.parent;
+  }
+
+  /**
+   * Try to indent the work package.
+   * @return a Promise with the change parent result
+   */
+  public async indent(workPackage:WorkPackageResource):Promise<unknown> {
+    if (!this.canIndent(workPackage)) {
+      return Promise.reject();
+    }
+
+    const rendered = this.renderedWorkPackageIds;
+    const index = rendered.indexOf(workPackage.id!);
+    const predecessorId:string = rendered[index - 1];
+
+    // By default, assume we're going to insert under parent
+    let newParentId = predecessorId;
+
+    // If the predecessor is in an ancestor chain.
+    // get the first element of the ancestor chain that workPackage is not in
+    const predecessor = await firstValueFrom(this.apiV3Service.work_packages.id(predecessorId).get());
+
+    const difference = predecessor.ancestorIds.filter((id) => !workPackage.ancestorIds.includes(id));
+    if (difference && difference.length > 0) {
+      newParentId = difference[0];
+    }
+
+    return this
+      .wpRelationHierarchy
+      .changeParent(workPackage, newParentId);
+  }
+
+  /**
+   * Try to outdent the work package.
+   * @return a Promise with the change parent result
+   */
+  public outdent(workPackage:WorkPackageResource):Promise<unknown> {
+    if (!this.canOutdent(workPackage)) {
+      return Promise.reject();
+    }
+
+    let newParentId:string|null = null;
+
+    // If we have more than one ancestor,
+    // just drop the last one
+    const { ancestorIds } = workPackage;
+    const ancestorCount = ancestorIds.length;
+    if (ancestorCount > 1) {
+      newParentId = ancestorIds[ancestorCount - 2];
+    }
+
+    return this
+      .wpRelationHierarchy
+      .changeParent(workPackage, newParentId);
+  }
+
+  /**
+   * Get the currently rendered work packages
+   */
+  private get renderedWorkPackageIds():string[] {
+    return this.querySpace.renderedWorkPackageIds.getValueOr([]);
+  }
+}

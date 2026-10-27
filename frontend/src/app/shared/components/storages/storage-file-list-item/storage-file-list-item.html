@@ -1,0 +1,126 @@
+<spot-tooltip [alignment]="getTooltipAlignment" [disabled]="!content.tooltip">
+  <p slot="body" class="spot-body-small">{{ content.tooltip }}</p>
+
+  <!-- eslint-disable-next-line @angular-eslint/template/label-has-associated-control -->
+  <label
+    slot="trigger"
+    class="spot-list--item-action"
+    data-test-selector="op-files-picker-modal--list-item"
+    (click)="enterDirectoryOnLabel($event)"
+    tabindex="0"
+    role="button"
+    [ngClass]="{
+      'spot-list--item-action_disabled': content.disabled,
+      'op-file-list--item-action_view-not-allowed': content.isConstrained
+    }"
+    >
+    @if (!!content.checkbox) {
+      <spot-checkbox [checked]="content.disabled || content.checkbox.selected"
+        (checkedChange)="content.checkbox.changeSelection()"
+        [disabled]="content.disabled"
+       />
+    }
+
+    <div class="spot-list--item-title op-file-list--item-title">
+      @switch (content.icon.icon) {
+        @case ('file-media') {
+          <svg
+            file-media-icon
+            size="small"
+            class="op-files-tab--icon op-files-tab--icon_{{content.icon.clazz}}"
+          ></svg>
+        }
+        @case ('file-directory-fill') {
+          <svg
+            file-directory-fill-icon
+            size="small"
+            class="op-files-tab--icon op-files-tab--icon_{{content.icon.clazz}}"
+          ></svg>
+        }
+        @case ('op-file-csv') {
+          <svg
+            op-file-csv-icon
+            size="small"
+            class="op-files-tab--icon op-files-tab--icon_{{content.icon.clazz}}"
+          ></svg>
+        }
+        @case ('op-file-doc') {
+          <svg
+            op-file-doc-icon
+            size="small"
+            class="op-files-tab--icon op-files-tab--icon_{{content.icon.clazz}}"
+          ></svg>
+        }
+        @case ('op-file-presentation') {
+          <svg
+            op-file-presentation-icon
+            size="small"
+            class="op-files-tab--icon op-files-tab--icon_{{content.icon.clazz}}"
+          ></svg>
+        }
+        @case ('op-file-sheet') {
+          <svg
+            op-file-sheet-icon
+            size="small"
+            class="op-files-tab--icon op-files-tab--icon_{{content.icon.clazz}}"
+          ></svg>
+        }
+        @case ('op-file-text') {
+          <svg
+            op-file-text-icon
+            size="small"
+            class="op-files-tab--icon op-files-tab--icon_{{content.icon.clazz}}"
+          ></svg>
+        }
+        @case ('op-pdf') {
+          <svg
+            op-pdf-icon
+            size="small"
+            class="op-files-tab--icon op-files-tab--icon_{{content.icon.clazz}}"
+          ></svg>
+        }
+        @case ('server') {
+          <svg
+            server-icon
+            size="small"
+            class="op-files-tab--icon op-files-tab--icon_{{content.icon.clazz}}"
+          ></svg>
+        }
+        @default {
+          <svg
+            file-icon
+            size="small"
+            class="op-files-tab--icon op-files-tab--icon_{{content.icon.clazz}}"
+          ></svg>
+        }
+      }
+
+      <span [textContent]="content.name"></span>
+    </div>
+
+    @if (!content.isDirectory) {
+      <span class="op-file-list--item-text" [textContent]="content.timestamp"></span>
+    }
+
+    @if (!content.isDirectory) {
+      <op-principal class="op-file-list--item-avatar"
+        [principal]="principal"
+        [hideName]="true"
+        [size]="'mini'"
+        [link]="false"
+       />
+    }
+
+    @if (content.isDirectory) {
+      <button
+        class="spot-link op-file-list--item-button"
+        data-test-selector="op-files-picker-modal--list-item-caret"
+        (click)="content.enterDirectory()"
+        (keydown.enter)="content.enterDirectory()"
+        (keydown.space)="content.enterDirectory()"
+        >
+        <svg chevron-right-icon size="small"></svg>
+      </button>
+    }
+  </label>
+</spot-tooltip>

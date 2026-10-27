@@ -1,0 +1,8 @@
+@import '../../global_styles/openproject/variables'
+
+.op-modal-single-date-picker
+  // Avoid jumping when a month has less days and the flatpickr is thus smaller
+  height: 505px
+  &--flatpickr-instance.inline
+    margin: 0 1rem !important
+    flex-grow: 1

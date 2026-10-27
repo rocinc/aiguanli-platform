@@ -1,0 +1,267 @@
+---
+http_interactions:
+- request:
+    method: propfind
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/UploadProject%20(-273)/uploads
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propfind xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
+          <d:prop>
+            <oc:fileid/>
+            <oc:size/>
+            <d:getcontenttype/>
+            <d:getlastmodified/>
+            <oc:permissions/>
+            <oc:owner-display-name/>
+          </d:prop>
+        </d:propfind>
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Depth:
+      - '1'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '253'
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 21 Nov 2025 14:53:15 GMT
+      Dav:
+      - 1, 3, extended-mkcol, access-control, calendarserver-principal-property-search,
+        nc-paginate, nextcloud-checksum-update, nc-calendar-search, nc-enable-birthday-calendar
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.65 (Debian)
+      Set-Cookie:
+      - oc53bqneyi5x=5834bc3cc530bd9d038a120056a9bc29; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=bP1OIykKpOmephU4E90I0t07fwkWPPOVK3NiDGtgSJlsQQb3j3GNqsCbK%2F%2BvFMWTvTwqf23gKT3U2prdXbFdh%2B8jqNSR6sJExemZUzUmPKuvto11%2Fe0fHU31bSmYwa%2Fw;
+        path=/; secure; HttpOnly; SameSite=Lax, oc53bqneyi5x=5834bc3cc530bd9d038a120056a9bc29;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, oc53bqneyi5x=5834bc3cc530bd9d038a120056a9bc29;
+        path=/; secure; HttpOnly; SameSite=Lax, oc53bqneyi5x=5834bc3cc530bd9d038a120056a9bc29;
+        path=/; secure; HttpOnly; SameSite=Lax, oc53bqneyi5x=8bf6231e0236ff30a285eac6cb1839c9;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - gWLo6Z70svEVXevMKDQM
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.3.27
+      X-Request-Id:
+      - gWLo6Z70svEVXevMKDQM
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '393'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns"><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/UploadProject%20(-273)/uploads/</d:href><d:propstat><d:prop><oc:fileid>190</oc:fileid><oc:size>50</oc:size><d:getlastmodified>Thu, 20 Nov 2025 12:26:16 GMT</d:getlastmodified><oc:permissions>RMGDNVCK</oc:permissions><oc:owner-display-name>OpenProject</oc:owner-display-name></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat><d:propstat><d:prop><d:getcontenttype/></d:prop><d:status>HTTP/1.1 404 Not Found</d:status></d:propstat></d:response><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/UploadProject%20(-273)/uploads/documents/</d:href><d:propstat><d:prop><oc:fileid>191</oc:fileid><oc:size>50</oc:size><d:getlastmodified>Thu, 20 Nov 2025 12:26:16 GMT</d:getlastmodified><oc:permissions>RMGDNVCK</oc:permissions><oc:owner-display-name>OpenProject</oc:owner-display-name></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat><d:propstat><d:prop><d:getcontenttype/></d:prop><d:status>HTTP/1.1 404 Not Found</d:status></d:propstat></d:response></d:multistatus>
+  recorded_at: Fri, 21 Nov 2025 14:53:15 GMT
+- request:
+    method: propfind
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/UploadProject%20(-273)/uploads/documents
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propfind xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
+          <d:prop>
+            <oc:fileid/>
+            <oc:size/>
+            <d:getcontenttype/>
+            <d:getlastmodified/>
+            <oc:permissions/>
+            <oc:owner-display-name/>
+          </d:prop>
+        </d:propfind>
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Depth:
+      - '1'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '253'
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 21 Nov 2025 14:53:15 GMT
+      Dav:
+      - 1, 3, extended-mkcol, access-control, calendarserver-principal-property-search,
+        nc-paginate, nextcloud-checksum-update, nc-calendar-search, nc-enable-birthday-calendar
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.65 (Debian)
+      Set-Cookie:
+      - oc53bqneyi5x=a5a13fa16fef370d4368833aa5bef8fe; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=AtNTWlbROVTfN%2BT41tO5WfvrK%2BKtDmoeVRIfaMHhKyCj9sguiklOEGLcAXiP4nMfXck%2FAzg5ukJKKh2R0BlUo%2FV%2FfFBHvwvWIRbzG6nQbggmaRw9QuPAwpLRBQAIJx7D;
+        path=/; secure; HttpOnly; SameSite=Lax, oc53bqneyi5x=a5a13fa16fef370d4368833aa5bef8fe;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, oc53bqneyi5x=a5a13fa16fef370d4368833aa5bef8fe;
+        path=/; secure; HttpOnly; SameSite=Lax, oc53bqneyi5x=a5a13fa16fef370d4368833aa5bef8fe;
+        path=/; secure; HttpOnly; SameSite=Lax, oc53bqneyi5x=8671e81488420d30aa57ccc705894c4a;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - 8PPtf6JIsC7fckSZwZCD
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.3.27
+      X-Request-Id:
+      - 8PPtf6JIsC7fckSZwZCD
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '484'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns"><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/UploadProject%20(-273)/uploads/documents/</d:href><d:propstat><d:prop><oc:fileid>191</oc:fileid><oc:size>50</oc:size><d:getlastmodified>Thu, 20 Nov 2025 12:26:16 GMT</d:getlastmodified><oc:permissions>RMGDNVCK</oc:permissions><oc:owner-display-name>OpenProject</oc:owner-display-name></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat><d:propstat><d:prop><d:getcontenttype/></d:prop><d:status>HTTP/1.1 404 Not Found</d:status></d:propstat></d:response><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/UploadProject%20(-273)/uploads/documents/new_folder/</d:href><d:propstat><d:prop><oc:fileid>202</oc:fileid><oc:size>0</oc:size><d:getlastmodified>Thu, 20 Nov 2025 12:15:08 GMT</d:getlastmodified><oc:permissions>RMGDNVCK</oc:permissions><oc:owner-display-name>OpenProject</oc:owner-display-name></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat><d:propstat><d:prop><d:getcontenttype/></d:prop><d:status>HTTP/1.1 404 Not Found</d:status></d:propstat></d:response><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/UploadProject%20(-273)/uploads/documents/secret/</d:href><d:propstat><d:prop><oc:fileid>203</oc:fileid><oc:size>25</oc:size><d:getlastmodified>Thu, 20 Nov 2025 12:26:16 GMT</d:getlastmodified><oc:permissions>RMGDNVCK</oc:permissions><oc:owner-display-name>OpenProject</oc:owner-display-name></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat><d:propstat><d:prop><d:getcontenttype/></d:prop><d:status>HTTP/1.1 404 Not Found</d:status></d:propstat></d:response><d:response><d:href>/remote.php/dav/files/OpenProject/OpenProject/UploadProject%20(-273)/uploads/documents/test_file.pdf</d:href><d:propstat><d:prop><oc:fileid>201</oc:fileid><oc:size>25</oc:size><d:getcontenttype>application/pdf</d:getcontenttype><d:getlastmodified>Thu, 20 Nov 2025 11:53:08 GMT</d:getlastmodified><oc:permissions>RMGDNVW</oc:permissions><oc:owner-display-name>OpenProject</oc:owner-display-name></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>
+  recorded_at: Fri, 21 Nov 2025 14:53:15 GMT
+- request:
+    method: propfind
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/OpenProject/UploadProject%20(-273)/uploads/documents/top_secret
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propfind xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
+          <d:prop>
+            <oc:fileid/>
+            <oc:size/>
+            <d:getcontenttype/>
+            <d:getlastmodified/>
+            <oc:permissions/>
+            <oc:owner-display-name/>
+          </d:prop>
+        </d:propfind>
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Depth:
+      - '1'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '253'
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Fri, 21 Nov 2025 14:53:15 GMT
+      Dav:
+      - 1, 3, extended-mkcol, access-control, calendarserver-principal-property-search,
+        nc-paginate, nextcloud-checksum-update, nc-calendar-search, nc-enable-birthday-calendar
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.65 (Debian)
+      Set-Cookie:
+      - oc53bqneyi5x=b8758d58ec2a35639782135852df2499; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=Va6MY1WZqkNcuHOEVHl%2BCZPxCNjXOvhEk9a5rnr8k1BSLZPHjfyBQfTpins9hBexhaCffqygznnLdfa90FCfyOOECKd2pQSd3J2MCGiYoQnIt%2FuRVl0RnLfDXSJ374v8;
+        path=/; secure; HttpOnly; SameSite=Lax, oc53bqneyi5x=b8758d58ec2a35639782135852df2499;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, oc53bqneyi5x=b8758d58ec2a35639782135852df2499;
+        path=/; secure; HttpOnly; SameSite=Lax, oc53bqneyi5x=b8758d58ec2a35639782135852df2499;
+        path=/; secure; HttpOnly; SameSite=Lax, oc53bqneyi5x=e382cdd1a1a7a1093dd8165e32eb987b;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.3.27
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '290'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="utf-8"?>
+        <d:error xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns">
+          <s:exception>Sabre\DAV\Exception\NotFound</s:exception>
+          <s:message>File with name /OpenProject/UploadProject (-273)/uploads/documents/top_secret could not be located</s:message>
+        </d:error>
+  recorded_at: Fri, 21 Nov 2025 14:53:15 GMT
+recorded_with: VCR 6.3.1

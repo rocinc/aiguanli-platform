@@ -1,0 +1,25 @@
+# This is an example for the `docker-compose.override.yml`.
+# You can use this as a base for creating your own override file.
+
+services:
+  backend:
+    # use these ports to be able to access the stack under http://localhost:3000
+    ports:
+      - "${PORT:-3000}:3000"
+
+  frontend:
+    # use these ports to be able to access the stack under http://localhost:4200
+    ports:
+      - "${FE_PORT:-4200}:4200"
+
+  # db:
+  #   ports:
+  #     - '5432:5432'
+
+  # db-test:
+  #   ports:
+  #     - '5433:5432'
+
+  # chrome:
+  #   ports:
+  #     - '5900:5900'

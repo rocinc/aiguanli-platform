@@ -1,0 +1,54 @@
+# /api/v3/custom_field_items/{id}
+---
+get:
+  summary: Get a custom field hierarchy item
+  operationId: get_custom_field_item
+  description: |-
+    Retrieves a single custom field item specified by its unique identifier.
+  tags:
+    - Custom Fields
+  parameters:
+    - name: id
+      description: The custom field item's unique identifier
+      in: path
+      example: 42
+      required: true
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/hierarchy_item_read_model.yml'
+          examples:
+            'simple response':
+              $ref: '../components/examples/hierarchy_item_response.yml'
+    '403':
+      description: Returned if the user is not logged in.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not authorized to access this resource.
+    '404':
+      description: |-
+        Returned if the custom field item does not exist or the user lacks permission to see it.
+
+        The permission required to view the item depends on the custom field it belongs to.
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.

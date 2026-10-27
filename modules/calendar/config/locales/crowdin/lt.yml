@@ -1,0 +1,12 @@
+---
+lt:
+  label_calendar: Kalendorius
+  label_calendar_plural: Kalendoriai
+  label_new_calendar: Naujas kalendorius
+  permission_manage_calendars: Tvarkyti kalendorius
+  permission_share_calendars: Prenumeruokite iCalendar
+  permission_view_calendar: Žiūrėti kalendorius
+  plugin_openproject_calendar:
+    description: Teikia kalendoriaus vaizdus.
+    name: OpenProject kalendorius
+  project_module_calendar_view: Kalendoriai

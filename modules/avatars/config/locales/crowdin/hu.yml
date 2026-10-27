@@ -1,0 +1,28 @@
+---
+hu:
+  are_you_sure_delete_avatar: Biztosan törölni szeretné a profilképét?
+  avatar_deleted: A profilkép sikeresen törölve.
+  avatars:
+    label_avatar: Profilkép
+    label_gravatar: Gravatar
+    label_local_avatar: Egyéni profilkép
+    settings:
+      enable_gravatars: Felhasználói gravatar profilképek engedélyezése
+      enable_local_avatars: Felhasználói egyéni profilképek engedélyezése
+      gravatar_default: Alapértelmezett Gravatar profilkép
+    text_avatar_gravatar_html: OpenProject uses your Gravatar if you registered one at %{gravatar_url}, or a default image or icon if one exists.
+    text_avatar_local: You can also upload a custom avatar that overrides the Gravatar by clicking the image. We recommend an image of 128 by 128 pixels.
+    text_avatar_local_only: You can upload a custom avatar by clicking the image. We recommend an image of 128 by 128 pixels.
+  empty_file_error: Töltsön fel egy érvényes képet (jpg, png, gif)
+  error_image_size: A kép túl nagy.
+  error_image_upload: Hiba a kép mentésekor.
+  label_avatar: Profilkép
+  label_avatar_plural: Profilképek
+  label_choose_avatar: Profilkép kiválasztása fájlból
+  label_current_avatar: Jelenlegi profilkép
+  message_avatar_uploaded: A profilkép sikeresen megváltoztatva.
+  plugin_openproject_avatars:
+    description: Ez a bővítmény lehetővé teszi az OpenProject-felhasználók számára, hogy feltöltsenek egy képet avatarként, vagy a Gravatar szolgáltatásból származó, már regisztrált képeket használjanak.
+    name: Profilképek
+  unable_to_delete_avatar: A profilképet nem sikerült törölni.
+  wrong_file_format: 'A megengedett formátumok: jpg, png, gif'

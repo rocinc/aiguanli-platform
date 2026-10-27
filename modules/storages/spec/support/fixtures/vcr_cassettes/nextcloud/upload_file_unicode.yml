@@ -1,0 +1,175 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/%F0%9F%8D%91%20is%20not%20spelled%20Pf%C3%BCrsich.txt
+    body:
+      encoding: ASCII-8BIT
+      string: "#<StringIO:0x000077efdd6c8258>"
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Content-Type:
+      - application/octet-stream
+      Content-Length:
+      - '25'
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Date:
+      - Thu, 20 Nov 2025 07:30:53 GMT
+      Etag:
+      - '"45ee5c393937b20f14299cc632b54f75"'
+      Oc-Etag:
+      - '"45ee5c393937b20f14299cc632b54f75"'
+      Oc-Fileid:
+      - '00001937ocm4e2tlfbl8'
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocm4e2tlfbl8=1fef52ce4996ef7e0ea47253f546ecf9; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=0q7jpgGqU3CKcEmQWfdBg0kmktjW3DCDY5eAtuzLjCicGjNY05oCnLvjoMSfDdSf9d0csivk23zSwkncnLyx%2BU%2FJnfR2fcJi0DmX2svZKEQn70hB0xfY73RAh9FUsomL;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=1fef52ce4996ef7e0ea47253f546ecf9;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocm4e2tlfbl8=1fef52ce4996ef7e0ea47253f546ecf9;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocm4e2tlfbl8=1fef52ce4996ef7e0ea47253f546ecf9;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=b446dadacafb4bd08cafabdc56e67f87;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - 9fYp8AVuMVXk521qdpP8
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.3.20
+      X-Request-Id:
+      - 9fYp8AVuMVXk521qdpP8
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Thu, 20 Nov 2025 07:30:54 GMT
+- request:
+    method: propfind
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/%F0%9F%8D%91%20is%20not%20spelled%20Pf%C3%BCrsich.txt
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:propfind xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
+          <d:prop>
+            <oc:fileid/>
+            <oc:size/>
+            <d:getcontenttype/>
+            <d:getlastmodified/>
+            <oc:permissions/>
+            <oc:owner-display-name/>
+          </d:prop>
+        </d:propfind>
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Depth:
+      - '1'
+      Content-Type:
+      - application/xml; charset=utf-8
+      Content-Length:
+      - '253'
+  response:
+    status:
+      code: 207
+      message: Multi-Status
+    headers:
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 20 Nov 2025 07:30:54 GMT
+      Dav:
+      - 1, 3, extended-mkcol, access-control, calendarserver-principal-property-search,
+        nc-paginate, nextcloud-checksum-update, nc-calendar-search, nc-enable-birthday-calendar
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocm4e2tlfbl8=3fea66fa68c119ca071e30bf29633e3e; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=z7BJ4TwDArk8lmVSL%2BycFRUdLJhz3lR4RsGiswPTW4b0mKrkwG2arCag7K5ZlTgfMxqdLT%2BIJrAUtYLKGZuSOXvQxLXS9oJLbc24fiNj%2FRiUnAc4IYCB96npAsOXsc0A;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=3fea66fa68c119ca071e30bf29633e3e;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocm4e2tlfbl8=3fea66fa68c119ca071e30bf29633e3e;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocm4e2tlfbl8=3fea66fa68c119ca071e30bf29633e3e;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=2ab86ecfa401f21cce601a7f5101d435;
+        path=/; secure; HttpOnly; SameSite=Lax
+      Vary:
+      - Brief,Prefer
+      X-Content-Type-Options:
+      - nosniff
+      X-Debug-Token:
+      - SdS3EQx1ILeqa4VFeFpg
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.3.20
+      X-Request-Id:
+      - SdS3EQx1ILeqa4VFeFpg
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '379'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns"><d:response><d:href>/remote.php/dav/files/OpenProject/%f0%9f%8d%91%20is%20not%20spelled%20Pf%c3%bcrsich.txt</d:href><d:propstat><d:prop><oc:fileid>1937</oc:fileid><oc:size>25</oc:size><d:getcontenttype>text/plain</d:getcontenttype><d:getlastmodified>Thu, 20 Nov 2025 07:30:53 GMT</d:getlastmodified><oc:permissions>RGDNVW</oc:permissions><oc:owner-display-name>OpenProject</oc:owner-display-name></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response></d:multistatus>
+  recorded_at: Thu, 20 Nov 2025 07:30:54 GMT
+recorded_with: VCR 6.3.1

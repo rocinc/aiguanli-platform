@@ -1,0 +1,146 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+table
+  td
+    padding: 3px 6px
+  p
+    margin: 0
+
+  &.plugins
+    td
+      &.configure
+        text-align: right
+        padding-right: 1em
+    span
+      &.name
+        font-weight: var(--base-text-weight-bold)
+      &.description, &.url
+        @include text-shortener
+        display: block
+        font-size: 0.9em
+
+  &#time-report
+    tbody tr
+      font-style: italic
+      color: var(--body-font-color)
+      &.last-level
+        font-style: normal
+      &.total
+        font-style: normal
+        font-weight: var(--base-text-weight-bold)
+        background-color: #EEEEEE
+tr
+  div.expander
+    cursor: pointer
+    float: left
+    margin-top: 0.1rem
+
+  &.open span .expand, &.closed span .collapse
+    display: none
+
+  [class*=reorder]
+    .icon-context:before
+      padding: 0 0 0 0
+
+  &.message
+    height: 2.6em
+    td
+      &.created_on, &.last_message
+        white-space: nowrap
+
+  &.version
+    td
+      &.closed
+        text-decoration: line-through
+        a
+          text-decoration: line-through
+      &.name
+        padding-left: 26px
+        &.icon-link:before
+          padding-right: 5px
+          margin-left: -23px
+    td
+      &.date, &.status, &.sharing
+        white-space: nowrap
+
+  &.user
+    &.locked, &.registered, &.locked a, &.registered a
+      color: var(--fgColor-muted)
+
+td
+  &.hours
+    font-weight: var(--base-text-weight-bold)
+  .date
+    .spot-drop-modal
+      display: block
+
+th.hidden
+  display: none
+
+tr.context-menu-selection,
+tr.-checked
+  background-color: var(--box-list-item-selected-bg-color) !important
+  border-bottom: 1px solid var(--box-list-item-selected-border-color) !important
+  &.__hl_background
+    outline: var(--bgColor-accent-emphasis) solid 2px
+
+  &:hover
+    background-color: var(--box-list-item-selected-bg-hover-color) !important
+
+  td
+    color: var(--body-font-color) !important
+    a
+      color: var(--body-font-color) !important
+
+tr.-pressed
+  border-bottom: 1px solid var(--box-list-item-pressed-border-color) !important
+
+tr:not(.-pressed):has(+ tr.-checked)
+  border-bottom: 1px solid var(--box-list-item-selected-border-color) !important
+
+tr:not(.-pressed):has(+ tr.-pressed)
+  border-bottom: 1px solid var(--box-list-item-pressed-border-color) !important
+
+thead:has(+ tbody > tr:first-child.-checked) th
+  border-bottom-color: var(--box-list-item-selected-border-color) !important
+
+thead:has(+ tbody > tr:first-child.-pressed) th
+  border-bottom-color: var(--box-list-item-pressed-border-color) !important
+
+#custom-options-table
+  .custom-option-value
+    display: inline-block
+    width: calc(100% - 5rem)
+  .icon-drag-handle:before
+    vertical-align: middle
+
+// Exceptions for summary reports where multiple tables are used in one view.
+body.action-report
+  .generic-table--container
+    height: auto

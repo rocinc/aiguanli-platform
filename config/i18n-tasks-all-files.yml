@@ -1,0 +1,28 @@
+# i18n-tasks finds and manages missing and unused translations: https://github.com/glebm/i18n-tasks
+#
+# This configuration file is only used to check interpolations consistency with command
+# `i18n-tasks check-consistent-interpolations --config config/i18n-tasks-all-files.yml`
+
+data:
+  # Locale files patterns where translations are read from:
+  read:
+    - config/locales/en.seeders.yml
+    - config/locales/en.yml
+    - config/locales/js-en.yml
+    - config/locales/crowdin/%{locale}.seeders.yml
+    - config/locales/crowdin/%{locale}.yml
+    - config/locales/crowdin/js-%{locale}.yml
+    - config/locales/generated/%{locale}.yml
+    - modules/*/config/locales/en.seeders.yml
+    - modules/*/config/locales/en.yml
+    - modules/*/config/locales/js-en.yml
+    - modules/*/config/locales/crowdin/%{locale}.seeders.yml
+    - modules/*/config/locales/crowdin/%{locale}.yml
+    - modules/*/config/locales/crowdin/js-%{locale}.yml
+
+ignore_inconsistent_interpolations:
+  # Ignore interpolations checks in the singular form.
+  # Some languages have simple pluralization form where 'one' is only used for exactly 1 item.
+  # Other languages such as Ukrainian and Serbian use 'one' also for 21, 31, 101, etc.
+  # Those will use the %{count} interpolation while the english source language will not have it.
+  - '*.one'

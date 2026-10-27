@@ -1,0 +1,76 @@
+<div>
+  <form>
+    <p [textContent]="text.choose_mode"></p>
+    <div class="form--field -full-width">
+      <div class="form--field-container">
+        <label class="option-label">
+          <input type="radio"
+            [(ngModel)]="displayMode"
+            value="default"
+            name="display_mode_switch">
+          <svg op-no-hierarchy-icon size="small" [attr.icon-title]="text.display_mode.default"></svg>
+          <span [textContent]="text.display_mode.default"></span>
+          <span class="form--inline-instructions" [textContent]="text.default"></span>
+        </label>
+      </div>
+    </div>
+    <div class="form--field -full-width">
+      <div class="form--field-container">
+        <label class="option-label">
+          <input type="radio"
+            [(ngModel)]="displayMode"
+            value="hierarchy"
+            name="display_mode_switch">
+          <svg op-hierarchy-icon size="small"[attr.icon-title]="text.display_mode.hierarchy"></svg>
+          <span [textContent]="text.display_mode.hierarchy"></span>
+          @if (displayMode === 'hierarchy') {
+            <span
+              class="form--inline-instructions"
+            [textContent]="text.display_mode.hierarchy_hint"></span>
+          }
+        </label>
+      </div>
+    </div>
+    <div class="form--field -full-width">
+      <div class="form--field-container">
+        <label class="option-label">
+          <input type="radio"
+            [(ngModel)]="displayMode"
+            value="grouped"
+            name="display_mode_switch">
+          <svg op-group-icon size="small" [attr.icon-title]="text.label_group_by"></svg>
+          <span [textContent]="text.label_group_by"></span>
+          <select (change)="updateGroup($event.target.value)"
+            id="selected_grouping"
+            name="selected_grouping"
+            class="form--select form--inline-select option-label--select">
+            @for (group of availableGroups; track group.href) {
+              <option
+                [textContent]="group.name"
+                [selected]="currentGroup && currentGroup!.href === group.href"
+              [value]="group.href"></option>
+            }
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div>
+      <div class="form--field -full-width">
+        <div class="form--field-container">
+          <label class="option-label">
+            <input type="checkbox"
+              (change)="displaySums = !displaySums"
+              [checked]="displaySums"
+              name="display_sums_switch">
+            {{ text.display_sums }}
+            <span class="form--inline-instructions" [textContent]="text.display_sums_hint"></span>
+          </label>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>

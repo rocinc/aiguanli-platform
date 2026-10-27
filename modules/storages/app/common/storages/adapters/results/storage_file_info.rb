@@ -1,0 +1,89 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+module Storages
+  module Adapters
+    module Results
+      # TODO: Unify StorageFile and StorageFileInfo as one is a subset of the other
+      StorageFileInfo = Data.define(
+        :status,
+        :status_code,
+        :id,
+        :name,
+        :last_modified_at,
+        :created_at,
+        :mime_type,
+        :size,
+        :owner_name,
+        :owner_id,
+        :last_modified_by_name,
+        :last_modified_by_id,
+        :permissions,
+        :location
+      ) do
+        def initialize(
+          status:,
+          status_code:,
+          id:,
+          name: nil,
+          size: nil,
+          mime_type: nil,
+          created_at: nil,
+          last_modified_at: nil,
+          last_modified_by_name: nil,
+          location: nil,
+          permissions: nil,
+          owner_name: nil,
+          owner_id: nil,
+          last_modified_by_id: nil
+        )
+          super
+        end
+
+        def self.build(contract: StorageFileInfoContract.new, **)
+          contract.call(**).to_monad.fmap { new(**it.to_h) }
+        end
+
+        def to_storage_file = StorageFile.build(**to_h, created_by_name: owner_name)
+
+        def clean_location
+          return nil if location.nil?
+          return location if location.starts_with? "/"
+
+          "/#{location}"
+        end
+
+        def self.from_id(file_id)
+          new(id: file_id, status: "OK", status_code: 200)
+        end
+      end
+    end
+  end
+end

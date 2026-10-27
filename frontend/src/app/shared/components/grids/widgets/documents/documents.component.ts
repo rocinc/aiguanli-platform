@@ -1,0 +1,108 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { AbstractWidgetComponent } from 'core-app/shared/components/grids/widgets/abstract-widget.component';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, SecurityContext, inject } from '@angular/core';
+import { CollectionResource } from 'core-app/features/hal/resources/collection-resource';
+import { HalResourceService } from 'core-app/features/hal/services/hal-resource.service';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
+import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
+import { TimezoneService } from 'core-app/core/datetime/timezone.service';
+import { DocumentResource } from '../../../../../../../../modules/documents/frontend/module/hal/resources/document-resource';
+
+@Component({
+  selector: 'op-documents-widget',
+  templateUrl: './documents.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
+})
+export class WidgetDocumentsComponent extends AbstractWidgetComponent implements OnInit {
+  readonly halResource = inject(HalResourceService);
+  readonly pathHelper = inject(PathHelperService);
+  readonly apiV3Service = inject(ApiV3Service);
+  readonly timezone = inject(TimezoneService);
+  readonly domSanitizer = inject(DomSanitizer);
+  readonly currentProject = inject(CurrentProjectService);
+  readonly cdr = inject(ChangeDetectorRef);
+
+  public text = {
+    noResults: this.i18n.t('js.grid.widgets.documents.no_results'),
+    project: this.i18n.t('js.label_project'),
+  };
+
+  public entries:DocumentResource[] = [];
+
+  private entriesLoaded = false;
+
+  ngOnInit() {
+    this.halResource
+      .get<CollectionResource>(this.documentsUrl)
+      .subscribe((collection) => {
+        this.entries = collection.elements as DocumentResource[];
+        this.entriesLoaded = true;
+
+        this.cdr.detectChanges();
+      });
+  }
+
+  public get isEditable() {
+    return false;
+  }
+
+  public documentPath(document:DocumentResource) {
+    return `${this.pathHelper.appBasePath}/documents/${document.id}`;
+  }
+
+  public documentCreated(document:DocumentResource) {
+    return this.timezone.formattedDatetime(document.createdAt);
+  }
+
+  public documentDescription(document:DocumentResource) {
+    return this.domSanitizer.sanitize(SecurityContext.HTML, document.description.html);
+  }
+
+  public get noEntries() {
+    return !this.entries.length && this.entriesLoaded;
+  }
+
+  public get documentsUrl() {
+    const orders = JSON.stringify([['updated_at', 'desc']]);
+
+    let url = `${this.apiV3Service.documents.toPath()}?sortBy=${orders}&pageSize=10`;
+
+    if (this.currentProject.id) {
+      const filters = JSON.stringify([{ project_id: { operator: '=', values: [this.currentProject.id.toString()] } }]);
+
+      url += `&filters=${filters}`;
+    }
+
+    return url;
+  }
+}

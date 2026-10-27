@@ -1,0 +1,284 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+$widget-box--enumeration-width: 20px
+
+.widget-boxes
+
+  &.-flex
+    display: flex
+    flex-flow: row wrap
+    gap: var(--stack-gap-normal)
+
+    .widget-box
+      flex: 1
+      flex-basis: calc(50% - var(--stack-gap-normal))
+      max-height: 750px // Avoid that individual widgets blow the whole grid
+      display: flex
+      flex-direction: column
+
+      &_half-width
+        flex-basis: calc(25% - var(--stack-gap-normal))
+        min-width: 200px
+
+        @media screen and (max-width: $breakpoint-lg)
+          flex-basis: calc(50% - var(--stack-gap-normal))
+
+      &_full-width
+        flex-basis: 100%
+
+    .widget-box--enumeration,
+    .widget-box--arrow-links,
+    .widget-box--feature-list
+      flex-grow: 2
+
+  .icon-context:before
+    padding-right: 5px
+
+  &.grid-content
+    padding-left: 10px
+    padding-right: 10px
+
+    .widget-box
+      margin-left: 0
+      margin-right: 0
+
+  .widget-box
+    position: relative
+    @include widget-box--style
+    word-wrap: break-word
+    overflow: hidden
+
+    &.-thin
+      min-height: 100px
+    &.-wider
+      flex-grow: 3
+    &.-minimal
+      flex-grow: 0
+    &.-no-border
+      padding: 0
+      border: 0
+      box-shadow: none
+
+    &--teaser-image
+      width: 200px
+
+    // Unfortunately, we cannot add a class to that container, so we have to use the Primer class
+    .blankslate-container
+      margin: auto
+
+    .widget-box--enumeration
+      margin-left: 1.5rem
+      margin-top: 0.5rem
+
+    .widget-box--feature-list
+      list-style: none
+      margin: 0.5rem 0 1rem 0
+
+      &:last-child
+        margin-bottom: 0
+
+      li:before
+        @include icon-common
+        @include icon-mixin-yes
+        @extend .icon-yes
+        display: inline-block
+        font-size: 0.6rem
+        color: var(--primary-button-color)
+        width: $widget-box--enumeration-width
+
+    .widget-box--description
+      display: grid
+      grid-template-columns: auto auto
+      grid-column-gap: 20px
+
+.op-widget-box--body
+  display: flex
+  flex-direction: column
+  height: 100%
+  padding: 0 var(--stack-padding-normal) var(--stack-padding-normal) var(--stack-padding-normal)
+  overflow-x: auto
+  overflow-y: auto
+
+  &.-no-overflow
+    overflow-x: hidden
+    overflow-y: hidden
+    display: block
+
+  &.-no-padding
+    padding-right: 0
+    padding-bottom: 0
+    padding-left: 0
+
+  &.-allow-inner-overflow
+    .wiki
+      overflow-y: auto
+      @include styled-scroll-bar
+
+  &.op-widget-box--empty
+    align-items: center
+    justify-content: center
+
+  // styles specific to the custom-text widget
+  &.-custom-text
+    a.inplace-editing--trigger-link
+      color: inherit
+      text-decoration: none
+
+    .op-ckeditor--wrapper
+      margin-bottom: 0
+
+    .ck-editor__top
+      position: sticky
+      top: 0
+
+    .inplace-edit--controls
+      position: initial
+
+      i
+        float: initial
+        padding: 0
+
+    edit-field-controls
+      display: flex
+      position: sticky
+      bottom: 0
+      justify-content: flex-end
+
+    .textarea-wrapper
+      margin-bottom: 0
+
+.op-widget-box--header
+  font-weight: var(--base-text-weight-bold)
+  font-size: var(--h4-size, 16px)
+  color: var(--fgColor-default)
+  display: flex
+  align-items: center
+  padding: var(--stack-padding-normal)
+  background-color: var(--body-background)
+
+  .help-text--entry
+    vertical-align: -1px
+    margin-left: 4px
+
+.op-widget-box--header-title
+  vertical-align: middle
+  margin-bottom: 0
+  flex-grow: 1
+  align-self: center
+
+  // Ensure style for read-only widget headers
+  .editable-toolbar-title--fixed,
+  .toolbar--editable-toolbar,
+  .editable-toolbar-title--input
+    font-size: var(--h4-size, 16px)
+    font-weight: var(--base-text-weight-bold)
+    color: var(--fgColor-default) !important
+    padding: 0 !important
+    @include text-shortener
+
+  .toolbar--editable-toolbar
+    height: 20px
+
+.op-widget-box--rows
+  margin: 0
+  overflow: auto
+
+.op-widget-box--row
+  padding: var(--stack-padding-normal)
+  list-style-type: none /* To account for applying Box component to a list */
+  border-top: var(--borderWidth-thin) solid var(--borderColor-muted)
+
+  &:first-of-type
+    border-top: none
+    padding-top: 0
+
+  &:last-of-type
+    border-bottom-right-radius: var(--borderRadius-medium)
+    border-bottom-left-radius: var(--borderRadius-medium)
+
+.op-widget-box--footer
+  margin-top: auto
+  padding: var(--stack-padding-normal)
+  border-top: var(--borderWidth-thin) solid var(--borderColor-muted)
+
+.widget-box--arrow-links
+  list-style: none
+  margin: 0.5rem 0 1rem 0
+
+  &:last-child
+    margin-bottom: 0
+
+  li:before
+    @include icon-font-common
+    @include icon-mixin-arrow-right2
+    @extend .icon-context
+    display: inline-block
+    font-size: 0.6rem
+    color: var(--control-iconColor-rest)
+    width: $widget-box--enumeration-width
+
+.widget-box--arrow-multiline
+  display: grid
+  grid-template-columns: auto auto 1fr
+  grid-template-rows: auto auto auto
+  margin-bottom: 10px
+
+  &:before
+    grid-column: 1/2
+    grid-row: 1/3
+    align-self: center
+    justify-self: center
+
+.widget-box--avatar
+  grid-column: 2/3
+  grid-row: 1/3
+
+.widget-box--project
+  grid-column: 3/4
+  grid-row: 1/2
+
+.widget-box--author
+  grid-column: 3/4
+  grid-row: 2/3
+
+.widget-box--additional-info
+  grid-column: 2/4
+  grid-row: 3/4
+  font-style: italic
+  margin-bottom: 0.5rem
+
+@media screen and (max-width: $breakpoint-sm)
+  .widget-boxes
+    &.-flex
+      .widget-box
+        flex-basis: 100%
+
+  .widget-box--arrow-links
+    .-widget-box--arrow-multiline:before
+      padding-top: 0

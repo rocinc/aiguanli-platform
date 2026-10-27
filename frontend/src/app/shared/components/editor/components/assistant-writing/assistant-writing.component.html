@@ -1,0 +1,239 @@
+@if (menu(); as menu) {
+  <div class="op-assistant-writing" data-test-selector="assistant-writing">
+    <button #toggleButton type="button"
+            class="Button Button--invisible Button--small op-assistant-writing--toggle"
+            [attr.aria-expanded]="open()"
+            [attr.aria-controls]="ids.panel"
+            (click)="toggle()">
+      <span class="Button-content">
+        <span class="Button-visual Button-leadingVisual"><svg sparkle-fill-icon size="small" aria-hidden="true"></svg></span>
+        <span class="Button-label" [textContent]="text.toggle"></span>
+      </span>
+    </button>
+
+    <div class="sr-only" aria-live="polite" role="status" [textContent]="announcement()"></div>
+
+    @if (open()) {
+      <section #panel class="op-assistant-writing--panel"
+               tabindex="-1"
+               [id]="ids.panel"
+               [attr.aria-label]="text.menu"
+               [attr.aria-busy]="busy()"
+               (keydown)="panelKeydown($event)">
+        @switch (phase()) {
+          @case ('choosing') {
+            <p class="op-assistant-writing--scope"
+               [textContent]="state().hasSelection ? text.on_selection : text.on_everything"></p>
+            @if (menu.actions.length) {
+              <ul class="op-assistant-writing--choices" [attr.aria-label]="text.configured">
+                @for (action of menu.actions; track action.id) {
+                  <li>
+                    <button type="button" class="op-assistant-writing--choice" (click)="chooseAction(action)">
+                      <span [textContent]="action.label"></span>
+                      @if (action.template) {
+                        <span class="op-assistant-writing--hint" [textContent]="text.template"></span>
+                      }
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+            <ul class="op-assistant-writing--choices" [attr.aria-label]="text.built_in">
+              @for (builtIn of menu.built_in; track builtIn.key) {
+                <li>
+                  <button type="button" class="op-assistant-writing--choice" (click)="chooseBuiltIn(builtIn)">
+                    <span [textContent]="builtIn.label"></span>
+                  </button>
+                </li>
+              }
+            </ul>
+            @if (menu.glossary) {
+              <p class="op-assistant-writing--note" [textContent]="text.glossary"></p>
+            }
+            @if (notice(); as notice) {
+              <p class="op-assistant-writing--note" role="status" [textContent]="notice.text"></p>
+            }
+            <div class="op-assistant-writing--footer">
+              <button type="button" class="Button Button--secondary Button--small" (click)="close()">
+                <span class="Button-content"><span class="Button-label" [textContent]="text.close"></span></span>
+              </button>
+            </div>
+          }
+
+          @case ('instructing') {
+            <h3 class="op-assistant-writing--title" [textContent]="choice()?.label"></h3>
+            <label class="sr-only" [attr.for]="ids.instruction"
+                   [textContent]="isWrite() ? text.instruction_label : text.request_label"></label>
+            <textarea #instruction maxlength="1000"
+                      class="FormControl-input FormControl-textarea FormControl-medium op-assistant-writing--instruction"
+                      [id]="ids.instruction"
+                      [attr.rows]="isWrite() ? 3 : 2"
+                      [attr.placeholder]="placeholder()"
+                      (keydown)="instructionKeydown($event, instruction)"></textarea>
+            <p class="op-assistant-writing--note"
+               [textContent]="isWrite() ? text.instruction_hint_write : text.instruction_hint"></p>
+            <div class="op-assistant-writing--footer">
+              <button type="button" class="Button Button--secondary Button--small" (click)="back()">
+                <span class="Button-content"><span class="Button-label" [textContent]="text.back"></span></span>
+              </button>
+              <button type="button" class="Button Button--primary Button--small" (click)="start(instruction)">
+                <span class="Button-content"><span class="Button-label" [textContent]="text.start"></span></span>
+              </button>
+            </div>
+          }
+
+          @default {
+            <div class="op-assistant-writing--head">
+              <h3 class="op-assistant-writing--title" [textContent]="choice()?.label"></h3>
+              @if (phase() === 'done' && versionCount() > 1) {
+                <div class="op-assistant-writing--versions" role="group" [attr.aria-label]="text.versions">
+                  <button type="button" class="op-assistant-writing--step"
+                          [disabled]="versionIndex() === 0"
+                          [attr.aria-label]="text.prev_version"
+                          (click)="step(-1)">‹</button>
+                  <span class="op-assistant-writing--position" aria-live="polite"
+                        [attr.aria-label]="versionAria()"
+                        [textContent]="versionLabel()"></span>
+                  <button type="button" class="op-assistant-writing--step"
+                          [disabled]="versionIndex() === versionCount() - 1"
+                          [attr.aria-label]="text.next_version"
+                          (click)="step(1)">›</button>
+                </div>
+              }
+            </div>
+
+            @if (phase() === 'done') {
+              <textarea #draft rows="6" spellcheck="false"
+                        class="FormControl-input FormControl-textarea op-assistant-writing--draft"
+                        [id]="ids.preview"
+                        [class.-swap]="swapping()"
+                        [attr.aria-label]="text.draft"
+                        [value]="draftText()"
+                        (input)="onDraftInput($event)"
+                        (compositionstart)="onCompositionStart()"
+                        (compositionend)="onCompositionEnd($event)"
+                        (select)="syncBar()"
+                        (mouseup)="syncBar()"
+                        (keyup)="syncBar()"
+                        (scroll)="syncBar()"
+                        (keydown)="draftKeydown($event)"
+                        (blur)="draftBlur($event)"></textarea>
+
+              @if (bar(); as bar) {
+                <div #barElement class="op-assistant-writing--bar" role="group"
+                     [attr.aria-label]="text.refine_label"
+                     [class.-below]="bar.placement === 'below'"
+                     [style.left.px]="bar.left"
+                     [style.top.px]="bar.top"
+                     [style.width.px]="bar.width"
+                     (mousedown)="barMousedown($event)">
+                  <div class="op-assistant-writing--bar-row">
+                    <input #barInput type="text" maxlength="1000"
+                           class="FormControl-input FormControl-small op-assistant-writing--bar-input"
+                           [attr.placeholder]="text.refine_placeholder"
+                           [attr.aria-label]="text.refine_placeholder"
+                           (keydown)="barKeydown($event, barInput)">
+                    <button type="button" class="Button Button--primary Button--small" (click)="refineFromBar(barInput.value)">
+                      <span class="Button-content"><span class="Button-label" [textContent]="text.refine_start"></span></span>
+                    </button>
+                  </div>
+                  <div class="op-assistant-writing--bar-chips">
+                    @for (chip of chips; track chip) {
+                      <button type="button" class="op-assistant-writing--chip" (click)="refineFromBar(chip)" [textContent]="chip"></button>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (canUndo()) {
+                <p class="op-assistant-writing--note op-assistant-writing--refined">
+                  <span [textContent]="text.refined"></span>
+                  <button type="button" class="op-assistant-writing--link" (click)="undoRefine()" [textContent]="text.undo_refine"></button>
+                </p>
+              } @else {
+                <p class="op-assistant-writing--note" [textContent]="text.draft_hint"></p>
+              }
+
+              <div class="op-assistant-writing--revise">
+                <label class="sr-only" [attr.for]="ids.revise" [textContent]="text.revise_label"></label>
+                <input #reviseInput type="text" maxlength="1000"
+                       class="FormControl-input FormControl-medium op-assistant-writing--revise-input"
+                       [id]="ids.revise"
+                       [attr.placeholder]="text.revise_placeholder"
+                       (keydown)="reviseKeydown($event, reviseInput)">
+                <button type="button" class="Button Button--secondary Button--small" (click)="submitRevise(reviseInput)">
+                  <span class="Button-content"><span class="Button-label" [textContent]="text.revise_start"></span></span>
+                </button>
+              </div>
+            } @else if (segments(); as seg) {
+              <div class="op-assistant-writing--preview" [attr.aria-label]="text.preview" [id]="ids.preview">
+                <span [textContent]="seg.before"></span><mark class="op-assistant-writing--mark"
+                      [class.-waiting]="seg.waiting"
+                      [textContent]="seg.marked"></mark><span [textContent]="seg.after"></span>
+              </div>
+            } @else {
+              <div class="op-assistant-writing--preview"
+                   tabindex="0"
+                   [id]="ids.preview"
+                   [attr.aria-label]="text.preview"
+                   [class.-streaming]="busy()"
+                   [textContent]="state().stream"></div>
+            }
+
+            @if (busy()) {
+              <p class="op-assistant-writing--status">
+                <span class="op-assistant-writing--pulse" aria-hidden="true"></span>
+                <span [textContent]="statusText()"></span>
+              </p>
+            }
+            @if (notice(); as notice) {
+              <p class="op-assistant-writing--note"
+                 [class.op-assistant-writing--error]="notice.kind === 'error'"
+                 [attr.role]="notice.kind === 'error' ? 'alert' : 'status'"
+                 [textContent]="notice.text"></p>
+            }
+
+            <div class="op-assistant-writing--footer">
+              @switch (phase()) {
+                @case ('streaming') {
+                  <button type="button" data-writing-stop class="Button Button--secondary Button--small" (click)="stop()">
+                    <span class="Button-content">
+                      <span class="Button-visual Button-leadingVisual"><svg stop-icon size="small" aria-hidden="true"></svg></span>
+                      <span class="Button-label" [textContent]="text.stop"></span>
+                    </span>
+                  </button>
+                }
+                @case ('done') {
+                  <button type="button" class="Button Button--secondary Button--small" (click)="discard()">
+                    <span class="Button-content"><span class="Button-label" [textContent]="text.discard"></span></span>
+                  </button>
+                  <button type="button" class="Button Button--small"
+                          [attr.data-writing-apply]="canReplace() ? null : ''"
+                          [class.Button--secondary]="canReplace()"
+                          [class.Button--primary]="!canReplace()"
+                          (click)="apply('insert')">
+                    <span class="Button-content"><span class="Button-label" [textContent]="text.insert"></span></span>
+                  </button>
+                  @if (canReplace()) {
+                    <button type="button" data-writing-apply class="Button Button--primary Button--small"
+                            (click)="apply('replace')">
+                      <span class="Button-content"><span class="Button-label" [textContent]="replaceLabel()"></span></span>
+                    </button>
+                  }
+                }
+                @default {
+                  <button type="button" class="Button Button--secondary Button--small" (click)="discard()">
+                    <span class="Button-content"><span class="Button-label" [textContent]="text.close"></span></span>
+                  </button>
+                  <button type="button" data-writing-retry class="Button Button--primary Button--small" (click)="retry()">
+                    <span class="Button-content"><span class="Button-label" [textContent]="text.retry"></span></span>
+                  </button>
+                }
+              }
+            </div>
+          }
+        }
+      </section>
+    }
+  </div>
+}

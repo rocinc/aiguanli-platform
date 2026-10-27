@@ -1,0 +1,177 @@
+# Schema: StorageReadModel
+---
+type: object
+required:
+  - id
+  - _type
+  - name
+  - _links
+properties:
+  id:
+    type: integer
+    description: Storage id
+  _type:
+    type: string
+    enum:
+      - Storage
+  name:
+    type: string
+    description: Storage name
+  storageAudience:
+    type: string
+    description: |-
+      The audience that the storage expects in tokens for requests to it,
+      usually the storage's client ID at the identity provider.
+
+      This is only required for authentication through single-sign-on and so far
+      only supported for provider type Nextcloud.
+  tokenExchangeScope:
+    type: string
+    description: |-
+      The scope that will be requested when requesting a token for the storage through token exchange. Has no effect if no
+      token exchange is performed.
+
+      This is only required for authentication through single-sign-on and so far only supported for provider type Nextcloud.
+  tenantId:
+    type:
+      - "string"
+      - "null"
+    description: |-
+      The tenant id of a file storage of type OneDrive.
+
+      Ignored if the provider type is not OneDrive. May be null if the storage is not configured completely.
+  driveId:
+    type:
+      - "string"
+      - "null"
+    description: |-
+      The drive id of a file storage of type OneDrive.
+
+      Ignored if the provider type is not OneDrive. May be null if the storage is not configured completely.
+  hasApplicationPassword:
+    type: boolean
+    description: |-
+      Whether the storage has the application password to use for the Nextcloud storage.
+
+      Ignored if the provider type is not Nextcloud.
+  forbiddenFileNameCharacters:
+    type: string
+    description: |-
+      A string with all the characters forbidden to be used for file and folder names in the storage. Used by OpenProject to avoid
+      creating files with unsupported names (e.g. when creating project folders).
+
+      Only supported for provider type Nextcloud so far.
+  createdAt:
+    type: string
+    format: date-time
+    description: Time of creation
+  updatedAt:
+    type: string
+    format: date-time
+    description: Time of the most recent change to the storage
+  configured:
+    type: boolean
+    description: Indication, if the storage is fully configured
+  _embedded:
+    type: object
+    properties:
+      oauthApplication:
+        $ref: './oauth_application_read_model.yml'
+      oauthClientCredentials:
+        $ref: './oauth_client_credentials_read_model.yml'
+  _links:
+    type: object
+    required:
+      - self
+      - type
+      - open
+      - authorizationState
+    properties:
+      self:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              This storage resource. Contains the user defined storage name as title.
+
+              **Resource**: Storage
+      type:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              The urn of the storage type. Currently Nextcloud and OneDrive storages are supported.
+
+              - urn:openproject-org:api:v3:storages:Nextcloud
+              - urn:openproject-org:api:v3:storages:OneDrive
+
+              **Resource**: N/A
+      authenticationMethod:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              The urn of the authentication method. Currently only Nextcloud storages support this setting.
+
+              - urn:openproject-org:api:v3:storages:authenticationMethod:TwoWayOAuth2 (default)
+              - urn:openproject-org:api:v3:storages:authenticationMethod:OAuth2SSO
+
+              **Resource**: N/A
+      origin:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              Web URI of the storage instance. This link is ignored, if the storage is hosted in a cloud and has no own
+              URL, like file storages of type OneDrive.
+
+              **Resource**: N/A
+      open:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              URI of the file storage location, from where the user usually starts browsing files.
+
+              **Resource**: N/A
+      authorizationState:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              The urn of the storage connection state. Can be one of:
+
+              - urn:openproject-org:api:v3:storages:authorization:Connected
+              - urn:openproject-org:api:v3:storages:authorization:FailedAuthorization
+              - urn:openproject-org:api:v3:storages:authorization:Error
+
+              **Resource**: N/A
+      authorize:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              The link to the starting point of the authorization cycle for a configured storage provider.
+
+              # Conditions
+
+              `authorizationState` is:
+
+              - urn:openproject-org:api:v3:storages:authorization:FailedAuthorization
+
+              **Resource**: N/A
+      oauthApplication:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              The OAuth 2 provider application linked to the storage.
+
+              # Conditions
+
+              - User has role `admin`
+
+              **Resource**: OAuthApplication
+      oauthClientCredentials:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              The OAuth 2 credentials resource linked to the storage.
+
+              # Conditions
+
+              - User has role `admin`
+
+              **Resource**: OAuthClientCredentials

@@ -1,0 +1,12 @@
+# Schema: FileUploadForm
+---
+type: object
+properties:
+  metadata:
+    type: object
+    properties:
+      fileName:
+        type: string
+  file:
+    type: string
+    format: binary

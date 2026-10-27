@@ -1,0 +1,39 @@
+<div
+  class="op-tab-content--container op-files-tab"
+  >
+  @if (showAttachments) {
+    <section
+      class="op-tab-content--tab-section"
+      [ngClass]="{ 'op-tab-content--tab-section_no-header': (showAttachmentHeader$ | async) === false }"
+      data-test-selector="op-tab-content--tab-section"
+      >
+      @if (showAttachmentHeader$ | async) {
+        <div
+          class="op-tab-content--header"
+          >
+          <svg class="op-tab-content--header-icon op-files-tab--icon" paperclip-icon size="small"></svg>
+          <span class="op-tab-content--header-text" [textContent]="text.attachments.label"></span>
+        </div>
+      }
+      <op-attachments [resource]="workPackage"
+        (attachmentRemoved)="attachmentRemoved()"
+        (attachmentAdded)="attachmentAdded()"
+       />
+    </section>
+  }
+
+  @for (storage of projectStorages | async; track storage.id) {
+    <section
+      data-test-selector="op-tab-content--tab-section"
+      class="op-tab-content--tab-section"
+      >
+      <op-storage [resource]="workPackage"
+        [projectStorage]="storage"
+        [allowUploading]="allowManageFileLinks$ | async"
+        [allowLinking]="allowManageFileLinks$ | async"
+        (fileRemoved)="attachmentRemoved()"
+        (fileAdded)="attachmentAdded()"
+       />
+    </section>
+  }
+</div>

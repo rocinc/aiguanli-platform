@@ -1,0 +1,31 @@
+<widget-header
+  [name]="widgetName"
+  [editable]="isEditable">
+
+  <widget-menu slot="menu"
+    [resource]="resource" />
+</widget-header>
+
+<div class="op-widget-box--body">
+  @if (noEntries) {
+    <op-no-results [title]="text.noResults" />
+  }
+  @for (document of entries; track document.id) {
+    <h4 class="document-category-elements--header">
+      <a [href]="documentPath(document)"
+        [textContent]="document.title">
+      </a>
+      @if (!currentProject.identifier) {
+        <span>
+          ({{ text.project }}: {{ document.project.name }})
+        </span>
+      }
+    </h4>
+    <p class="document-category-elements--date">
+      <em [textContent]="documentCreated(document)"></em>
+    </p>
+    <div class="wiki grid--widget-limited-text op-uc-container"
+      [innerHtml]="documentDescription(document)">
+    </div>
+  }
+</div>

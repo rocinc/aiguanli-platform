@@ -1,0 +1,38 @@
+<div
+  class="spot-modal loading-indicator--location"
+  data-indicator-name="modal"
+  >
+  <div id="spotModalTitle" class="spot-modal--header">{{text.title}}</div>
+
+  <div class="spot-divider"></div>
+
+  <div class="ngdialog-body spot-modal--body spot-container">
+    <ul class="spot-list">
+      @for (widget of selectable; track trackWidgetBy($index, widget)) {
+        <li
+          class="spot-list--item"
+          data-test-selector="op-grid--addable-widget">
+          <button
+            type="button"
+            class="spot-list--item-action"
+            (click)="select($event, widget)"
+            [id]="widget.identifier"
+            [textContent]="widget.title"
+          ></button>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <div class="spot-action-bar hidden-for-mobile">
+    <div class="spot-action-bar--right">
+      <button
+        type="button"
+        class="button button_no-margin spot-modal--cancel-button spot-action-bar--action"
+        (click)="closeMe()"
+        >
+        {{ text.cancel_button }}
+      </button>
+    </div>
+  </div>
+</div>

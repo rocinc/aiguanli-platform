@@ -1,0 +1,170 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+uk:
+  activerecord:
+    attributes:
+      document:
+        content_binary: Двійковий вміст
+        title: Заголовок
+    errors:
+      models:
+        document_type:
+          one_or_more_required: Неможливо видалити останній тип документа
+    models:
+      document:
+        one: Документ
+        few: Документи
+        many: Документи
+        other: Документи
+      document_type:
+        one: Тип документів
+        few: Типи документів
+        many: Типи документів
+        other: Типи документів
+  activity:
+    filter:
+      document: Документи
+  attributes:
+    collaborative_editing_hocuspocus_url: URL-адреса сервера Hocuspocus
+    documents: Документи
+  default_doc_category_tech: Технічна документація
+  default_doc_category_user: Документація користувача
+  documents:
+    active_editors: Активні редактори
+    active_editors_count:
+      one: 1 активний редактор
+      few: "%{count} активних редактори"
+      many: "%{count} активних редакторів"
+      other: "%{count} активного редактора"
+    admin:
+      collaboration_settings:
+        banner:
+          none_writable: Ці значення налаштовуються через змінні середовища й не можуть бути змінені тут.
+          some_unwritable: Деякі значення налаштовуються за допомогою змінних середовища і не можуть бути відредаговані тут.
+        hocuspocus_server: Сервер Hocuspocus
+        hocuspocus_server_secret:
+          caption: Вставте секретний код, наданий сервером Hocuspocus.
+          label: Секретний ключ клієнта
+        hocuspocus_server_url:
+          caption: Адреса WebSocket робочого сервера Hocuspocus.
+          invalid_scheme: Слід використовувати протокол WebSocket (ws:// or wss://).
+          label: URL-адреса сервера Hocuspocus
+        page_header:
+          description: |-
+            Якщо увімкнено, спільне редагування в реальному часі дає змогу кільком користувачам одночасно редагувати документ.
+            Для роботи потрібен працездатний %{hocuspocus_server_link}.
+      disable_text_collaboration_dialog:
+        confirmation_checkbox_message: Я розумію, що можу назавжди втратити дані
+        confirmation_message: Усі наявні документи можуть стати недоступними. Будь ласка, виконуйте цю дію лише якщо впевнені, що хочете вимкнути спільне редагування в реальному часі та редактор BlockNote у цьому середовищі.
+        heading: Вимкнути спільне редагування в реальному часі?
+        success: Спільне редагування в реальному часі вимкнене.
+        title: Вимкнути спільне редагування в реальному часі
+      enable_text_collaboration:
+        description: |-
+          Після ввімкнення кілька користувачів зможуть одночасно працювати над документом.
+          Усі нові документи використовуватимуть новий редактор (BlockNote) і вимагатимуть робочого підключення до сервера Hocuspocus.
+        heading: Спільне редагування в реальному часі не ввімкнено
+        primary_action: Увімкнути спільне редагування в реальному часі
+        success: Спільне редагування в реальному часі ввімкнено.
+    button_add_type: Тип
+    delete_dialog:
+      confirmation_message_html: Це назавжди видалить цей документ та всі вкладені файли. Ви впевнені, що хочете зробити це?
+      heading: Видалити цей документ?
+      title: Видалити документ
+    delete_document_type_dialog:
+      at_least_one_type_required:
+        heading: Неможливо видалити останній тип документа
+        message: Має бути налаштований щонайменше один тип документа. Спочатку створіть інший, якщо хочете видалити цей.
+        title: Неможливо видалити тип документа
+      confirmation_message: Тип"%{type_name}" наразі не використовується. Видалення цього типу не вплине на наявні документи.
+      heading: Видалити цей тип документа?
+      reassign_message:
+        one: Тип "%{type_name}" наразі використовується в %{document_count} документі. Виберіть тип, до якого їх перепризначити.
+        few: Тип "%{type_name}" наразі використовується в %{document_count} документах. Виберіть тип, до якого їх перепризначити.
+        many: Тип "%{type_name}" наразі використовується в %{document_count} документах. Виберіть тип, до якого їх перепризначити.
+        other: Тип "%{type_name}" наразі використовується в %{document_count} документах. Виберіть тип, до якого їх перепризначити.
+      select_reassign_to_label: Перепризначити документи на
+      title: Видалити тип документа
+    document_categories_deprecation_notice:
+      description: |-
+        Наявні категорії файлів були перетворені на типи документів із впровадженням нового модуля «Документи».
+        Усі наявні документи також були перенесені до цих нових типів.
+      heading: Категорії файлів тепер називаються "Типи документу"
+      primary_action: Налаштувати типи документів
+      secondary_action: Дізнайтеся більше про модуль Документи
+    document_type_actions: Дії з типом документа
+    documents_list_blank_slate:
+      description: У цьому поданні немає документів. Щоб додати, натисніть кнопку нижче.
+      heading: Документів ще немає
+    index_page:
+      label_legacy: Застаріле
+      name: Назва
+      type: Тип
+      updated_at: Останнє редагування
+    info_line:
+      connection_restored: Ви знову в мережі.
+      currently_offline: Ви зараз не в мережі.
+    label_attachment_author: Автор додатку
+    label_categories: Категорії
+    last_updated_at: Востаннє збережено о %{time}.
+    menu:
+      all: Усі документи
+      collaboration_settings: Спільне редагування в реальному часі
+      types: Типи
+    new_category: Нова категорія
+    new_type: Новий тип
+    page_header:
+      action_menu:
+        document_actions: Дії з документом
+        edit_title: Редагувати назву
+      heading: Усі документи
+    show_edit_view:
+      connection_error_notice:
+        action: Спробуйте знову
+        description_server_unavailable: |-
+          Неможливо відкрити документ, оскільки сервер спільного редагування в реальному часі недоступний.
+          Будь ласка, зверніться до адміністратора якщо проблема не зникне.
+      tabs: Вкладки документів
+    subheader:
+      filter:
+        label: Фільтр за назвою документів
+        placeholder: Введіть текст тут, щоб шукати назви документів
+    text_collaboration_disabled_notice:
+      description: |-
+        Неможливо відкрити документ, оскільки режим спільного редагування в реальному часі вимкнено.
+        Будь ласка, зверніться до адміністратора, щоб увімкнути спільне редагування в реальному часі, якщо ви хочете отримати доступ до цього документа.
+  enumeration_doc_categories: Категорії документів
+  label_document_added: Документ додано
+  label_document_category: Категорія
+  label_document_description: Опис
+  label_document_new: Новий документ
+  label_document_plural: Документи
+  label_document_title: Назва
+  label_document_type: Тип
+  label_documents: Документи
+  permission_manage_documents: Керування документами
+  permission_view_documents: Перегляд документів
+  plugin_openproject_documents:
+    description: Плагін OpenProject дозволяє створювати документи в проектах.
+    name: 'Документи OpenProject '
+  project_module_documents: Документи

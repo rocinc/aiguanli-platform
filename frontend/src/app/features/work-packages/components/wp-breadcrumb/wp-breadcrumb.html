@@ -1,0 +1,31 @@
+@if (workPackage) {
+  <div class="op-wp-breadcrumb -show"
+    data-test-selector="op-wp-breadcrumb"
+    >
+    <ul class="op-breadcrumb"
+      data-test-selector="op-breadcrumb">
+      @if (!inputActive && hierarchyCount > 0) {
+        <li>
+          <span>{{ hierarchyLabel }}: </span>
+        </li>
+        @for (ancestor of workPackage.getAncestors(); track ancestor.href; let first = $first; let last = $last) {
+          @if (!last) {
+            <li
+              class="op-wp-breadcrumb--ellipsed"
+              [ngClass]="{ 'icon4 icon-small icon-arrow-right5': !first }">
+              <a [attr.title]="ancestor.name"
+                 [textContent]="ancestor.name"
+                 data-test-selector="op-wp-breadcrumb--hierarchy-element"
+                 [href]="ancestorPath(ancestor)"
+                 data-turbo="false"></a>
+            </li>
+          }
+        }
+      }
+      <li
+        [ngClass]="{ 'op-wp-breadcrumb--active-parent-select': inputActive, 'icon4 icon-small icon-arrow-right5': !inputActive && hierarchyCount > 1 }">
+        <wp-breadcrumb-parent (onSwitch)="updateActiveInput($event)" [workPackage]="workPackage" />
+      </li>
+    </ul>
+  </div>
+}

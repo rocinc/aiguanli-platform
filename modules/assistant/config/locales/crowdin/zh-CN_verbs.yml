@@ -1,0 +1,87 @@
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+zh-CN:
+  assistant:
+    meeting_recap:
+      who:
+        you: "你"
+        commitment: "%{owner} 说会做的"
+        commitment_with: "%{owner} 答应 %{other} 的"
+        deferral: "%{owner} 说先放一放的"
+        decision: "%{owner} 定下的"
+        question: "%{owner} 问的"
+        question_with: "%{owner} 问 %{other} 的"
+        objection: "%{owner} 提出异议的"
+    verbs:
+      label: "处理这一项"
+      more: "更多"
+      cancel: "取消"
+      undo: "撤销"
+      scheduled: "已排进 %{date} %{title}"
+      shelved: "已搁置「%{title}」，这次不再列出。"
+      labels:
+        schedule: "排进会议"
+        assign: "交给"
+        assign_question: "指给"
+        remind: "提醒"
+        answer: "回答"
+        record: "记结论"
+        shelve: "搁置"
+      panel:
+        confirm: "确认"
+        affects: "会影响 %{names}"
+        schedule:
+          legend: "排进哪场会议"
+          here: "本场会议"
+          confirm: "排进议程"
+        assign:
+          legend: "选一个人"
+          filter: "找人"
+          sort_free: "按有空排"
+          sort_name: "按名字排"
+          free: "本周还剩 %{hours} 小时"
+          away: "休假至 %{date}"
+          preview: "看一下会怎样"
+          draft: "起草一条评论"
+        remind:
+          legend: "提醒谁"
+          help: "会起草一条署你名字的评论，先给你看，你确认后才发出。"
+          confirm: "起草提醒"
+        record:
+          conclusion: "写下结论…"
+          answer: "写下回答…"
+          where: "记在哪一项下"
+          outcome: "记下结论"
+          draft: "起草回答"
+          outcome_help: "记在这场会议的议程项下，之后可以撤销。"
+          draft_help: "会起草一条署你名字的评论，你确认后才发出。"
+      titles:
+        schedule: "排进「%{meeting}」"
+        assign: "交给 %{name}"
+        remind: "提醒 %{name}"
+        answer: "回答这个问题"
+        record: "记下会议结论"
+      words:
+        assign: "%{who}，「%{title}」这个问题想请你看一下。"
+        remind:
+          commitment: "%{who}，「%{title}」现在进展怎么样？需要什么支持吗？"
+          commitment_dated: "%{who}，「%{title}」说好 %{said}，现在还没完成，需要调整吗？"
+          commitment_moved: "%{who}，%{ref}「%{title}」说好 %{said}，现在排到 %{due}，需要调整吗？"
+          deferral: "%{who}，「%{title}」之前说先放一放，现在适合接着看吗？"
+          decision: "%{who}，「%{title}」是之前定下的，想和你确认一下现在是否仍然适用。"
+          question: "%{who}，「%{title}」这个问题还在等回答，方便看一眼吗？"
+      refused:
+        gone: "这一项现在不能这样处理了。"
+        already: "%{name} 已经在负责了。"
+        pick_meeting: "先选一场会议。"
+        pick_person: "先选一个人。"
+        write_something: "先写点内容。"
+        no_agenda_item: "这场会议还没有议程项，先加一项再记结论。"
+        outcome_no_meeting: "要在会议页上才能记结论。"
+        outcome_not_started: "会议还没开始，开始后才能记结论。"
+        outcome_over: "会议已经结束，不能再往里记结论。"
+        outcome_forbidden: "你没有在这场会议里记结论的权限。"

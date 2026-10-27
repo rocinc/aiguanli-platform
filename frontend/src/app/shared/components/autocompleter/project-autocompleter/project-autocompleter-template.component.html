@@ -1,0 +1,74 @@
+<ng-template
+  #labelTemplate
+  let-item
+  let-clear="clear"
+  >
+  <span class="d-flex">
+    <span
+      class="ng-value-icon left"
+      tabindex="0"
+      role="button"
+      (click)="clear(item)"
+      (keydown.enter)="clear(item)"
+      (keydown.space)="$event.preventDefault(); clear(item)"
+      [attr.aria-label]="this.I18n.t('js.autocomplete_select.remove', { name: item.name })"
+    >×</span>
+    <span class="ng-value-label d-flex gap-2">
+      <span class="ellipsis">{{ item.name }}</span>
+      @switch (item._type) {
+        @case ('Portfolio') {
+          <span class="description">
+            <svg briefcase-icon size="xsmall" />
+            {{ this.I18n.t('js.include_workspaces.types.portfolio') }}
+          </span>
+        }
+        @case ('Program') {
+          <span class="description">
+            <svg versions-icon size="xsmall" />
+            {{ this.I18n.t('js.include_workspaces.types.program') }}
+          </span>
+        }
+      }
+    </span>
+  </span>
+</ng-template>
+
+<ng-template
+  #optionTemplate
+  let-item
+  let-search="search"
+  >
+  <div
+    class="ng-option-label"
+    [ngStyle]="{ 'padding-left.px': item.numberOfAncestors * 16 }"
+  >
+    <span class="d-flex gap-2">
+      <span
+        [title]="item.name"
+        class="ellipsis"
+        [opSearchHighlight]="search"
+      >{{ item.name }}</span>
+      @switch (item._type) {
+        @case ('Portfolio') {
+          <span class="description">
+            <svg briefcase-icon size="xsmall" />
+            {{ this.I18n.t('js.include_workspaces.types.portfolio') }}
+          </span>
+        }
+        @case ('Program') {
+          <span class="description">
+            <svg versions-icon size="xsmall" />
+            {{ this.I18n.t('js.include_workspaces.types.program') }}
+          </span>
+        }
+      }
+    </span>
+  </div>
+  @if (item.disabled && item.disabledReason) {
+    <div
+      [title]="item.disabledReason"
+      class="ng-option-label ellipsis"
+      [ngStyle]="{ 'padding-left.px': item.numberOfAncestors * 16 }"
+    >{{ item.disabledReason }}</div>
+  }
+</ng-template>

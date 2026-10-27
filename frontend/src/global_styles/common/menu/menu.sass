@@ -1,0 +1,52 @@
+.op-menu
+  display: flex
+  flex-direction: column
+
+  &--item
+    white-space: nowrap
+
+    &-title
+      font-weight: 400
+      overflow: hidden
+      text-overflow: ellipsis
+      display: inline-flex
+      align-items: center
+
+    &-action
+      display: block
+      height: 32px
+      line-height: 32px
+      text-decoration: none
+      padding: 0 13px 0 10px
+      font-weight: 400
+      color: var(--body-font-color)
+      border: 1px solid transparent
+
+      .trailing-icon
+        margin-left: auto
+
+      &:focus
+        background-color: var(--control-transparent-bgColor-hover)
+        color: var(--body-font-color)
+
+      &:hover,
+      &:active
+        background-color: var(--control-transparent-bgColor-hover)
+        cursor: pointer
+        text-decoration: none
+        border-color: var(--list-item-hover--border-color)
+        color: var(--list-item-hover--color)
+
+  &--item-action,
+  &--headline
+    padding: 0 10px
+
+  &--headline
+    font-size: 12px
+    color: var(--fgColor-muted)
+    text-transform: uppercase
+
+  &--separator
+    border-bottom: 1px solid var(--borderColor-default)
+    margin: 0 0 10px
+    background: none

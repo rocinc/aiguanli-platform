@@ -1,0 +1,259 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://login.microsoftonline.com/e36f1dbc-fdae-427e-b61b-0d96ddfb81a4/oauth2/v2.0/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=client_credentials&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default+offline_access&client_id=404e0567-19a1-4a64-b2d1-d3b0c99f2ed9&client_secret=QRB8Q%7Ei.1rID_.MC9FTfRGq-FTE5SgWYsoeLacWf
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.2
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '199'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      X-Ms-Request-Id:
+      - ee252a5b-7290-47d5-82a5-3c725ca50700
+      X-Ms-Ests-Server:
+      - 2.1.22096.4 - WEULR1 ProdSlices
+      X-Ms-Srs:
+      - 1.P
+      Content-Security-Policy-Report-Only:
+      - object-src 'none'; base-uri 'self'; script-src 'self' 'nonce-xSxE4CEpUpXGyAu47XnvmA'
+        'unsafe-inline' 'unsafe-eval' https://*.msauth.net https://*.msftauth.net
+        https://*.msftauthimages.net https://*.msauthimages.net https://*.msidentity.com
+        https://*.microsoftonline-p.com https://*.microsoftazuread-sso.com https://*.azureedge.net
+        https://*.outlook.com https://*.office.com https://*.office365.com https://*.microsoft.com
+        https://*.bing.com 'report-sample'; report-uri https://csp.microsoft.com/report/ESTS-UX-All
+      Cross-Origin-Opener-Policy-Report-Only:
+      - same-origin; report-to="coop-endpoint"
+      Reporting-Endpoints:
+      - coop-endpoint="https://idux.azurewebsites.net/api/coopReport"
+      X-Xss-Protection:
+      - '0'
+      Set-Cookie:
+      - fpc=AmAKtMnuCo9Ir6AmVn_gFdZZ-dCOAQAAAPayeeAOAAAA; expires=Sat, 08-Nov-2025
+        13:43:18 GMT; path=/; secure; HttpOnly; SameSite=None, x-ms-gateway-slice=estsfd;
+        path=/; secure; samesite=none; httponly, stsservicecookie=estsfd; path=/;
+        secure; samesite=none; httponly
+      Date:
+      - Thu, 09 Oct 2025 13:43:17 GMT
+      Content-Length:
+      - '2040'
+    body:
+      encoding: UTF-8
+      string: '{"token_type":"Bearer","expires_in":3599,"ext_expires_in":3599,"access_token":"<ACCESS_TOKEN>"}'
+  recorded_at: Thu, 09 Oct 2025 13:43:18 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW/items/01ANJ53W33OC4BONL5BZH2L4JYCNW6AJG6?$select=id,name,parentReference,webUrl,fileSystemInfo,createdBy,lastModifiedBy
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.2
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Content-Encoding:
+      - gzip
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 30b1ad8c-3fc5-4073-8f8b-2f0090ff7b82
+      Client-Request-Id:
+      - 30b1ad8c-3fc5-4073-8f8b-2f0090ff7b82
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"006","RoleInstance":"FR1PEPF00001FD0"}}'
+      Splogid:
+      - 31b6cda1-004a-0000-83a4-a0acd3ac273f
+      Date:
+      - Thu, 09 Oct 2025 13:43:18 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)/$entity","@odata.etag":"\"{17B8707B-7D35-4F0E-A5F1-38136DE024DE},1\"","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"id":"01ANJ53W33OC4BONL5BZH2L4JYCNW6AJG6","lastModifiedBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"name":"Subfolder 123","parentReference":{"driveType":"documentLibrary","driveId":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW","id":"01ANJ53W2LHDLFFGQN4RHJRV6HAK2CFDCT","name":"Test
+        Project Folder Copy Folder","path":"/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW/root:/Test
+        Project Folder Copy Folder","siteId":"1099e315-d0c7-47c7-8640-aa9504b70fff"},"webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Marcello%20VCR/Test%20Project%20Folder%20Copy%20Folder/Subfolder%20123","fileSystemInfo":{"createdDateTime":"2025-10-06T14:52:19Z","lastModifiedDateTime":"2025-10-06T14:52:19Z"}}'
+  recorded_at: Thu, 09 Oct 2025 13:43:19 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW/root:/Test%20Project%20Folder%20Copy%20Folder/Subfolder%20123:/children?$select=id,name,size,webUrl,lastModifiedBy,createdBy,fileSystemInfo,file,folder,parentReference&$top=1000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.2
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Content-Encoding:
+      - gzip
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - bb9dc002-04dc-44fd-acec-16ae05e1dd69
+      Client-Request-Id:
+      - bb9dc002-04dc-44fd-acec-16ae05e1dd69
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"006","RoleInstance":"FR1PEPF00001FD0"}}'
+      Splogid:
+      - 31b6cda1-1052-0000-8a5a-68887fec5bc1
+      Date:
+      - Thu, 09 Oct 2025 13:43:18 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)","value":[{"@odata.etag":"\"{D6DA18D0-54A4-43E1-ABFE-618571894573},1\"","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"id":"01ANJ53W6QDDNNNJCU4FB2X7TBQVYYSRLT","lastModifiedBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"name":"Subfolder 456","parentReference":{"driveType":"documentLibrary","driveId":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW","id":"01ANJ53W33OC4BONL5BZH2L4JYCNW6AJG6","name":"Subfolder
+        123","path":"/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW/root:/Test
+        Project Folder Copy Folder/Subfolder 123","siteId":"1099e315-d0c7-47c7-8640-aa9504b70fff"},"webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Marcello%20VCR/Test%20Project%20Folder%20Copy%20Folder/Subfolder%20123/Subfolder%20456","fileSystemInfo":{"createdDateTime":"2025-10-06T14:52:42Z","lastModifiedDateTime":"2025-10-06T14:52:42Z"},"folder":{"childCount":0},"size":0},{"@odata.etag":"\"{A634DAB7-48BB-4B95-ACC3-537AF37F8A2D},1\"","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"id":"01ANJ53W5X3I2KNO2ISVF2ZQ2TPLZX7CRN","lastModifiedBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"name":"Presentation.pptx","parentReference":{"driveType":"documentLibrary","driveId":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW","id":"01ANJ53W33OC4BONL5BZH2L4JYCNW6AJG6","name":"Subfolder
+        123","path":"/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW/root:/Test
+        Project Folder Copy Folder/Subfolder 123","siteId":"1099e315-d0c7-47c7-8640-aa9504b70fff"},"webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/_layouts/15/Doc.aspx?sourcedoc=%7BA634DAB7-48BB-4B95-ACC3-537AF37F8A2D%7D&file=Presentation.pptx&action=edit&mobileredirect=true","file":{"hashes":{"quickXorHash":"AAAAAAAAAAAAAAAAAAAAAAAAAAA="},"mimeType":"application/vnd.openxmlformats-officedocument.presentationml.presentation"},"fileSystemInfo":{"createdDateTime":"2025-10-06T14:52:48Z","lastModifiedDateTime":"2025-10-06T14:52:48Z"},"size":0}]}'
+  recorded_at: Thu, 09 Oct 2025 13:43:19 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW/root:/Test%20Project%20Folder%20Copy%20Folder/Subfolder%20123/Subfolder%20456:/children?$select=id,name,size,webUrl,lastModifiedBy,createdBy,fileSystemInfo,file,folder,parentReference&$top=1000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.2
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Content-Encoding:
+      - gzip
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - f3f4e1bc-23c2-448d-a8b9-90f648689648
+      Client-Request-Id:
+      - f3f4e1bc-23c2-448d-a8b9-90f648689648
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"006","RoleInstance":"FR1PEPF00001FD0"}}'
+      Splogid:
+      - 31b6cda1-a05a-0000-83a4-a71cee9df24e
+      Date:
+      - Thu, 09 Oct 2025 13:43:18 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)","value":[]}'
+  recorded_at: Thu, 09 Oct 2025 13:43:19 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW/root:/Test%20Project%20Folder%20Copy%20Folder/Subfolder%20123/Subfolder%20456?$select=id,name,size,webUrl,lastModifiedBy,createdBy,fileSystemInfo,file,folder,parentReference&$top=1000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.2
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Content-Encoding:
+      - gzip
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - b96d1341-8339-4fcf-a178-8b4ed7a00c70
+      Client-Request-Id:
+      - b96d1341-8339-4fcf-a178-8b4ed7a00c70
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"006","RoleInstance":"FR1PEPF00001FD0"}}'
+      Splogid:
+      - 31b6cda1-b062-0000-8a5a-6e9b1f9f3ac5
+      Date:
+      - Thu, 09 Oct 2025 13:43:19 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)/$entity","@odata.etag":"\"{D6DA18D0-54A4-43E1-ABFE-618571894573},1\"","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"id":"01ANJ53W6QDDNNNJCU4FB2X7TBQVYYSRLT","lastModifiedBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"name":"Subfolder 456","parentReference":{"driveType":"documentLibrary","driveId":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW","id":"01ANJ53W33OC4BONL5BZH2L4JYCNW6AJG6","name":"Subfolder
+        123","path":"/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW/root:/Test
+        Project Folder Copy Folder/Subfolder 123","siteId":"1099e315-d0c7-47c7-8640-aa9504b70fff"},"webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Marcello%20VCR/Test%20Project%20Folder%20Copy%20Folder/Subfolder%20123/Subfolder%20456","fileSystemInfo":{"createdDateTime":"2025-10-06T14:52:42Z","lastModifiedDateTime":"2025-10-06T14:52:42Z"},"folder":{"childCount":0},"size":0}'
+  recorded_at: Thu, 09 Oct 2025 13:43:19 GMT
+recorded_with: VCR 6.3.1

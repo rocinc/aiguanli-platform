@@ -1,0 +1,55 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+da:
+  js:
+    github_integration:
+      github_actions: Handlinger
+      pull_requests:
+        merged_message: 'Pull-anmodning #%{pr_number} %{pr_link} for %{repository_link} er blevet %{pr_state} af %{github_user_link}.'
+        message: 'Pull-anmodning #%{pr_number} %{pr_link} for %{repository_link} forfattet af %{github_user_link} er blevet %{pr_state}.'
+        referenced_message: 'Pull-anmodning #%{pr_number} %{pr_link} for %{repository_link} forfattet af %{github_user_link} henviste til denne pakke.'
+        states:
+          closed: lukket
+          draft: udarbejdet
+          merged: flettet
+          opened: åbnet
+          ready_for_review: markeret som klar til gennemgang
+      tab_header:
+        copy_menu:
+          description: Copy git snippets to clipboard
+          label: Git snippets
+        git_actions:
+          branch_name: Branch name
+          cmd: Create branch with empty commit
+          commit_message: Commit message
+          copy_error: "❌ Kopiering mislykkedes!"
+          copy_success: "✅ Kopieret!"
+          title: Quick snippets for Git
+        title: Pull requests
+      tab_prs:
+        empty: Der er endnu ingen pull requests linket. Link en eksisterende PR ved at bruge koden <code>OP#%{wp_id}</code> i PR-beskrivelsen eller opret en ny PR.
+      work_packages:
+        tab_name: GitHub
+    work_packages:
+      tabs:
+        github: GitHub

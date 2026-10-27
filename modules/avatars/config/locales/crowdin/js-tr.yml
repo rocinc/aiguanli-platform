@@ -1,0 +1,11 @@
+---
+tr:
+  js:
+    avatars:
+      empty_file_error: Lütfen geçerli bir resim yükleyin (jpg, png, gif)
+      error_image_too_large: Resim çok büyük.
+      label_choose_avatar: Dosyadan Avatar seçin
+      uploading_avatar: Avatarını yüklüyorum.
+      wrong_file_format: İzin verilen biçimler jpg, png, gif
+    button_update: Güncelleştirme
+    label_preview: Önizle

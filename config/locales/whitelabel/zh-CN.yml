@@ -1,0 +1,200 @@
+# 品牌覆盖：统一界面上的产品品牌，去掉版本推广入口
+# 通过 i18n load_path 最后加载，覆盖 crowdin/zh-CN.yml 中的对应条目。
+zh-CN:
+  # ---------- 企业版标识 ----------
+  label_enterprise: 内部
+  label_enterprise_edition: 内部版
+  label_enterprise_support: 内部支持
+  label_enterprise_active_users: "%{current}/%{limit} 已用席位"
+  label_enterprise_token: 内部授权
+  label_enterprise_trial: 试用
+
+  # ---------- 企业版功能受限提示 ----------
+  error_enterprise_only: "%{action}需要管理员开通相应权限。"
+
+  # ---------- 无脚本提示 ----------
+  noscript_heading: JavaScript 被禁用
+  noscript_description: 您需要激活 JavaScript 才能使用本系统！
+
+  # ---------- 帮助菜单中的品牌链接 ----------
+  label_openproject_website: 内网门户
+  label_openproject_community: 团队公告
+
+  # ---------- 首页：去掉外部品牌链接与升级入口 ----------
+  homescreen:
+    blocks:
+      community: 团队公告
+    additional:
+      no_visible_projects: 当前没有可见的项目。
+      projects: 本系统中最新可见的项目。
+      users: 本系统中最新注册的用户。
+    upsell:
+      title: 了解本季度新功能
+    links:
+      blog: 内部公告
+      faq: 帮助中心
+      forums: 技术论坛
+      glossary: 术语表
+      newsletter: 订阅
+      impressum: 法律声明
+
+  # ---------- 企业版功能清单（升级横幅中展示）----------
+  # 保留键名以避免报错，但内容改为中性描述
+  # ---------- 安装状态徽章说明（管理后台）----------
+  text_notice_security_badge_displayed_html: "注：启用后会在管理面板和首页显示一个安装状态徽章，仅管理员可见。"
+
+  # ---------- 管理菜单中的企业版入口 ----------
+  legacy_enterprise: 内部授权
+
+  ee:
+    upsell:
+      # 首页/管理菜单里的企业版推广段落（原为社区版升级说明）
+      title: 了解本季度新功能
+      homescreen_description: "本系统为公司内部研发协作平台。"
+      homescreen_subline: ""
+      plan_name: "%{plan} 内部授权"
+      plans_title: 内部授权
+    features:
+      baseline_comparison: 基线比较
+      board_view: 面板视图
+      calculated_values: 计算值
+      capture_external_links: 外链安全提示
+      custom_actions: 自定义操作
+      custom_field_hierarchies: 层级字段
+      customize_life_cycle: 生命周期
+      date_alerts: 日期提醒
+      define_custom_style: 主题与标识
+      edit_attribute_groups: 属性分组
+      gantt_pdf_export: 甘特图导出
+      internal_comments: 内部评论
+      ldap_groups: 目录服务同步
+      mcp_server: 智能体接口（MCP）
+      one_drive: 文件存储集成
+      placeholder_users: 占位用户
+      project_attributes: 项目属性
+      project_templates: 项目模板
+      scim_api: 账户同步接口
+      share_work_packages_externally: 对外共享
+      team_planner: 团队计划
+      two_factor_authentication: 两步验证
+      version_comparison: 版本比较
+      working_days: 工作日历
+      xls_export: 表格导出
+    enterprise_trial: 试用
+    enterprise: 内部
+    upgrade: 联系管理员
+    required_for_feature: 该功能需要管理员开通。
+
+  # ---------- 企业令牌管理入口（管理后台）----------
+  enterprise:
+    add_token: 上传授权文件
+    paste: 粘贴授权文件
+    title: 内部授权
+    upgrade: 联系管理员
+    enterprise_trial: 试用
+  enterprise_token:
+    add_token: 上传授权文件
+    title: 内部授权
+    delete_confirmation: 确定要删除此授权吗？
+    delete_heading: 删除此授权？
+    delete_title: 删除授权
+    paste: 粘贴授权文件
+    required_for_feature: 该功能需要管理员开通。
+
+  # ---------- AI 记忆页面（modules/ai_workspace） ----------
+  # 必须放在本文件里，不能另起一个 `ai_memories.zh-CN.yml`：spec 环境的 i18n
+  # backend 是 I18n::Backend::LazyLoadable，它按**文件名**推断 locale
+  # （spec/support/i18n_lazy_loading.rb 里的 LocaleExtractor 取 `_` 之前的整段），
+  # 于是 `ai_memories.zh-CN.yml` 会被当成 `ai_memories.zh` 这个不存在的语言，
+  # 中文在 spec 里永远查不到。`zh-CN.yml` 推断正确，开发和测试都能取到。
+  #
+  # ref.* 三个键的名字对应 AI::Memories::RefCard 产出的三个 tombstone 常量，
+  # 取值刻意与那三个常量逐字相同：服务层用这三个常量说明"这条引用为什么解析不
+  # 出来"，界面就必须原样显示出来——引用解析不出来时显示空白，正是这套设计要
+  # 排除的那种失败。
+  ai_workspace:
+    memories:
+      my:
+        title: "记忆"
+      project:
+        title: "AI 记忆"
+      table_title: "AI 记忆"
+      never_used: "从未使用"
+      used_times: "已使用 %{count} 次 · %{time}"
+      no_refs: "没有关联对象"
+      unknown_author: "未知作者"
+      auto_captured: "%{label} · 自动捕获"
+      source_session: "来源会话"
+      review_banner:
+        other: "有 %{count} 条记忆已过复核日期。"
+      review_banner_action: "查看待复核"
+
+      attributes:
+        title: "标题"
+        kind: "类型"
+        body: "正文"
+        body_caption: "写成关于项目的事实，不要写成对人的评判。"
+        source: "来源"
+        refs: "引用对象"
+        review_after: "复核日期"
+        review_after_caption: "日期，格式 YYYY-MM-DD。"
+        last_used_at: "最近使用"
+
+      scope:
+        personal: "个人"
+        project: "项目"
+        global: "全局"
+
+      kind:
+        fact: "事实"
+        preference: "偏好"
+        decision: "决定"
+        glossary: "术语"
+        constraint: "约束"
+
+      source_kind:
+        user_explicit: "由你写入"
+        model_proposed_user_confirmed: "模型提议，你已确认"
+        compaction_auto: "自动"
+        imported: "导入"
+
+      # 取值必须与 AI::Memories::RefCard::{PERMISSION_DENIED, OBJECT_MISSING,
+      # UNRESOLVABLE} 逐字相同。
+      ref:
+        permission_denied: "无权查看"
+        object_missing: "对象已不存在"
+        unresolvable: "无法解析引用"
+
+      filter:
+        search: "搜索"
+        search_placeholder: "搜索标题与正文"
+        scope: "作用域"
+        any_scope: "全部作用域"
+        apply: "筛选"
+        clear: "清除筛选"
+
+      action:
+        edit: "编辑"
+        delete: "删除"
+        delete_confirm: "确定删除这条记忆？删除会留痕，且此后不再回放给模型。"
+
+      edit:
+        title: "编辑记忆"
+
+      notice:
+        updated: "记忆已更新。"
+        deleted: "记忆已删除。"
+
+      error:
+        review_after_not_a_date: "复核日期必须是一个日期，格式 YYYY-MM-DD。"
+
+      blank:
+        title: "还没有记住任何东西"
+        description: "有人写入记忆、或一次对话被压缩时捕获到值得保留的内容后，条目会出现在这里。任何内容都不会在不出现在本页面的情况下被模型使用。"
+
+  # ---------- 菜单整理：概览 / 维基 / 工时与成本 ----------
+  cost_reports_intro: 按人、按任务、按版本汇总工时与成本。
+  cost_reports_menu:
+    default_report: 成本报告
+    time_entries: 工时记录
+    by_version: 按版本汇总

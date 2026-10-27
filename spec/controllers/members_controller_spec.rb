@@ -1,0 +1,525 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+require "spec_helper"
+
+RSpec.describe MembersController do
+  shared_let(:admin) { create(:admin) }
+  shared_let(:project) { create(:project, identifier: "pet_project") }
+
+  let(:user) { create(:user) }
+  let(:role) { create(:project_role) }
+  let(:member) do
+    create(:member, project:,
+                    user:,
+                    roles: [role])
+  end
+
+  before { login_as(admin) }
+
+  describe "#autocomplete_for_member" do
+    let(:params) { { "project_id" => project.identifier.to_s, "q" => query } }
+    let(:query) { "" }
+    let(:json_response) { response.parsed_body }
+    let(:global_permissions) { [] }
+    let(:project_permissions) { [] }
+
+    let(:user) do
+      create(:user,
+             member_with_permissions: { project => project_permissions },
+             global_permissions: global_permissions)
+    end
+
+    subject { post(:autocomplete_for_member, xhr: true, params:, format: :json) }
+
+    before do
+      login_as(user)
+    end
+
+    describe "WHEN the user is authorized to view all users WHEN a project is provided" do
+      let(:project_permissions) { [:manage_members] }
+      let(:global_permissions) { [:view_all_principals] }
+
+      it "is success" do
+        subject
+        expect(response).to be_successful
+      end
+
+      context "when the user is not authorized to see email addresses" do
+        it "returns id, name and href" do
+          subject
+          expect(json_response).to be_an(Array)
+          expect(json_response).to include(
+            {
+              "id" => admin.id,
+              "name" => admin.name,
+              "href" => "/api/v3/users/#{admin.id}"
+            }
+          )
+        end
+
+        context "when searching email addresses" do
+          let(:query) { admin.mail }
+
+          it "does not return matches from emails" do
+            subject
+            expect(json_response).to be_empty
+          end
+        end
+      end
+
+      context "when the user is authorized to see email addresses" do
+        let(:global_permissions) { %i[view_all_principals view_user_email] }
+
+        it "returns id, name, email and href" do
+          subject
+          expect(json_response).to be_an(Array)
+          expect(json_response).to include(
+            {
+              "id" => admin.id,
+              "name" => admin.name,
+              "email" => admin.mail,
+              "href" => "/api/v3/users/#{admin.id}"
+            }
+          )
+        end
+
+        context "when searching email addresses" do
+          let(:query) { admin.mail }
+
+          it "returns matches from emails" do
+            subject
+            expect(json_response).to include(
+              {
+                "id" => admin.id,
+                "name" => admin.name,
+                "email" => admin.mail,
+                "href" => "/api/v3/users/#{admin.id}"
+              }
+            )
+          end
+        end
+      end
+    end
+
+    describe "WHEN the user has manage_members but no view_all_users (reduced visibility)" do
+      let(:project_permissions) { [:manage_members] }
+      let!(:other_project) { create(:project) }
+      let!(:other_user) { create(:user, member_with_permissions: { other_project => %i[view_project] }) }
+      let!(:user) do
+        create(:user,
+               global_permissions: global_permissions,
+               member_with_permissions: { project => project_permissions, other_project => %i[view_project] })
+      end
+
+      context "when the user is not authorized to see email addresses" do
+        it "returns only users visible through shared projects" do
+          subject
+          expect(json_response).to be_an(Array)
+          expect(json_response).to include(
+            {
+              "id" => other_user.id,
+              "name" => other_user.name,
+              "href" => "/api/v3/users/#{other_user.id}"
+            }
+          )
+          expect(json_response).not_to include(
+            {
+              "id" => admin.id,
+              "name" => admin.name,
+              "href" => "/api/v3/users/#{admin.id}"
+            }
+          )
+        end
+
+        context "when searching email addresses" do
+          let(:query) { other_user.mail }
+
+          it "does not return matches from emails" do
+            subject
+            expect(json_response).to be_empty
+          end
+        end
+      end
+
+      context "when searching for a group the user belongs to" do
+        let!(:visible_group) { create(:group, lastname: "Visible group", members: [user]) }
+        let!(:hidden_group) { create(:group, lastname: "Hidden group") }
+        let(:query) { "Visible group" }
+
+        it "returns the group even if it is not a member of the project" do
+          subject
+
+          expect(json_response).to include(
+            {
+              "id" => visible_group.id,
+              "name" => visible_group.name,
+              "href" => "/api/v3/groups/#{visible_group.id}"
+            }
+          )
+          expect(json_response.pluck("id")).not_to include(hidden_group.id)
+        end
+      end
+
+      context "when the user is authorized to see email addresses" do
+        let(:global_permissions) { [:view_user_email] }
+
+        it "returns id, name, email and href for visible users" do
+          subject
+          expect(json_response).to be_an(Array)
+          expect(json_response).to include(
+            {
+              "id" => other_user.id,
+              "name" => other_user.name,
+              "email" => other_user.mail,
+              "href" => "/api/v3/users/#{other_user.id}"
+            }
+          )
+        end
+
+        context "when searching email addresses" do
+          let(:query) { other_user.mail }
+
+          it "returns matches from emails for visible users" do
+            subject
+            expect(json_response).to include(
+              {
+                "id" => other_user.id,
+                "name" => other_user.name,
+                "email" => other_user.mail,
+                "href" => "/api/v3/users/#{other_user.id}"
+              }
+            )
+          end
+        end
+      end
+    end
+
+    describe "WHEN the user is not authorized" do
+      it "is forbidden" do
+        subject
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+  end
+
+  describe "#index" do
+    let(:role) { create(:project_role, permissions: [:manage_members]) }
+    let!(:member) { create(:member, project:, user:, roles: [role]) }
+
+    let!(:visible_group) { create(:group, members: [user]) }
+    let!(:hidden_group) { create(:group) }
+
+    before { login_as(user) }
+
+    it "only includes groups the user is a member of in the filter options" do
+      get :index, params: { project_id: project.id }
+
+      expect(response).to be_successful
+
+      groups = assigns(:members_filter_options)[:groups]
+      expect(groups).to include(visible_group)
+      expect(groups).not_to include(hidden_group)
+    end
+  end
+
+  describe "#create with reduced visibility" do
+    let(:project_permissions) { %i[manage_members invite_members_by_email] }
+    let!(:other_project) { create(:project) }
+    let!(:other_user) { create(:user, member_with_permissions: { other_project => %i[view_project] }) }
+    let!(:user) do
+      create(:user, member_with_permissions: { project => project_permissions, other_project => %i[view_project] })
+    end
+
+    before do
+      login_as(user)
+    end
+
+    context "when inviting by email an existing user who is not visible" do
+      let!(:hidden_user) { create(:user, mail: "hidden@example.com") }
+      let(:params) do
+        {
+          project_id: project.id,
+          member: {
+            role_ids: [role.id],
+            user_ids: [hidden_user.mail]
+          }
+        }
+      end
+
+      it "adds the existing user as a member instead of creating a new invitation" do
+        expect { post :create, params: }
+          .to change(Member, :count).by(1)
+          .and change(User, :count).by(0)
+
+        expect(response).to redirect_to "/projects/pet_project/members?status=all"
+
+        # The hidden user should now be a member of the project
+        hidden_user.reload
+        expect(hidden_user).to be_member_of(project)
+
+        # No invitation email should be sent since the user already exists
+        expect(ActionMailer::Base.deliveries).to be_empty
+      end
+    end
+
+    context "when adding by direct user ID a user who is not visible" do
+      let!(:hidden_user) { create(:user) }
+      let(:params) do
+        {
+          project_id: project.id,
+          member: {
+            role_ids: [role.id],
+            user_ids: [hidden_user.id]
+          }
+        }
+      end
+
+      it "does not add the hidden user as a member" do
+        expect { post :create, params: }
+          .to change(Member, :count).by(0)
+
+        hidden_user.reload
+        expect(hidden_user).not_to be_member_of(project)
+      end
+    end
+  end
+
+  describe "#create" do
+    render_views
+    let(:user2) { create(:user) }
+    let(:user3) { create(:user) }
+    let(:user4) { create(:user) }
+
+    context "for single member" do
+      let(:action) do
+        post :create,
+             params: {
+               project_id: project.id,
+               member: { role_ids: [role.id], user_id: user2.id }
+             }
+      end
+
+      it "adds a member" do
+        expect { action }.to change(Member, :count).by(1)
+        expect(response).to redirect_to "/projects/pet_project/members?status=all"
+        expect(user2).to be_member_of(project)
+      end
+    end
+
+    context "for multiple members" do
+      let(:action) do
+        post :create,
+             params: {
+               project_id: project.id,
+               member: { role_ids: [role.id], user_ids: [user2.id, user3.id, user4.id] }
+             }
+      end
+
+      it "adds all members" do
+        expect { action }.to change(Member, :count).by(3)
+        expect(response).to redirect_to "/projects/pet_project/members?status=all"
+        expect(user2).to be_member_of(project)
+        expect(user3).to be_member_of(project)
+        expect(user4).to be_member_of(project)
+      end
+    end
+
+    context "with yet-to-be-invited emails" do
+      let(:emails) { ["h.wurst@openproject.com", "1277551@openproject.com"] }
+      let(:params) do
+        {
+          project_id: project.id,
+          member: {
+            role_ids: [role.id],
+            user_ids: [emails.first] + [user2.id, user3.id] + [emails.last]
+          }
+        }
+      end
+
+      let(:invited_users) { User.where(mail: emails).to_a }
+      let(:users) { invited_users + [user2, user3] }
+      let(:original_member_count) { Member.count }
+
+      before do
+        original_member_count
+
+        perform_enqueued_jobs do
+          post :create, params:
+        end
+      end
+
+      it "redirects to the members list" do
+        expect(response).to redirect_to "/projects/pet_project/members?status=all"
+      end
+
+      it "adds members" do
+        expect(users.size).to eq 4 # 2 emails, 2 existing users
+        expect(users).to all be_member_of(project)
+
+        expect(Member.count).to eq (original_member_count + users.size)
+      end
+
+      it "invites new users" do
+        mails = ActionMailer::Base.deliveries
+
+        expect(invited_users.size).to eq 2
+        expect(mails.size).to eq invited_users.size
+        expect(mails.map(&:to).flatten).to eq invited_users.map(&:mail)
+
+        mails.each do |mail|
+          expect(mail.subject).to include "account activation"
+        end
+      end
+    end
+
+    context "with a failed save" do
+      let(:invalid_params) do
+        { project_id: project.id,
+          member: { role_ids: [],
+                    user_ids: [user2.id, user3.id, user4.id] } }
+      end
+
+      before do
+        post :create, params: invalid_params
+      end
+
+      it "does not redirect to the members index" do
+        expect(response).not_to redirect_to "/projects/pet_project/members"
+      end
+
+      it "shows an error message" do
+        expect(response.body).to include "Roles need to be assigned."
+      end
+    end
+  end
+
+  describe "#destroy_by_principal" do
+    let(:action) do
+      delete :destroy_by_principal, params: { project_id: project.id, principal_id: user.id, **more_params }
+    end
+
+    let(:role) { create(:project_role, permissions: %i[manage_members share_work_packages]) }
+    let!(:project_role_member) do
+      create(:member, project:,
+                      user:,
+                      roles: [role])
+    end
+
+    let(:work_package_role) { create(:view_work_package_role) }
+    let!(:work_packages_shares) do
+      Array.new(2) do
+        create(:member,
+               project:,
+               roles: [work_package_role],
+               entity: create(:work_package, project:),
+               principal: user)
+      end
+    end
+
+    before do
+      allow(User).to receive(:current).and_return(user)
+    end
+
+    context "when requested to delete only project role member" do
+      let(:more_params) { { project: "✓" } }
+
+      it "destroys the project role member" do
+        expect { action }.to change(Member, :count).by(-1)
+        expect(response).to redirect_to "/projects/pet_project/members"
+        expect(user).not_to be_member_of(project)
+      end
+    end
+
+    context "when requested to delete only work packages shares" do
+      let(:more_params) { { work_package_shares_role_id: "all" } }
+
+      it "destroys the project role member" do
+        expect { action }.to change(Member, :count).by(-2)
+        expect(response).to redirect_to "/projects/pet_project/members"
+        expect(user).to be_member_of(project)
+      end
+    end
+
+    context "when requested to delete both project role member and work packages shares" do
+      let(:more_params) { { project: "✓", work_package_shares_role_id: "all" } }
+
+      it "destroys the project role member" do
+        expect { action }.to change(Member, :count).by(-3)
+        expect(response).to redirect_to "/projects/pet_project/members"
+        expect(user).not_to be_member_of(project)
+      end
+    end
+  end
+
+  describe "#update" do
+    let(:action) do
+      post :update,
+           params: {
+             project_id: project.id,
+             id: member.id,
+             member: { role_ids: [role2.id], user_id: user.id }
+           }
+    end
+    let(:role2) { create(:project_role) }
+
+    before do
+      member
+    end
+
+    it "updates the member" do
+      expect { action }.not_to change(Member, :count)
+      expect(response).to redirect_to "/projects/pet_project/members"
+    end
+
+    context "when the member is a group" do
+      let(:group) { create(:group) }
+      let(:member) do
+        create(:member, project:,
+                        principal: group,
+                        roles: [role])
+      end
+      let(:action) do
+        post :update,
+             params: {
+               project_id: project.id,
+               id: member.id,
+               member: { role_ids: [role2.id] }
+             }
+      end
+
+      it "updates the group member instead of returning a 404" do
+        action
+        expect(response).to redirect_to "/projects/pet_project/members"
+        expect(member.reload.roles).to contain_exactly(role2)
+      end
+    end
+  end
+end

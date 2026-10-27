@@ -1,0 +1,130 @@
+@if (resource) {
+  <div class=op-tab-content--header>
+    @if ((storage | async)?._links.type.href === nextcloud) {
+      <svg class="op-tab-content--header-icon op-files-tab--icon" op-mark-nextcloud-icon size="small"></svg>
+    } @else {
+      <svg class="op-tab-content--header-icon op-files-tab--icon" cloud-icon size="small"></svg>
+    }
+
+    <span class="op-tab-content--header-text" [textContent]="$safeNavigationMigration((storage | async)?.name)"></span>
+
+    @if (openStorageLink) {
+      <a
+        class="op-tab-content--header-action"
+        aria-label="{{text.openStorage(storageType | async)}}"
+        [title]="text.openStorage(storageType | async)"
+        [href]="openStorageLink"
+        target="_blank"
+      >
+        <svg link-external-icon size="small"></svg>
+      </a>
+    }
+  </div>
+
+  @for (infoBox of storageErrors | async; track infoBox.header + ':' + infoBox.content) {
+    <op-storage-information class="op-files-tab--storage-info-box"
+      data-test-selector="op-storage--information"
+      [content]="infoBox"
+     />
+  }
+
+  <div class="op-file-section">
+    @if ((fileLinks | async)?.length > 0) {
+      <ul
+        class="spot-list spot-list_compact op-file-list"
+        [ngClass]="{
+          'op-file-section': true,
+          'op-file-section--list_dragging': dragging > 0
+        }"
+        data-test-selector="file-list"
+      >
+        @for (fileLink of fileLinks | async; track fileLink.id) {
+          <li
+            class="spot-list--item op-file-list--item"
+            data-test-selector="file-list--item"
+            op-file-link-list-item
+            [fileLink]="fileLink"
+            [disabled]="disabled | async"
+            [allowEditing]="allowLinking"
+            (removeFileLink)="removeFileLink(fileLink)"
+          ></li>
+        }
+      </ul>
+    }
+
+    @if (!allowUploading && (storageErrors | async)?.length === 0 && (fileLinks | async)?.length === 0) {
+      <span class="op-file-section--empty-list-hint" [textContent]="text.emptyList(this.storageType | async)"></span>
+    }
+
+    @if (allowUploading) {
+      <input
+        #hiddenFileInput
+        type="file"
+        id="upload_files"
+        name="upload_files"
+        (change)="onFilePickerChanged()"
+        hidden
+      />
+    }
+
+    @if (allowUploading && (storageErrors | async)?.length === 0) {
+      <button
+        [attr.aria-label]="text.dropBox.uploadLabel"
+        data-test-selector="op-storage--drop-box"
+        [ngClass]="{
+          'hide-when-print': true,
+          'op-file-section--drop-box': true,
+          'op-file-section--drop-box_dragging': dragging > 0,
+          'op-file-section--drop-box_dragging-over': draggingOverDropZone,
+          'op-file-section--drop-box_float': $safeNavigationMigration((fileLinks | async)?.length)
+        }"
+        type="button"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDropFiles($event)"
+        (click)="triggerFileInput()"
+      >
+        <svg upload-icon size="small" class="op-file-section--drop-box-icon"></svg>
+        @if ((fileLinks | async)?.length === 0) {
+          <span
+            class="op-file-section--drop-box-text"
+            [textContent]="text.dropBox.dropClickFiles(this.storageType | async)"
+          ></span>
+        } @else {
+          <span
+            class="op-file-section--drop-box-text"
+            [textContent]="text.dropBox.dropFiles(this.storageType | async)"
+          ></span>
+        }
+      </button>
+    }
+
+    @if ((storageErrors | async)?.length === 0) {
+      <div class="op-file-section--actions">
+        @if (allowUploading) {
+          <button
+            type="button"
+            class="spot-link"
+            data-test-selector="op-storage--upload-file-button"
+            (click)="triggerFileInput()"
+          >
+            <svg upload-icon size="small" class="octicon"></svg>
+            <span [textContent]="text.actions.uploadFile"></span>
+          </button>
+        }
+
+        @if (allowLinking) {
+          <button
+            type="button"
+            class="spot-link"
+            data-test-selector="op-storage--link-existing-file-button"
+            (click)="openLinkFilesDialog()"
+          >
+            <svg link-icon size="small" class="octicon"></svg>
+            <span [textContent]="text.actions.linkExisting"></span>
+          </button>
+        }
+      </div>
+    }
+  </div>
+}

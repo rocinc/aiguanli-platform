@@ -1,0 +1,59 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+require "spec_helper"
+require_relative "shared_query_select_specs"
+
+RSpec.describe Queries::WorkPackages::Selects::RelationOfTypeSelect do
+  let(:project) { build_stubbed(:project) }
+  let(:type) { build_stubbed(:type) }
+  let(:instance) { described_class.new(type) }
+
+  it_behaves_like "query column"
+
+  describe "instances" do
+    before do
+      stub_const("Relation::TYPES",
+                 relation1: { name: :label_relates_to, sym_name: :label_relates_to, order: 1, sym: :relation1 },
+                 relation2: { name: :label_duplicates, sym_name: :label_duplicated_by, order: 2, sym: :relation2 })
+    end
+
+    it "contains the type columns" do
+      expect(described_class.instances.length)
+        .to eq 2
+
+      expect(described_class.instances[0].sym)
+        .to eq :relation1
+
+      expect(described_class.instances[1].sym)
+        .to eq :relation2
+    end
+  end
+end

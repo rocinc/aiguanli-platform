@@ -1,0 +1,150 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<% html_title(t(:label_my_account), t("assistant.settings.title")) -%>
+<% note = flash[:assistant_note] %>
+<% levels = Assistant::Preference::LEVELS %>
+<% caps = Assistant::Preference::CAPS %>
+
+<%=
+  render(Primer::OpenProject::PageHeader.new) do |header|
+    header.with_title { t("assistant.settings.title") }
+    header.with_description { t("assistant.settings.lede") }
+    header.with_breadcrumbs(
+      [{ href: my_account_path, text: t(:label_my_account) },
+       t("assistant.settings.title")]
+    )
+  end
+%>
+
+<%= turbo_frame_tag "assistant-settings" do %>
+  <%= form_with(url: my_assistant_path, method: :patch, data: { test_selector: "assistant-settings-form" }) do %>
+    <%= render(Primer::Beta::Subhead.new) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.settings.level.heading") } } %>
+    <div class="FormControl-radio-group-wrap" role="radiogroup" aria-label="<%= t('assistant.settings.level.heading') %>">
+      <% [nil, *levels].each do |level| %>
+        <div class="FormControl-radio-wrap">
+          <%= radio_button_tag(:proactivity, level.to_s, @settings.preference.proactivity == level, class: "FormControl-radio",
+                                                                                                   id: "assistant-proactivity-#{level || 'follow'}") %>
+          <div class="FormControl-radio-labelWrap">
+            <label class="FormControl-label" for="assistant-proactivity-<%= level || 'follow' %>">
+              <%= level ? t("assistant.settings.level.names.#{level}") : t("assistant.settings.level.follow") %>
+            </label>
+            <span class="FormControl-caption">
+              <% if level %>
+                <%= t("assistant.settings.level.captions.#{level}", count: caps.fetch(level)) %>
+              <% else %>
+                <%= t("assistant.settings.level.follow_caption", site: t("assistant.settings.level.names.#{Setting.assistant_default_proactivity.presence_in(levels) || 'standard'}")) %>
+              <% end %>
+            </span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @settings.projects.any? %>
+      <%= render(Primer::Beta::Subhead.new(mt: 4)) { |c| c.with_heading(tag: :h3, size: :medium) { t("assistant.settings.projects.heading") } } %>
+      <p class="color-fg-muted"><%= t("assistant.settings.projects.caption") %></p>
+      <%= render(Primer::Beta::BorderBox.new(mb: 3)) do |box| %>
+        <% @settings.projects.each do |project| %>
+          <% box.with_row(display: :flex, justify_content: :space_between, align_items: :center) do %>
+            <label for="assistant-project-level-<%= project.id %>"><%= project.name %></label>
+            <%= select_tag("project_levels[#{project.id}]",
+                           options_for_select([[t("assistant.settings.projects.follow"), ""],
+                                               *levels.map { [t("assistant.settings.level.names.#{it}"), it] }],
+                                              @settings.project_level(project)),
+                           class: "FormControl-select", id: "assistant-project-level-#{project.id}") %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= render(Primer::Beta::Subhead.new(mt: 4)) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.settings.cap.heading") } } %>
+    <%= select_tag(:interrupt_cap,
+                   options_for_select([[t("assistant.settings.cap.follow"), ""],
+                                       *Assistant::MySettings::CAP_CHOICES.map { [t("assistant.settings.cap.times", count: it), it] }],
+                                      @settings.chosen_cap),
+                   class: "FormControl-select", "aria-label": t("assistant.settings.cap.heading")) %>
+    <p class="FormControl-caption mt-1">
+      <%= t("assistant.settings.cap.caption", quiet: caps["quiet"], standard: caps["standard"], active: caps["active"]) %>
+    </p>
+
+    <%= render(Primer::Beta::Subhead.new(mt: 4)) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.settings.brief.heading") } } %>
+    <p>
+      <%= t("assistant.settings.brief.time", time: @settings.brief_clock) %>
+      <%= t("assistant.settings.brief.change_html",
+            link: link_to(t("assistant.settings.brief.reminder_settings"), "#{my_notifications_path}?tab=reminders", data: { turbo_frame: "_top" })) %>
+    </p>
+    <div class="FormControl-checkbox-wrap">
+      <%= hidden_field_tag(:brief_email, "0", id: nil) %>
+      <%= check_box_tag(:brief_email, "1", @settings.preference.brief_email, class: "FormControl-checkbox", id: "assistant-brief-email") %>
+      <div class="FormControl-checkbox-labelWrap">
+        <label class="FormControl-label" for="assistant-brief-email"><%= t("assistant.settings.brief.email") %></label>
+      </div>
+    </div>
+
+    <div class="mt-4 d-flex flex-items-center">
+      <%= render(Primer::Beta::Button.new(type: :submit, scheme: :primary)) { t("assistant.settings.save") } %>
+      <% if note && note["section"] == "form" %>
+        <span class="color-fg-muted ml-3" role="status" data-test-selector="assistant-settings-note"><%= note["text"] %></span>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= render(Primer::Beta::Subhead.new(mt: 6)) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.settings.mutes.heading") } } %>
+  <div id="assistant-settings-mutes">
+    <% if @settings.mutes.empty? %>
+      <p class="color-fg-muted"><%= t("assistant.settings.mutes.empty") %></p>
+    <% else %>
+      <%= render(Primer::Beta::BorderBox.new(mb: 2)) do |box| %>
+        <% @settings.mutes.each do |mute| %>
+          <% box.with_row(display: :flex, justify_content: :space_between, align_items: :center) do %>
+            <span>
+              <%= Assistant::MySettings.rule_title(mute.key) %>
+              <% if mute.project %>
+                <span class="color-fg-muted"><%= t("assistant.settings.mutes.in_project", project: mute.project.name) %></span>
+              <% end %>
+            </span>
+            <%= button_to(t("assistant.settings.restore"), mute_my_assistant_path(rule: mute.key, project_id: mute.project&.id),
+                          method: :delete, class: "Button Button--secondary Button--small",
+                          form: { data: { test_selector: "assistant-unmute-#{mute.key}" } }) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% if note && note["section"] == "mutes" %>
+      <p class="color-fg-muted" role="status" data-test-selector="assistant-settings-note"><%= note["text"] %></p>
+    <% end %>
+  </div>
+
+  <%= render(Primer::Beta::Subhead.new(mt: 6)) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.settings.grants.heading") } } %>
+  <div id="assistant-settings-grants">
+    <% if @settings.grants.empty? %>
+      <p class="color-fg-muted"><%= t("assistant.settings.grants.empty") %></p>
+    <% else %>
+      <p class="color-fg-muted"><%= t("assistant.settings.grants.lede") %></p>
+      <%= render(Primer::Beta::BorderBox.new(mb: 2)) do |box| %>
+        <% @settings.grants.each do |grant| %>
+          <% box.with_row(display: :flex, justify_content: :space_between, align_items: :center) do %>
+            <span>
+              <%= Assistant::DutiesPageComponent.kind_label(grant.action_kind) %>
+              <span class="color-fg-muted"><%= t("assistant.settings.grants.in_project", project: grant.project.name) %></span>
+            </span>
+            <%= button_to(t("assistant.settings.revoke"), grant_my_assistant_path(grant), method: :delete,
+                          class: "Button Button--secondary Button--small",
+                          form: { data: { test_selector: "assistant-revoke-#{grant.id}" } }) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% if note && note["section"] == "grants" %>
+      <p class="color-fg-muted" role="status" data-test-selector="assistant-settings-note"><%= note["text"] %></p>
+    <% end %>
+  </div>
+<% end %>

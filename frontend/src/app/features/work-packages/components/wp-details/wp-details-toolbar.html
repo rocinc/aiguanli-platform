@@ -1,0 +1,32 @@
+<div class="work-packages--details-toolbar">
+  <wp-watcher-button [workPackage]="workPackage" />
+
+  @if (displayNotificationsButton) {
+    <op-work-package-mark-notification-button [workPackage]="workPackage"
+      data-test-selector="mark-notification-read-button"
+     />
+  }
+
+  @if (displayShareButton$ | async) {
+    <wp-share-button [workPackage]="workPackage"
+       />
+  }
+
+  @if (displayReminderButton$ | async) {
+    <wp-reminder-button [workPackage]="workPackage"
+       />
+  }
+
+  <button class="button dropdown-relative"
+    [attr.accesskey]="7"
+    [title]="text.button_more"
+    data-test-selector="wp-details-toolbar--show-more-button"
+    wpSingleContextMenu
+    [wpSingleContextMenu-workPackage]="workPackage">
+    <svg
+      kebab-horizontal-icon
+      class="button--icon"
+      size="small"
+    ></svg>
+  </button>
+</div>

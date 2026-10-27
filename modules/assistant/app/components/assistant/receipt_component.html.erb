@@ -1,0 +1,139 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= content_tag(
+      :article,
+      id:,
+      class: class_names("assistant-receipt", "assistant-receipt--#{density}", "assistant-receipt--undone" => undone?),
+      "aria-labelledby": sentence_id,
+      data: { assistant_action_id: action.id, assistant_density: density, test_selector: "assistant-receipt" }
+    ) do %>
+  <%= tag.details(class: "assistant-receipt--details", open: open?) do %>
+    <summary class="assistant-receipt--summary">
+      <%= render(Primer::Beta::Octicon.new(icon: :"sparkle-fill", size: :small, color: :muted, classes: "assistant-receipt--mark", "aria-hidden": true)) %>
+      <span id="<%= sentence_id %>" class="assistant-receipt--sentence" data-test-selector="assistant-receipt-sentence"><%= sentence_html %></span>
+      <span class="assistant-receipt--meta">
+        <% if (reason = reason_html).present? %>
+          <span data-test-selector="assistant-receipt-reason"><%= reason %></span>
+          <span aria-hidden="true">·</span>
+        <% end %>
+        <span data-test-selector="assistant-receipt-when"><%= when_text %></span>
+      </span>
+      <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-receipt--chevron", "aria-label": t("assistant.receipt.expand"))) %>
+    </summary>
+
+    <div class="assistant-receipt--more">
+      <% if notice %>
+        <p class="assistant-receipt--notice" role="status"><%= notice %></p>
+      <% end %>
+
+      <% if undone? %>
+        <p class="assistant-receipt--note"><%= undone_text %></p>
+      <% end %>
+
+      <% if listed_changes.any? %>
+        <ul class="assistant-receipt--changes" data-test-selector="assistant-receipt-changes">
+          <% listed_changes.each do |change| %>
+            <li><%= change_line(change) %></li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <% if cascaded_changes.any? %>
+        <div class="assistant-receipt--cascade" data-test-selector="assistant-receipt-cascade">
+          <p class="assistant-receipt--note"><%= t("assistant.receipt.cascade", count: cascaded_changes.size) %></p>
+          <ul class="assistant-receipt--changes">
+            <% cascaded_changes.each do |change| %>
+              <li><%= change_line(change) %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <% if full? && basis.any? %>
+        <ul class="assistant-receipt--basis">
+          <% basis.each do |entry| %>
+            <li>
+              <% if (url = basis_url(entry)) %>
+                <%= link_to(entry.label.presence || t("assistant.card.source"), url, data: { turbo_frame: "_top" }) %>
+              <% else %>
+                <span><%= entry.label.presence || t("assistant.card.source") %></span>
+              <% end %>
+              <% if entry.quote.present? %>
+                <blockquote class="assistant-card--quote"><%= entry.quote %></blockquote>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <% if full? && decided_line %>
+        <p class="assistant-receipt--note"><%= decided_line %></p>
+      <% end %>
+
+      <% if conflicts.present? %>
+        <div class="assistant-receipt--conflicts" role="group" aria-labelledby="<%= id %>-conflicts"
+             data-test-selector="assistant-receipt-conflicts">
+          <p id="<%= id %>-conflicts" class="assistant-receipt--note"><%= t("assistant.card.conflicts_lead") %></p>
+          <ul class="assistant-receipt--changes">
+            <% conflicts.each do |conflict| %>
+              <li><%= t("assistant.card.conflict", label: conflict["label"], attribute: consequences.attribute_label(conflict["attribute"])) %></li>
+            <% end %>
+          </ul>
+          <div class="assistant-receipt--buttons">
+            <%= form_with(url: undo_path, method: :post, data: { turbo_stream: true }, class: "d-inline") do %>
+              <% form_inputs.each do |input| %>
+                <%= hidden_field_tag(input[:name], input[:value], id: nil) %>
+              <% end %>
+              <%= hidden_field_tag(:keep, "1", id: nil) %>
+              <%= render(Primer::Beta::Button.new(type: :submit, size: :small, test_selector: "assistant-action-undo-keep")) { t("assistant.card.undo_keep") } %>
+            <% end %>
+            <%= form_with(url: show_path, method: :get, data: { turbo_stream: true }, class: "d-inline") do %>
+              <% form_inputs.each do |input| %>
+                <%= hidden_field_tag(input[:name], input[:value], id: nil) %>
+              <% end %>
+              <%= render(Primer::Beta::Button.new(type: :submit, scheme: :invisible, size: :small)) { t("assistant.card.undo_cancel") } %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <p class="assistant-receipt--note">
+        <%= link_to(t("assistant.card.details"), show_path, data: { turbo_frame: "_top" }) %>
+        <%= render(Assistant::SayButtonComponent.new(record: action, user:, describedby: sentence_id)) %>
+      </p>
+    </div>
+  <% end %>
+
+  <% if undone? %>
+    <span class="assistant-receipt--aside assistant-receipt--status" data-test-selector="assistant-receipt-undone"><%= t("assistant.receipt.undone") %></span>
+  <% elsif undoable? && conflicts.blank? %>
+    <div class="assistant-receipt--aside">
+      <% if undo_with_preview? %>
+        <%= link_to(
+              t("assistant.receipt.undo_preview"), show_path, class: "Link--secondary", "aria-describedby": sentence_id,
+                                                              data: { turbo_frame: "_top", test_selector: "assistant-action-undo-preview" }
+            ) %>
+      <% else %>
+        <%= form_with(url: undo_path, method: :post, data: { turbo_stream: true }, class: "d-inline") do %>
+          <% form_inputs.each do |input| %>
+            <%= hidden_field_tag(input[:name], input[:value], id: nil) %>
+          <% end %>
+          <%= render(
+                Primer::Beta::Button.new(
+                  type: :submit, scheme: :invisible, size: :small, "aria-describedby": sentence_id,
+                  test_selector: "assistant-action-undo"
+                )
+              ) { t("assistant.card.undo") } %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

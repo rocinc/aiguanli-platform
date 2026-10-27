@@ -1,0 +1,42 @@
+# frozen_string_literal: true
+
+module ::TwoFactorAuthentication
+  module My
+    class BackupCodesController < ::ApplicationController
+      # Ensure user is logged in
+      before_action :require_login
+      no_authorization_required! :show, :create
+
+      # Password confirmation helpers and actions
+      include PasswordConfirmation
+      before_action :check_password_confirmation, only: [:create]
+
+      # Verify that flash was set (coming from create)
+      before_action :check_regenerate_done, only: [:show]
+
+      layout "my"
+      menu_item :security
+
+      def create
+        flash[:_backup_codes] = TwoFactorAuthentication::BackupCode.regenerate!(current_user)
+        redirect_to action: :show
+      end
+
+      def show
+        render
+      end
+
+      private
+
+      def check_regenerate_done
+        @backup_codes = flash[:_backup_codes]
+        flash.delete :_backup_codes
+
+        unless @backup_codes.present?
+          flash[:error] = I18n.t(:notice_bad_request)
+          redirect_to my_security_path
+        end
+      end
+    end
+  end
+end

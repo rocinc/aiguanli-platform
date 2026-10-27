@@ -1,0 +1,41 @@
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+zh-CN:
+  assistant:
+    draft_loop:
+      hint: "可以直接改字；选中一段，只改这一段。"
+      revise_label: "还想怎么改？"
+      revise_placeholder: "还想怎么改？"
+      revise_start: "再写一版"
+      refine_label: "改这一段"
+      refine_placeholder: "怎么改这一段？"
+      refine_start: "改"
+      chip_shorter: "更短"
+      chip_specific: "更具体"
+      chip_rephrase: "换个说法"
+      chip_formal: "更正式"
+      refined_note: "这一段已改。"
+      undo_refine: "撤销"
+      stop: "停止"
+      versions: "版本"
+      prev_version: "上一版"
+      next_version: "下一版"
+      preview: "正在改写的文字"
+      reread: "文字有变化，读过之后请重新勾选“我已读过”。"
+      texts:
+        revising: "正在按你的意见重写……"
+        refining: "正在改这一段……"
+        revise_failed: "没改成，稿子还是原来的，可以再试一次。"
+        refine_failed: "这一段没改成，稿子还是原来的。"
+        empty_result: "没有写出新的内容，稿子还是原来的。"
+        stopped_kept: "已停下，稿子还是原来的。"
+        leave_confirm: "再按一次 Esc 放弃这些改动。"
+        reread: "文字有变化，读过之后请重新勾选“我已读过”。"
+        revised: "已按你的意见重写，现在是第 %{current} 版。"
+        refined: "这一段已改。"
+        version_position: "第 %{current} 版，共 %{total} 版"
+        failed: "助理这会儿没能完成，稍后再试。"

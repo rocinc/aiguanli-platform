@@ -1,0 +1,56 @@
+@if (calendarOptions) {
+  <full-calendar #ucCalendar
+    [options]="calendarOptions"
+    class="op-non-working-days-list--calendar"
+   />
+}
+
+@for (date of nonWorkingDays; track date) {
+  @if (!date.id) {
+    <input type="hidden" name="settings[non_working_days_attributes][{{ date.date }}][date]" [value]="date.date"/>
+    <input type="hidden" name="settings[non_working_days_attributes][{{ date.date }}][name]" [value]="date.name"/>
+  }
+  @if (date.id && date._destroy) {
+    <input type="hidden" name="settings[non_working_days_attributes][{{ date.id }}][id]" [value]="date.id"/>
+    <input type="hidden" name="settings[non_working_days_attributes][{{ date.id }}][_destroy]" value="true" />
+  }
+}
+
+<div
+  class="op-non-working-days-list--add-button"
+  >
+  <op-modal-single-date-picker
+    id="test"
+    name="test"
+    [opened]="datepickerOpened"
+    [required]="true"
+    [showIgnoreNonWorkingDays]="false"
+    [name]="text.add_non_working_day"
+    [applyLabel]="text.add"
+    (closed)="datepickerOpened = false"
+    (valueChange)="addNonWorkingDay($event)"
+    >
+    <spot-form-field
+      slot="extra-fields"
+      [required]="true"
+      [label]="text.non_working_day_name"
+      >
+      <spot-text-field name="name"
+        slot="input"
+        [required]="true"
+        [(ngModel)]="selectedNonWorkingDayName"
+        [showClearButton]="false"
+       />
+    </spot-form-field>
+
+    <button
+      slot="trigger"
+      type="button"
+      class="spot-link op-non-working-days-list--add-button"
+      (click)="datepickerOpened = true"
+      >
+      <svg plus-icon size="small" />
+      <span [textContent]="text.add_non_working_day"></span>
+    </button>
+  </op-modal-single-date-picker>
+</div>

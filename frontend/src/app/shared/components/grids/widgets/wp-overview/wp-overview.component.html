@@ -1,0 +1,10 @@
+<widget-header
+    [name]="widgetName"
+    (onRenamed)="renameWidget($event)">
+
+  <widget-menu slot="menu"
+    [resource]="resource" />
+</widget-header>
+
+<opce-wp-overview-graph class='op-widget-box--body -no-overflow'
+    [groupBy]="'type'" />

@@ -1,0 +1,138 @@
+# /api/v3/activities/{id}/emoji_reactions
+---
+get:
+  summary: List emoji reactions by activity
+  operationId: list_activity_emoji_reactions
+  tags:
+    - Activities
+    - EmojiReactions
+  description: List all emoji reactions of a single activity.
+  parameters:
+    - name: id
+      description: ID of the activity whose emoji reactions will be listed
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 1
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/emoji_reactions_model.yml'
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: |-
+        Returned if the activity does not exist or the client does not have sufficient permissions
+        to see it.
+
+        **Required permission:**
+        - `view_work_packages`
+        - for internal comments: `view_internal_comments`
+
+        *Note: A client without sufficient permissions shall not be able to test for the existence of an activity.
+        That's why a 404 is returned here, even if a 403 might be more appropriate.*
+
+patch:
+  summary: Toggle emoji reaction for an activity
+  operationId: toggle_activity_emoji_reaction
+  tags:
+    - Activities
+    - EmojiReactions
+  description: |-
+    Toggle an emoji reaction for a given activity. If the user has already reacted with the given emoji,
+    the reaction will be removed. Otherwise, a new reaction will be created.
+
+    **Note:** The response contains the complete collection of all emoji reactions for this activity.
+
+    **Required permission:**
+    - `add_work_package_comments`
+    - for internal comments: `add_internal_comments`
+
+  parameters:
+    - name: id
+      description: ID of the activity to toggle emoji reaction for
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 1
+  requestBody:
+    required: true
+    content:
+      application/hal+json:
+        schema:
+          type: object
+          required:
+            - reaction
+          properties:
+            reaction:
+              type: string
+              description: The emoji reaction identifier
+              example: "thumbs_up"
+              enum:
+                - thumbs_up
+                - thumbs_down
+                - grinning_face_with_smiling_eyes
+                - confused_face
+                - heart
+                - party_popper
+                - rocket
+                - eyes
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/emoji_reaction_model.yml'
+    '400':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:BadRequest
+                message: "Bad request: reaction does not have a valid value"
+      description: Returned if the request is invalid. For example, if the reaction is not valid.
+    '403':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: "You are not authorized to access this resource."
+      description: |-
+        Returned if the client does not have sufficient permissions to toggle the emoji reaction for the activity.
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: |-
+        Returned if the activity does not exist or the client does not have sufficient permissions
+        to see it.

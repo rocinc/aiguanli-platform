@@ -1,0 +1,95 @@
+# /api/v3/portfolios
+---
+get:
+  summary: List portfolios
+  operationId: list_portfolios
+  tags:
+    - Portfolios
+  description: Returns a collection of portfolios. The collection can be filtered via
+    query parameters similar to how work packages are filtered. In addition to the
+    provided filter, the result set is always limited to only contain portfolios the
+    client is allowed to see.
+  parameters:
+    - name: filters
+      schema:
+        type: string
+      in: query
+      required: false
+      description: |-
+        JSON specifying filter conditions.
+        Accepts the same format as returned by the [queries](https://www.openportfolio.org/docs/api/endpoints/queries/) endpoint.
+        Currently supported filters are:
+
+        + active: based on the active property of the portfolio
+        + ancestor: filters portfolios by their ancestor. A portfolio is not considered to be its own ancestor.
+        + available_project_attributes: filters portfolios based on the activated project attributes.
+        + created_at: based on the time the portfolio was created
+        + favorited: based on the favorited property of the portfolio
+        + id: based on portfolios' id.
+        + latest_activity_at: based on the time the last activity was registered on a portfolio.
+        + name_and_identifier: based on both the name and the identifier.
+        + parent_id: filters portfolios by their parent.
+        + principal: based on members of the portfolio.
+        + project_phase_any: based on the project phases active in a portfolio.
+        + project_status_code: based on status code of the portfolio
+        + storage_id: filters portfolios by linked storages
+        + storage_url: filters portfolios by linked storages identified by the host url
+        + type_id: based on the types active in a portfolio.
+        + user_action: based on the actions the current user has in the portfolio.
+        + visible: based on the visibility for the user (id) provided as the filter value. This filter is useful for admins to identify the portfolios visible to a user.
+
+        There might also be additional filters based on the custom fields that have been configured.
+
+        Each defined lifecycle step will also define a filter in this list endpoint. Given that the elements are not
+        static but rather dynamically created on each OpenProject instance, a list cannot be provided. Those filters follow the schema:
+        + project_start_gate_[id]: a filter on a project phase's start gate active in a portfolio. The id is the id of the phase the gate belongs to.
+        + project_finish_gate_[id]: a filter on a project phase's finish gate active in a portfolio. The id is the id of the phase the gate belongs to.
+        + project_phase_[id]: a filter on a project phase active in a portfolio. The id is the id of the phase queried for.
+      example: '[{ "ancestor": { "operator": "=", "values": ["1"] } }]'
+    - name: sortBy
+      schema:
+        type: string
+      in: query
+      required: false
+      description: |-
+        JSON specifying sort criteria.
+        Currently supported orders are:
+
+        + id
+        + name
+        + typeahead (sorting by hierarchy and name)
+        + created_at
+        + public
+        + latest_activity_at
+        + required_disk_space
+
+        There might also be additional orders based on the custom fields that have been configured.
+      example: '[["id", "asc"]]'
+    - name: select
+      schema:
+        type: string
+      in: query
+      required: false
+      description: |-
+        Comma separated list of properties to include.
+      example: 'total,elements/identifier,elements/name'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/portfolio_collection_model.yml'
+          examples:
+            'simple portfolio collection':
+              $ref: '../components/examples/portfolio_collection.yml'
+    '400':
+      description: Returned if the client sends invalid request parameters e.g. filters
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          example:
+            _type: Error
+            errorIdentifier: urn:openproject-org:api:v3:errors:InvalidQuery
+            message: Filters Invalid filter does not exist.

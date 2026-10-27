@@ -1,0 +1,48 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw/items/01ANJ53W7BT4LBZ3PNORCYAXKILWJBLEBV?$select=id,name,fileSystemInfo,file,folder,size,createdBy,lastModifiedBy,parentReference,webUrl
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer <BEARER TOKEN>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Content-Encoding:
+      - gzip
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 56614a06-a3d1-4ef8-80a7-24f8eedf32b5
+      Client-Request-Id:
+      - 56614a06-a3d1-4ef8-80a7-24f8eedf32b5
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"005","RoleInstance":"FR3PEPF00000449"}}'
+      Splogid:
+      - 93b5baa1-b017-0000-7534-c329084eb5bc
+      Date:
+      - Mon, 11 Aug 2025 12:47:56 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)/$entity","@odata.etag":"\"{1C169FE1-EDED-4574-805D-485D92159035},1\"","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"id":"01ANJ53W7BT4LBZ3PNORCYAXKILWJBLEBV","lastModifiedBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"name":"written_in_stone.webp","parentReference":{"driveType":"documentLibrary","driveId":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw","id":"01ANJ53W6GVP274RHZMJFI6WHHYNYYG6IY","name":"data","path":"/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw/root:/\u00dcml\u00e6\u00fbts/data","siteId":"1099e315-d0c7-47c7-8640-aa9504b70fff"},"webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Shared%20Documents/%C3%9Cml%C3%A6%C3%BBts/data/written_in_stone.webp","file":{"hashes":{"quickXorHash":"Oo63TqbQWEjMVaIwNDmfJJQqGXc="},"mimeType":"application/octet-stream"},"fileSystemInfo":{"createdDateTime":"2025-08-11T12:41:19Z","lastModifiedDateTime":"2025-08-11T12:41:19Z"},"size":190656}'
+  recorded_at: Mon, 11 Aug 2025 12:47:57 GMT
+recorded_with: VCR 6.3.1

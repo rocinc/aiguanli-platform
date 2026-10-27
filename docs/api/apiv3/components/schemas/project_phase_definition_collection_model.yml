@@ -1,0 +1,47 @@
+# Schema: ProjectPhaseDefinitionCollectionModel
+---
+allOf:
+  - $ref: './offset_paginated_collection_model.yml'
+  - type: object
+    required:
+      - _links
+      - _embedded
+    properties:
+      _links:
+        type: object
+        required:
+          - self
+        properties:
+          self:
+            allOf:
+              - $ref: "./link.yml"
+              - description: |-
+                  This file links collection
+
+                  **Resource**: ProjectPhaseDefinitionCollectionModel
+      _embedded:
+        type: object
+        required:
+          - elements
+        properties:
+          elements:
+            type: array
+            items:
+              $ref: './project_phase_definition_model.yml'
+example:
+  _type: Collection
+  total: 2
+  count: 2
+  _links:
+    self:
+      href: '/api/v3/project_phase_definitions'
+  _embedded:
+    elements:
+      - id: 14
+        name: "Initiating"
+        _type: ProjectPhaseDefinition
+        _abbreviated: project phase definition resource shortened for brevity
+      - id: 15
+        name: "Executing"
+        _type: ProjectPhaseDefinition
+        _abbreviated: project phase definition resource shortened for brevity

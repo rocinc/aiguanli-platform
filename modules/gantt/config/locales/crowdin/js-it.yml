@@ -1,0 +1,7 @@
+---
+it:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Traguardi
+      label_gantt_chart_plural: Diagrammi di Gantt

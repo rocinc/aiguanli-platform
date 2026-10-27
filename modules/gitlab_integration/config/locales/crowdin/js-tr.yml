@@ -1,0 +1,54 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) 2023 Ben Tey
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See docs/COPYRIGHT.rdoc for more details.
+#++
+---
+tr:
+  js:
+    gitlab_integration:
+      gitlab_pipelines: İş Akışları
+      tab_header_issue:
+        title: Sorunlar
+      tab_header_mr:
+        copy_menu:
+          description: Git kod parçacığını panoya kopyala
+          label: Git kod parçacığı
+        create_mr:
+          description: Birleştirme İsteği Oluştur
+          label: Birleştirme isteği oluştur
+        git_actions:
+          branch_name: Dal adı
+          cmd: Boş işlemle dal oluştur
+          commit_message: İşlem mesajı
+          copy_error: "❌ Kopyalanamadı!"
+          copy_success: "✅ Kopyalandı!"
+          title: Git için hızlı kod parçaları
+        title: Birleştirme istekleri
+      tab_issue:
+        empty: Henüz bağlantılı sorun yok. Sorun başlığında/açıklamasında <code>OP#%{wp_id}</code> (veya özel bağlantılar için <code>PP#%{wp_id}</code>) kodunu kullanarak mevcut bir sorunu bağlayın veya yeni bir sorun oluşturun.
+      tab_mrs:
+        empty: Henüz bağlanmış bir birleştirme isteği yok. MR başlığında/açıklamasında <code>OP#%{wp_id}</code> (veya özel bağlantılar için <code>PP#%{wp_id}</code>) kodunu kullanarak mevcut bir MR'ı bağlayın veya yeni bir MR oluşturun.
+      updated_on: Güncelleme tarihi
+      work_packages:
+        tab_name: GitLab
+    work_packages:
+      tabs:
+        gitlab: GitLab

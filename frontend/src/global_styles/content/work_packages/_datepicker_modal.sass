@@ -1,0 +1,14 @@
+.op-datepicker-modal
+  &--date-field
+    &_current,
+    &_current:hover
+      outline: 2px solid var(--control-checked-color) !important
+
+  &--flatpickr-instance.inline
+    margin: 0 auto !important
+    overflow: hidden
+
+.flatpickr-wrapper
+  // Make flatpickr behave correctly when it is instantiated
+  // inside a dialog using the static: true option.
+  width: 100%

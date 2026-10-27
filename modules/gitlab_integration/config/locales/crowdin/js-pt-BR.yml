@@ -1,0 +1,54 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) 2023 Ben Tey
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See docs/COPYRIGHT.rdoc for more details.
+#++
+---
+pt-BR:
+  js:
+    gitlab_integration:
+      gitlab_pipelines: Pipelines
+      tab_header_issue:
+        title: Problemas
+      tab_header_mr:
+        copy_menu:
+          description: Copiar trechos de código git para área de transferência
+          label: Trechos de código Git
+        create_mr:
+          description: Criar uma Solicitação de Combinação
+          label: Criar SC
+        git_actions:
+          branch_name: Nome da ramificação
+          cmd: Criar ramificação com a confirmação vazia
+          commit_message: Mensagem de confirmação
+          copy_error: "❌ Falha ao copiar!"
+          copy_success: "✅ Copiado!"
+          title: Trechos de código rápido para Git
+        title: Solicitações de combinação
+      tab_issue:
+        empty: Ainda não há problemas vinculados. Para vincular um problema existente, use o código <code>OP#%{wp_id}</code> (ou <code>PP#%{wp_id}</code> para links privados) no título ou descrição do problema. Você também pode criar um novo problema.
+      tab_mrs:
+        empty: Ainda não há solicitações de combinação vinculadas. Para vincular uma SC existente, use o código <code>OP#%{wp_id}</code> (ou <code>PP#%{wp_id}</code> para links privados) no título ou descrição da SC. Você também pode criar um nova SC.
+      updated_on: Atualizado em
+      work_packages:
+        tab_name: GitLab
+    work_packages:
+      tabs:
+        gitlab: GitLab

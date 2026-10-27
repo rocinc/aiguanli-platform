@@ -1,0 +1,34 @@
+# Schema: List_available_parent_project_candidatesModel
+---
+allOf:
+  - $ref: ./collection_model.yml
+  - type: object
+    required:
+      - _links
+      - _embedded
+    properties:
+      _links:
+        type: object
+        required:
+          - self
+        properties:
+          self:
+            allOf:
+              - "$ref": ./link.yml
+              - description: |-
+                  The project collection
+
+                  **Resource**: ProjectCollection
+                readOnly: true
+      _embedded:
+        type: object
+        properties:
+          elements:
+            type: array
+            readOnly: true
+            items:
+              allOf:
+                - "$ref": ./project_model.yml
+                - "$ref": ./program_model.yml
+                - "$ref": ./portfolio_model.yml
+            description: Collection of projects

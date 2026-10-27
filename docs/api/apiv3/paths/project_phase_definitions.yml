@@ -1,0 +1,27 @@
+# /api/v3/project_phase_definitions
+---
+get:
+  summary: List project phase definitions
+  operationId: list_project_phase_definitions
+  tags:
+    - Project Phase Definitions
+  description: |-
+    Returns a collection of all project phase definitions.
+    The result set is always limited to only contain project phase definitions the client is allowed to see.
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/project_phase_definition_collection_model.yml'
+    '400':
+      description: Returned if the client sends invalid request parameters e.g. filters
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          example:
+            _type: Error
+            errorIdentifier: urn:openproject-org:api:v3:errors:InvalidQuery
+            message: Filters Invalid filter does not exist.

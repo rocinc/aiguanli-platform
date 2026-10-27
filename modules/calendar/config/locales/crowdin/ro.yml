@@ -1,0 +1,12 @@
+---
+ro:
+  label_calendar: Calendar
+  label_calendar_plural: Calendare
+  label_new_calendar: Adaugă calendar
+  permission_manage_calendars: Gestionează calendare
+  permission_share_calendars: Distribuie calendare
+  permission_view_calendar: Vezi calendarele
+  plugin_openproject_calendar:
+    description: Oferă vizualizări calendar.
+    name: Calendar OpenProject
+  project_module_calendar_view: Calendare

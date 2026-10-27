@@ -1,0 +1,148 @@
+# /api/v3/activities/{id}/attachments
+---
+get:
+  summary: List attachments by activity
+  operationId: list_activity_attachments
+  tags:
+    - Activities
+    - Attachments
+  description: List all attachments of a single activity.
+  parameters:
+    - name: id
+      description: ID of the activity whose attachments will be listed
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 1
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/attachments_model.yml'
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: |-
+        Returned if the activity does not exist or the client does not have sufficient permissions
+        to see it.
+
+        **Required permission:** 
+        - `view_work_packages`
+        - for internal comments: `view_internal_comments`
+
+        *Note: A client without sufficient permissions shall not be able to test for the existence of an activity.
+        That's why a 404 is returned here, even if a 403 might be more appropriate.*
+
+post:
+  summary: Add attachment to activity
+  operationId: create_activity_attachment
+  tags:
+    - Activities
+    - Attachments
+  description: Adds an attachment to the specified activity.
+  parameters:
+    - name: id
+      description: ID of the activity to receive the attachment
+      in: path
+      required: true
+      schema:
+        type: integer
+      example: 1
+  requestBody:
+    content:
+      multipart/form-data:
+        schema:
+          $ref: '../components/schemas/file_upload_form.yml'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/attachment_model.yml'
+    '400':
+      description: |-
+        Returned if the client sends a not understandable request. Reasons include:
+
+        * Omitting one of the required parts (metadata and file)
+
+        * sending unparsable JSON in the metadata part
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:InvalidRequestBody
+                message: The request could not be parsed as JSON.
+    '403':
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** view_work_packages or view_internal_comments (for internal comments)
+
+        *Note that you will only receive this error, if you are at least allowed to see the activity*
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not allowed to add attachments to this activity.
+    '404':
+      description: |-
+        Returned if the activity does not exist or the client does not have sufficient permissions
+        to see it.
+
+        **Required permission:** view_work_packages or view_internal_comments (for internal comments)
+
+        *Note: A client without sufficient permissions shall not be able to test for the existence of an activity.
+        That's why a 404 is returned here, even if a 403 might be more appropriate.*
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+    '406':
+      $ref: '../components/responses/missing_content_type.yml'
+    '415':
+      $ref: '../components/responses/unsupported_media_type.yml'
+    '422':
+      description: |-
+        Returned if the client tries to send an invalid attachment.
+        Reasons are:
+
+        * Omitting the file name (`fileName` property of metadata part)
+
+        * Sending a file that is too large
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:PropertyConstraintViolation
+                message: File is too large (maximum size is 5242880 Bytes).

@@ -1,0 +1,9 @@
+<div class="columns-modal--content">
+  <op-draggable-autocompleter [options]="availableColumnsOptions"
+                              [selected]="selectedColumns"
+                              [inputLabel]="text.inputLabel"
+                              [inputPlaceholder]="text.inputPlaceholder"
+                              [dragAreaLabel]="text.inputDragLabel"
+                              [id]="'columns-select'"
+                              (onChange)="updateSelected($event)" />
+</div>

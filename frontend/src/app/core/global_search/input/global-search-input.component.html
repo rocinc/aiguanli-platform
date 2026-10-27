@@ -1,0 +1,111 @@
+<div role="search" class="top-menu-search" [attr.aria-label]="placeholder">
+  @if (expanded) {
+    <button
+      type="button"
+      (click)="toggleMobileSearch()"
+      class="top-menu-search--back-button"
+      href="#"
+      [attr.title]="text.close_search"
+      [attr.aria-label]="text.close_search"
+      >
+      <i class="icon-arrow-left1" aria-hidden="true"></i>
+    </button>
+  }
+  <button
+    type="button"
+    #btn
+    id="top-menu-search-button"
+    class="top-menu-search--button search-form-normal"
+    [attr.title]="text.search"
+    [attr.aria-label]="text.search"
+    [class.-input-focused]="expanded"
+    (click)="handleClick($event)"
+    tabindex="-1"
+    >
+    <op-icon icon-classes="icon5 icon-search ellipsis" />
+  </button>
+  <op-autocompleter
+    #select
+    [defaultData]="false"
+    [name]="'global-search-input'"
+    [id]="'global-search-input'"
+    [accesskey]="4"
+    [markFirst]="false"
+    class="global-search"
+    [placeholder]="effectivePlaceholder"
+    [ariaLabel]="effectivePlaceholder"
+    [appendTo]="'#global-search-input'"
+    [dropdownPosition]="'bottom'"
+    [classes]="{'top-menu-search--input': true, '-markable': markable, '-expanded': expanded, 'ng-select--primerized': true }"
+    [inputAttrs]="{ 'class': 'global-search--input', 'name': 'global-search--input', autocomplete: 'off'}"
+    [openOnEnter]="true"
+    [labelRequired]="false"
+    [clearAllText]="text.close_search"
+    [focusDirectly]="isFocusedDirectly"
+    [model]="selectedItem"
+    [searchFn]="customSearchFn"
+    [virtualScroll]="false"
+    (focus)="onFocus()"
+    (blur)="onFocusOut()"
+    (search)="search($event)"
+    (close)="onClose()"
+    (change)="followItem($event)"
+    (keydown.enter)="onEnterBeforeResultsLoaded()"
+    (keydown.escape)="onFocusOut()"
+    (clear)="clearSearch()"
+    [filters]="autocompleterOptions.filters"
+    [resource]="autocompleterOptions.resource"
+    [searchKey]="autocompleterOptions.searchKey"
+    [getOptionsFn]="autocompleterOptions.getOptionsFn"
+    >
+    <ng-template op-autocompleter-header-tmp>
+      @if (!searchTerm && (hasRecentItems$ | async)) {
+        <div>{{text.recently_viewed}}</div>
+      }
+    </ng-template>
+    <ng-template op-autocompleter-option-tmp let-item let-index="index" let-search="searchTerm">
+      @if (!item.id) {
+        <div>
+          <a tabindex="0"
+             href="#"
+             class="global-search--option"
+             (click)="$event.preventDefault(); followItem(item)"
+             (keydown.enter)="$event.preventDefault(); followItem(item)"
+             (keydown.space)="$event.preventDefault(); followItem(item)">
+            <div class="global-search--search-term">{{ currentValue }}</div>
+            <div class="global-search--project-scope" title="{{ item.projectScope }}">{{ item.text }} ↵</div>
+          </a>
+        </div>
+      } @else {
+        <a
+          class="global-search--option"
+          [href]="wpPath(item.displayId)"
+          (click)="redirectToWp(item.displayId, $event)"
+          style="line-height: 1"
+          >
+          <div class="global-search--option-meta">
+            <div class="global-search--wp-line">
+              <span [ngClass]="highlighting('type', item.type.id)">
+                {{ item.type.name }}
+              </span>
+              <span>{{ item.formattedId }}</span>
+              <span [ngClass]="statusHighlighting(item.status.id)">
+                {{ item.status.name }}
+              </span>
+              <span>-</span>
+              <span
+                class="global-search--wp-project"
+                [attr.title]="item.project.name"
+                >
+                {{ item.project.name }}
+              </span>
+            </div>
+            <span class="global-search--wp-subject">
+              {{ item.subject }}
+            </span>
+          </div>
+        </a>
+      }
+    </ng-template>
+  </op-autocompleter>
+</div>

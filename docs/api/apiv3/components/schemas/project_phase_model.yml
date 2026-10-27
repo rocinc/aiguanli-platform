@@ -1,0 +1,75 @@
+# Schema: ProjectPhaseModel
+---
+type: object
+required:
+  - _type
+  - id
+  - name
+  - active
+  - createdAt
+  - updatedAt
+properties:
+  _type:
+    type: string
+    enum:
+      - ProjectPhase
+  id:
+    type: integer
+    description: The project phase's id
+    minimum: 1
+  name:
+    type: string
+  active:
+    type: boolean
+  createdAt:
+    type: string
+    format: date-time
+    description: Time of creation
+  updatedAt:
+    type: string
+    format: date-time
+    description: Time of the most recent change to the project phase
+  _links:
+    type: object
+    required:
+      - self
+      - definition
+      - project
+    properties:
+      self:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              This project phase.
+
+              **Resource**: ProjectPhase
+      definition:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              The definition this phase relies on.
+
+              **Resource**: ProjectPhaseDefinition
+      project:
+        allOf:
+          - $ref: './link.yml'
+          - description: |-
+              The project resource, that is the container of this phase.
+
+              **Resource**: Project
+example:
+  _type: 'ProjectPhase'
+  id: 1337
+  name: 'Initiating'
+  active: true
+  createdAt: '2023-01-20T14:30:00.368Z'
+  updatedAt: '2023-05-23T11:57:48.618Z'
+  _links:
+    self:
+      href: '/api/v3/project_phases/23'
+    definition:
+      title: 'Initiating'
+      href: '/api/v3/project_definitions/11'
+    project:
+      title: 'Death Star 3.0'
+      href: '/api/v3/projects/11'

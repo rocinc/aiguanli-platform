@@ -1,0 +1,87 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+Copyright (C) 2006-2013 Jean-Philippe Lang
+Copyright (C) 2010-2013 the ChiliProject Team
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+See COPYRIGHT and LICENSE files for more details.
+
+++#%>
+
+<%=
+  component_wrapper(data: wrapper_data_attributes) do
+    render(
+      OpenProject::Common::BorderBoxListComponent.new(
+        container: "pdf-export-templates",
+        position: :relative,
+        mb: 3,
+        data: (readonly? ? {} : drag_and_drop_target_config)
+      )
+    ) do |list|
+      list.with_header(title: I18n.t("types.edit.export_configuration.pdf_export_templates.label")) do |header|
+        unless readonly?
+          header.with_action_button(
+            tag: :a,
+            href: enable_all_type_pdf_export_template_index_path(**@variant.path_args),
+            scheme: :invisible,
+            font_weight: :bold,
+            color: :subtle,
+            aria: { label: t("projects.settings.actions.label_enable_all") },
+            test_selector: "enable-all-pdf-export-templates",
+            data: { turbo_method: :put, turbo_stream: true }
+          ) do |button|
+            button.with_leading_visual_icon(icon: "check-circle", color: :subtle)
+            I18n.t("types.edit.export_configuration.pdf_export_templates.actions.label_enable_all")
+          end
+          header.with_action_button(
+            tag: :a,
+            href: disable_all_type_pdf_export_template_index_path(**@variant.path_args),
+            scheme: :invisible,
+            font_weight: :bold,
+            color: :subtle,
+            aria: { label: t("projects.settings.actions.label_disable_all") },
+            test_selector: "disable-all-pdf-export-templates",
+            data: { turbo_method: :put, turbo_stream: true }
+          ) do |button|
+            button.with_leading_visual_icon(icon: "x-circle", color: :subtle)
+            I18n.t("types.edit.export_configuration.pdf_export_templates.actions.label_disable_all")
+          end
+        end
+      end
+
+      @variant.pdf_export_templates.list.each do |template|
+        list.with_item(
+          test_selector: "pdf-export-template-row-#{template.id}",
+          data: (readonly? ? {} : draggable_item_config(template))
+        ) do
+          render(
+            WorkPackageTypes::ExportTemplateRowComponent.new(
+              variant: @variant,
+              template:,
+              readonly: readonly?
+            )
+          )
+        end
+      end
+    end
+  end
+%>

@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Script to check YAML header syntax in README files
+# Checks for proper YAML front matter between --- lines
+# Exits with error code 1 if any issues are found
+
+# Function to check YAML header syntax
+check_yaml_header() {
+    local file="$1"
+    local yaml_header=""
+
+    # skip when no header YAML is found
+    if head -n1 "$file" | grep --invert-match --quiet "^---"; then
+      return 0
+    fi
+
+    yaml_header=$(sed -n '/^--- *$/,/^--- */p' "$file")
+    yaml_error=$(echo "$yaml_header" | ruby -ryaml -e "
+      begin
+        YAML.safe_load(STDIN.read, permitted_classes: [Date, Time])
+      rescue => e
+        puts e.to_s.delete_prefix('(<unknown>): ')
+      end")
+
+    if [ -n "$yaml_error" ]; then
+      echo "ERROR: invalid YAML syntax in $file"
+      echo "YAML header:"
+      echo "$yaml_header"
+      echo "YAML error:"
+      echo "$yaml_error"
+      echo
+      return 1
+    fi
+
+    return 0
+}
+
+# Main script logic
+DOCS_DIR="docs"
+ERRORS_FOUND=0
+
+echo "Checking YAML header syntax in $DOCS_DIR README files..."
+
+# Find all README.md files in the docs directory
+while IFS= read -r -d '' file; do
+    # Check if file has proper YAML header
+    if ! check_yaml_header "$file"; then
+        ERRORS_FOUND=1
+    fi
+done < <(find "$DOCS_DIR" -name "README.md" -type f -print0)
+
+if [ "$ERRORS_FOUND" -eq 1 ]; then
+    echo ""
+    echo "🔴 Found YAML header syntax errors in README files."
+    echo "Please fix the issues above."
+    exit 1
+else
+    echo "🟢 All README files have correct YAML header syntax."
+    exit 0
+fi

@@ -1,0 +1,300 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Injector, Input, OnInit, Output, ViewChild, OnDestroy, inject } from '@angular/core';
+import { IsolatedQuerySpace } from 'core-app/features/work-packages/directives/query-space/isolated-query-space';
+import { I18nService } from 'core-app/core/i18n/i18n.service';
+import { WorkPackageInlineCreateService } from 'core-app/features/work-packages/components/wp-inline-create/wp-inline-create.service';
+import { WorkPackageCreateService } from 'core-app/features/work-packages/components/wp-new/wp-create.service';
+import { trackByHrefAndProperty } from 'core-app/shared/helpers/angular/tracking-functions';
+import { CardHighlightingMode } from 'core-app/features/work-packages/components/wp-fast-table/builders/highlighting/highlighting-mode.const';
+import { AuthorisationService } from 'core-app/core/model-auth/model-auth.service';
+import { StateService } from '@uirouter/core';
+import { States } from 'core-app/core/states/states.service';
+import { WorkPackageViewOrderService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-order.service';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+import {
+  filter,
+  map,
+  withLatestFrom,
+} from 'rxjs/operators';
+import { CausedUpdatesService } from 'core-app/features/boards/board/caused-updates/caused-updates.service';
+import { WorkPackageViewSelectionService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-selection.service';
+import { CardViewHandlerRegistry } from 'core-app/features/work-packages/components/wp-card-view/event-handler/card-view-handler-registry';
+import { WorkPackageCardViewService } from 'core-app/features/work-packages/components/wp-card-view/services/wp-card-view.service';
+import { WorkPackageCardDragAndDropService } from 'core-app/features/work-packages/components/wp-card-view/services/wp-card-drag-and-drop.service';
+import { WorkPackageNotificationService } from 'core-app/features/work-packages/services/notifications/work-package-notification.service';
+import { DeviceService } from 'core-app/core/browser/device.service';
+import {
+  WorkPackageViewHandlerToken,
+  WorkPackageViewOutputs,
+} from 'core-app/features/work-packages/routing/wp-view-base/event-handling/event-handler-registry';
+import { UntilDestroyedMixin } from 'core-app/shared/helpers/angular/until-destroyed.mixin';
+import { QueryColumn } from 'core-app/features/work-packages/components/wp-query/query-column';
+import { QueryResource } from 'core-app/features/hal/resources/query-resource';
+import { HalEventsService } from 'core-app/features/hal/services/hal-events.service';
+import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
+import isNewResource from 'core-app/features/hal/helpers/is-new-resource';
+import type {
+  SortableListsDropEvent,
+  SortableListsRemovedEvent,
+} from 'core-app/shared/directives/sortable-lists/sortable-lists.directive';
+
+export type CardViewOrientation = 'horizontal'|'vertical';
+
+export interface WorkPackageAddedResult {
+  /**
+   * Whether the handler itself persisted this work package's membership in
+   * the target query. Action boards do; free boards rely on ordered work
+   * package persistence for membership.
+   */
+  membershipPersisted:boolean;
+}
+
+@Component({
+  selector: 'wp-card-view',
+  styleUrls: ['./styles/wp-card-view.component.sass', './styles/wp-card-view-horizontal.sass', './styles/wp-card-view-vertical.sass'],
+  templateUrl: './wp-card-view.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
+})
+export class WorkPackageCardViewComponent extends UntilDestroyedMixin implements OnInit, AfterViewInit, WorkPackageViewOutputs, OnDestroy {
+  readonly querySpace = inject(IsolatedQuerySpace);
+  readonly states = inject(States);
+  readonly injector = inject(Injector);
+  readonly $state = inject(StateService);
+  readonly I18n = inject(I18nService);
+  readonly wpCreate = inject(WorkPackageCreateService);
+  readonly wpInlineCreate = inject(WorkPackageInlineCreateService);
+  readonly notificationService = inject(WorkPackageNotificationService);
+  readonly halEvents = inject(HalEventsService);
+  readonly authorisationService = inject(AuthorisationService);
+  readonly causedUpdates = inject(CausedUpdatesService);
+  readonly cdRef = inject(ChangeDetectorRef);
+  readonly pathHelper = inject(PathHelperService);
+  readonly wpTableSelection = inject(WorkPackageViewSelectionService);
+  readonly wpViewOrder = inject(WorkPackageViewOrderService);
+  readonly cardView = inject(WorkPackageCardViewService);
+  readonly cardDragDrop = inject(WorkPackageCardDragAndDropService);
+  readonly deviceService = inject(DeviceService);
+
+  @Input('dragOutOfHandler') public canDragOutOf:(wp:WorkPackageResource) => boolean;
+
+  @Input() public dragInto:boolean;
+
+  /** Stable list id for callers managing more than one card view under a shared root (e.g. boards) */
+  @Input() public listId?:string;
+
+  @Input() public highlightingMode:CardHighlightingMode;
+
+  @Input() public workPackageAddedHandler:(wp:WorkPackageResource) => Promise<WorkPackageAddedResult>;
+
+  /**
+   * Whether this list's order IS its membership, as on a free board. A failed
+   * order removal then leaves the card in both queries for real, so the source
+   * side must show that rather than keep its optimistic removal.
+   */
+  @Input() public orderIsMembership = false;
+
+  @Input() public showStatusButton = true;
+
+  @Input() public showInfoButton = false;
+
+  @Input() public orientation:CardViewOrientation = 'vertical';
+
+  /** Whether cards are removable */
+  @Input() public cardsRemovable = false;
+
+  /** Whether a notification box shall be shown when there are no WP to display */
+  @Input() public showEmptyResultsBox = false;
+
+  /** Whether on special mobile version of the cards shall be shown */
+  @Input() public shrinkOnMobile = false;
+
+  /** Container reference */
+  @ViewChild('container', { static: true }) public container:ElementRef<HTMLElement>;
+
+  @Output() public onMoved = new EventEmitter<void>();
+
+  @Output() selectionChanged = new EventEmitter<string[]>();
+
+  @Output() itemClicked = new EventEmitter<{ workPackageId:string, double:boolean }>();
+
+  @Output() stateLinkClicked = new EventEmitter<{ workPackageId:string, requestedState:string }>();
+
+  public trackByHref = trackByHrefAndProperty('lockVersion');
+
+  private static nextListId = 0;
+
+  /** Default list id when the caller (e.g. wp-grid) does not pass one via `listId` */
+  private readonly internalListId = `wp-card-view-list-${WorkPackageCardViewComponent.nextListId += 1}`;
+
+  public query:QueryResource;
+
+  public isResultEmpty = false;
+
+  public columns:QueryColumn[];
+
+  public text = {
+    removeCard: this.I18n.t('js.card.remove_from_list'),
+    addNewCard: this.I18n.t('js.card.add_new'),
+    noResults: {
+      title: this.I18n.t('js.work_packages.no_results.title'),
+      description: this.I18n.t('js.work_packages.no_results.description'),
+    },
+  };
+
+  public inReference = false;
+
+  public referenceClass = this.wpInlineCreate.referenceComponentClass;
+
+  // We need to mount a dynamic component into the view
+  // but map the following output
+  public referenceOutputs = {
+    onCancel: () => this.setReferenceMode(false),
+    onReferenced: (wp:WorkPackageResource) => this.cardDragDrop.addWorkPackageToQuery(wp, 0),
+  };
+
+  isNewResource = isNewResource;
+
+  ngOnInit() {
+    this.registerCreationCallback();
+
+    // Observe changes to the work packages in this view
+    this.halEvents
+      .aggregated$('WorkPackage')
+      .pipe(
+        map((events) => events.filter((event) => event.eventType === 'updated')),
+        filter((events) => {
+          const wpIds:string[] = this.workPackages.map((el) => el.id!.toString());
+          return !!events.find((event) => wpIds.includes(event.id));
+        }),
+      ).subscribe(() => {
+        this.workPackages = this.workPackages.map((wp) => this.states.workPackages.get(wp.id!).getValueOr(wp));
+        this.cdRef.detectChanges();
+      });
+
+    this.querySpace.results
+      .values$()
+      .pipe(
+        withLatestFrom(this.querySpace.query.values$()),
+        this.untilDestroyed(),
+      ).subscribe(([results, query]) => {
+        this.query = query;
+        this.workPackages = this.wpViewOrder.orderedWorkPackages();
+        this.cardView.updateRenderedCardsValues(this.workPackages);
+        this.isResultEmpty = this.workPackages.length === 0;
+        this.cdRef.detectChanges();
+      });
+  }
+
+  ngAfterViewInit() {
+    this.cardDragDrop.init(this);
+
+    // Register event handlers for the cards
+    const registry = this.injector.get<any>(WorkPackageViewHandlerToken, CardViewHandlerRegistry);
+    if (registry instanceof CardViewHandlerRegistry) {
+      registry.attachTo(this);
+    } else {
+      new registry(this.injector).attachTo(this);
+    }
+    this.wpTableSelection.registerSelectAllListener(() => this.cardView.renderedCards);
+    this.wpTableSelection.registerDeselectAllListener();
+  }
+
+  ngOnDestroy():void {
+    super.ngOnDestroy();
+    this.cardDragDrop.destroy();
+  }
+
+  public get workPackages():WorkPackageResource[] {
+    return this.cardDragDrop.workPackages;
+  }
+
+  public set workPackages(workPackages:WorkPackageResource[]) {
+    this.cardDragDrop.workPackages = workPackages;
+  }
+
+  public setReferenceMode(mode:boolean) {
+    this.inReference = mode;
+    this.cdRef.detectChanges();
+  }
+
+  public addNewCard() {
+    this.cardDragDrop.addNewCard();
+  }
+
+  public removeCard(wp:WorkPackageResource) {
+    this.cardDragDrop.removeCard(wp);
+  }
+
+  async onCardSaved(wp:WorkPackageResource) {
+    await this.cardDragDrop.onCardSaved(wp);
+  }
+
+  /** Desktop-only, gated by the caller's drag-out check and never for an unsaved (new) card */
+  public itemCanDrag = (wp:WorkPackageResource):boolean => !this.deviceService.isMobile && this.canDragOutOf(wp) && !isNewResource(wp);
+
+  public acceptsDrops = ():boolean => this.dragInto;
+
+  public handleDrop(event:SortableListsDropEvent):void {
+    this.cardDragDrop.handleDrop(event);
+  }
+
+  public handleRemoved(event:SortableListsRemovedEvent):void {
+    this.cardDragDrop.handleRemoved(event);
+  }
+
+  /** Falls back to a stable per-instance id when the caller does not manage more than one list */
+  public get resolvedListId():string {
+    return this.listId ?? this.internalListId;
+  }
+
+  public classes() {
+    let classes = 'wp-cards-container ';
+    classes += `-${this.orientation}`;
+    classes += this.shrinkOnMobile ? ' -shrink' : '';
+
+    return classes;
+  }
+
+  /**
+   * Listen to newly created work packages to detect whether the WP is the one we created,
+   * and properly reset inline create in this case
+   */
+  private registerCreationCallback() {
+    this.wpCreate
+      .onNewWorkPackage()
+      .pipe(
+        this.untilDestroyed(),
+      )
+      .subscribe(async (wp:WorkPackageResource) => {
+        this.onCardSaved(wp);
+      });
+  }
+}

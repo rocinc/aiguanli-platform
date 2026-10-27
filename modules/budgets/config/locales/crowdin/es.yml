@@ -1,0 +1,133 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+es:
+  activerecord:
+    attributes:
+      budget:
+        author: Autor
+        available: Disponible
+        base_amount: Importe base
+        budget: Planeado
+        budget_ratio: Gastado (proporción)
+        description: Descripción
+        labor_budget: Costos laborales planeados
+        labor_budget_items: Costos laborales previstos
+        material_budget: Costos unitarios planeados
+        spent: Gastado
+        status: Estado
+        subject: Asunto
+        type: Tipo de costo
+      work_package:
+        budget_subject: Título de presupuesto
+    errors:
+      models:
+        labor_budget_item:
+          attributes:
+            principal:
+              not_a_member_of_budget_project: no es miembro del proyecto presupuestario
+    models:
+      budget:
+        one: Presupuesto
+        other: Presupuestos
+      labor_budget_item:
+        one: Coste laboral previsto
+        other: Costes laborales previstos
+      material_budget_item:
+        one: Unidad
+        other: Unidades
+  activity:
+    filter:
+      budget: Presupuestos
+  attributes:
+    budget: Presupuesto
+  budgets:
+    widgets:
+      budget_by_cost_type:
+        blankslate:
+          description: Obtenga una visión general de los presupuestos y costes para realizar un seguimiento eficaz del estado de su proyecto
+          heading: Comience a controlar su proyecto
+        blankslate_zero:
+          description: Añada detalles sobre su presupuesto previsto para ver los datos aquí
+          heading: Faltan detalles del presupuesto
+        count_caption:
+          one: Datos recopilados de %{count} presupuesto
+          other: Datos recopilados de %{count} presupuestos
+          zero: No hay datos presupuestarios.
+        count_caption_with_subitems:
+          portfolio:
+            one: Datos recopilados de %{count} presupuesto incluido en esta cartera y sus subelementos.
+            other: Datos recopilados de %{count} presupuestos incluidos en esta cartera y sus subelementos.
+            zero: No hay datos presupuestarios.
+          program:
+            one: Datos recopilados de %{count} presupuesto incluido en este programa y sus subelementos.
+            other: Datos recopilados de %{count} presupuestos incluidos en este programa y sus subelementos.
+            zero: No hay datos presupuestarios.
+          project:
+            one: Datos recopilados de %{count} presupuesto incluido en este proyecto y sus subelementos.
+            other: Datos recopilados de %{count} presupuestos incluidos en este proyecto y sus subelementos.
+            zero: No hay datos presupuestarios.
+        title: Presupuesto por tipo de coste
+        view_details: Ver los detalles del presupuesto
+      budget_totals:
+        remaining_budget: Presupuesto restante
+        spent_budget: Presupuesto gastado
+        title: Total del presupuesto
+        total_actual_costs: Costes reales totales
+        total_planned_budget: Presupuesto total previsto
+  budgets_title: Presupuestos
+  button_add_budget: Añadir presupuesto
+  button_add_budget_item: Añadir los costos previstos
+  button_add_cost_type: Agregar tipo de costo
+  button_cancel_edit_budget: Cancelar edicion de presupuesto
+  button_cancel_edit_costs: Cancelar edición de los costos
+  caption_labor: Mano de obra
+  caption_labor_costs: Costos laborales actuales
+  caption_material_costs: Costos unitarios actuales
+  events:
+    budget: Presupuesto editado
+  help_click_to_edit: Haga clic aquí para editar.
+  help_currency_format: Formato de muestra de valores de divisas. %n se sustituye por el valor de la moneda, %u es reemplazada por la unidad monetaria.
+  help_override_rate: Introduzca un valor para anular la morisidad.
+  label_budget_available: Presupuesto disponible
+  label_budget_details: Detalles de presupuesto
+  label_budget_id: 'Presupuesto #%{id}'
+  label_budget_new: Nuevo presupuesto
+  label_budget_planned: Presupuesto previsto
+  label_budget_plural: Presupuestos
+  label_budget_spent: Presupuesto gastado
+  label_budget_spent_ratio: Ratio de presupuesto gastado
+  label_budget_totals: Totales
+  label_deliverable: Presupuesto
+  label_example_placeholder: Por ejemplo, %{decimal}
+  label_view_all_budgets: Ver todos los presupuestos
+  label_yes: Sí
+  notice_budget_conflict: Los paquetes de trabajo deben ser del mismo proyecto.
+  notice_no_budgets_available: No hay presupuestos disponibles.
+  permission_edit_budgets: Editar presupuestos
+  permission_view_budgets: Ver los presupuestos
+  plugin_budgets_engine:
+    name: Presupuestos
+  project_module_budgets: Presupuestos
+  text_budget_delete: Eliminar el presupuesto de todos los paquetes de trabajo.
+  text_budget_destroy_assigned_wp: Hay %{count} paquetes de trabajo asignados a este presupuesto. ¿Qué desea hacer?
+  text_budget_reassign_to: 'Reasígnelos al siguiente presupuesto:'

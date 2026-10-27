@@ -1,0 +1,17 @@
+#edit-project-life-cycle-dialog
+  .FormControl-horizontalGroup
+    row-gap: 1rem
+    primer-text-field
+      flex: 1 1 100%
+    primer-text-field:last-child
+      flex: 1 0 170px
+  @media screen and (min-width: $breakpoint-lg)
+    primer-text-field
+      min-height: 76px
+  @media screen and (max-width: $breakpoint-sm)
+    .FormControl-horizontalGroup
+      flex-direction: column
+      primer-text-field:last-child
+        flex-basis: auto
+    opce-wp-date-picker-instance
+      display: none !important

@@ -1,0 +1,94 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+require "support/flash/expectations"
+
+module Components
+  class PasswordConfirmationDialog
+    include Capybara::DSL
+    include Capybara::RSpecMatchers
+    include RSpec::Matchers
+    include Flash::Expectations
+
+    def confirm_flow_with(password, with_keyboard: false, should_fail: false)
+      expect_open
+
+      expect(submit_button).to be_disabled
+      fill_in password_confirmation_field, with: password
+
+      expect(submit_button).not_to be_disabled
+      submit(should_fail:, with_keyboard:)
+    end
+
+    def expect_open
+      expect(page).to have_test_selector(test_selector)
+    end
+
+    def expect_closed
+      expect(page).not_to have_test_selector(test_selector)
+    end
+
+    def cancel
+      expect_open
+      page.within_test_selector(test_selector) do
+        click_on I18n.t("button_cancel")
+      end
+      expect_closed
+    end
+
+    def submit_button
+      page.find('[data-test-selector="op-my--password-confirmation-dialog--submit-button"]')
+    end
+
+    private
+
+    def test_selector
+      "op-my--password-confirmation-dialog"
+    end
+
+    def password_confirmation_field
+      "password_confirmation"
+    end
+
+    def submit(should_fail:, with_keyboard:)
+      if with_keyboard
+        find_field(password_confirmation_field).send_keys :enter
+      else
+        submit_button.click
+      end
+
+      if should_fail
+        expect_flash(type: :error, message: I18n.t(:notice_password_confirmation_failed))
+      else
+        expect(page).to have_no_css(".op-toast.-error")
+      end
+    end
+  end
+end

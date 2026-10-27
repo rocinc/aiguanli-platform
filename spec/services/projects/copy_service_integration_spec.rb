@@ -1,0 +1,1376 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+require "spec_helper"
+
+RSpec.describe(
+  Projects::CopyService,
+  "integration",
+  :webmock,
+  type: :model,
+  with_ee: %i[readonly_work_packages]
+) do
+  shared_let(:status_locked) { create(:status, is_readonly: true) }
+  shared_let(:source) do
+    create(:project,
+           :with_internal_wiki,
+           name: "Source Project Name",
+           enabled_module_names: %i[work_package_tracking storages])
+  end
+  shared_let(:source_wp) { create(:work_package, project: source, subject: "source wp") }
+  shared_let(:source_wp_locked) do
+    create(:work_package, project: source, subject: "source wp locked", status: status_locked)
+  end
+  shared_let(:source_query) { create(:query, project: source, name: "My query") }
+  shared_let(:source_view) { create(:view_work_packages_table, query: source_query) }
+  shared_let(:source_category) { create(:category, project: source, name: "Stock management") }
+  shared_let(:source_version) { create(:version, project: source, name: "Version A") }
+  shared_let(:source_wiki_page) { create(:wiki_page, wiki: source.wiki) }
+  shared_let(:source_child_wiki_page) { create(:wiki_page, wiki: source.wiki, parent: source_wiki_page) }
+  shared_let(:source_forum) { create(:forum, project: source) }
+  shared_let(:source_topic) { create(:message, forum: source_forum) }
+  shared_let(:source_project_phase) do
+    create(:project_phase,
+           project: source,
+           start_date: Time.zone.today,
+           finish_date: Time.zone.today + 5.days)
+  end
+
+  let(:current_user) do
+    create(:user,
+           member_with_roles: { source => role })
+  end
+  let(:other_user) do
+    create(:user,
+           member_with_roles: { source => role })
+  end
+  let(:instance) { described_class.new(source:, user: current_user) }
+  let(:only_args) { nil }
+  let(:target_project_params) do
+    { name: "Target Project Name", identifier: "some-identifier" }
+  end
+  let(:params) do
+    { target_project_params:, only: only_args, send_notifications: }
+  end
+  let(:send_notifications) { true }
+
+  shared_let(:role) do
+    create(:project_role,
+           permissions: %i[copy_projects
+                           view_work_packages
+                           work_package_assigned
+                           manage_files_in_project
+                           manage_file_links
+                           view_project_attributes
+                           edit_project_attributes
+                           select_project_custom_fields])
+  end
+  shared_let(:new_project_role) { create(:project_creator_role) }
+
+  before do
+    allow(Setting)
+      .to receive(:new_project_user_role_id)
+            .and_return(new_project_role&.id&.to_s)
+  end
+
+  describe ".copyable_dependencies" do
+    it "includes the list of dependencies" do
+      expect(described_class.copyable_dependencies.pluck(:identifier)).to match_array(
+        %w(
+          backlog_buckets
+          boards
+          categories
+          file_links
+          forums
+          members
+          overview
+          phases
+          queries
+          sprints
+          storage_project_folders
+          storages
+          versions
+          wiki
+          wiki_page_attachments
+          work_package_attachments
+          work_package_shares
+          work_packages
+        )
+      )
+    end
+  end
+
+  describe ".call" do
+    subject { instance.call(params) }
+
+    let(:all_modules) { described_class.copyable_dependencies.pluck(:identifier) }
+    let(:project_copy) { subject.result }
+
+    def copy_of(original_work_package)
+      copied_work_package = project_copy.work_packages.find_by(subject: original_work_package.subject)
+      expect(copied_work_package).not_to be_nil,
+                                         "Expected work package '#{original_work_package.subject}' to be copied to " \
+                                         "project '#{project_copy.name}' but was not"
+      copied_work_package
+    end
+
+    describe "the variant a type resolves to" do
+      shared_let(:root_type) { create(:type, name: "Copied root") }
+      shared_let(:variant) { create(:type_variant, type: root_type, variant_name: "Copied variant") }
+
+      before { source.project_types.create!(type: root_type, variant:) }
+
+      it "copies the resolved variant, not just the root the project uses" do
+        expect(subject).to be_success
+
+        copied = project_copy.project_types.find_by(type: root_type)
+
+        expect(copied.variant).to eq(variant)
+        expect(copied.variant).to eq(variant)
+      end
+
+      it "keeps the copy pointing at its own project" do
+        expect(subject).to be_success
+
+        expect(project_copy.project_types.pluck(:project_id).uniq).to eq([project_copy.id])
+      end
+
+      context "when the caller names the types itself" do
+        shared_let(:other_type) { create(:type, name: "Chosen type") }
+
+        let(:target_project_params) do
+          { "name" => "Copy", "identifier" => "copy", "project_types" => [ProjectType.new(type: other_type)] }
+        end
+
+        it "uses the caller's types instead of the source's" do
+          expect(subject).to be_success
+
+          expect(project_copy.enabled_types).to contain_exactly(other_type)
+        end
+      end
+    end
+
+    shared_examples_for "copies public attribute" do
+      describe "#public" do
+        before do
+          source.update!(public:)
+        end
+
+        context "when not public" do
+          let(:public) { false }
+
+          it "copies correctly" do
+            expect(subject).to be_success
+            expect(project_copy.public).to eq public
+          end
+        end
+
+        context "when public" do
+          let(:public) { true }
+
+          it "copies correctly" do
+            expect(subject).to be_success
+            expect(project_copy.public).to eq public
+          end
+        end
+      end
+    end
+
+    shared_examples_for "copies custom fields" do
+      describe "project custom fields" do
+        context "with user project CF" do
+          let(:user_custom_field) { create(:user_project_custom_field) }
+          let(:user_value) do
+            create(:user,
+                   member_with_roles: { source => role })
+          end
+
+          before do
+            source.custom_values << CustomValue.new(custom_field: user_custom_field, value: user_value.id.to_s)
+          end
+
+          it "copies the custom_field" do
+            expect(subject).to be_success
+
+            expect(project_copy.project_custom_fields).to contain_exactly(user_custom_field)
+
+            cv = project_copy.custom_values.reload.find_by(custom_field: user_custom_field)
+            expect(cv).to be_present
+            expect(cv.value).to eq user_value.id.to_s
+            expect(cv.typed_value).to eq user_value
+          end
+        end
+
+        context "with multi selection project list CF" do
+          let(:list_custom_field) { create(:list_project_custom_field, multi_value: true) }
+
+          before do
+            source.custom_values << CustomValue.new(custom_field: list_custom_field, value: list_custom_field.value_of("A"))
+            source.custom_values << CustomValue.new(custom_field: list_custom_field, value: list_custom_field.value_of("B"))
+
+            source.save!
+          end
+
+          it "copies the custom_field" do
+            expect(subject).to be_success
+
+            expect(project_copy.project_custom_fields).to contain_exactly(list_custom_field)
+
+            cv = project_copy.custom_values.reload.where(custom_field: list_custom_field).to_a
+            expect(cv).to be_a Array
+            expect(cv.count).to eq 2
+            expect(cv.map(&:formatted_value)).to contain_exactly("A", "B")
+          end
+        end
+
+        context "with disabled project custom fields with default value" do
+          it "is still disabled in the copy" do
+            create(:text_project_custom_field, default_value: "default value")
+
+            expect(subject).to be_success
+
+            expect(source.project_custom_fields).to eq([])
+            expect(project_copy.project_custom_fields).to match_array(source.project_custom_fields)
+          end
+        end
+
+        context "with project custom field mapping creation_wizard flag" do
+          let(:text_custom_field) { create(:text_project_custom_field) }
+
+          before do
+            source.custom_values << CustomValue.new(custom_field: text_custom_field, value: "test value")
+            source.save!
+          end
+
+          context "when creation_wizard is true" do
+            before do
+              mapping = source.project_custom_field_project_mappings.find_by(custom_field_id: text_custom_field.id)
+              mapping.update!(creation_wizard: true)
+            end
+
+            it "copies the creation_wizard flag as true" do
+              expect(subject).to be_success
+
+              source_mapping = source.project_custom_field_project_mappings.find_by(custom_field_id: text_custom_field.id)
+              copied_mapping = project_copy.project_custom_field_project_mappings.find_by(custom_field_id: text_custom_field.id)
+
+              expect(copied_mapping).to be_present
+              expect(copied_mapping.creation_wizard).to be true
+              expect(copied_mapping.creation_wizard).to eq(source_mapping.creation_wizard)
+            end
+          end
+
+          context "when creation_wizard is false" do
+            before do
+              mapping = source.project_custom_field_project_mappings.find_by(custom_field_id: text_custom_field.id)
+              mapping.update!(creation_wizard: false)
+            end
+
+            it "copies the creation_wizard flag as false" do
+              expect(subject).to be_success
+
+              source_mapping = source.project_custom_field_project_mappings.find_by(custom_field_id: text_custom_field.id)
+              copied_mapping = project_copy.project_custom_field_project_mappings.find_by(custom_field_id: text_custom_field.id)
+
+              expect(copied_mapping).to be_present
+              expect(copied_mapping.creation_wizard).to be false
+              expect(copied_mapping.creation_wizard).to eq(source_mapping.creation_wizard)
+            end
+          end
+        end
+
+        context "with calculated custom fields", with_ee: %i[calculated_values] do
+          using CustomFieldFormulaReferencing
+          let(:integer_custom_field) { create(:integer_project_custom_field, projects: [source]) }
+          let(:calculated_custom_field) do
+            create(:calculated_value_project_custom_field, :skip_validations,
+                   projects: [source],
+                   formula: "#{integer_custom_field} * 2")
+          end
+
+          before do
+            source.custom_field_values = { integer_custom_field.id => 5 }
+            source.save!
+            source.calculate_custom_fields([calculated_custom_field])
+            source.save!
+          end
+
+          it "copies the custom fields and recalculates values" do
+            expect(subject).to be_success
+
+            expect(project_copy.project_custom_fields).to contain_exactly(integer_custom_field, calculated_custom_field)
+
+            integer_cv = project_copy.custom_values.reload.find_by(custom_field: integer_custom_field)
+            expect(integer_cv).to be_present
+            expect(integer_cv.value).to eq "5"
+
+            calculated_cv = project_copy.custom_values.reload.find_by(custom_field: calculated_custom_field)
+            expect(calculated_cv).to be_present
+            expect(calculated_cv.value).to eq "10"
+          end
+
+          it "recalculates values when referenced custom field is changed during copy" do
+            target_project_params[:custom_field_values] = { integer_custom_field.id => 8 }
+
+            expect(subject).to be_success
+
+            expect(project_copy.project_custom_fields).to contain_exactly(integer_custom_field, calculated_custom_field)
+
+            integer_cv = project_copy.custom_values.reload.find_by(custom_field: integer_custom_field)
+            expect(integer_cv).to be_present
+            expect(integer_cv.value).to eq "8"
+
+            calculated_cv = project_copy.custom_values.reload.find_by(custom_field: calculated_custom_field)
+            expect(calculated_cv).to be_present
+            expect(calculated_cv.value).to eq "16"
+          end
+
+          context "with calculation errors", with_ee: %i[calculated_values] do
+            let(:calculated_custom_field) do
+              create(:calculated_value_project_custom_field, :skip_validations,
+                     projects: [source],
+                     formula: "#{integer_custom_field.id} / 0")
+            end
+
+            it "copies the custom fields and errors are recreated during recalculation" do
+              expect(subject).to be_success
+
+              expect(project_copy.project_custom_fields).to contain_exactly(
+                integer_custom_field,
+                calculated_custom_field
+              )
+
+              integer_cv = project_copy.custom_values.reload.find_by(custom_field: integer_custom_field)
+              expect(integer_cv).to be_present
+              expect(integer_cv.value).to eq "5"
+
+              calculated_cv = project_copy.custom_values.reload.find_by(custom_field: calculated_custom_field)
+              expect(calculated_cv).to be_present
+              # The calculated value remains blank as it cannot be calculated (division by zero)
+              expect(calculated_cv.value).to be_blank
+
+              error = project_copy.calculated_value_errors.find_by(custom_field: calculated_custom_field)
+              expect(error).to be_present
+
+              expect(error.error_code).to eq("ERROR_MATHEMATICAL")
+            end
+          end
+        end
+      end
+
+      describe "work_package_custom_fields" do
+        context "with disabled work package custom field" do
+          it "is still disabled in the copy" do
+            custom_field = create(:text_wp_custom_field)
+            create(:type_task,
+                   projects: [source],
+                   custom_fields: [custom_field])
+
+            expect(subject).to be_success
+
+            expect(source.work_package_custom_fields).to eq([])
+            expect(project_copy.work_package_custom_fields).to match_array(source.work_package_custom_fields)
+          end
+        end
+
+        context "with enabled work package custom field" do
+          it "is still enabled in the copy" do
+            custom_field = create(:text_wp_custom_field, projects: [source])
+            create(:type_task,
+                   projects: [source],
+                   custom_fields: [custom_field])
+
+            expect(subject).to be_success
+
+            expect(source.work_package_custom_fields).to eq([custom_field])
+            expect(project_copy.work_package_custom_fields).to match_array(source.work_package_custom_fields)
+          end
+        end
+      end
+    end
+
+    context "when source project has a non-zero wp_sequence_counter",
+            with_settings: { work_packages_identifier: "semantic" } do
+      let(:target_project_params) { { name: "Target Project Name", identifier: "COPY1" } }
+
+      before do
+        source.update_column(:wp_sequence_counter, 5)
+      end
+
+      it "succeeds and resets wp_sequence_counter to 0 on the copy" do
+        expect(subject).to be_success
+        expect(project_copy.wp_sequence_counter).to eq(0)
+      end
+    end
+
+    context "with all modules selected" do
+      let(:only_args) { all_modules }
+      let(:storage1) { source_automatic_project_storage.storage }
+      let(:storage2) { source_manual_project_storage.storage }
+      # rubocop:enable RSpec/IndexedLet
+
+      shared_let(:source_automatic_project_storage) do
+        storage = create(:nextcloud_storage)
+        create(:project_storage, storage:, project: source, project_folder_id: "123", project_folder_mode: "automatic")
+      end
+
+      shared_let(:source_manual_project_storage) do
+        storage = create(:nextcloud_storage)
+        create(:project_storage, storage:, project: source, project_folder_id: "345", project_folder_mode: "manual")
+      end
+
+      # rubocop:disable RSpec/ExampleLength
+      # rubocop:disable RSpec/MultipleExpectations
+      it "copies all dependencies and set attributes" do
+        expect(subject).to be_success
+
+        expect(project_copy.members.count).to eq 1
+        expect(project_copy.categories.count).to eq 1
+        # normal wp and locked wp
+        expect(project_copy.work_packages.count).to eq 2
+        expect(project_copy.forums.count).to eq 1
+        expect(project_copy.forums.first.messages.count).to eq 1
+        expect(project_copy.wiki).to be_present
+        expect(project_copy.wiki.pages.count).to eq 2
+        expect(project_copy.queries.count).to eq 1
+        expect(project_copy.queries[0].views.count).to eq 1
+        expect(project_copy.versions.count).to eq 1
+        expect(project_copy.wiki.pages.root.text).to eq source_wiki_page.text
+        expect(project_copy.wiki.pages.leaves.first.text).to eq source_child_wiki_page.text
+        expect(project_copy.wiki.start_page).to eq "Wiki"
+        expect(project_copy.phases.count).to eq 1
+
+        # Cleared attributes
+        expect(project_copy).to be_persisted
+        expect(project_copy.name).to eq "Target Project Name"
+        expect(project_copy.identifier).to eq "some-identifier"
+
+        # Duplicated attributes
+        expect(project_copy.description).to eq source.description
+        expect(source.enabled_module_names.sort - %w[repository]).to eq project_copy.enabled_module_names.sort
+        expect(project_copy.enabled_types.to_a).to eq source.enabled_types.to_a
+
+        # Default attributes
+        expect(project_copy).to be_active
+
+        # Default role being assigned according to setting
+        #  merged with the role the user already had.
+        member = project_copy.members.reload.last
+        expect(member.principal).to eql(current_user)
+        expect(member.roles.reload).to contain_exactly(role, new_project_role)
+
+        expect(project_copy.project_storages.count).to eq(2)
+        automatic_project_storage_copy = project_copy.project_storages.find_by(storage: storage1)
+        expect(automatic_project_storage_copy.id).not_to eq(source_automatic_project_storage.id)
+        expect(automatic_project_storage_copy.project_id).to eq(project_copy.id)
+        expect(automatic_project_storage_copy.creator_id).to eq(current_user.id)
+        expect(automatic_project_storage_copy.project_folder_id).to be_nil
+        expect(automatic_project_storage_copy.project_folder_mode).to eq("inactive")
+
+        manual_project_storage_copy = project_copy.project_storages.find_by(storage: storage2)
+        expect(manual_project_storage_copy.id).not_to eq(source_manual_project_storage.id)
+        expect(manual_project_storage_copy.project_id).to eq(project_copy.id)
+        expect(manual_project_storage_copy.creator_id).to eq(current_user.id)
+        expect(manual_project_storage_copy.project_folder_id).to be_nil
+        expect(manual_project_storage_copy.project_folder_mode).to eq("inactive")
+      end
+      # rubocop:enable RSpec/ExampleLength
+      # rubocop:enable RSpec/MultipleExpectations
+
+      context "with project_creation_wizard_artifact_export_storage set" do
+        before do
+          source.project_creation_wizard_artifact_export_storage = source_automatic_project_storage.id.to_s
+          source.save!
+        end
+
+        it "updates the reference to the copied project storage" do
+          expect(subject).to be_success
+
+          automatic_project_storage_copy = project_copy.project_storages.find_by(storage: storage1)
+          expect(project_copy.project_creation_wizard_artifact_export_storage).to eq(automatic_project_storage_copy.id.to_s)
+          expect(project_copy.project_creation_wizard_artifact_export_storage).not_to eq(source.project_creation_wizard_artifact_export_storage)
+        end
+      end
+
+      context "without project_creation_wizard_artifact_export_storage set" do
+        it "does not set project_creation_wizard_artifact_export_storage in the copy" do
+          expect(subject).to be_success
+          expect(project_copy.project_creation_wizard_artifact_export_storage).to be_nil
+        end
+      end
+
+      it_behaves_like "copies public attribute"
+      it_behaves_like "copies custom fields"
+    end
+
+    context "with some modules selected" do
+      context "with queries" do
+        let(:only_args) { %i[queries] }
+
+        context "with a filter" do
+          let!(:query) do
+            build(:query, project: source).tap do |q|
+              q.add_filter("subject", "~", ["bogus"])
+              q.save!
+
+              create(:view_work_packages_table, query: q)
+            end
+          end
+
+          it "produces a valid query in the new project" do
+            expect(subject).to be_success
+            expect(project_copy.queries.all?(&:valid?)).to be(true)
+            expect(project_copy.queries.count).to eq 2
+          end
+        end
+
+        context "with a filter to be mapped" do
+          let(:only_args) { %w(members work_packages queries) }
+          let!(:query) do
+            build(:query, project: source).tap do |q|
+              q.add_filter("parent", "=", [source_wp.id.to_s])
+              # Not valid due to wp not visible
+              q.save!(validate: false)
+
+              create(:view_work_packages_table, query: q)
+            end
+          end
+
+          it "produces a valid query that is mapped in the new project" do
+            expect(subject).to be_success
+            copied_wp = copy_of(source_wp)
+            copied = project_copy.queries.find_by(name: query.name)
+            expect(copied.filters[1].values).to eq [copied_wp.id.to_s]
+          end
+        end
+
+        context "with query with views" do
+          let!(:query_with_view) do
+            query = build(:query, project: source, name: "Query with view")
+            query.add_filter("subject", "~", ["bogus"])
+            query.save!
+
+            create(:view_work_packages_table, query:)
+
+            query
+          end
+
+          let!(:query_without_view) do
+            query = build(:query, project: source, name: "Query without view")
+            query.add_filter("subject", "~", ["bogus"])
+            query.save!
+
+            query
+          end
+
+          it "copies only the query with a view (non viewed queries will have to implement specific copy service)" do
+            expect(subject).to be_success
+            copied_query_with_view = project_copy.queries.find_by(name: "Query with view")
+            expect(copied_query_with_view).to be_present
+            expect(copied_query_with_view.views.length).to eq 1
+            expect(copied_query_with_view.views[0].type).to eq "work_packages_table"
+
+            expect(project_copy.queries).not_to exist(name: "Query without view")
+          end
+        end
+      end
+
+      context "with member" do
+        let(:only_args) { %w[members] }
+
+        let!(:user) { create(:user) }
+        let!(:another_role) { create(:project_role) }
+        let!(:group) { create(:group, members: [user]) }
+
+        it "copies them as well" do
+          Members::CreateService
+            .new(user: current_user, contract_class: EmptyContract)
+            .call(principal: group, roles: [another_role], project: source)
+
+          source.users.reload
+          expect(source.users).to include current_user
+          expect(source.users).to include user
+          expect(project_copy.groups).to include group
+          expect(source.members.count).to eq 3
+
+          expect(subject).to be_success
+
+          expect(project_copy.members.count).to eq 3
+          expect(project_copy.groups).to include group
+          expect(project_copy.users).to include current_user
+          expect(project_copy.users).to include user
+
+          group_member = Member.find_by(user_id: group.id, project_id: project_copy.id)
+          expect(group_member).to be_present
+          expect(group_member.roles.map(&:id)).to eq [another_role.id]
+
+          member = Member.find_by(user_id: user.id, project_id: project_copy.id)
+          expect(member).to be_present
+          expect(member.roles.map(&:id)).to eq [another_role.id]
+          expect(member.member_roles.first.inherited_from).to eq group_member.member_roles.first.id
+        end
+      end
+
+      context "with member having an excluded role" do
+        let(:only_args) { %w[members] }
+
+        let!(:user_with_excluded_role) { create(:user) }
+        let!(:user_with_kept_role) { create(:user) }
+        let!(:excluded_role) { create(:project_role, name: "Template Manager") }
+        let!(:kept_role) { create(:project_role, name: "Developer") }
+
+        before do
+          source.update!(excluded_role_ids_on_copy: [excluded_role.id])
+
+          Members::CreateService
+            .new(user: current_user, contract_class: EmptyContract)
+            .call(principal: user_with_excluded_role, roles: [excluded_role], project: source)
+
+          Members::CreateService
+            .new(user: current_user, contract_class: EmptyContract)
+            .call(principal: user_with_kept_role, roles: [kept_role], project: source)
+        end
+
+        it "excludes members with the excluded role" do
+          expect(source.users).to include(user_with_excluded_role, user_with_kept_role)
+
+          expect(subject).to be_success
+
+          # User with excluded role should not be copied
+          expect(project_copy.users).not_to include(user_with_excluded_role)
+
+          # User with kept role should be copied
+          expect(project_copy.users).to include(user_with_kept_role)
+          member = Member.find_by(user_id: user_with_kept_role.id, project_id: project_copy.id)
+          expect(member.roles).to contain_exactly(kept_role)
+        end
+
+        context "when a member has multiple roles, one excluded and one not" do
+          let!(:user_with_both_roles) { create(:user) }
+
+          before do
+            Members::CreateService
+              .new(user: current_user, contract_class: EmptyContract)
+              .call(principal: user_with_both_roles, roles: [excluded_role, kept_role], project: source)
+          end
+
+          it "copies the member but only with the non-excluded role" do
+            expect(subject).to be_success
+
+            # User should be copied but only with the kept role
+            expect(project_copy.users).to include(user_with_both_roles)
+            member = Member.find_by(user_id: user_with_both_roles.id, project_id: project_copy.id)
+            expect(member.roles).to contain_exactly(kept_role)
+            expect(member.roles).not_to include(excluded_role)
+          end
+        end
+      end
+
+      context "with work_packages" do
+        let(:only_args) { %w[work_packages] }
+
+        let(:work_package) { create(:work_package, project: source) }
+
+        # rubocop:disable RSpec/IndexedLet
+        let(:work_package2) { create(:work_package, project: source) }
+        let(:work_package3) { create(:work_package, project: source) }
+        # rubocop:enable RSpec/IndexedLet
+
+        it "does not copy work package budgets" do
+          budget = create(:budget, project: source)
+          source_wp.update!(budget:)
+
+          expect(subject).to be_success
+
+          expect(source.work_packages.count).to eq(project_copy.work_packages.count)
+          expect(copy_of(source_wp).budget).to be_nil
+        end
+
+        context "if categories are copied" do
+          let(:only_args) { %i[work_packages categories] }
+
+          it "copies the work package with category" do
+            source_wp.update!(category: source_category)
+
+            expect(subject).to be_success
+
+            wp = copy_of(source_wp)
+            expect(wp.category.name).to eq "Stock management"
+            # Category got copied
+            expect(wp.category.id).not_to eq source_category.id
+          end
+        end
+
+        context "with an assigned version" do
+          let(:only_args) { %i[work_packages versions] }
+          let!(:assigned_version) { create(:version, name: "Assigned Issues", project: source, status: "open") }
+
+          before do
+            source_wp.target_versions = [assigned_version]
+            assigned_version.update!(status: "closed")
+          end
+
+          it "updates the version" do
+            expect(subject).to be_success
+
+            wp = copy_of(source_wp)
+            expect(wp.target_versions.first.name).to eq "Assigned Issues"
+            expect(wp.target_versions.first).to be_closed
+            expect(wp.target_versions.first.id).not_to eq assigned_version.id
+          end
+        end
+
+        context "with target_versions" do
+          let(:only_args) { %i[work_packages versions] }
+          let(:version_one) { create(:version, name: "Target One", project: source, status: "open") }
+          let(:version_two) { create(:version, name: "Target Two", project: source, status: "open") }
+
+          before do
+            source_wp.target_versions = [version_one, version_two]
+          end
+
+          it "copies the target_versions remapped to the copied project's versions" do
+            expect(subject).to be_success
+
+            wp = copy_of(source_wp)
+            copied_names = wp.target_versions.map(&:name).sort
+            expect(copied_names).to eq(["Target One", "Target Two"])
+            wp.target_versions.each do |v|
+              expect(v.project_id).to eq(project_copy.id)
+              expect([version_one.id, version_two.id]).not_to include(v.id)
+            end
+          end
+        end
+
+        context "with observed_in_versions" do
+          let(:only_args) { %i[work_packages versions] }
+          let(:observed_one) { create(:version, name: "Observed One", project: source, status: "open") }
+          let(:observed_two) { create(:version, name: "Observed Two", project: source, status: "open") }
+
+          before do
+            source_wp.observed_in_versions = [observed_one, observed_two]
+          end
+
+          it "copies the observed_in_versions remapped to the copied project's versions" do
+            expect(subject).to be_success
+
+            wp = copy_of(source_wp)
+            copied_names = wp.observed_in_versions.map(&:name).sort
+            expect(copied_names).to eq(["Observed One", "Observed Two"])
+            wp.observed_in_versions.each do |v|
+              expect(v.project_id).to eq(project_copy.id)
+              expect([observed_one.id, observed_two.id]).not_to include(v.id)
+            end
+          end
+        end
+
+        context "when a referenced version is not among the copied versions" do
+          let(:only_args) { %i[work_packages versions] }
+          let(:other_project) { create(:project, name: "Other Project") }
+          let(:foreign_version) { create(:version, name: "Foreign", project: other_project, status: "open") }
+
+          before do
+            source_wp.work_package_versions.delete_all
+            source_wp.work_package_versions.create!(version_id: foreign_version.id, kind: "target")
+            source_wp.work_package_versions.create!(version_id: foreign_version.id, kind: "observed_in")
+          end
+
+          it "drops the unmapped versions instead of copying dangling ids" do
+            expect(subject).to be_success
+
+            wp = copy_of(source_wp)
+            expect(wp.target_versions).to be_empty
+            expect(wp.observed_in_versions).to be_empty
+          end
+        end
+
+        context "when versions are not copied along" do
+          let(:only_args) { %i[work_packages] }
+          let(:assigned_version) { create(:version, name: "Assigned", project: source, status: "open") }
+          let(:observed_version) { create(:version, name: "Observed", project: source, status: "open") }
+
+          before do
+            source_wp.work_package_versions.delete_all
+            source_wp.target_versions = [assigned_version]
+            source_wp.observed_in_versions = [observed_version]
+          end
+
+          it "copies the work package without any version assignments" do
+            expect(subject).to be_success
+
+            wp = copy_of(source_wp)
+            expect(wp).not_to be_nil
+            expect(wp.target_versions).to be_empty
+            expect(wp.observed_in_versions).to be_empty
+          end
+        end
+
+        context "with attachments" do
+          before do
+            create(:attachment, container: work_package)
+            expect(work_package.attachments.count).to eq(1) # rubocop:disable RSpec/ExpectInHook
+          end
+
+          context "when requested" do
+            let(:only_args) { %i[work_packages work_package_attachments] }
+
+            it "copies them" do
+              expect(subject).to be_success
+              expect(project_copy.work_packages.count).to eq(3)
+
+              wp = copy_of(work_package)
+              expect(wp.attachments.count).to eq(1)
+              expect(wp.attachments.first.author).to eql(current_user)
+            end
+          end
+
+          context "when not requested" do
+            it "ignores them" do
+              expect(subject).to be_success
+              expect(project_copy.work_packages.count).to eq(3)
+
+              wp = copy_of(work_package)
+              expect(wp.attachments.count).to eq(0)
+            end
+          end
+        end
+
+        context "with an ordered query (Feature #31317)" do
+          let!(:query) do
+            create(:query, name: "Manual query", user: current_user, project: source, show_hierarchies: false).tap do |q|
+              q.sort_criteria = [[:manual_sorting, "asc"]]
+              q.save!
+
+              create(:view_work_packages_table, query: q)
+            end
+          end
+          let(:only_args) { %w[work_packages queries] }
+
+          before do
+            OrderedWorkPackage.create(query:, work_package:, position: 100)
+            OrderedWorkPackage.create(query:, work_package: work_package2, position: 0)
+            OrderedWorkPackage.create(query:, work_package: work_package3, position: 50)
+          end
+
+          it "copies the query and order" do
+            expect(subject).to be_success
+            expect(project_copy.work_packages.count).to eq(5)
+            expect(project_copy.queries.count).to eq(2)
+
+            manual_query = project_copy.queries.find_by name: "Manual query"
+            expect(manual_query).to be_manually_sorted
+
+            expect(query.ordered_work_packages.count).to eq 3
+            original_order = query.ordered_work_packages.map { |ow| ow.work_package.subject }
+            copied_order = manual_query.ordered_work_packages.map { |ow| ow.work_package.subject }
+
+            expect(copied_order).to eq(original_order)
+          end
+
+          context "if one work package is a cross project reference" do
+            let(:other_project) { create(:project) }
+            let(:only_args) { %w[work_packages queries] }
+
+            before do
+              work_package2.update! project: other_project
+            end
+
+            it "copies the query and order" do
+              expect(subject).to be_success
+              # Only 4 out of the 5 work packages got copied this time
+              expect(project_copy.work_packages.count).to eq(4)
+              expect(project_copy.queries.count).to eq(2)
+
+              manual_query = project_copy.queries.find_by name: "Manual query"
+              expect(manual_query).to be_manually_sorted
+
+              expect(query.ordered_work_packages.count).to eq 3
+              original_order = query.ordered_work_packages.map { |ow| ow.work_package.subject }
+              copied_order = manual_query.ordered_work_packages.map { |ow| ow.work_package.subject }
+
+              expect(copied_order).to eq(original_order)
+
+              # Expect reference to the original work package
+              referenced = query.ordered_work_packages.detect { |ow| ow.work_package == work_package2 }
+              expect(referenced).to be_present
+            end
+          end
+        end
+
+        context "with parent work_package" do
+          before do
+            work_package.parent = work_package2
+            work_package.save!
+            work_package2.parent = work_package3
+            work_package2.save!
+          end
+
+          it do
+            expect(subject).to be_success
+
+            grandparent_wp_copy = copy_of(work_package3)
+            parent_wp_copy = copy_of(work_package2)
+            child_wp_copy = copy_of(work_package)
+
+            expect([grandparent_wp_copy, parent_wp_copy, child_wp_copy]).to all be_present
+            expect(child_wp_copy.parent).to eq(parent_wp_copy)
+            expect(parent_wp_copy.parent).to eq(grandparent_wp_copy)
+          end
+        end
+
+        context "with category" do
+          let(:only_args) { %w[work_packages categories] }
+
+          before do
+            wp = work_package
+            wp.category = create(:category, project: source)
+            wp.save
+
+            source.work_packages << wp
+          end
+
+          it do
+            expect(subject).to be_success
+            wp = copy_of(work_package)
+            expect(cat = wp.category).not_to be_nil
+            expect(cat.project).to eq(project_copy)
+          end
+        end
+
+        context "with watchers" do
+          let(:watcher) { create(:user, member_with_permissions: { source => [:view_work_packages] }) }
+
+          let(:only_args) { %w[work_packages members] }
+
+          context "with active watcher" do
+            before do
+              wp = work_package
+              wp.add_watcher watcher
+              wp.save
+
+              source.work_packages << wp
+            end
+
+            it "does copy active watchers but does not add the copying user as a watcher" do
+              expect(subject).to be_success
+              expect(copy_of(work_package).watcher_users)
+                .to contain_exactly(watcher)
+            end
+          end
+
+          context "with locked watcher" do
+            before do
+              user = watcher
+              wp = work_package
+              wp.add_watcher user
+              wp.save
+
+              user.locked!
+
+              source.work_packages << wp
+            end
+
+            it "does not copy locked watchers and does not add the copying user as a watcher" do
+              expect(subject).to be_success
+              expect(copy_of(work_package).watcher_users).to be_empty
+            end
+          end
+        end
+
+        context "with shared work packages" do
+          let(:wp_role) { create(:view_work_package_role) }
+          let!(:source_wp_shared_with_user) do
+            create(:user, member_with_roles: { source_wp => wp_role })
+          end
+
+          let(:only_args) { %w[work_packages work_package_shares] }
+
+          shared_examples "does not sends share notification" do
+            it "does not create any notifications" do
+              subject
+              # The sharee is not notified
+              expect { perform_enqueued_jobs }
+                .not_to change(Notification.where(recipient: source_wp_shared_with_user), :count)
+            end
+          end
+
+          shared_examples "sends share notification" do
+            it "creates a notification for the sharee" do
+              subject
+              # The sharee of the new work package receives a notification
+              expect { perform_enqueued_jobs }
+                .to change(Notification.where(recipient: source_wp_shared_with_user), :count)
+                      .from(0)
+                      .to(1)
+            end
+          end
+
+          shared_examples "copies the shared with membership for the work package" do
+            it "copies the shared with membership for the work package" do
+              expect(subject).to be_success
+              expect(project_copy.members.count).to eq 2
+
+              shared_wp_member = project_copy.members.find_by(entity_type: "WorkPackage")
+              expect(shared_wp_member.principal).to eq(source_wp_shared_with_user)
+              expect(shared_wp_member.roles).to contain_exactly(wp_role)
+
+              expect(shared_wp_member.entity).to eq(copy_of(source_wp))
+            end
+          end
+
+          it_behaves_like "copies the shared with membership for the work package"
+          it_behaves_like "sends share notification"
+
+          context "when send_notifications are disabled" do
+            let(:send_notifications) { false }
+
+            it_behaves_like "copies the shared with membership for the work package"
+            it_behaves_like "does not sends share notification"
+          end
+
+          context "having disabled" do
+            let(:only_args) { %w[work_packages] }
+
+            it "copies the standard membership for the project only" do
+              expect(subject).to be_success
+              expect(project_copy.members.count).to eq 1
+
+              wp_member = project_copy.members.find_by(user_id: current_user.id)
+              expect(wp_member.principal).to eq(current_user)
+              expect(wp_member).to be_project_role
+            end
+
+            it_behaves_like "does not sends share notification"
+          end
+        end
+
+        context "when work_package is assigned to somebody" do
+          let(:assigned_user) do
+            create(:user,
+                   member_with_roles: { source => role })
+          end
+
+          before do
+            work_package.update_column(:assigned_to_id, assigned_user.id)
+          end
+
+          context "with the members being copied" do
+            let(:only_args) { %w[members work_packages] }
+
+            it "copies the assigned_to" do
+              expect(subject).to be_success
+              expect(copy_of(work_package).assigned_to).to eq(assigned_user)
+              # The assignee of the new work package receives a notification
+              expect { perform_enqueued_jobs }
+                .to change(Notification.where(recipient: assigned_user), :count)
+                      .from(0)
+                      .to(1)
+            end
+          end
+
+          context "with the member being not copied" do
+            let(:only_args) { %w[work_packages] }
+
+            it "nils the assigned_to" do
+              expect(subject).to be_success
+              expect(copy_of(work_package).assigned_to).to be_nil
+              # No notification is sent out
+              expect { perform_enqueued_jobs }
+                .not_to change(Notification.where(recipient: assigned_user), :count)
+            end
+          end
+        end
+
+        context "when work_package has a responsible person" do
+          let(:responsible_user) do
+            create(:user,
+                   member_with_roles: { source => role })
+          end
+
+          before do
+            work_package.update_column(:responsible_id, responsible_user.id)
+          end
+
+          context "with the members being copied" do
+            let(:only_args) { %w[members work_packages] }
+
+            it "copies the responsible" do
+              expect(subject).to be_success
+              expect(copy_of(work_package).responsible).to eq(responsible_user)
+              # The responsible of the new work package receives a notification
+              expect { perform_enqueued_jobs }
+                .to change(Notification.where(recipient: responsible_user), :count)
+                      .from(0)
+                      .to(1)
+            end
+          end
+
+          context "with the member being not copied" do
+            let(:only_args) { %w[work_packages] }
+
+            it "nils the responsible" do
+              expect(subject).to be_success
+              expect(copy_of(work_package).responsible).to be_nil
+              # No notification is sent out
+              expect { perform_enqueued_jobs }
+                .not_to change(Notification.where(recipient: responsible_user), :count)
+            end
+          end
+        end
+
+        describe "work package user custom field" do
+          let(:custom_field) do
+            create(:user_wp_custom_field).tap do |cf|
+              source.work_package_custom_fields << cf
+              work_package.type.default_variant.custom_fields << cf
+            end
+          end
+
+          before do
+            custom_field
+            # Void the custom field caching
+            RequestStore.clear!
+            work_package.send(custom_field.attribute_setter, other_user.id)
+            work_package.save!(validate: false)
+          end
+
+          context "with the member being copied" do
+            let(:only_args) { %w[members work_packages] }
+
+            it "copies the custom_field" do
+              expect(subject).to be_success
+              expect(copy_of(work_package).send(custom_field.attribute_getter)).to eql other_user
+            end
+          end
+
+          context "with the member being not copied" do
+            let(:only_args) { %w[work_packages] }
+
+            it "nils the custom_field" do
+              expect(subject).to be_success
+              expect(copy_of(work_package).send(custom_field.attribute_getter)).to be_nil
+            end
+          end
+        end
+
+        context("with work package relations",
+                with_settings: { cross_project_work_package_relations: "1" }) do
+          let!(:source_wp2) { create(:work_package, project: source, subject: "source wp2") }
+          let!(:source_relation) { create(:relation, from: source_wp, to: source_wp2, relation_type: "relates") }
+
+          let!(:other_project) { create(:project) }
+          let!(:other_wp) { create(:work_package, project: other_project, subject: "other wp") }
+          let!(:cross_relation) { create(:relation, from: source_wp, to: other_wp, relation_type: "duplicates") }
+
+          it "copies relations" do
+            expect(subject).to be_success
+
+            expect(source.work_packages.count).to eq(project_copy.work_packages.count)
+            copied_wp = copy_of(source_wp)
+            copied_wp2 = copy_of(source_wp2)
+
+            # First issue with a relation on project
+            # copied relation + reflexive relation
+            expect(copied_wp.relations.count).to eq 2
+            relates_relation = copied_wp.relations.find { |r| r.relation_type == "relates" }
+            expect(relates_relation.from_id).to eq copied_wp.id
+            expect(relates_relation.to_id).to eq copied_wp2.id
+
+            # Second issue with a cross project relation
+            # copied relation + reflexive relation
+            duplicates_relation = copied_wp.relations.find { |r| r.relation_type == "duplicates" }
+            expect(duplicates_relation.from_id).to eq copied_wp.id
+            expect(duplicates_relation.to_id).to eq other_wp.id
+          end
+        end
+
+        context "with project phases associated" do
+          before do
+            source_wp.update_column(:project_phase_definition_id, source_project_phase.definition_id)
+          end
+
+          it "copies the project phase (regardless of the phase not being copied itself)" do
+            expect(subject).to be_success
+            expect(project_copy.work_packages.count).to eq(2)
+
+            expect(copy_of(source_wp).project_phase_definition_id).to eq(source_project_phase.definition_id)
+
+            [source_wp, source_wp_locked].each do |wp|
+              expect(copy_of(wp).project_phase_definition_id).to eq(wp.project_phase_definition_id)
+            end
+          end
+        end
+      end
+
+      context "with wiki" do
+        let(:only_args) { %i[wiki] }
+
+        it "copies wiki menu items" do
+          source.wiki.wiki_menu_items << create(:wiki_menu_item_with_parent, wiki: source.wiki)
+
+          expect(subject).to be_success
+          expect(project_copy.wiki.wiki_menu_items.count).to eq 3
+        end
+
+        it "ignores wiki attachments" do
+          create(:attachment, container: source_wiki_page)
+          expect(source_wiki_page.attachments.count).to eq(1)
+
+          expect(subject).to be_success
+          expect(subject.errors).to be_empty
+          expect(project_copy.wiki.pages.count).to eq 2
+
+          page = project_copy.wiki.pages.find_by(title: source_wiki_page.title)
+          expect(page.attachments.count).to eq(0)
+        end
+
+        context "when wiki attachments are requested" do
+          let(:only_args) { %i[wiki wiki_page_attachments] }
+
+          it "copies them" do
+            create(:attachment, container: source_wiki_page)
+            expect(source_wiki_page.attachments.count).to eq(1)
+
+            expect(subject).to be_success
+            expect(subject.errors).to be_empty
+            expect(project_copy.wiki.pages.count).to eq 2
+
+            page = project_copy.wiki.pages.find_by(title: source_wiki_page.title)
+            expect(page.attachments.count).to eq(1)
+            expect(page.attachments.first.author).to eql(current_user)
+          end
+        end
+      end
+
+      context "with project phases" do
+        let(:only_args) { %i[phases] }
+
+        let!(:inactive_source_project_phase) do
+          create(:project_phase,
+                 project: source,
+                 active: false,
+                 start_date: Time.zone.today + 10.days,
+                 finish_date: Time.zone.today + 15.days)
+        end
+
+        it "copies the phases" do
+          expect(subject).to be_success
+          expect(project_copy.phases.count).to eq 2
+
+          [source_project_phase, inactive_source_project_phase].each do |source_phase|
+            copied_phase = project_copy.phases.find_by(definition_id: source_phase.definition_id)
+            expect(copied_phase.attributes.slice("definition_id", "active", "start_date", "finish_date", "duration"))
+              .to eql source_phase.attributes.slice("definition_id", "active", "start_date", "finish_date", "duration")
+          end
+        end
+      end
+    end
+
+    context "without anything selected" do
+      let!(:source_member) { create(:user, member_with_roles: { source => role }) }
+      let(:only_args) { nil }
+
+      # rubocop:disable RSpec/MultipleExpectations
+      it "sets attributes only without copying dependencies" do
+        expect(subject).to be_success
+
+        expect(project_copy.members.count).to eq 1
+        expect(project_copy.categories.count).to eq 0
+        expect(project_copy.work_packages.count).to eq 0
+        expect(project_copy.forums.count).to eq 0
+        # Default wiki page
+        expect(project_copy.wiki).to be_present
+        expect(project_copy.wiki.enabled?).to eq(source.wiki.enabled?)
+        expect(project_copy.wiki.pages.count).to eq 0
+        expect(project_copy.queries.count).to eq 0
+        expect(project_copy.versions.count).to eq 0
+        expect(project_copy.phases.count).to eq 0
+
+        # Cleared attributes
+        expect(project_copy).to be_persisted
+        expect(project_copy.name).to eq "Target Project Name"
+        expect(project_copy.name).to eq "Target Project Name"
+        expect(project_copy.identifier).to eq "some-identifier"
+
+        # Duplicated attributes
+        expect(project_copy.description).to eq source.description
+        expect(source.enabled_module_names.sort - %w[repository]).to eq project_copy.enabled_module_names.sort
+        expect(project_copy.enabled_types.to_a).to eq source.enabled_types.to_a
+
+        # Default attributes
+        expect(project_copy).to be_active
+
+        # Copy only the current_user as we do not copy any members
+        # Only the default role is being assigned according to setting
+        member = project_copy.reload.members.first
+        expect(member.principal)
+          .to eql(current_user)
+        expect(member.roles)
+          .to contain_exactly(new_project_role)
+      end
+      # rubocop:enable RSpec/MultipleExpectations
+
+      context "with group memberships" do
+        let!(:user) { create(:user) }
+        let!(:another_role) { create(:project_role) }
+        let!(:group) do
+          create(:group, members: [user])
+        end
+
+        it "does not copy group members" do
+          Members::CreateService
+            .new(user: current_user, contract_class: EmptyContract)
+            .call(principal: group, roles: [another_role], project: source)
+
+          source.users.reload
+          expect(source.users).to include current_user
+          expect(source.users).to include user
+          expect(project_copy.groups).to be_empty
+          expect(source.members.count).to eq 4
+
+          expect(subject).to be_success
+
+          expect(project_copy.members.count).to eq 1
+          expect(project_copy.groups).to be_empty
+          expect(project_copy.users).to contain_exactly current_user
+
+          group_member = Member.find_by(user_id: group.id, project_id: project_copy.id)
+          expect(group_member).to be_nil
+
+          member = Member.find_by(user_id: user.id, project_id: project_copy.id)
+          expect(member).to be_nil
+        end
+      end
+
+      it_behaves_like "copies public attribute"
+      it_behaves_like "copies custom fields"
+    end
+  end
+end

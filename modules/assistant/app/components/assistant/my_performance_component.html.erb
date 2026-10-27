@@ -1,0 +1,47 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<div class="assistant-appraisal" data-test-selector="assistant-my-performance">
+  <% if sections.empty? %>
+    <%= render(Primer::Beta::Blankslate.new(border: true)) do |slate| %>
+      <% slate.with_visual_icon(icon: :graph) %>
+      <% slate.with_heading(tag: :h2) { t("assistant.performance.mine.empty_title") } %>
+      <% slate.with_description { t("assistant.performance.mine.empty_text") } %>
+    <% end %>
+  <% else %>
+    <p class="assistant-appraisal--lead"><%= t("assistant.performance.mine.lead", days: PERIOD) %></p>
+    <% sections.each do |section| %>
+      <% project = section[:project] %>
+      <section class="assistant-appraisal--section assistant-mine" aria-labelledby="assistant-mine-<%= project.id %>"
+               data-test-selector="assistant-my-performance-project">
+        <h2 id="assistant-mine-<%= project.id %>" class="assistant-section--title">
+          <%= link_to(project.name, page_path(project)) %>
+        </h2>
+        <dl class="assistant-mine--values">
+          <% dimensions.each do |key| %>
+            <% d = dim(section, key) %>
+            <div class="assistant-mine--value">
+              <dt><%= dimension_label(key) %></dt>
+              <dd class="<%= class_names("assistant-dimension--insufficient" => d["insufficient"]) %>"><%= dimension_value(d) %></dd>
+            </div>
+          <% end %>
+        </dl>
+        <% if (line = final_line(section)) %>
+          <p class="assistant-appraisal--quiet"><%= line %></p>
+        <% end %>
+        <% if notes_count(section).positive? %>
+          <p class="assistant-appraisal--quiet"><%= t("assistant.performance.mine.notes", count: notes_count(section)) %></p>
+        <% end %>
+        <p class="assistant-appraisal--quiet" data-test-selector="assistant-my-performance-views"><%= section[:views_line] %></p>
+        <p class="assistant-appraisal--quiet"><%= link_to(t("assistant.performance.mine.open"), page_path(project)) %></p>
+      </section>
+    <% end %>
+  <% end %>
+</div>

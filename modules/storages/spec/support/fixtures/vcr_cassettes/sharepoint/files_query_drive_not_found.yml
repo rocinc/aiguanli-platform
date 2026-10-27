@@ -1,0 +1,147 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://login.microsoftonline.com/e36f1dbc-fdae-427e-b61b-0d96ddfb81a4/oauth2/v2.0/token
+    body:
+      encoding: ASCII-8BIT
+      string: grant_type=client_credentials&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default+offline_access&client_id=404e0567-19a1-4a64-b2d1-d3b0c99f2ed9&client_secret=QRB8Q%7Ei.1rID_.MC9FTfRGq-FTE5SgWYsoeLacWf
+    headers:
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Content-Length:
+      - '199'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Pragma:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Expires:
+      - "-1"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      X-Content-Type-Options:
+      - nosniff
+      P3p:
+      - CP="DSP CUR OTPi IND OTRi ONL FIN"
+      X-Ms-Request-Id:
+      - 3a28052a-558e-4483-bb63-e209f4a64700
+      X-Ms-Ests-Server:
+      - 2.1.21470.11 - WEULR1 ProdSlices
+      X-Ms-Srs:
+      - 1.P
+      Content-Security-Policy-Report-Only:
+      - object-src 'none'; base-uri 'self'; script-src 'self' 'nonce--TZF6qKL9UrtZm7Hv3p_Kw'
+        'unsafe-inline' 'unsafe-eval' https://*.msauth.net https://*.msftauth.net
+        https://*.msftauthimages.net https://*.msauthimages.net https://*.msidentity.com
+        https://*.microsoftonline-p.com https://*.microsoftazuread-sso.com https://*.azureedge.net
+        https://*.outlook.com https://*.office.com https://*.office365.com https://*.microsoft.com
+        https://*.bing.com 'report-sample'; report-uri https://csp.microsoft.com/report/ESTS-UX-All
+      X-Xss-Protection:
+      - '0'
+      Set-Cookie:
+      - fpc=AkNumlrtRc9OtoUB3ihrtAVZ-dCOAQAAALbAJ-AOAAAA; expires=Sun, 07-Sep-2025
+        09:56:07 GMT; path=/; secure; HttpOnly; SameSite=None, x-ms-gateway-slice=estsfd;
+        path=/; secure; samesite=none; httponly, stsservicecookie=estsfd; path=/;
+        secure; samesite=none; httponly
+      Date:
+      - Fri, 08 Aug 2025 09:56:06 GMT
+      Content-Length:
+      - '1932'
+    body:
+      encoding: UTF-8
+      string: '{"token_type":"Bearer","expires_in":3599,"ext_expires_in":3599,"access_token":"<ACCESS_TOKEN>"}'
+  recorded_at: Fri, 08 Aug 2025 09:56:07 GMT
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/sites/ymt6d.sharepoint.com:/sites/OPTest:/lists?$expand=drive&$select=id,name,drive
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Bearer <BEARER TOKEN>
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8
+      Content-Encoding:
+      - gzip
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 4036a72f-3585-4f0d-abf1-85a44066e8a6
+      Client-Request-Id:
+      - 4036a72f-3585-4f0d-abf1-85a44066e8a6
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"008","RoleInstance":"FR3PEPF00000CC0"}}'
+      Splogid:
+      - 8cb4b9a1-40bf-0000-7bb8-a590e4c2dba7
+      Odata-Version:
+      - '4.0'
+      Date:
+      - Fri, 08 Aug 2025 09:56:06 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)(id,name,drive,drive())","value":[{"@odata.etag":"\"df897210-689b-48ba-a128-0a6b8662a40a,26\"","id":"df897210-689b-48ba-a128-0a6b8662a40a","name":"OpenProject","drive@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)(''df897210-689b-48ba-a128-0a6b8662a40a'')/drive/$entity","drive":{"createdDateTime":"2024-02-02T13:53:33Z","description":"Enabled
+        for automatic management","id":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8Qconfm2i6SKEoCmuGYqQK","lastModifiedDateTime":"2025-06-18T11:42:21Z","name":"OpenProject","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/OpenProject","driveType":"documentLibrary","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"lastModifiedBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"owner":{"group":{"email":"OPTest@ymt6d.onmicrosoft.com","id":"5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb","displayName":"OP
+        Test Owners"}},"quota":{"deleted":1847,"remaining":27487787000926,"state":"normal","total":27487790694400,"used":3691627}}},{"@odata.etag":"\"7a76be3b-077e-41ef-a9d9-1d7f97080cb0,21\"","id":"7a76be3b-077e-41ef-a9d9-1d7f97080cb0","name":"Shared
+        Documents","drive@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)(''7a76be3b-077e-41ef-a9d9-1d7f97080cb0'')/drive/$entity","drive":{"createdDateTime":"2023-12-10T00:27:16Z","description":"","id":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw","lastModifiedDateTime":"2025-08-07T11:35:23Z","name":"Documents","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Shared%20Documents","driveType":"documentLibrary","createdBy":{"user":{"displayName":"System
+        Account"}},"lastModifiedBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"owner":{"group":{"email":"OPTest@ymt6d.onmicrosoft.com","id":"5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb","displayName":"OP
+        Test Owners"}},"quota":{"deleted":1847,"remaining":27487787000926,"state":"normal","total":27487790694400,"used":3691627}}},{"@odata.etag":"\"5cda990f-64f2-4035-9932-21b6d6409a25,4\"","id":"5cda990f-64f2-4035-9932-21b6d6409a25","name":"Selected
+        Permissions","drive@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)(''5cda990f-64f2-4035-9932-21b6d6409a25'')/drive/$entity","drive":{"createdDateTime":"2024-08-12T13:14:43Z","description":"","id":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8Pmdpc8mQ1QJkyIbbWQJol","lastModifiedDateTime":"2024-08-12T16:45:41Z","name":"Selected
+        Permissions","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Selected%20Permissions","driveType":"documentLibrary","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"lastModifiedBy":{"user":{"email":"op.owner@ymt6d.onmicrosoft.com","id":"ddbce65c-65fd-42a9-be30-253e244c3f36","displayName":"OP
+        Owner"}},"owner":{"group":{"email":"OPTest@ymt6d.onmicrosoft.com","id":"5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb","displayName":"OP
+        Test Owners"}},"quota":{"deleted":1847,"remaining":27487787000926,"state":"normal","total":27487790694400,"used":3691627}}},{"@odata.etag":"\"f5a7a0d8-fb24-48d8-9785-46ccb1e3317f,22\"","id":"f5a7a0d8-fb24-48d8-9785-46ccb1e3317f","name":"Chris
+        document library","drive@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)(''f5a7a0d8-fb24-48d8-9785-46ccb1e3317f'')/drive/$entity","drive":{"createdDateTime":"2024-02-13T15:38:57Z","description":"For
+        testing","id":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY_YoKf1JPvYSJeFRsyx4zF_","lastModifiedDateTime":"2024-05-21T12:58:12Z","name":"Chris
+        document library","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Chris%20document%20library","driveType":"documentLibrary","createdBy":{"user":{"email":"cbliard@ymt6d.onmicrosoft.com","id":"5bbaa900-f913-41c9-9593-c3d03a14684b","displayName":"Christophe
+        Bliard"}},"owner":{"group":{"email":"OPTest@ymt6d.onmicrosoft.com","id":"5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb","displayName":"OP
+        Test Owners"}},"quota":{"deleted":1847,"remaining":27487787000926,"state":"normal","total":27487790694400,"used":3691627}}},{"@odata.etag":"\"87d67c02-fdaf-4504-8b39-920984585ad7,4\"","id":"87d67c02-fdaf-4504-8b39-920984585ad7","name":"Marcello
+        AMPF","drive@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)(''87d67c02-fdaf-4504-8b39-920984585ad7'')/drive/$entity","drive":{"createdDateTime":"2025-04-07T12:03:17Z","description":"","id":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8CfNaHr_0ERYs5kgmEWFrX","lastModifiedDateTime":"2025-04-09T16:01:59Z","name":"Marcello
+        (AMPF)","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Marcello%20AMPF","driveType":"documentLibrary","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"lastModifiedBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"owner":{"group":{"email":"OPTest@ymt6d.onmicrosoft.com","id":"5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb","displayName":"OP
+        Test Owners"}},"quota":{"deleted":1847,"remaining":27487787000926,"state":"normal","total":27487790694400,"used":3691627}}},{"@odata.etag":"\"587ba428-c078-4d0d-a857-952e781601e7,6\"","id":"587ba428-c078-4d0d-a857-952e781601e7","name":"Dominic","drive@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)(''587ba428-c078-4d0d-a857-952e781601e7'')/drive/$entity","drive":{"createdDateTime":"2024-07-05T09:54:25Z","description":"","id":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY8opHtYeMANTahXlS54FgHn","lastModifiedDateTime":"2024-07-19T07:48:01Z","name":"Dominic","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Dominic","driveType":"documentLibrary","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"owner":{"group":{"email":"OPTest@ymt6d.onmicrosoft.com","id":"5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb","displayName":"OP
+        Test Owners"}},"quota":{"deleted":1847,"remaining":27487787000926,"state":"normal","total":27487790694400,"used":3691627}}},{"@odata.etag":"\"6b0e0177-f280-47a8-bb4c-c29b29823f79,25\"","id":"6b0e0177-f280-47a8-bb4c-c29b29823f79","name":"Markus","drive@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)(''6b0e0177-f280-47a8-bb4c-c29b29823f79'')/drive/$entity","drive":{"createdDateTime":"2024-05-13T14:53:56Z","description":"","id":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY93AQ5rgPKoR7tMwpspgj95","lastModifiedDateTime":"2025-05-19T13:28:22Z","name":"Markus","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Markus","driveType":"documentLibrary","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"lastModifiedBy":{"user":{"email":"op.owner@ymt6d.onmicrosoft.com","id":"ddbce65c-65fd-42a9-be30-253e244c3f36","displayName":"OP
+        Owner"}},"owner":{"group":{"email":"OPTest@ymt6d.onmicrosoft.com","id":"5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb","displayName":"OP
+        Test Owners"}},"quota":{"deleted":1847,"remaining":27487787000926,"state":"normal","total":27487790694400,"used":3691627}}},{"@odata.etag":"\"5ea9a363-3a24-4fab-b9ae-cef9a25a3156,20\"","id":"5ea9a363-3a24-4fab-b9ae-cef9a25a3156","name":"Marcello
+        VCR","drive@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(microsoft.graph.list)(''5ea9a363-3a24-4fab-b9ae-cef9a25a3156'')/drive/$entity","drive":{"createdDateTime":"2025-04-07T12:02:17Z","description":"","id":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY9jo6leJDqrT7muzvmiWjFW","lastModifiedDateTime":"2025-08-05T16:12:54Z","name":"Marcello
+        (VCR)","webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Marcello%20VCR","driveType":"documentLibrary","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"lastModifiedBy":{"user":{"email":"op.member@ymt6d.onmicrosoft.com","id":"a9023fd0-c421-4695-b83c-bb3ba67708d6","displayName":"OP
+        Member"}},"owner":{"group":{"email":"OPTest@ymt6d.onmicrosoft.com","id":"5dfb4269-d3e3-4c70-83f5-c4937ff6dcdb","displayName":"OP
+        Test Owners"}},"quota":{"deleted":1847,"remaining":27487787000926,"state":"normal","total":27487790694400,"used":3691627}}},{"@odata.etag":"\"da53472d-ec9c-4fb1-b021-d89d3748c8a1,0\"","id":"da53472d-ec9c-4fb1-b021-d89d3748c8a1","name":"wte"},{"@odata.etag":"\"834449c8-dc24-44e0-a59a-e94f9128801c,8\"","id":"834449c8-dc24-44e0-a59a-e94f9128801c","name":"Access
+        Requests"}]}'
+  recorded_at: Fri, 08 Aug 2025 09:56:07 GMT
+recorded_with: VCR 6.3.1

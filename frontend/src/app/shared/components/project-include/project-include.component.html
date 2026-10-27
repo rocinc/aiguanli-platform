@@ -1,0 +1,110 @@
+<spot-drop-modal
+  [opened]="opened"
+  (closed)="opened = false"
+  class="op-project-list-modal"
+  >
+  <button
+    slot="trigger"
+    type="button"
+    class="button button_flex op-project-include--button"
+    (click)="toggleOpen()"
+    [title]="text.toggle_title"
+    data-test-selector="project-include-button"
+    >
+    {{ text.toggle_title }}
+    @if ((numberOfProjectsInFilter$ | async); as count) {
+      <span
+        class="badge"
+        [textContent]="count"
+        >
+      </span>
+    }
+    <svg triangle-down-icon size="small"/>
+  </button>
+
+  <ng-container slot="body">
+    <div class="op-project-list-modal--header op-project-include--header">
+      <h1 class="op-project-list-modal--title">{{ text.title }}</h1>
+      <spot-toggle [options]="displayModeOptions"
+        [(ngModel)]="displayMode"
+       />
+    </div>
+    @if (projects$ | async; as projects) {
+      <form
+        (submit)="onSubmit($event)"
+        class="spot-container op-project-list-modal--body"
+        data-searchable-list-parent="true"
+        >
+        <spot-text-field
+          [placeholder]="text.search_placeholder"
+          name="project-include-search"
+          [(ngModel)]="searchableProjectListService.searchText"
+          [ngModelOptions]="{standalone: true}"
+          data-test-selector="project-include-search"
+          data-list-focus-catcher-container="true"
+          data-modal-focus-catcher-container="true"
+          (keydown)="searchableProjectListService.onKeydown($event, projects)"
+          (inputFocus)="textFieldFocused = true"
+          (inputBlur)="textFieldFocused = false"
+          >
+          <svg search-icon slot="before" size="small" />
+        </spot-text-field>
+        @if ((loading$ | async) === false) {
+          @if (projects.length > 0) {
+            <ul
+              class="op-project-include--list"
+              [ngClass]="{ 'spot-list_active': textFieldFocused }"
+              op-project-include-list
+              [projects]="projects"
+              [selected]="selectedProjects"
+              [includeSubprojects]="includeSubprojects$ | async"
+              [searchText]="searchableProjectListService.searchText"
+              [root]="true"
+              [queryWorkspaceHref]="queryWorkspaceHref"
+              (update)="selectedProjects = $event"
+              data-test-selector="project-include-list"
+              data-list-root="true"
+            ></ul>
+          } @else {
+            <span class="op-project-list-modal--no-results">
+              {{text.no_results}}
+            </span>
+          }
+        } @else {
+          <op-loading-project-list class="op-project-list-modal--loading"
+            data-test-selector="op-project-include--loading"
+           />
+        }
+        <div class="spot-action-bar">
+          <div class="spot-action-bar--left">
+            <!-- eslint-disable-next-line @angular-eslint/template/label-has-associated-control -->
+            <label class="op-project-include--include-all spot-action-bar--action">
+              <spot-checkbox [(ngModel)]="includeSubprojects"
+                [ngModelOptions]="{standalone: true}"
+                data-qa-project-include-all-subprojects="1"
+               />
+              <span class="op-project-include--include-all-text">{{ text.include_subprojects }}</span>
+            </label>
+          </div>
+          <div class="spot-action-bar--right">
+            <button
+              [disabled]="(loading$ | async)"
+              class="button spot-action-bar--action"
+              type="button"
+              (click)="clearSelection()"
+              >
+              {{ text.clear_selection }}
+            </button>
+            <button
+              [disabled]="(loading$ | async)"
+              class="button -primary spot-action-bar--action"
+              >
+              {{ text.apply }}
+            </button>
+          </div>
+        </div>
+      </form>
+    }
+  </ng-container>
+
+</spot-drop-modal>

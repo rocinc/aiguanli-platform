@@ -1,0 +1,61 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<div class="assistant-desk-watching" data-test-selector="assistant-desk-watching">
+  <section class="assistant-desk-watching--column" aria-labelledby="assistant-desk-looking">
+    <h2 id="assistant-desk-looking" class="assistant-section--title"><%= t("assistant.desk.watching.looking") %></h2>
+    <% if watching.empty? %>
+      <p class="assistant-desk--quiet"><%= quiet("assistant.desk.watching.looking_none", first_week: nothing_yet?) %></p>
+    <% else %>
+      <ul class="assistant-desk-watching--list">
+        <% watching.each do |row| %>
+          <li><%= row.url ? link_to(row.text, row.url, data: { turbo_frame: "_top" }) : row.text %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </section>
+
+  <section id="assistant-desk-promises" class="assistant-desk-watching--column" aria-labelledby="assistant-desk-agreements">
+    <h2 id="assistant-desk-agreements" class="assistant-section--title"><%= t("assistant.desk.watching.agreements") %></h2>
+    <% if agreements? %>
+      <% agreement_groups.each do |key, list| %>
+        <% next if list.empty? %>
+        <h3 class="assistant-desk-watching--subhead"><%= t("assistant.desk.agreements.#{key}") %></h3>
+        <ul class="assistant-desk-watching--list">
+          <% list.each do |promise| %>
+            <li>
+              <span><%= promise.who %></span>
+              <%= promise.url ? link_to(promise.title, promise.url, data: { turbo_frame: "_top" }) : promise.title %>
+              <% if promise.ref %><span class="assistant-desk--muted"><%= promise.ref %></span><% end %>
+              <% if promise.date %><span class="assistant-desk--muted">· <%= promise.date %></span><% end %>
+              <% if promise.hint %><span class="assistant-desk--muted">· <%= promise.hint %></span><% end %>
+              <%= render(Assistant::IntentVerbsComponent.new(intent: promise.intent, user:)) %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    <% else %>
+      <p class="assistant-desk--quiet"><%= t("assistant.desk.watching.agreements_none") %></p>
+    <% end %>
+  </section>
+
+  <section class="assistant-desk-watching--column" aria-labelledby="assistant-desk-done" data-test-selector="assistant-desk-done">
+    <h2 id="assistant-desk-done" class="assistant-section--title"><%= t("assistant.desk.watching.done") %></h2>
+    <% if done.empty? %>
+      <p class="assistant-desk--quiet"><%= t("assistant.desk.watching.done_none") %></p>
+    <% else %>
+      <ul class="assistant-desk-watching--list">
+        <% done.each do |action| %>
+          <li><%= render(Assistant::ReceiptComponent.new(action:, user:)) %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </section>
+</div>

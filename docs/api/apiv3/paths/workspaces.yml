@@ -1,0 +1,95 @@
+# /api/v3/workspaces
+---
+get:
+  summary: List workspace
+  operationId: list_workspace
+  tags:
+    - Workspace
+  description: Returns a collection of workspaces. The collection can be filtered via
+    query parameters similar to how work packages are filtered. In addition to the
+    provided filter, the result set is always limited to only contain workspaces the
+    client is allowed to see.
+
+    Since workspaces are the generic term for a number of resources like projects and portfolios, the returned
+    collection will contain a mix of those resources.
+  parameters:
+    - name: filters
+      schema:
+        type: string
+      in: query
+      required: false
+      description: |-
+        JSON specifying filter conditions.
+        Accepts the same format as returned by the [queries](https://www.openproject.org/docs/api/endpoints/queries/) endpoint.
+        Currently supported filters are:
+
+        + active: based on the active property of the workspace
+        + ancestor: filters workspace by their ancestor. A workspace is not considered to be its own ancestor.
+        + available_project_attributes: filters workspace based on the activated project attributes.
+        + created_at: based on the time the workspace was created
+        + favorited: based on the favorited property of the workspace
+        + id: based on workspace' id.
+        + latest_activity_at: based on the time the last activity was registered on a workspace.
+        + name_and_identifier: based on both the name and the identifier.
+        + parent_id: filters workspace by their parent.
+        + principal: based on members of the workspace.
+        + project_phase_any: based on the project phases active in a workspace.
+        + project_status_code: based on status code of the workspace
+        + storage_id: filters workspace by linked storages
+        + storage_url: filters workspace by linked storages identified by the host url
+        + type_id: based on the types active in a workspace.
+        + user_action: based on the actions the current user has in the workspace.
+        + visible: based on the visibility for the user (id) provided as the filter value. This filter is useful for admins to identify the workspace visible to a user.
+
+        There might also be additional filters based on the custom fields that have been configured.
+
+        Each defined lifecycle step will also define a filter in this list endpoint. Given that the elements are not
+        static but rather dynamically created on each OpenProject instance, a list cannot be provided. Those filters follow the schema:
+        + project_start_gate_[id]: a filter on a project phase's start gate active in a workspace. The id is the id of the phase the gate belongs to.
+        + project_finish_gate_[id]: a filter on a project phase's finish gate active in a workspace. The id is the id of the phase the gate belongs to.
+        + project_phase_[id]: a filter on a project phase active in a workspace. The id is the id of the phase queried for.
+      example: '[{ "ancestor": { "operator": "=", "values": ["1"] } }]'
+    - name: sortBy
+      schema:
+        type: string
+      in: query
+      required: false
+      description: |-
+        JSON specifying sort criteria.
+        Currently supported orders are:
+
+        + id
+        + name
+        + typeahead (sorting by hierarchy and name)
+        + created_at
+        + public
+        + latest_activity_at
+        + required_disk_space
+
+        There might also be additional orders based on the custom fields that have been configured.
+      example: '[["id", "asc"]]'
+    - name: select
+      schema:
+        type: string
+      in: query
+      required: false
+      description: |-
+        Comma separated list of properties to include.
+      example: 'total,elements/identifier,elements/name'
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/workspace_collection_model.yml'
+    '400':
+      description: Returned if the client sends invalid request parameters e.g. filters
+      content:
+        application/hal+json:
+          schema:
+            $ref: '../components/schemas/error_response.yml'
+          example:
+            _type: Error
+            errorIdentifier: urn:openproject-org:api:v3:errors:InvalidQuery
+            message: Filters Invalid filter does not exist.

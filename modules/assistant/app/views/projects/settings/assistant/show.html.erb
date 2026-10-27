@@ -1,0 +1,131 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<% levels = ::Assistant::Preference::LEVELS %>
+<% caps = ::Assistant::Preference::CAPS %>
+<% level_names = ->(level) { t("assistant.project_settings.levels.#{level}") } %>
+
+<%=
+  render(Primer::OpenProject::PageHeader.new) do |header|
+    header.with_title { t("assistant.project_settings.title") }
+    header.with_description { t("assistant.project_settings.lede") }
+    header.with_breadcrumbs(
+      [{ href: project_overview_path(@project), text: @project.name },
+       { href: project_settings_general_path(@project), text: t(:label_project_settings) },
+       t("assistant.project_settings.title")]
+    )
+  end
+%>
+
+<%= form_with(url: project_settings_assistant_path(@project), method: :patch, data: { test_selector: "assistant-project-settings-form" }) do %>
+  <%= render(Primer::Beta::Subhead.new) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.project_settings.level.heading") } } %>
+  <p class="color-fg-muted"><%= t("assistant.project_settings.level.effect") %></p>
+  <div class="FormControl-radio-group-wrap" role="radiogroup" aria-label="<%= t('assistant.project_settings.level.heading') %>">
+    <% [nil, *levels].each do |level| %>
+      <div class="FormControl-radio-wrap">
+        <%= radio_button_tag(:level, level.to_s, @settings.preference.proactivity == level, class: "FormControl-radio",
+                                                                                          id: "assistant-project-level-#{level || 'follow'}") %>
+        <div class="FormControl-radio-labelWrap">
+          <label class="FormControl-label" for="assistant-project-level-<%= level || 'follow' %>">
+            <%= level ? level_names.(level) : t("assistant.project_settings.level.follow", site: level_names.(Setting.assistant_default_proactivity.presence_in(levels) || "standard")) %>
+          </label>
+          <% if level %>
+            <span class="FormControl-caption"><%= t("assistant.settings.level.captions.#{level}", count: caps.fetch(level)) %></span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @settings.roles.any? %>
+    <%= render(Primer::Beta::Subhead.new(mt: 4)) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.project_settings.roles.heading") } } %>
+    <p class="color-fg-muted"><%= t("assistant.project_settings.roles.effect") %></p>
+    <%= render(Primer::Beta::BorderBox.new(mb: 3)) do |box| %>
+      <% @settings.roles.each do |role| %>
+        <% box.with_row(display: :flex, justify_content: :space_between, align_items: :center) do %>
+          <label for="assistant-role-level-<%= role.id %>"><%= role.name %></label>
+          <%= select_tag("role_levels[#{role.id}]",
+                         options_for_select([[t("assistant.project_settings.roles.follow"), ""],
+                                             *levels.map { [level_names.(it), it] }], @settings.role_level(role)),
+                         class: "FormControl-select", id: "assistant-role-level-#{role.id}") %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render(Primer::Beta::Subhead.new(mt: 4)) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.project_settings.rules.heading") } } %>
+  <p class="color-fg-muted"><%= t("assistant.project_settings.rules.effect") %></p>
+  <%= hidden_field_tag("rules[]", "", id: nil) %>
+  <%= render(Primer::Beta::BorderBox.new(mb: 3)) do |box| %>
+    <% @settings.rules.each do |rule| %>
+      <% box.with_row do %>
+        <div class="FormControl-checkbox-wrap">
+          <%= check_box_tag("rules[]", rule, @settings.enabled?(rule), class: "FormControl-checkbox", id: "assistant-rule-#{rule}") %>
+          <div class="FormControl-checkbox-labelWrap">
+            <label class="FormControl-label" for="assistant-rule-<%= rule %>"><%= ::Assistant::MySettings.rule_title(rule) %></label>
+            <span class="FormControl-caption"><%= t("assistant.insights.detectors.#{rule}.what", default: "") %></span>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render(Primer::Beta::Subhead.new(mt: 4)) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.project_settings.leads.heading") } } %>
+  <p class="color-fg-muted"><%= t("assistant.project_settings.leads.effect") %></p>
+  <%= hidden_field_tag("lead_ids[]", "", id: nil) %>
+  <div class="border rounded-2 p-2 mb-3 assistant-settings--members">
+    <% @settings.members.each do |member| %>
+      <div class="FormControl-checkbox-wrap">
+        <%= check_box_tag("lead_ids[]", member.id, @settings.leads.include?(member.id), class: "FormControl-checkbox", id: "assistant-lead-#{member.id}") %>
+        <div class="FormControl-checkbox-labelWrap">
+          <label class="FormControl-label" for="assistant-lead-<%= member.id %>"><%= member.name %></label>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= render(Primer::Beta::Subhead.new(mt: 4)) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.project_settings.duties.heading") } } %>
+  <p class="color-fg-muted"><%= t("assistant.project_settings.duties.effect") %></p>
+  <%= hidden_field_tag("duties[]", "", id: nil) %>
+  <%= render(Primer::Beta::BorderBox.new(mb: 3)) do |box| %>
+    <% @settings.duty_kinds.each do |kind| %>
+      <% box.with_row do %>
+        <div class="FormControl-checkbox-wrap">
+          <%= check_box_tag("duties[]", kind, @settings.duty_allowed?(kind), class: "FormControl-checkbox", id: "assistant-duty-#{kind}") %>
+          <div class="FormControl-checkbox-labelWrap">
+            <label class="FormControl-label" for="assistant-duty-<%= kind %>">
+              <%= t("assistant.duties.kinds.#{kind}.title", default: kind.humanize) %>
+            </label>
+            <span class="FormControl-caption">
+              <%= t("assistant.duties_page.kinds.#{kind}.does", default: "") %>
+              <%= t("assistant.project_settings.duties.in_use") if @settings.in_use?(kind) %>
+            </span>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render(Primer::Beta::Subhead.new(mt: 4)) { |c| c.with_heading(tag: :h2, size: :medium) { t("assistant.project_settings.budget.heading") } } %>
+  <p class="color-fg-muted">
+    <%= t("assistant.project_settings.budget.effect", site: number_with_delimiter(Setting.assistant_monthly_token_budget.to_i, delimiter: ","),
+                                                       used: number_with_delimiter(@settings.tokens_used, delimiter: ",")) %>
+  </p>
+  <%= number_field_tag(:token_cap, @settings.token_cap.nonzero?, min: 0, step: 100_000, class: "FormControl-input FormControl-medium",
+                                                                  "aria-label": t("assistant.project_settings.budget.heading"),
+                                                                  placeholder: t("assistant.project_settings.budget.none")) %>
+
+  <div class="mt-4 d-flex flex-items-center">
+    <%= render(Primer::Beta::Button.new(type: :submit, scheme: :primary)) { t("assistant.settings.save") } %>
+    <% if flash[:assistant_saved] %>
+      <span class="color-fg-muted ml-3" role="status" data-test-selector="assistant-settings-note"><%= t("assistant.settings.saved") %></span>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,24 @@
+zh-CN:
+  assistant:
+    writing:
+      errors:
+        unavailable: "语言模型没有响应，没有写出内容。你的原文没有改动，几分钟后再试一次。"
+    admin:
+      test:
+        button: "测试连接"
+        running: "正在测试…"
+        ok: "连得通，模型：%{model}，用时 %{seconds} 秒"
+        failed: "没连上：%{reason}"
+        no_address: "还没有填模型地址。"
+        no_key: "没有设置密钥（环境变量 ASSISTANT_LLM_API_KEY）。"
+        no_model: "还没有填模型名。"
+        bad_address: "模型地址不是有效的网址。"
+        timeout: "%{seconds} 秒内没有回应。"
+        unreachable: "地址不通：%{host}（%{detail}）。"
+        ssl: "安全连接建立失败（%{detail}）。"
+        denied: "密钥被拒绝（HTTP %{status}）。"
+        limited: "请求太频繁，或额度已用完（HTTP %{status}）。"
+        server: "模型服务那边出错了（HTTP %{status}）。"
+        no_such_model: "模型名不存在：%{model}（HTTP %{status}）。"
+        not_found: "找不到这个地址（HTTP %{status}），请检查地址是否以 /v1 之类结尾。"
+        other: "服务返回 HTTP %{status}：%{detail}"

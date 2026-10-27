@@ -1,0 +1,46 @@
+<ng-select [(ngModel)]="selectedOption"
+  [ngClass]="'inline-edit--field -multi-select'"
+  [required]="required"
+  [clearable]="!required"
+  [disabled]="inFlight"
+  [id]="handler.htmlId"
+  [items]="availableOptions"
+  bindLabel="name"
+  [virtualScroll]="true"
+  [clearSearchOnAdd]="true"
+  (keydown)="handler.handleUserKeydown($event, true)"
+  (open)="onOpen()"
+  (close)="onClose()"
+  (add)="repositionDropdown()"
+  (remove)="repositionDropdown()"
+  [multiple]="true"
+  [closeOnSelect]="false"
+  [appendTo]="appendTo"
+  [groupBy]="groupByFn"
+  [dropdownPosition]="'top'"
+  [hideSelected]="true">
+  <ng-template ng-option-tmp let-item="item">
+    <span
+      class="ng-option-label ellipsis"
+      [attr.data-hover-card-trigger-target]="getHoverCardTriggerTarget()"
+      [attr.data-hover-card-url]="getHoverCardUrl(item)"
+      [textContent]="item.name"
+      [ngStyle]="{'padding-left.px': item.depth * 16}"
+    ></span>
+  </ng-template>
+  @if (showAddNewUserButton) {
+    <ng-template ng-footer-tmp>
+      <op-invite-user-button [projectId]="$safeNavigationMigration(resource.project?.id)"
+        (invited)="selectedOption = $event"
+       />
+    </ng-template>
+  }
+</ng-select>
+
+@if (!handler.inEditMode) {
+  <edit-field-controls [fieldController]="self"
+    (onSave)="handler.handleUserSubmit()"
+    (onCancel)="handler.handleUserCancel()"
+    [saveTitle]="text.save"
+    [cancelTitle]="text.cancel" />
+}

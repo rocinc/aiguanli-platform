@@ -1,0 +1,228 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+.assistant-notice
+  display: block
+  padding: var(--base-size-8) var(--base-size-12)
+  border: var(--borderWidth-thin) solid var(--borderColor-default)
+  border-radius: var(--borderRadius-medium)
+  background: var(--bgColor-muted)
+
+  &--line,
+  &--aside
+    padding: var(--base-size-4) var(--base-size-8)
+
+  &--row
+    display: flex
+    align-items: baseline
+    gap: var(--base-size-8)
+
+    .octicon
+      flex-shrink: 0
+      align-self: flex-start
+      margin-top: var(--base-size-4)
+
+  &--summary
+    cursor: pointer
+    list-style: none
+    flex-wrap: wrap
+
+    &::-webkit-details-marker
+      display: none
+
+  &--body
+    flex: 1
+    min-width: 12rem
+
+  &--headline
+    margin: 0
+    color: var(--fgColor-default)
+    font-size: var(--text-body-size-medium)
+    font-weight: var(--base-text-weight-normal)
+    line-height: var(--text-body-lineHeight-medium)
+    overflow-wrap: anywhere
+
+  &--guess
+    color: var(--fgColor-default)
+
+  &--toggle
+    margin-left: auto
+    color: var(--fgColor-muted)
+
+  &--fold[open] > &--summary &--chevron,
+  &--basis[open] > &--basis-summary &--chevron
+    transform: rotate(90deg)
+
+  &--main
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+    margin: var(--base-size-8) 0 0 var(--base-size-24)
+
+  &--basis
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--basis-summary
+    cursor: pointer
+    list-style: none
+
+    &::-webkit-details-marker
+      display: none
+
+  &--basis-list
+    margin: var(--base-size-4) 0 0
+    padding-left: var(--base-size-20)
+
+  &--basis-kind
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+    border: var(--borderWidth-thin) solid var(--borderColor-muted)
+    border-radius: var(--borderRadius-small)
+    padding: 0 var(--base-size-4)
+    margin-right: var(--base-size-4)
+
+  &--options
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: var(--base-size-8)
+
+  &--confirm
+    flex-basis: 100%
+
+    > summary
+      display: inline-flex
+      cursor: pointer
+      list-style: none
+
+      &::-webkit-details-marker
+        display: none
+
+    &[open] > summary
+      margin-bottom: var(--base-size-8)
+
+  &--option-text
+    color: var(--fgColor-default)
+    font-size: var(--text-body-size-small)
+
+  &--foot
+    display: flex
+    flex-wrap: wrap
+    align-items: baseline
+    justify-content: space-between
+    gap: var(--base-size-8)
+
+  &--why
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--controls
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: var(--base-size-4)
+
+  &--menu
+    display: inline-block
+
+    &[open]
+      flex-basis: 100%
+
+    > summary
+      display: inline-flex
+      cursor: pointer
+      list-style: none
+      color: var(--fgColor-muted)
+
+      &::-webkit-details-marker
+        display: none
+
+  &--menu-items,
+  &--choices
+    display: flex
+    flex-wrap: wrap
+    gap: var(--base-size-4)
+    margin-top: var(--base-size-4)
+
+  &--reply
+    display: flex
+    align-items: baseline
+    gap: var(--base-size-8)
+    margin: 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--reply-text
+    margin: 0
+    color: var(--fgColor-muted)
+
+  &--fading
+    animation: assistant-notice-fade 200ms ease-out 6s forwards
+
+  &--stale
+    display: flex
+    align-items: baseline
+    gap: var(--base-size-8)
+    margin: 0
+    border-style: dashed
+    background: none
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--handled span
+    text-decoration: line-through
+
+  &--told
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-4)
+
+  &--told-text
+    margin: 0
+    white-space: pre-line
+
+  &--told-yours
+    margin: 0
+    padding-left: var(--base-size-20)
+
+  &--pairs
+    display: flex
+    flex-direction: column
+    gap: var(--base-size-8)
+    margin: 0
+    padding: 0
+    list-style: none
+
+  &--pair
+    display: grid
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr))
+    gap: var(--base-size-8)
+
+  &--pair-side
+    margin: 0
+    padding: var(--base-size-8)
+    border-left: var(--borderWidth-thick) solid var(--borderColor-muted)
+    background: var(--bgColor-default)
+    border-radius: var(--borderRadius-small)
+    font-size: var(--text-body-size-small)
+
+  &--settled
+    padding-top: var(--base-size-4)
+    padding-bottom: var(--base-size-4)
+
+@keyframes assistant-notice-fade
+  to
+    opacity: 0
+    max-height: 0
+    margin: 0
+    overflow: hidden
+
+@media (prefers-reduced-motion: reduce)
+  .assistant-notice--fading
+    animation-duration: 1ms

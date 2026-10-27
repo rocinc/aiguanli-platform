@@ -1,0 +1,11 @@
+---
+ro:
+  js:
+    avatars:
+      empty_file_error: Te rog să încarci o imagine validă (jpg, png, gif)
+      error_image_too_large: Imaginea este prea mare.
+      label_choose_avatar: Alege Avatar din fișier
+      uploading_avatar: Se încarcă avatarul tău.
+      wrong_file_format: Formatele permise sunt jpg, png, gif
+    button_update: Actualizează
+    label_preview: Previzualizează

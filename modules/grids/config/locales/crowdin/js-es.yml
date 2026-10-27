@@ -1,0 +1,74 @@
+---
+es:
+  js:
+    grid:
+      add_widget: Agregar widget
+      configure: Configurar widget
+      remove: Quitar widget
+      widget_menu_label: Mostrar opciones de menú para el widget %{widgetName}
+      widgets:
+        custom_text:
+          title: Texto personalizado
+        documents:
+          no_results: No hay documentos.
+          title: Documentos
+        members:
+          title: Miembros
+        missing_permission: No tiene los permisos necesarios para ver este widget.
+        news:
+          title: Noticias
+        not_available: Este widget no está disponible actualmente.
+        project_description:
+          title: Descripción
+        project_favorites:
+          no_results: Actualmente no tienes proyectos favoritos. Añada uno o varios proyectos como favoritos a través del resumen del proyecto o en una lista de proyectos.
+          title: Proyectos favoritos
+        project_status:
+          at_risk: En riesgo
+          discontinued: Discontinuado
+          finished: Terminado
+          not_set: No establecido
+          not_started: No empezado
+          off_track: Fuera de lo previsto
+          on_track: Según lo previsto
+          title: Estado
+        project_timeline:
+          accessible_date_range: "%{start} hasta %{end}"
+          accessible_gate: 'Puerta de fase %{name}: %{date}'
+          accessible_milestone: 'Milestone %{name}: %{date}'
+          accessible_phase: 'Fase %{name}: %{date}'
+          accessible_sprint: 'Sprint %{name}: %{date}. Status: %{status}'
+          sprint_status:
+            active: Active
+            completed: Completed
+            in_planning: In planning
+          tooltip_type_gate: Hito de fase
+          tooltip_type_milestone: Hito
+          tooltip_type_phase: Fase
+          tooltip_type_sprint: Sprint
+        subprojects:
+          title: Subelementos
+        time_entries_current_user:
+          displayed_days: 'Días mostrados en el widget:'
+          title: Mi tiempo invertido
+        time_entries_list:
+          no_results: Sin registros temporales en los últimos 7 días.
+          title: Tiempo invertido (últimos 7 días)
+        work_packages_accountable:
+          title: Paquetes de trabajo de los que soy responsable
+        work_packages_assigned:
+          title: Paquetes de trabajo asignados a mí
+        work_packages_calendar:
+          title: Calendario
+        work_packages_created:
+          title: Paquetes de trabajo creados por mí
+        work_packages_graph:
+          summary: Diagrama %{chartType} que muestra los paquetes de trabajo que son %{description}.
+          title: Gráfico de paquetes de trabajo
+        work_packages_overview:
+          placeholder: Haga clic para editar…
+          title: Información general sobre paquete de trabajo
+        work_packages_table:
+          title: Tabla de paquetes de trabajo
+        work_packages_watched:
+          title: Paquetes de trabajo vigilados por mí

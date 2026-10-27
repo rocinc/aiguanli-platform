@@ -1,0 +1,44 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+.assistant-reading
+  &--line
+    display: inline-flex
+    align-items: center
+    gap: var(--base-size-8)
+    margin: var(--base-size-4) 0 0
+    color: var(--fgColor-muted)
+    font-size: var(--text-body-size-small)
+
+  &--pulse
+    position: relative
+    width: var(--base-size-8)
+    height: var(--base-size-8)
+    border-radius: 50%
+    background: var(--fgColor-accent)
+    animation: assistant-reading-pulse 1.6s ease-in-out infinite
+
+  &--fade
+    transition: opacity 600ms ease-out
+
+  &--gone
+    opacity: 0
+
+@keyframes assistant-reading-pulse
+  0%, 100%
+    opacity: 0.35
+    transform: scale(0.85)
+  50%
+    opacity: 1
+    transform: scale(1)
+
+@media (prefers-reduced-motion: reduce)
+  .assistant-reading--pulse
+    animation: none
+    opacity: 0.7
+  .assistant-reading--fade
+    transition: none

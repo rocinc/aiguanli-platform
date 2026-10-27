@@ -1,0 +1,72 @@
+<div [attr.id]="locals.contextMenuId"
+  class="dropdown-relative dropdown -overflow-in-view"
+  ng-class="{'dropdown-anchor-right': locals.showAnchorRight}">
+  <ul class="dropdown-menu "
+    role="menu"
+    [attr.aria-label]="locals.label"
+    [ngClass]="{'-empty': items.length === 0 }">
+    @for (item of items; track (item.href || item.linkText || item.ariaLabel || item.title || 'item') + ':' + $index) {
+      @if (item.isHeader) {
+        <li role="none">
+          <span
+            role="presentation"
+            [attr.aria-hidden]="true"
+            [textContent]="item.linkText"
+            class="op-menu--headline">
+          </span>
+        </li>
+      }
+      @if (item.divider) {
+        <li class="dropdown-divider" role="separator"></li>
+      }
+      @if (!item.divider && !item.isHeader) {
+        <li>
+          @if (item.href) {
+            <a
+              class="menu-item"
+              role="menuitem"
+              [ngClass]="item.class"
+              [class.inactive]="item.disabled"
+              [attr.href]="item.href"
+              data-turbo="false"
+              [attr.aria-disabled]="item.disabled"
+              [attr.aria-label]="item.ariaLabel || item.linkText"
+              [attr.title]="item.title || undefined"
+              (click)="handleClick(item, $event)"
+              >
+              @if (item.icon) {
+                <op-icon icon-classes="icon-action-menu {{ item.icon }}" />
+              }
+              <span [textContent]="item.linkText"></span>
+              @if (item.postIcon) {
+                <op-icon [icon-title]="item.postIconTitle || ''"
+                icon-classes="icon-action-menu-post {{ item.postIcon }}" />
+              }
+            </a>
+          }
+          @if (!item.href) {
+            <button
+              class="menu-item"
+              role="menuitem"
+              [ngClass]="item.class"
+              [class.inactive]="item.disabled"
+              [attr.aria-disabled]="item.disabled"
+              [attr.aria-label]="item.ariaLabel || item.linkText"
+              [attr.title]="item.title || undefined"
+              (click)="handleClick(item, $event)"
+              >
+              @if (item.icon) {
+                <op-icon icon-classes="icon-action-menu {{ item.icon }}" />
+              }
+              <span [textContent]="item.linkText"></span>
+              @if (item.postIcon) {
+                <op-icon [icon-title]="item.postIconTitle || ''"
+                icon-classes="icon-action-menu-post {{ item.postIcon }}" />
+              }
+            </button>
+          }
+        </li>
+      }
+    }
+  </ul>
+</div>

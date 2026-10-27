@@ -1,0 +1,258 @@
+api_docs:
+  href: https://www.openproject.org/docs/api/
+  label: :label_api_doc
+api:
+  authentication_basic_auth:
+    href: https://www.openproject.org/docs/api/introduction/#api-key-through-basic-auth
+blog:
+  href: https://www.openproject.org/blog
+  label: homescreen.links.blog
+blog_article_progress_changes:
+  href: https://www.openproject.org/blog/updates-to-progress-tracking-in-14-4-based-on-user-feedback/
+  label: Significant changes to progress and work estimates
+chargebee:
+  href: https://js.chargebee.com/v2/chargebee.js
+client_credentials_code_flow:
+  href: https://oauth.net/2/grant-types/client-credentials/
+  label: oauth.flows.client_credentials
+configuration_guide:
+  href: https://www.openproject.org/docs/installation-and-operations/configuration/
+  label: links.configuration_guide
+contact:
+  href: https://www.openproject.org/contact/
+  label: links.get_in_touch
+contact_us:
+  href: https://www.openproject.org/contact/
+crowdin:
+  href: https://www.openproject.org/docs/contributions-guide/translate-openproject/
+  label: :label_add_edit_translations
+data_privacy:
+  href: https://www.openproject.org/legal/privacy/
+  label: :label_privacy_policy
+date_format_settings_documentation:
+  href: https://www.openproject.org/docs/system-admin-guide/calendars-and-dates/#date-format
+digital_accessibility:
+  href: https://www.openproject.org/de/rechtliches/erklaerung-zur-digitalen-barrierefreiheit/
+  label: :label_digital_accessibility
+password_login:
+  href: https://www.openproject.org/docs/installation-and-operations/configuration/#password-login
+docker_installation:
+  href: https://www.openproject.org/docs/installation-and-operations/installation/docker/
+  label: Docker installation
+documents_docs:
+  href: https://www.openproject.org/docs/user-guide/documents/
+enterprise_features:
+  board_view:
+    href: https://www.openproject.org/docs/user-guide/agile-boards/#action-boards-enterprise-add-on
+  boards:
+    href: https://www.openproject.org/docs/user-guide/agile-boards/#action-boards-enterprise-add-on
+  custom_field_hierarchies:
+    href: https://www.openproject.org/docs/system-admin-guide/custom-fields/#hierarchy-custom-field-enterprise-add-on
+  custom_field_multiselect:
+    href: https://www.openproject.org/docs/system-admin-guide/custom-fields/#create-a-multi-select-custom-field
+  custom_field_projects:
+    href: https://www.openproject.org/docs/system-admin-guide/custom-fields/#add-a-custom-field-to-one-or-multiple-projects
+  customize_life_cycle:
+    href: https://www.openproject.org/docs/system-admin-guide/projects/project-life-cycle/
+  default:
+    href: https://www.openproject.org/enterprise-edition
+  feature_comparison:
+    href: https://www.openproject.org/pricing/#features
+  form_configuration:
+    href: https://www.openproject.org/docs/system-admin-guide/manage-work-packages/work-package-types/#work-package-form-configuration-enterprise-add-on
+  internal_comments:
+    href: https://www.openproject.org/docs/user-guide/activity/#internal-comments-enterprise-add-on
+  nextcloud_sso:
+    href: https://www.openproject.org/docs/system-admin-guide/integrations/nextcloud/oidc-sso
+  readonly_work_packages:
+    href: https://www.openproject.org/docs/system-admin-guide/manage-work-packages/work-package-status/#create-a-new-work-package-status
+  work_package_subject_generation:
+    href: https://www.openproject.org/docs/system-admin-guide/manage-work-packages/work-package-types/automatic-subjects/
+enterprise_guide:
+  on_premises:
+    activate:
+      href: https://www.openproject.org/docs/enterprise-guide/enterprise-on-premises-guide/activate-enterprise-on-premises/
+enterprise_support:
+  href: https://www.openproject.org/docs/enterprise-guide/support/
+  label: :label_enterprise_support
+enterprise_support_as_community:
+  href: https://www.openproject.org/pricing/#support
+  label: :label_enterprise_support
+enterprise_welcome_video:
+  href: https://openproject-docs.s3.eu-central-1.amazonaws.com/videos/OpenProject-Enterprise-add-ons.mp4
+forums:
+  href: https://community.openproject.org/projects/openproject/forums
+  label: homescreen.links.forums
+get_started_videos:
+  href: https://www.youtube.com/playlist?list=PLGzJ4gG7hPb8WWOWmeXqlfMfhdXReu-RJ
+glossary:
+  href: https://www.openproject.org/docs/glossary/
+  label: homescreen.links.glossary
+github:
+  href: https://github.com/opf/openproject
+hocuspocus_server_docs:
+  href: https://github.com/opf/openproject/tree/dev/extensions/op-blocknote-hocuspocus
+ical_docs:
+  href: https://www.openproject.org/docs/user-guide/calendar/#subscribe-to-a-calendar
+installation_guides:
+  href: https://www.openproject.org/docs/installation-and-operations/installation/
+  label: :label_installation_guides
+integrations:
+  href: https://www.openproject.org/docs/system-admin-guide/integrations/
+ldap_encryption_documentation:
+  href: https://www.rubydoc.info/gems/net-ldap/Net/LDAP#constructor_details
+manual_installation:
+  href: https://www.openproject.org/docs/installation-and-operations/installation/manual/
+  label: Manual installation
+multiple_versions_documentation:
+  href: https://www.openproject.org/docs/system-admin-guide/manage-work-packages/versions-and-categories/#multiple-target-versions
+newsletter:
+  href: https://www.openproject.org/newsletter
+  label: homescreen.links.newsletter
+oauth_applications:
+  href: https://www.openproject.org/docs/system-admin-guide/authentication/oauth-applications/
+security_alerts:
+  href: https://www.openproject.org/security-and-privacy/#mailing-list
+  label: homescreen.links.security_alerts
+oauth_authorization_code_flow:
+  href: https://oauth.net/2/grant-types/authorization-code/
+  label: oauth.flows.authorization_code
+onboarding_video_url:
+  href: https://openproject-docs.s3.eu-central-1.amazonaws.com/videos/Getting_started_with_OpenProject.mp4
+  label: top_menu.getting_started
+openproject_docs:
+  href: https://www.openproject.org/docs/
+origin_mdn_documentation:
+  href: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin
+packager_installation:
+  href: https://www.openproject.org/docs/installation-and-operations/installation/packaged/
+  label: Packaged installation
+postgres_13_upgrade:
+  href: https://www.openproject.org/docs/installation-and-operations/misc/migration-to-postgresql13/
+postgres_17_upgrade:
+  href: https://www.openproject.org/docs/installation-and-operations/misc/migration-to-postgresql17/
+postgres_migration:
+  href: https://www.openproject.org/docs/installation-and-operations/misc/packaged-postgresql-migration/
+  label: :homescreen.links.postgres_migration
+pricing:
+  href: https://www.openproject.org/pricing/
+progress_tracking_docs:
+  href: https://www.openproject.org/docs/user-guide/time-and-costs/progress-tracking/
+release_notes:
+  href: https://www.openproject.org/docs/release-notes/
+  label: :label_release_notes
+release_notes_14_0_1:
+  href: https://www.openproject.org/docs/release-notes/14/14-0-1/
+  label: Release notes for OpenProject 14.0.1
+report_bug:
+  href: https://www.openproject.org/docs/development/report-a-bug/
+  label: :label_report_bug
+roadmap:
+  href: https://www.openproject.org/roadmap/
+  label: :label_development_roadmap
+security_badge_documentation:
+  href: https://www.openproject.org/docs/system-admin-guide/information/#security-badge
+shortcuts:
+  href: https://www.openproject.org/docs/user-guide/keyboard-shortcuts-access-keys/
+  label: homescreen.links.shortcuts
+wiki_docs:
+  health_status:
+    href: https://www.openproject.org/docs/system-admin-guide/wikis/wiki-providers/health-status/
+  xwiki_setup:
+    href: https://www.openproject.org/docs/system-admin-guide/integrations/xwiki/
+storage_docs:
+  health_status:
+    href: https://www.openproject.org/docs/system-admin-guide/files/external-file-storages/health-status/
+  nextcloud_oauth_application:
+    href: https://apps.nextcloud.com/apps/integration_openproject
+  nextcloud_setup:
+    href: https://www.openproject.org/docs/system-admin-guide/integrations/nextcloud/
+  nextcloud_sso:
+    href: https://www.openproject.org/docs/system-admin-guide/integrations/nextcloud/oidc-sso
+  one_drive_drive_id_guide:
+    href: https://www.openproject.org/docs/system-admin-guide/integrations/one-drive/drive-guide/
+  one_drive_oauth_application:
+    href: https://portal.azure.com/
+  one_drive_setup:
+    href: https://www.openproject.org/docs/system-admin-guide/integrations/one-drive/
+  sharepoint_drive_id_guide:
+    href: https://www.openproject.org/docs/system-admin-guide/integrations/one-drive/drive-guide/
+  sharepoint_oauth_application:
+    href: https://portal.azure.com/
+  sharepoint_setup:
+    href: https://www.openproject.org/docs/system-admin-guide/integrations/one-drive/
+  troubleshooting:
+    href: https://www.openproject.org/docs/user-guide/file-management/nextcloud-integration/#possible-errors-and-troubleshooting
+sysadmin_docs:
+  roles_and_permissions:
+    href: https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#roles-and-permissions
+  ldap:
+    href: https://www.openproject.org/docs/system-admin-guide/authentication/ldap-connections/
+  ldap_group_sync:
+    href: https://www.openproject.org/docs/system-admin-guide/authentication/ldap-connections/ldap-group-synchronization/
+  mcp_resources:
+    href: https://www.openproject.org/docs/system-admin-guide/integrations/mcp-server/#resources
+  mcp_tools:
+    href: https://www.openproject.org/docs/system-admin-guide/integrations/mcp-server/#tools
+  oidc:
+    href: https://www.openproject.org/docs/system-admin-guide/authentication/openid-providers/
+  oidc_acr_values:
+    href: https://www.openproject.org/docs/system-admin-guide/authentication/openid-providers/#step-8-claims
+  oidc_claims:
+    href: https://www.openproject.org/docs/system-admin-guide/authentication/openid-providers/#step-8-claims
+  oidc_groups:
+    href: https://www.openproject.org/docs/system-admin-guide/authentication/openid-providers/#step-7-group-mapping
+  project_identifier_visibility:
+    href: https://www.openproject.org/docs/system-admin-guide/users-permissions/roles-permissions/#project-identifier-visibility
+  saml:
+    href: https://www.openproject.org/docs/system-admin-guide/authentication/saml/
+  scim:
+    href: https://www.openproject.org/docs/system-admin-guide/authentication/scim/
+  scim_authentication:
+    href: https://www.openproject.org/docs/system-admin-guide/authentication/scim/#step-3-choose-an-authentication-method
+  scim_jwt_authetication_method:
+    href: https://www.openproject.org/docs/system-admin-guide/authentication/scim/#c-jwt-from-identity-provider
+  ssrf_protection:
+    href: https://www.openproject.org/docs/installation-and-operations/configuration/ssrf-protection/
+terms_of_service:
+  href: https://www.openproject.org/terms-of-service/
+text_formatting:
+  href: https://www.openproject.org/docs/user-guide/wysiwyg/
+  label: :setting_text_formatting
+upgrade_guides:
+  href: https://www.openproject.org/docs/installation-and-operations/operation/upgrading/
+  label: :label_upgrade_guides
+upsell:
+  href: https://www.openproject.org/enterprise-edition
+  label: homescreen.links.upgrade_enterprise_edition
+upsell_benefits_features:
+  href: https://www.openproject.org/enterprise-edition/#enterprise-add-ons
+  label: noscript_learn_more
+upsell_benefits_installation:
+  href: https://www.openproject.org/enterprise-edition/#installation
+  label: noscript_learn_more
+upsell_benefits_security:
+  href: https://www.openproject.org/enterprise-edition/#security-features
+  label: noscript_learn_more
+upsell_benefits_support:
+  href: https://www.openproject.org/enterprise-edition/#professional-support
+  label: noscript_learn_more
+upsell_get_quote:
+  href: https://www.openproject.org/request-quote/
+  label: admin.enterprise.get_quote
+user_guides:
+  href: https://www.openproject.org/docs/user-guide/
+  label: homescreen.links.user_guides
+user_guide:
+  calendar:
+    subscribe:
+      href: https://www.openproject.org/docs/user-guide/calendar/#subscribe-to-a-calendar
+webinar_videos:
+  href: https://www.youtube.com/watch?v=un6zCm8_FT4
+website:
+  href: https://www.openproject.org
+  label: label_openproject_website
+jira_migrator_project:
+  href: https://community.openproject.org/projects/jira-migration/dashboard
+backup_guide:
+  href: https://www.openproject.org/docs/installation-and-operations/operation/backing-up/

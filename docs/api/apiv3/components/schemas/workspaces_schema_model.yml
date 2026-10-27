@@ -1,0 +1,245 @@
+# Schema: Workspaces_schemaModel
+---
+type: object
+description: |-
+  A schema for a workspace. This schema defines the attributes of a workspace.
+
+properties:
+  _type:
+    type: string
+    enum: [Schema]
+    description: The type identifier for this resource
+  _dependencies:
+    type: array
+    description: Schema dependencies (currently empty for workspaces)
+  _attributeGroups:
+    type: array
+    items:
+      type: object
+      properties:
+        _type:
+          type: string
+          enum: [ProjectFormCustomFieldSection]
+          description: The type identifier for this resource
+        id:
+          type: integer
+          description: The unique identifier of the custom field section
+        name:
+          type: string
+          description: The human-readable name of the custom field section
+        attributes:
+          type: array
+          items:
+            type: string
+          description: |-
+            Array of camelCase custom field attribute names belonging to this section.
+            Only includes custom fields visible to the current user.
+    description: |-
+      Defines the organizational structure of project custom fields into sections for UI rendering.
+
+      Each attribute group represents a project attribute section containing related project attributes.
+      The sections determine how project attributes are visually organized and grouped in forms.
+
+      **Key behaviors:**
+      - Admin-only project attributes appear only for users with admin privileges
+      - Empty sections (with no accessible project attributes) are omitted from the response
+      - The order reflects the configured section positioning in admin settings
+      - Each section contains only project attributes assigned to that specific section
+
+      **Example structure:**
+      ```json
+      [
+        {
+          "_type": "ProjectFormCustomFieldSection",
+          "name": "Project Details",
+          "attributes": ["customField1", "customField3"]
+        },
+        {
+          "_type": "ProjectFormCustomFieldSection",
+          "name": "Budget Information",
+          "attributes": ["customField2", "customField4"]
+        }
+      ]
+      ```
+  id:
+    $ref: './schema_property_model.yml'
+  name:
+    $ref: './schema_property_model.yml'
+  identifier:
+    $ref: './schema_property_model.yml'
+  description:
+    $ref: './schema_property_model.yml'
+  public:
+    $ref: './schema_property_model.yml'
+  active:
+    $ref: './schema_property_model.yml'
+  status:
+    $ref: './schema_property_model.yml'
+  statusExplanation:
+    $ref: './schema_property_model.yml'
+  parent:
+    $ref: './schema_property_model.yml'
+  createdAt:
+    $ref: './schema_property_model.yml'
+  updatedAt:
+    $ref: './schema_property_model.yml'
+  _links:
+    type: object
+    description: Links related to this resource
+    properties:
+      self:
+        type: object
+        properties:
+          href:
+            type: string
+            example: "/api/v3/workspaces/schema"
+patternProperties:
+  "^customField\\d+$":
+    $ref: './schema_property_model.yml'
+  "^customComment\\d+$":
+    $ref: './schema_property_model.yml'
+
+example:
+  _type: Schema
+  _dependencies: []
+  _attributeGroups:
+  - _type: ProjectFormCustomFieldSection
+    name: Project Details
+    attributes:
+    - customField30
+    - customField34
+  - _type: ProjectFormCustomFieldSection
+    name: Budget Information
+    attributes:
+    - customField31
+    - customField32
+    - customField35
+  id:
+    type: Integer
+    name: ID
+    required: true
+    hasDefault: false
+    writable: false
+  name:
+    type: String
+    name: Name
+    required: true
+    hasDefault: false
+    writable: true
+    minLength: 1
+    maxLength: 255
+  identifier:
+    type: String
+    name: Identifier
+    required: true
+    hasDefault: false
+    writable: true
+    minLength: 1
+    maxLength: 100
+  description:
+    type: Formattable
+    name: Description
+    required: false
+    hasDefault: false
+    writable: true
+  public:
+    type: Boolean
+    name: Public
+    required: true
+    hasDefault: false
+    writable: true
+  active:
+    type: Boolean
+    name: Active
+    required: true
+    hasDefault: true
+    writable: true
+  status:
+    type: ProjectStatus
+    name: Status
+    required: false
+    hasDefault: true
+    writable: true
+    _links:
+      allowedValues:
+      - href: "/api/v3/project_statuses/on_track"
+        title: On track
+      - href: "/api/v3/project_statuses/at_risk"
+        title: At risk
+      - href: "/api/v3/project_statuses/off_track"
+        title: Off track
+  statusExplanation:
+    type: Formattable
+    name: Status explanation
+    required: false
+    hasDefault: false
+    writable: true
+  parent:
+    type: Workspace
+    name: Subproject of
+    required: false
+    hasDefault: false
+    writable: true
+    location: _links
+    visibility: default
+    _links: {}
+  createdAt:
+    type: DateTime
+    name: Created on
+    required: true
+    hasDefault: false
+    writable: false
+  updatedAt:
+    type: DateTime
+    name: Updated on
+    required: true
+    hasDefault: false
+    writable: false
+  customField30:
+    type: Integer
+    name: Integer project custom field
+    required: false
+    hasDefault: false
+    writable: true
+    visibility: default
+  customField31:
+    type: CustomOption
+    name: List project custom field
+    required: false
+    hasDefault: false
+    writable: true
+    location: _links
+    visibility: default
+    _links: {}
+  customField32:
+    type: Version
+    name: Version project custom field
+    required: false
+    hasDefault: false
+    writable: true
+    location: _links
+    visibility: default
+    _links: {}
+  customField34:
+    type: Boolean
+    name: Boolean project custom field
+    required: false
+    hasDefault: false
+    writable: true
+    visibility: default
+  customField35:
+    type: String
+    name: Text project custom field
+    required: true
+    hasDefault: false
+    writable: true
+    visibility: default
+  customComment35:
+    type: String
+    name: Text project custom field comment
+    required: false
+    hasDefault: false
+    writable: true
+  _links:
+    self:
+      href: "/api/v3/workspaces/schema"

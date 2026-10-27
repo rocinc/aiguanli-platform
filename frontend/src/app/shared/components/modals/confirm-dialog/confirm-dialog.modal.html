@@ -1,0 +1,79 @@
+<div
+  class="spot-modal op-confirm-dialog loading-indicator--location"
+  data-indicator-name="modal"
+  tabindex="0"
+  cdkFocusInitial
+  cdkTrapFocus
+  [cdkTrapFocusAutoCapture]="true"
+  >
+  <div id="spotModalTitle" class="spot-modal--header">{{text.title}}</div>
+
+  @if (divideContent) {
+    <div class="spot-divider"></div>
+  }
+
+  <div class="spot-modal--body spot-container">
+    <span class="op-confirm-dialog--text spot-body-small"
+      [textContent]="text.text"
+    ></span>
+
+    @if (showListData) {
+      <span class="op-confirm-dialog--text spot-body-small"
+        [textContent]="listTitle"
+      ></span>
+      <ul class="op-confirm-dialog--list">
+        @for (data of passedData; track data) {
+          <li class="spot-body-small">
+            <span>{{data}}</span>
+          </li>
+        }
+      </ul>
+    } @else {
+      @for (data of passedData; track data) {
+        <span
+          class="spot-body-small"
+          >
+          <br/>
+          <strong>{{data}}</strong>
+        </span>
+      }
+    }
+
+
+    <span class="op-confirm-dialog--text spot-body-small"
+      [innerHtml]="warningText"
+    ></span>
+
+  </div>
+
+  <div class="spot-action-bar">
+    <div class="spot-action-bar--right">
+      <button
+        type="button"
+        class="button spot-modal--cancel-button spot-action-bar--action"
+        data-test-selector="confirmation-modal--cancel"
+        (click)="close($event)"
+        >
+        <svg x-icon size="small"></svg>
+        <span>{{text.button_cancel}}</span>
+      </button>
+      <button
+        type="button"
+        class="button spot-action-bar--action"
+        data-test-selector="confirmation-modal--confirmed"
+        [ngClass]="dangerHighlighting ? '-danger': '-primary'"
+        (click)="confirmAndClose($event)"
+        >
+        @switch (icon.continue) {
+          @case ('trash') {
+            <svg trash-icon size="small"></svg>
+          }
+          @case ('unlink') {
+            <svg unlink-icon size="small"></svg>
+          }
+        }
+        <span>{{text.button_continue}}</span>
+      </button>
+    </div>
+  </div>
+</div>

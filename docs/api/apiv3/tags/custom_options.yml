@@ -1,0 +1,20 @@
+---
+description: |-
+  The custom options endpoints return collections or single entities of type `CustomOption`. The following tables list the different properties
+  of `CustomOption` entities.
+
+  ## Linked Properties
+
+  |  Link         | Description               | Type          | Constraints | Supported operations |
+  |:-------------:|-------------------------- | ------------- | ----------- | -------------------- |
+  | self          | This custom option        | CustomOption  | not null    | READ                 |
+
+  ## Local Properties
+
+  | Property         | Description                                    | Type     | Constraints | Supported operations |
+  |:----------------:| ---------------------------------------------- | -------- | ----------- | -------------------- |
+  | id               | The identifier                                 | Integer  |             | READ                 |
+  | value            | The value defined for this custom option       | String   |             | READ                 |
+
+  custom options are options of list custom fields.
+name: Custom Options

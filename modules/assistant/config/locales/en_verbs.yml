@@ -1,0 +1,87 @@
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+en:
+  assistant:
+    meeting_recap:
+      who:
+        you: "You"
+        commitment: "what %{owner} said they would do"
+        commitment_with: "what %{owner} promised %{other}"
+        deferral: "what %{owner} set aside"
+        decision: "what %{owner} decided"
+        question: "what %{owner} asked"
+        question_with: "what %{owner} asked %{other}"
+        objection: "what %{owner} objected to"
+    verbs:
+      label: "Handle this"
+      more: "More"
+      cancel: "Cancel"
+      undo: "Undo"
+      scheduled: "On the agenda of %{date} %{title}"
+      shelved: "Set aside \"%{title}\"; it is not listed this time."
+      labels:
+        schedule: "Add to a meeting"
+        assign: "Hand to"
+        assign_question: "Ask"
+        remind: "Remind"
+        answer: "Answer"
+        record: "Record outcome"
+        shelve: "Set aside"
+      panel:
+        confirm: "Confirm"
+        affects: "Affects %{names}"
+        schedule:
+          legend: "Which meeting"
+          here: "This meeting"
+          confirm: "Add to agenda"
+        assign:
+          legend: "Pick someone"
+          filter: "Find a person"
+          sort_free: "Sort by availability"
+          sort_name: "Sort by name"
+          free: "%{hours} h left this week"
+          away: "Away until %{date}"
+          preview: "See what would change"
+          draft: "Draft a comment"
+        remind:
+          legend: "Remind whom"
+          help: "Drafts a comment in your name for you to read first; it goes out only when you confirm."
+          confirm: "Draft the reminder"
+        record:
+          conclusion: "Write the outcome…"
+          answer: "Write the answer…"
+          where: "Under which item"
+          outcome: "Record outcome"
+          draft: "Draft the answer"
+          outcome_help: "Recorded under the meeting's agenda item; you can undo it."
+          draft_help: "Drafts a comment in your name; it goes out only when you confirm."
+      titles:
+        schedule: "Add to \"%{meeting}\""
+        assign: "Hand to %{name}"
+        remind: "Remind %{name}"
+        answer: "Answer this question"
+        record: "Record the meeting outcome"
+      words:
+        assign: "%{who}, could you take a look at \"%{title}\"?"
+        remind:
+          commitment: "%{who}, how is \"%{title}\" going? Is there anything you need?"
+          commitment_dated: "%{who}, \"%{title}\" was planned for %{said} and is not done yet. Does it need adjusting?"
+          commitment_moved: "%{who}, \"%{title}\" (%{ref}) was planned for %{said} and is now on %{due}. Does it need adjusting?"
+          deferral: "%{who}, \"%{title}\" was set aside earlier. Is now a good time to pick it up?"
+          decision: "%{who}, \"%{title}\" was decided earlier. Does it still hold?"
+          question: "%{who}, \"%{title}\" is still waiting for an answer. Could you take a look?"
+      refused:
+        gone: "This can't be done any more."
+        already: "%{name} is already on it."
+        pick_meeting: "Pick a meeting first."
+        pick_person: "Pick a person first."
+        write_something: "Write something first."
+        no_agenda_item: "This meeting has no agenda item yet; add one before recording an outcome."
+        outcome_no_meeting: "Outcomes can be recorded from the meeting page."
+        outcome_not_started: "The meeting hasn't started; outcomes can be recorded once it does."
+        outcome_over: "The meeting is over; outcomes can no longer be added."
+        outcome_forbidden: "You may not record outcomes in this meeting."

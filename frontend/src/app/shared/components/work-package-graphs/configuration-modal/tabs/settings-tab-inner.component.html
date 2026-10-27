@@ -1,0 +1,39 @@
+<div>
+  <form class="form">
+    <div class="form--field">
+      <label class="form--label" [textContent]="text.group_by" for="selected_grouping"></label>
+      <div class="form--field-container">
+        <div class="form--select-container -middle">
+          <select [(ngModel)]="currentGroup"
+            [ngModelOptions]="{standalone: true}"
+            id="selected_grouping"
+            class="form--select">
+            @for (group of availableGroups; track group.href) {
+              <option
+                [ngValue]="group"
+              [textContent]="group.name"></option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form--field">
+      <label class="form--label" [textContent]="text.chart_type" for="selected_chart_type"></label>
+      <div class="form--field-container">
+        <div class="form--select-container -middle">
+          <select [(ngModel)]="currentChartType"
+            [ngModelOptions]="{standalone: true}"
+            id="selected_chart_type"
+            class="form--select">
+            @for (type of availableChartTypes; track type.identifier) {
+              <option
+                [ngValue]="type"
+              [textContent]="type.label"></option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

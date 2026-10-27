@@ -1,0 +1,184 @@
+# frozen_string_literal: true
+
+module Saml
+  class ProvidersController < ::ApplicationController
+    include OpTurbo::ComponentStream
+
+    layout "admin"
+    menu_item :plugin_saml
+
+    before_action :require_admin
+    before_action :check_ee, except: %i[index]
+    before_action :find_provider, only: %i[show edit import_metadata update confirm_destroy destroy]
+    before_action :check_provider_writable, only: %i[update import_metadata]
+    before_action :set_edit_state, only: %i[create edit update import_metadata]
+
+    def index
+      @providers = Saml::Provider.order(display_name: :asc)
+    end
+
+    def edit
+      respond_to do |format|
+        format.turbo_stream do
+          update_view_component(view_mode: :edit, new_mode: @new_mode, edit_state: @edit_state)
+          scroll_into_view_via_turbo_stream("saml-providers-edit-form", behavior: :instant)
+          render turbo_stream: resolve_turbo_streams
+        end
+        format.html
+      end
+    end
+
+    def show; end
+
+    def new
+      @provider = ::Saml::Provider.new
+    end
+
+    def import_metadata
+      call = update_provider_metadata_call
+      @provider = call.result
+
+      if call.success?
+        if @new_mode || @provider.last_metadata_update.present?
+          redirect_to edit_saml_provider_path(@provider,
+                                              anchor: "saml-providers-edit-form",
+                                              new_mode: @new_mode,
+                                              edit_state: :configuration)
+        else
+          redirect_to saml_provider_path(@provider)
+        end
+      else
+        @edit_state = :metadata
+
+        flash.now[:error] = call.message
+        render action: :edit, status: :unprocessable_entity
+      end
+    end
+
+    def create
+      call = ::Saml::Providers::CreateService
+        .new(user: User.current)
+        .call(**create_params)
+
+      @provider = call.result
+
+      if call.success?
+        successful_save_response
+      else
+        flash.now[:error] = call.message
+        render action: :new, status: :unprocessable_entity
+      end
+    end
+
+    def update
+      call = Saml::Providers::UpdateService
+        .new(model: @provider, user: User.current)
+        .call(update_params)
+
+      if call.success?
+        flash[:notice] = I18n.t(:notice_successful_update) unless @new_mode
+        successful_save_response
+      else
+        @provider = call.result
+        render action: :edit, status: :unprocessable_entity
+      end
+    end
+
+    def confirm_destroy
+      respond_with_dialog Saml::Providers::ConfirmDestroyDialogComponent.new(provider: @provider)
+    end
+
+    def destroy
+      call = ::Saml::Providers::DeleteService
+        .new(model: @provider, user: User.current)
+        .call
+
+      if call.success?
+        flash[:notice] = I18n.t(:notice_successful_delete)
+      else
+        flash[:error] = call.errors.full_messages
+      end
+
+      redirect_to action: :index
+    end
+
+    private
+
+    def successful_save_response
+      if @new_mode && !@next_edit_state
+        flash[:notice] = I18n.t("saml.providers.notice_created")
+        return redirect_to saml_provider_path(@provider)
+      end
+
+      respond_to do |format|
+        format.turbo_stream do
+          update_view_component(new_mode: @new_mode, edit_state: @next_edit_state, view_mode: :show)
+          render turbo_stream: resolve_turbo_streams
+        end
+        format.html do
+          if @next_edit_state
+            redirect_to edit_saml_provider_path(@provider,
+                                                anchor: "saml-providers-edit-form",
+                                                new_mode: @new_mode,
+                                                edit_state: @next_edit_state)
+          else
+            redirect_to saml_provider_path(@provider)
+          end
+        end
+      end
+    end
+
+    def update_view_component(new_mode:, edit_state:, view_mode:)
+      update_via_turbo_stream(component: Saml::Providers::ViewComponent.new(@provider, new_mode:, edit_state:, view_mode:))
+    end
+
+    def check_ee
+      redirect_to action: :index unless EnterpriseToken.allows_to?(:sso_auth_providers)
+    end
+
+    def update_provider_metadata_call
+      Saml::Providers::UpdateService
+        .new(model: @provider, user: User.current)
+        .call(import_params)
+    end
+
+    def import_params
+      options = params
+        .require(:saml_provider)
+        .permit(:metadata_url, :metadata_xml, :metadata)
+
+      if options[:metadata] == "none"
+        { metadata_url: nil, metadata_xml: nil }
+      else
+        options.slice(:metadata_url, :metadata_xml)
+      end
+    end
+
+    def create_params
+      params.require(:saml_provider).permit(:display_name)
+    end
+
+    def update_params
+      params
+        .require(:saml_provider)
+        .permit(:display_name, :limit_self_registration, *Saml::Provider.stored_attributes[:options])
+    end
+
+    def find_provider
+      @provider = Saml::Provider.find(params[:id])
+    end
+
+    def check_provider_writable
+      if @provider.seeded_from_env?
+        flash[:error] = I18n.t(:label_seeded_from_env_warning)
+        redirect_to saml_provider_path(@provider)
+      end
+    end
+
+    def set_edit_state
+      @edit_state = params[:edit_state].to_sym if params.key?(:edit_state)
+      @new_mode = ActiveRecord::Type::Boolean.new.cast(params[:new_mode])
+      @next_edit_state = params[:next_edit_state].to_sym if params.key?(:next_edit_state)
+    end
+  end
+end

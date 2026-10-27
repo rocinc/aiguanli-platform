@@ -1,0 +1,23 @@
+.avatars--media
+  display: inline-flex
+  flex-direction: column
+  align-items: center
+  gap: 0.25rem
+
+.avatars--current-avatar
+  display: inline-block
+
+  .op-avatar
+    height: 4rem
+    width: 4rem
+    line-height: 3.75rem
+    font-size: 1.75rem
+
+.avatars--upload-trigger
+  cursor: pointer
+  &:hover
+    opacity: 0.8
+
+.avatars--error-pane
+  color: var(--content-form-error-color)
+  font-weight: var(--base-text-weight-bold)

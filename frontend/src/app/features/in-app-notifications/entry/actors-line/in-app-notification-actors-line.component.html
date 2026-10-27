@@ -1,0 +1,22 @@
+<op-in-app-notification-relative-time
+  [notification]="notification"
+  />
+<div class="op-ian-actors--container">
+  @for (actor of actors | slice:0:3; track actor.href; let idx = $index; let last = $last) {
+    @if (last && actors.length > 1 && actors.length < 4) {
+      <span textContent=" {{ text.and }} "></span>
+    }
+    <op-principal class="op-ian-item--actors"
+      [principal]="actor"
+      [hideName]="false"
+      [hideAvatar]="true"
+      [link]="!deviceService.isMobile"
+     />
+    @if ((idx === 0 && actors.length > 2) || (idx === 1 && actors.length > 3)) {
+      <span [textContent]="', '"></span>
+    }
+  }
+  @if (actors.length > 3) {
+    <span> {{ text_for_additional_authors(actors.length - 3) }}</span>
+  }
+</div>

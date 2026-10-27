@@ -1,0 +1,216 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= content_tag(:div, id: ID, class: "assistant-appraisal", data: { test_selector: "assistant-appraisal" }) do %>
+  <% if read_only? %>
+    <%= render(Primer::Alpha::Banner.new(scheme: :default, icon: :lock)) { t("assistant.project_pages.read_only") } %>
+  <% end %>
+
+  <div class="assistant-appraisals--bar">
+    <nav aria-label="<%= t("assistant.performance.period_label") %>">
+      <%= render(Primer::Alpha::SegmentedControl.new("aria-label": t("assistant.performance.period_label"), size: :small)) do |control| %>
+        <% periods.each do |key| %>
+          <% control.with_item(tag: :a, href: period_path(key), label: period_label(key), selected: key == period) %>
+        <% end %>
+      <% end %>
+    </nav>
+    <p class="assistant-appraisals--fairness">
+      <%= own? ? t("assistant.performance.same_as_appraiser") : t("assistant.performance.same_as_member", name: user.name) %>
+    </p>
+  </div>
+
+  <% if situation_items.any? %>
+    <section class="assistant-appraisal--section" aria-labelledby="assistant-appraisal-situation">
+      <h2 id="assistant-appraisal-situation" class="assistant-section--title"><%= t("assistant.performance.situation_title") %></h2>
+      <p class="assistant-appraisal--lead"><%= t("assistant.performance.situation_lead") %></p>
+      <ul class="assistant-appraisal--situation">
+        <% situation_items.each do |item| %>
+          <li><%= item %></li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+
+  <section class="assistant-appraisal--section" aria-labelledby="assistant-appraisal-dimensions">
+    <h2 id="assistant-appraisal-dimensions" class="assistant-section--title"><%= t("assistant.performance.dimensions_title") %></h2>
+    <ul class="assistant-appraisal--dimensions">
+      <% dimensions.each do |key| %>
+        <% d = dim(key) %>
+        <li id="<%= dom_id(key) %>" class="assistant-dimension" data-test-selector="assistant-appraisal-dimension">
+          <div class="assistant-dimension--head">
+            <h3 id="<%= dom_id(key) %>-title" class="assistant-dimension--title"><%= dimension_label(key) %></h3>
+            <p class="<%= class_names("assistant-dimension--value", "assistant-dimension--insufficient" => d["insufficient"]) %>">
+              <%= dimension_value(d) %>
+            </p>
+            <% if (median = median_text(d)) %>
+              <p class="assistant-dimension--median"><%= median %></p>
+            <% end %>
+            <% if (trend = trend_text(key)) %>
+              <p class="assistant-dimension--median"><%= trend %></p>
+            <% end %>
+          </div>
+          <p class="assistant-dimension--because"><%= d["because"] %></p>
+          <% if d["insufficient"] %>
+            <p class="assistant-dimension--quiet"><%= t("assistant.performance.insufficient_hint", count: d["sample"].to_i) %></p>
+          <% end %>
+          <% if evidence(key).any? %>
+            <details class="assistant-dimension--evidence">
+              <summary class="assistant-card--basis-summary">
+                <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-card--chevron", "aria-hidden": true)) %>
+                <%= t("assistant.performance.evidence", count: evidence(key).size) %>
+              </summary>
+              <ul class="assistant-dimension--evidence-list">
+                <% evidence(key).each do |line| %>
+                  <li><%= format_markdown(line) %></li>
+                <% end %>
+              </ul>
+            </details>
+          <% end %>
+
+          <% if notes(key).any? %>
+            <ul class="assistant-dimension--notes" aria-label="<%= t("assistant.performance.notes_from", name: user.name) %>">
+              <% notes(key).each do |note| %>
+                <li class="assistant-note">
+                  <%= render(Primer::Beta::Octicon.new(icon: :comment, size: :xsmall, "aria-hidden": true)) %>
+                  <span class="assistant-note--who"><%= t("assistant.performance.note_by", name: user.name, date: note_day(note)) %></span>
+                  <span class="assistant-note--text"><%= note["note"] %></span>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+
+          <% if may_note? %>
+            <details class="assistant-dimension--add-note">
+              <summary class="assistant-dimension--add-summary"><%= t("assistant.performance.add_note") %></summary>
+              <%= form_with(url: note_path, method: :post, data: { turbo_stream: true }, class: "assistant-note-form") do %>
+                <%= hidden_field_tag(:metric_key, key, id: nil) %>
+                <label for="<%= dom_id(key) %>-note" class="sr-only"><%= t("assistant.performance.note_label", dimension: dimension_label(key)) %></label>
+                <textarea id="<%= dom_id(key) %>-note" name="note" rows="2" maxlength="2000" required
+                          class="FormControl-input FormControl-textarea"
+                          placeholder="<%= t("assistant.performance.note_placeholder") %>"></textarea>
+                <%= render(Primer::Beta::Button.new(type: :submit, size: :small)) { t("assistant.performance.save_note") } %>
+              <% end %>
+            </details>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+
+  <% if final || !own? %>
+  <section class="assistant-appraisal--section" aria-labelledby="assistant-appraisal-written">
+    <h2 id="assistant-appraisal-written" class="assistant-section--title"><%= t("assistant.performance.written_title") %></h2>
+    <% if final %>
+      <article class="assistant-written" data-test-selector="assistant-appraisal-final">
+        <p class="assistant-written--meta">
+          <%= t(
+                "assistant.performance.final_meta", name: final.author&.name || t("assistant.timeline.someone"),
+                                                        date: Assistant::Text.day(final.finalized_at),
+                                                        from: Assistant::Text.day(final.period_start), to: Assistant::Text.day(final.period_end)
+              ) %>
+        </p>
+        <div class="assistant-written--text op-uc-container"><%= format_markdown(final.narrative) %></div>
+      </article>
+    <% elsif !may_appraise? %>
+      <p class="assistant-appraisal--quiet" data-test-selector="assistant-appraisal-no-final"><%= t("assistant.performance.no_final") %></p>
+    <% end %>
+
+    <% if draft && may_appraise? %>
+      <%= form_with(url: finalize_path, method: :post, data: { turbo_stream: true }, class: "assistant-written assistant-written--draft") do %>
+        <%= hidden_field_tag(:appraisal_id, draft.id, id: nil) %>
+        <p class="assistant-written--meta" id="assistant-appraisal-draft-meta">
+          <%= t("assistant.performance.draft_meta", date: Assistant::Text.moment(draft.created_at)) %>
+        </p>
+        <label for="assistant-appraisal-draft" class="FormControl-label"><%= t("assistant.performance.draft_label") %></label>
+        <textarea id="assistant-appraisal-draft" name="narrative" rows="14" required
+                  class="FormControl-input FormControl-textarea assistant-written--editor"
+                  aria-describedby="assistant-appraisal-draft-meta assistant-appraisal-draft-hint"><%= draft.narrative %></textarea>
+        <p id="assistant-appraisal-draft-hint" class="assistant-appraisal--quiet"><%= t("assistant.performance.draft_hint", name: user.name) %></p>
+        <div class="assistant-written--actions">
+          <%= render(
+                Primer::Beta::Button.new(
+                  type: :submit, scheme: :primary, size: :small,
+                  test_selector: "assistant-appraisal-finalize"
+                )
+              ) { t("assistant.performance.finalize") } %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <% if may_appraise? %>
+      <%= form_with(
+            url: draft_path, method: :post, data: { turbo_stream: true, turbo_submits_with: t("assistant.performance.drafting") },
+            class: "assistant-written--new"
+          ) do %>
+        <%= render(
+              Primer::Beta::Button.new(
+                type: :submit, size: :small, disabled: !configured?,
+                "aria-describedby": "assistant-appraisal-draft-caption",
+                test_selector: "assistant-appraisal-draft"
+              )
+            ) do |button| %>
+          <% button.with_leading_visual_icon(icon: :"sparkle-fill") %>
+          <%= draft ? t("assistant.performance.redraft") : t("assistant.performance.draft") %>
+        <% end %>
+        <span id="assistant-appraisal-draft-caption" class="assistant-appraisal--quiet">
+          <%= configured? ? t("assistant.performance.draft_caption") : t("assistant.performance.errors.not_configured") %>
+        </span>
+      <% end %>
+    <% end %>
+  </section>
+  <% end %>
+
+  <% if general_notes.any? || may_note? %>
+    <section class="assistant-appraisal--section" aria-labelledby="assistant-appraisal-general">
+      <h2 id="assistant-appraisal-general" class="assistant-section--title"><%= t("assistant.performance.general_title") %></h2>
+      <% if general_notes.any? %>
+        <ul class="assistant-dimension--notes" aria-label="<%= t("assistant.performance.notes_from", name: user.name) %>">
+          <% general_notes.each do |note| %>
+            <li class="assistant-note">
+              <%= render(Primer::Beta::Octicon.new(icon: :comment, size: :xsmall, "aria-hidden": true)) %>
+              <span class="assistant-note--who"><%= t("assistant.performance.note_by", name: user.name, date: note_day(note)) %></span>
+              <span class="assistant-note--text"><%= note["note"] %></span>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+      <% if may_note? %>
+        <%= form_with(url: note_path, method: :post, data: { turbo_stream: true }, class: "assistant-note-form") do %>
+          <%= hidden_field_tag(:metric_key, "general", id: nil) %>
+          <label for="assistant-appraisal-general-note" class="FormControl-label"><%= t("assistant.performance.general_label") %></label>
+          <textarea id="assistant-appraisal-general-note" name="note" rows="3" maxlength="2000" required
+                    class="FormControl-input FormControl-textarea"
+                    placeholder="<%= t("assistant.performance.note_placeholder") %>"></textarea>
+          <%= render(Primer::Beta::Button.new(type: :submit, size: :small, test_selector: "assistant-appraisal-note")) { t("assistant.performance.save_note") } %>
+        <% end %>
+      <% end %>
+    </section>
+  <% end %>
+
+  <% if own? %>
+    <section class="assistant-appraisal--section" aria-labelledby="assistant-appraisal-views">
+      <h2 id="assistant-appraisal-views" class="assistant-section--title"><%= t("assistant.performance.views_title") %></h2>
+      <p class="assistant-appraisal--lead" data-test-selector="assistant-appraisal-views-summary"><%= views_summary %></p>
+      <% if views.any? %>
+        <details class="assistant-dimension--evidence">
+          <summary class="assistant-card--basis-summary">
+            <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-card--chevron", "aria-hidden": true)) %>
+            <%= t("assistant.performance.views_all") %>
+          </summary>
+          <ul class="assistant-appraisal--views" data-test-selector="assistant-appraisal-views">
+            <% views.each do |view| %>
+              <li><%= view_line(view) %></li>
+            <% end %>
+          </ul>
+        </details>
+      <% end %>
+    </section>
+  <% end %>
+<% end %>

@@ -1,0 +1,50 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw/items/01ANJ53W5UJK2CQO6IY5HLBVYBVNJ4TKHZ?$select=id,name,fileSystemInfo,file,folder,size,createdBy,lastModifiedBy,parentReference,webUrl
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer <BEARER TOKEN>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json; odata.metadata=minimal; odata.streaming=true; IEEE754Compatible=false;
+        charset=utf-8
+      Content-Encoding:
+      - gzip
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - 943d40d2-fa5d-4af1-8f8d-984765e9fd96
+      Client-Request-Id:
+      - 943d40d2-fa5d-4af1-8f8d-984765e9fd96
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"004","RoleInstance":"FR2PEPF0000038F"}}'
+      Splogid:
+      - 0eb6baa1-406d-0000-7534-c8aa3d55df40
+      Date:
+      - Mon, 11 Aug 2025 12:56:22 GMT
+    body:
+      encoding: UTF-8
+      string: '{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#Collection(driveItem)/$entity","@odata.etag":"\"{28B44AB4-C83B-4EC7-B0D7-01AB53C9A8F9},2\"","createdBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"id":"01ANJ53W5UJK2CQO6IY5HLBVYBVNJ4TKHZ","lastModifiedBy":{"user":{"email":"op.admin@ymt6d.onmicrosoft.com","id":"5b5a7dc4-4539-41ba-9fa9-100f0a26acb7","displayName":"Eric
+        Schubert"}},"name":"release_meme.jpg","parentReference":{"driveType":"documentLibrary","driveId":"b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw","id":"01ANJ53W4MWZNYS4FOTNDI3UVTLEXUZ5TQ","name":"Nested
+        Folder","path":"/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw/root:/Folder/Nested
+        Folder","siteId":"1099e315-d0c7-47c7-8640-aa9504b70fff"},"webUrl":"https://ymt6d.sharepoint.com/sites/OPTest/Shared%20Documents/Folder/Nested%20Folder/release_meme.jpg","file":{"hashes":{"quickXorHash":"YkS9AR4yVsWrDqYEUTlRDmX28hI="},"mimeType":"image/jpeg"},"fileSystemInfo":{"createdDateTime":"2024-02-20T14:26:07Z","lastModifiedDateTime":"2024-02-20T14:26:07Z"},"size":46264}'
+  recorded_at: Mon, 11 Aug 2025 12:56:22 GMT
+recorded_with: VCR 6.3.1

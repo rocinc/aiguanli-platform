@@ -1,0 +1,78 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: https://nextcloud.local/remote.php/dav/files/OpenProject/non-existing-folder/test-file.txt
+    body:
+      encoding: ASCII-8BIT
+      string: "#<StringIO:0x000077efde70f620>"
+    headers:
+      User-Agent:
+      - httpx.rb/1.6.3
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      Authorization:
+      - Basic <BASIC_AUTH>
+      Content-Type:
+      - application/octet-stream
+      Content-Length:
+      - '25'
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Security-Policy:
+      - default-src 'none';
+      Content-Type:
+      - application/xml; charset=utf-8
+      Date:
+      - Thu, 20 Nov 2025 07:30:54 GMT
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache/2.4.62 (Debian)
+      Set-Cookie:
+      - ocm4e2tlfbl8=9fe8c2b6df86a068d3a747acd4ecac1f; path=/; secure; HttpOnly; SameSite=Lax,
+        oc_sessionPassphrase=G2d%2BxM4VvrT5RplAv1fVtxARYQ2DLS3Bls33qY98ULjUqlG%2BjdRfuQ7MWWbd%2BA1on%2F9j%2F9Xy5A8sjbtaKerENkCurcjh%2Fy9dtw1k0jOj0iPd1cNvHod6iBcHbEnKWMlX;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9fe8c2b6df86a068d3a747acd4ecac1f;
+        path=/; secure; HttpOnly; SameSite=Lax, __Host-nc_sameSiteCookielax=true;
+        path=/; httponly;secure; expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=lax,
+        __Host-nc_sameSiteCookiestrict=true; path=/; httponly;secure; expires=Fri,
+        31-Dec-2100 23:59:59 GMT; SameSite=strict, ocm4e2tlfbl8=9fe8c2b6df86a068d3a747acd4ecac1f;
+        path=/; secure; HttpOnly; SameSite=Lax, nc_username=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_token=deleted; expires=Thu,
+        01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_session_id=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; secure; HttpOnly, nc_username=deleted;
+        expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/; secure; HttpOnly,
+        nc_token=deleted; expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0; path=/;
+        secure; HttpOnly, nc_session_id=deleted; expires=Thu, 01 Jan 1970 00:00:01
+        GMT; Max-Age=0; path=/; secure; HttpOnly, ocm4e2tlfbl8=9fe8c2b6df86a068d3a747acd4ecac1f;
+        path=/; secure; HttpOnly; SameSite=Lax, ocm4e2tlfbl8=9299c3a882f6f619f85577858e52e072;
+        path=/; secure; HttpOnly; SameSite=Lax
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Powered-By:
+      - PHP/8.3.20
+      X-Robots-Tag:
+      - noindex, nofollow
+      X-Xss-Protection:
+      - 1; mode=block
+      Content-Length:
+      - '249'
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0" encoding="utf-8"?>
+        <d:error xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns">
+          <s:exception>Sabre\DAV\Exception\NotFound</s:exception>
+          <s:message>File with name //non-existing-folder could not be located</s:message>
+        </d:error>
+  recorded_at: Thu, 20 Nov 2025 07:30:54 GMT
+recorded_with: VCR 6.3.1

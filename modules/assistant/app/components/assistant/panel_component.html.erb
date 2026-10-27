@@ -1,0 +1,148 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= component_wrapper(
+      class: "assistant-panel", data: { test_selector: "assistant-panel",
+                                        controller: "assistant--panel",
+                                        conversation_id: conversation&.id,
+                                        assistant__panel_busy_value: busy?,
+                                        assistant__panel_sync_value: sync_url }
+    ) do %>
+  <div class="assistant-panel--context">
+    <% if context_label %>
+      <span class="assistant-panel--tag" data-assistant--panel-target="tag" data-test-selector="assistant-panel-context">
+        <%= render(Primer::Beta::Octicon.new(icon: :eye, size: :xsmall, "aria-hidden": true)) %>
+        <span class="assistant-panel--tag-lead"><%= context_lead %></span>
+        <span class="assistant-panel--tag-subject"><%= context_label %></span>
+        <% if context_removable? %>
+          <%= render(
+                Primer::Beta::IconButton.new(
+                  icon: :x, size: :small, scheme: :invisible, "aria-label": t("assistant.panel.context.remove"),
+                  data: { action: "assistant--panel#dropContext", test_selector: "assistant-panel-context-remove" }
+                )
+              ) %>
+        <% end %>
+      </span>
+    <% end %>
+    <span class="assistant-panel--tools">
+      <% if history.any? %>
+        <details class="assistant-panel--history" data-test-selector="assistant-panel-history"
+                   data-assistant--panel-target="history" data-action="keydown->assistant--panel#historyKeydown">
+          <summary><%= t("assistant.panel.history.label") %></summary>
+          <ul class="assistant-panel--history-list">
+            <% history.each do |entry| %>
+              <li>
+                <%= link_to(
+                      history_url(entry), class: "assistant-panel--history-item",
+                                          aria: { current: (entry.current ? "true" : nil) },
+                                          data: { turbo_frame: "assistant-panel-frame" }
+                    ) do %>
+                  <span class="assistant-panel--history-title"><%= entry.title %></span>
+                  <span class="assistant-panel--history-meta"><%= [entry.about, entry.stamp].compact.join(" · ") %></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </details>
+      <% end %>
+      <% if conversation %>
+        <%= link_to(
+              t("assistant.panel.new"), new_url, class: "assistant-panel--new",
+                                                 data: { turbo_frame: "assistant-panel-frame",
+                                                         action: "assistant--panel-dialog#fresh" }
+            ) %>
+      <% end %>
+    </span>
+  </div>
+
+  <ol class="assistant-panel--messages" aria-label="<%= t("assistant.panel.messages") %>" aria-live="polite"
+      aria-relevant="additions" id="assistant_messages_<%= conversation&.id || "new" %>"
+      data-assistant--panel-target="messages">
+    <% if messages.empty? %>
+      <li class="assistant-panel--welcome">
+        <% if thread? %>
+          <p class="assistant-panel--welcome-lead" data-test-selector="assistant-panel-thread-welcome"><%= thread_welcome %></p>
+        <% elsif object_line&.render? %>
+          <%= render(object_line) %>
+        <% else %>
+          <p class="assistant-panel--welcome-lead"><%= t("assistant.panel.welcome") %></p>
+        <% end %>
+        <% unless configured? %>
+          <p class="assistant-panel--notice"><%= t("assistant.panel.not_configured") %></p>
+        <% end %>
+      </li>
+    <% else %>
+      <% messages.each do |message| %>
+        <%= render(Assistant::MessageComponent.new(message:, user:)) %>
+      <% end %>
+    <% end %>
+  </ol>
+
+  <%= form_with(
+        url: form_url, method: :post, class: "assistant-panel--form",
+        data: { turbo_frame: "assistant-panel-frame", assistant__panel_target: "form",
+                controller: "assistant--reference-input",
+                assistant__reference_input_url_value: references_url,
+                assistant__reference_input_context_value: context_gid,
+                assistant__reference_input_none_value: t("assistant.panel.references.none"),
+                action: "submit->assistant--panel#submitted" }
+      ) do %>
+    <%= hidden_field_tag(:context, context_gid, id: nil, data: { assistant__panel_target: "contextField" }) if context_gid %>
+    <% if chips.any? %>
+      <ul class="assistant-panel--chips" aria-label="<%= t("assistant.thread.chips_label") %>" data-test-selector="assistant-panel-chips">
+        <% chips.each do |chip| %>
+          <li>
+            <button type="button" class="assistant-panel--chip" data-action="assistant--panel#ask"
+                    data-assistant--panel-text-param="<%= chip %>" data-test-selector="assistant-panel-chip"><%= chip %></button>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+    <label for="assistant-panel-input" class="sr-only"><%= t("assistant.panel.input_label", name:) %></label>
+    <div class="assistant-panel--field">
+      <textarea id="assistant-panel-input" name="content" rows="2" required maxlength="4000"
+                class="assistant-panel--input FormControl-input FormControl-textarea"
+                placeholder="<%= t("assistant.panel.placeholder") %>"
+                data-assistant--panel-target="input"
+                data-assistant--reference-input-target="input"
+                data-action="keydown->assistant--panel#keydown"
+                role="combobox" aria-expanded="false" aria-controls="assistant-panel-references"
+                aria-autocomplete="list"
+                aria-describedby="assistant-panel-hint"><%= draft %></textarea>
+      <ul id="assistant-panel-references" class="assistant-panel--references" role="listbox" hidden
+          aria-label="<%= t("assistant.panel.references.label") %>"
+          data-assistant--reference-input-target="list"></ul>
+    </div>
+    <p class="assistant-panel--send-failed" role="alert" hidden data-assistant--panel-target="error"
+       data-test-selector="assistant-panel-send-failed"><%= t("assistant.panel.send_failed") %></p>
+    <div class="assistant-panel--form-footer">
+      <span id="assistant-panel-hint" class="assistant-panel--hint"><%= t("assistant.panel.hint") %></span>
+      <span class="assistant-panel--actions">
+        <span class="assistant-panel--sending" <%= "hidden" unless busy? %> data-assistant--panel-target="spinner">
+          <%= render(Primer::Beta::Spinner.new(size: :small)) %>
+        </span>
+        <%= render(
+              Primer::Beta::Button.new(
+                type: :button, size: :small, hidden: !busy?,
+                data: { assistant__panel_target: "stop", action: "assistant--panel#stop", url: stop_url,
+                        test_selector: "assistant-panel-stop" }
+              )
+            ) { t("assistant.panel.stop") } %>
+        <%= render(
+              Primer::Beta::Button.new(
+                type: :submit, scheme: :primary, size: :small,
+                data: { assistant__panel_target: "submit" },
+                test_selector: "assistant-panel-send"
+              )
+            ) { t("assistant.panel.send") } %>
+      </span>
+    </div>
+  <% end %>
+<% end %>

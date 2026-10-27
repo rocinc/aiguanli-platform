@@ -1,0 +1,4 @@
+@if (!!filters) {
+  <op-query-filters (filtersChanged)="filters = $event"
+  [filters]="filters" />
+}

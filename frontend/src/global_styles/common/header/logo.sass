@@ -1,0 +1,30 @@
+$op-logo-link-margin-y: 0.25rem
+$op-logo-icon-margin-y: 11px // Ensures the mobile logo has the same vertical spacing as the right-side create action button
+
+.op-logo
+  width: 130px
+  height: var(--header-height)
+  margin: 0 0.5rem
+
+  &--link
+    margin: $op-logo-link-margin-y 0
+    width: 100%
+    display: block
+    height: calc(100% - (#{$op-logo-link-margin-y} * 2))
+    text-indent: -9999em
+    background: no-repeat left center
+    background-size: contain
+
+  @media screen and (max-width: 850px)
+    display: none
+
+  &--icon
+    display: none
+    background-repeat: no-repeat
+    background-position: left center
+    background-size: contain
+    @media screen and (max-width: 850px)
+      margin: $op-logo-icon-margin-y 0 $op-logo-icon-margin-y 0.5rem
+      display: block
+      width: 130px
+      height: calc(100% - (#{$op-logo-icon-margin-y} * 2))

@@ -1,0 +1,128 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%
+  data = { assistant_draft_id: action.id, assistant_density: density, test_selector: "assistant-draft" }
+%>
+<% if state == :sent %>
+  <%= content_tag(:div, id:, class: "assistant-draft-card assistant-draft-card--sent", data:) do %>
+    <%= render(Assistant::ReceiptComponent.new(action:, user:, density: :line)) %>
+  <% end %>
+<% elsif state == :declined %>
+  <%= content_tag(:p, id:, class: "assistant-draft-card assistant-draft-card--quiet", role: "status", data:) do %>
+    <%= mark %>
+    <span><%= declined_text %></span>
+  <% end %>
+<% elsif state == :failed %>
+  <%= content_tag(:p, id:, class: "assistant-draft-card assistant-draft-card--quiet", role: "status", data:) do %>
+    <%= mark %>
+    <span><%= failed_text %></span>
+  <% end %>
+<% elsif line? %>
+  <%= content_tag(:p, id:, class: "assistant-draft-card assistant-draft-card--line", data:) do %>
+    <%= mark %>
+    <span><%= lead_html %></span>
+    <%= link_to(t("assistant.draft.look"), show_path, class: "assistant-draft-card--look", data: { turbo_frame: "_top" }) %>
+  <% end %>
+<% else %>
+  <%= content_tag(:article, id:, class: "assistant-draft-card assistant-draft-card--card", "aria-labelledby": title_id, data:) do %>
+    <div class="assistant-draft-card--row">
+      <%= mark %>
+      <div class="assistant-draft-card--body">
+        <%= content_tag(heading_tag, lead_html, id: title_id, class: "assistant-draft-card--lead") %>
+        <p class="assistant-draft-card--signature" data-test-selector="assistant-draft-signature"><%= signature %></p>
+      </div>
+    </div>
+
+    <%= form_with(url: approve_path, method: :post, data: form_data, class: "assistant-draft-card--main") do %>
+      <input type="checkbox" id="<%= toggle_id %>" class="assistant-draft-card--toggle" aria-controls="<%= toggle_id %>-panel"
+             data-assistant--draft-refine-target="toggle" data-action="change->assistant--draft-refine#toggled">
+
+      <% if notice.present? %>
+        <p class="assistant-draft-card--notice" role="status" data-test-selector="assistant-draft-notice"><%= notice %></p>
+      <% end %>
+
+      <div class="assistant-draft-card--text" data-test-selector="assistant-draft-text">
+        <% body.each do |line| %>
+          <p><%= line %></p>
+        <% end %>
+      </div>
+
+      <div id="<%= toggle_id %>-panel" class="assistant-draft-card--edit" data-test-selector="assistant-draft-fields">
+        <% fields.each do |field| %>
+          <% if words?(field) %>
+            <%= render(Assistant::DraftBenchComponent.new(field:, label: field_label(field), refinement:, rows: rows(field))) %>
+          <% else %>
+            <div class="FormControl FormControl--fullWidth">
+              <label for="<%= field[:input_id] %>" class="FormControl-label"><%= field_label(field) %></label>
+              <% if field[:attribute] == "status_code" %>
+                <%= select_tag(field[:name], status_options(field[:value]), id: field[:input_id], class: "FormControl-select FormControl-medium") %>
+              <% else %>
+                <%= text_field_tag(field[:name], field[:value], id: field[:input_id], maxlength: 255, autocomplete: "off",
+                                                                class: "FormControl-input FormControl-medium") %>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+      <% if basis.any? %>
+        <details class="assistant-draft-card--basis">
+          <summary class="assistant-draft-card--basis-summary">
+            <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-draft-card--chevron", "aria-hidden": true)) %>
+            <%= t("assistant.draft.basis") %>
+          </summary>
+          <ul class="assistant-draft-card--basis-list">
+            <% basis.each do |entry| %>
+              <li>
+                <% if (url = basis_url(entry)) %>
+                  <%= link_to(basis_label(entry), url, data: { turbo_frame: "_top" }) %>
+                <% else %>
+                  <%= basis_label(entry) %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </details>
+      <% end %>
+
+      <p class="assistant-draft-card--after" data-test-selector="assistant-draft-after">
+        <%= t("assistant.draft.after.lead") %><%= outcome %>
+        <span class="<%= 'assistant-draft-card--final' if public? %>"><%= level_text %></span>
+      </p>
+
+      <% if public? %>
+        <div class="FormControl-checkbox-wrap assistant-draft-card--acknowledge">
+          <%= check_box_tag(:acknowledged, "1", false, id: acknowledge_id, required: true, class: "FormControl-checkbox") %>
+          <div class="FormControl-checkbox-labelWrap">
+            <label for="<%= acknowledge_id %>" class="FormControl-label"><%= t("assistant.draft.read") %></label>
+          </div>
+        </div>
+        <p class="assistant-draft-card--reread" role="status" data-assistant--draft-refine-target="reread" hidden><%= reread %></p>
+      <% end %>
+
+      <div class="assistant-draft-card--actions">
+        <%= render(Primer::Beta::Button.new(type: :submit, scheme: :primary, size: :small, "aria-describedby": title_id,
+                                            data: { "assistant--draft-refine-target": "guard" },
+                                            test_selector: "assistant-draft-send")) { t("assistant.draft.send") } %>
+        <label for="<%= toggle_id %>" class="Button Button--secondary Button--small assistant-draft-card--edit-button">
+          <span class="Button-content"><span class="Button-label"><%= t("assistant.draft.edit") %></span></span>
+        </label>
+        <%= render(Primer::Beta::Button.new(type: :submit, scheme: :secondary, size: :small, formaction: revise_path,
+                                            formnovalidate: true, classes: "assistant-draft-card--keep",
+                                            data: { "assistant--draft-refine-target": "guard" },
+                                            test_selector: "assistant-draft-keep")) { t("assistant.draft.save") } %>
+        <%= render(Primer::Beta::Button.new(type: :submit, scheme: :invisible, size: :small, formaction: reject_path,
+                                            formnovalidate: true, "aria-describedby": title_id,
+                                            test_selector: "assistant-draft-discard")) { t("assistant.draft.discard") } %>
+        <%= render(Assistant::SayButtonComponent.new(record: action, user:, describedby: title_id)) %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,0 +1,12 @@
+---
+hu:
+  label_calendar: Naptár
+  label_calendar_plural: Naptárak
+  label_new_calendar: Új esemény
+  permission_manage_calendars: Naptár kezelés
+  permission_share_calendars: Feliratkozás az iCalendars-ra
+  permission_view_calendar: Naptár bejegyzések megtekintése
+  plugin_openproject_calendar:
+    description: Tábla nézeteket biztosít.
+    name: OpenProject naptár
+  project_module_calendar_view: Naptárak

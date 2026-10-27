@@ -1,0 +1,7 @@
+---
+cs:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Milníky
+      label_gantt_chart_plural: Ganttovy diagramy

@@ -1,0 +1,44 @@
+@if (!active) {
+  @if (parent) {
+    <a
+      [attr.title]="parent.name"
+      [href]="parentLink(parent)"
+      class="op-wp-breadcrumb-parent"
+      data-test-selector="op-wp-breadcrumb-parent"
+      data-turbo="false"
+      [textContent]="parent.name">
+    </a>
+  }
+  @if (canModifyParent()) {
+    <button
+      type="button"
+      class="spot-link wp-relation--parent-change -no-decoration hide-when-print"
+      [title]="parent ? text.edit_parent : text.set_parent"
+      (click)="open()"
+      >
+      @if (!parent) {
+        <span [textContent]="text.set_parent"></span>
+      }
+      <op-icon icon-classes="icon-small {{ parent ? 'icon-edit icon5 icon-no-color' : 'icon-add icon4' }}" />
+    </button>
+  }
+  @if (canModifyParent() && parent) {
+    <button
+      type="button"
+      class="spot-link wp-relation--parent-remove hide-when-print -no-decoration"
+      [title]="text.remove_parent"
+      (click)="updateParent(null)"
+      >
+      <op-icon icon-classes="icon-small icon-no-color icon-remove icon4" />
+    </button>
+  }
+}
+
+@if (active) {
+  <wp-relations-autocomplete [placeholder]="text.set_or_remove_parent"
+    [workPackage]="workPackage"
+    (cancel)="close()"
+    (change)="updateParent($event)"
+    data-test-selector="wp-relations-autocomplete"
+    filterCandidatesFor="parent" />
+}

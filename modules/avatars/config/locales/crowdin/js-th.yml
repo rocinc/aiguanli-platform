@@ -1,0 +1,11 @@
+---
+th:
+  js:
+    avatars:
+      empty_file_error: กรุณาเลือกรูปภาพนามสุกล .jpg .png .gif
+      error_image_too_large: แฟ้มมีขนาดใหญ่เกินไป
+      label_choose_avatar: เลือกรูปจากไฟล์
+      uploading_avatar: อัปโหลดรูป
+      wrong_file_format: อนุญาติให้ใช้รูปภาพนามสุกล .jpg, .png, .gif
+    button_update: ปรับปรุง
+    label_preview: แสดงตัวอย่าง

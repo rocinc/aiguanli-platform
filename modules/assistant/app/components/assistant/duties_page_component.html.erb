@@ -1,0 +1,281 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= content_tag(:div, id: ID, class: "assistant-duties", data: { test_selector: "assistant-duties" }) do %>
+  <% if read_only? %>
+    <%= render(Primer::Alpha::Banner.new(scheme: :default, icon: :lock)) { t("assistant.project_pages.read_only") } %>
+  <% end %>
+
+  <section class="assistant-duties--section" aria-labelledby="assistant-duties-handed">
+    <div class="assistant-duties--heading">
+      <h2 id="assistant-duties-handed" class="assistant-section--title"><%= t("assistant.duties_page.handed") %></h2>
+      <% if manager? && open_kinds.any? %>
+        <details class="assistant-duties--catalog" data-test-selector="assistant-duty-catalog">
+          <summary class="Button Button--secondary Button--small" data-test-selector="assistant-duty-hand-over">
+            <span class="Button-content"><span class="Button-label"><%= t("assistant.duties_page.hand_over") %></span></span>
+          </summary>
+          <div class="assistant-duties--catalog-body">
+            <p class="assistant-duties--lead"><%= t("assistant.duties_page.hand_over_lead") %></p>
+            <ul class="assistant-duties--offers">
+              <% open_kinds.each do |kind| %>
+                <li data-test-selector="assistant-duty-offer">
+                  <details class="assistant-offer">
+                    <summary class="assistant-offer--summary">
+                      <span class="assistant-offer--title"><%= title(kind) %></span>
+                      <span class="assistant-offer--does"><%= description(kind) %></span>
+                      <span class="assistant-offer--level"><%= t("assistant.duties_page.hand_over_default", level: default_level(kind)) %></span>
+                    </summary>
+                    <%= form_with(url: create_path, method: :post, data: { turbo_stream: true }, class: "assistant-offer--confirm") do %>
+                      <%= hidden_field_tag(:kind, kind, id: nil) %>
+                      <p><%= t("assistant.duties_page.will", text: description(kind)) %></p>
+                      <p><%= t("assistant.duties_page.will_not", text: will_not(kind)) %></p>
+                      <%= render(Primer::Beta::Button.new(type: :submit, size: :small, scheme: :primary, test_selector: "assistant-duty-create")) { t("assistant.duties_page.hand_over_confirm") } %>
+                    <% end %>
+                  </details>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </details>
+      <% end %>
+    </div>
+
+    <% if duties.empty? %>
+      <%= render(Primer::Beta::Blankslate.new(border: true, test_selector: "assistant-duties-empty")) do |slate| %>
+        <% slate.with_visual_icon(icon: :tasklist) %>
+        <% slate.with_heading(tag: :h3) { t("assistant.duties_page.empty.title") } %>
+        <% slate.with_description { t("assistant.duties_page.empty.text") } %>
+      <% end %>
+    <% else %>
+      <ul class="assistant-duties--list">
+        <% duties.each do |duty| %>
+          <li>
+            <%= content_tag(
+                  :article, id: dom_id(duty),
+                            class: ["assistant-duty", ("assistant-duty--paused" unless duty.active?)],
+                            "aria-labelledby": "#{dom_id(duty)}-title",
+                            data: { test_selector: "assistant-duty" }
+                ) do %>
+              <header class="assistant-duty--header">
+                <h3 id="<%= dom_id(duty) %>-title" class="assistant-duty--title"><%= title(duty.kind) %></h3>
+                <% unless duty.active? %>
+                  <%= render(Primer::Beta::Label.new(scheme: :secondary, test_selector: "assistant-duty-paused")) { t("assistant.duties_page.state.paused") } %>
+                <% end %>
+              </header>
+              <p class="assistant-duty--does"><%= description(duty.kind) %></p>
+              <dl class="assistant-duty--facts">
+                <div><dt><%= t("assistant.duties_page.facts.who") %></dt><dd><%= delegator_name(duty) %></dd></div>
+                <div><dt><%= t("assistant.duties_page.facts.when") %></dt><dd><%= schedule(duty) %></dd></div>
+                <div><dt><%= t("assistant.duties_page.facts.scope") %></dt><dd><%= scope_text(duty) %></dd></div>
+                <div><dt><%= t("assistant.duties_page.facts.level") %></dt><dd><%= level(duty) %></dd></div>
+                <div>
+                  <dt><%= t("assistant.duties_page.facts.last") %></dt>
+                  <dd>
+                    <%= last_run(duty) %>
+                    <% linkable_actions(duty).each_with_index do |action, index| %><%= "、" if index.positive? %><%= link_to(action.title, action_path(action)) %><% end %>
+                    <% if linkable_actions(duty).any? && more_actions(duty).positive? %>
+                      <%= t("assistant.duties_page.more_actions", count: more_actions(duty)) %>
+                    <% end %>
+                  </dd>
+                </div>
+                <div><dt><%= t("assistant.duties_page.facts.next") %></dt><dd><%= next_run(duty) %></dd></div>
+              </dl>
+
+              <% if stale?(duty) %>
+                <div class="assistant-duty--stale" data-test-selector="assistant-duty-stale">
+                  <p><%= stale_text(duty) %></p>
+                  <% if operable?(duty) %>
+                    <div class="assistant-duty--controls">
+                      <%= form_with(url: duty_path(duty), method: :patch, data: { turbo_stream: true }, class: "d-inline") do %>
+                        <%= hidden_field_tag(:keep, "1", id: nil) %>
+                        <%= render(Primer::Beta::Button.new(type: :submit, size: :small, "aria-describedby": "#{dom_id(duty)}-title", test_selector: "assistant-duty-keep")) { t("assistant.duties_page.keep") } %>
+                      <% end %>
+                      <%= form_with(
+                            url: duty_path(duty), method: :delete,
+                            data: { turbo_stream: true, turbo_confirm: t("assistant.duties_page.remove_confirm", duty: title(duty.kind)) },
+                            class: "d-inline"
+                          ) do %>
+                        <%= render(Primer::Beta::Button.new(type: :submit, size: :small, "aria-describedby": "#{dom_id(duty)}-title")) { t("assistant.duties_page.remove") } %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <% if operable?(duty) %>
+                <div class="assistant-duty--controls">
+                  <%= form_with(url: duty_path(duty), method: :patch, data: { turbo_stream: true }, class: "d-inline") do %>
+                    <%= hidden_field_tag(:active, duty.active? ? "0" : "1", id: nil) %>
+                    <%= render(
+                          Primer::Beta::Button.new(
+                            type: :submit, size: :small, "aria-describedby": "#{dom_id(duty)}-title",
+                            test_selector: "assistant-duty-toggle"
+                          )
+                        ) do |button| %>
+                      <% button.with_leading_visual_icon(icon: duty.active? ? :pause : :play) %>
+                      <%= duty.active? ? t("assistant.duties_page.pause") : t("assistant.duties_page.resume") %>
+                    <% end %>
+                  <% end %>
+                  <%= form_with(
+                        url: duty_path(duty), method: :delete,
+                        data: { turbo_stream: true, turbo_confirm: t("assistant.duties_page.remove_confirm", duty: title(duty.kind)) },
+                        class: "d-inline"
+                      ) do %>
+                    <%= render(
+                          Primer::Beta::Button.new(
+                            type: :submit, size: :small, "aria-describedby": "#{dom_id(duty)}-title",
+                            test_selector: "assistant-duty-remove"
+                          )
+                        ) { t("assistant.duties_page.remove") } %>
+                  <% end %>
+                  <% if scope_fields(duty).any? || duty.delegator_id != user.id %>
+                    <details class="assistant-duty--settings" data-test-selector="assistant-duty-edit">
+                      <summary class="Button Button--secondary Button--small" aria-describedby="<%= dom_id(duty) %>-title">
+                        <span class="Button-content"><span class="Button-label"><%= t("assistant.duties_page.edit") %></span></span>
+                      </summary>
+                      <% if scope_fields(duty).any? %>
+                        <%= form_with(
+                              url: duty_path(duty), method: :patch, data: { turbo_stream: true },
+                              class: "assistant-duty--form"
+                            ) do %>
+                          <% scope_fields(duty).each do |field| %>
+                            <% field_id = "#{dom_id(duty)}-#{field}" %>
+                            <div class="FormControl">
+                              <label for="<%= field_id %>" class="FormControl-label"><%= t("assistant.duties_page.fields.#{field}") %></label>
+                              <% case field %>
+                              <% when "wday" %>
+                                <%= select_tag(
+                                      "scope[wday]", options_for_select(WEEKDAYS.map { [weekday(it), it] }, (scope_value(duty, field) || 5).to_i),
+                                      id: field_id, class: "FormControl-select FormControl-medium"
+                                    ) %>
+                              <% when "hour" %>
+                                <%= select_tag(
+                                      "scope[hour]", options_for_select(hours.map { [hour_label(it), it] }, (scope_value(duty, field) || 16).to_i),
+                                      id: field_id, class: "FormControl-select FormControl-medium"
+                                    ) %>
+                              <% when "version_id" %>
+                                <%= select_tag(
+                                      "scope[version_id]",
+                                      options_for_select(open_versions.map { [it.name, it.id] }, scope_value(duty, field)),
+                                      include_blank: t("assistant.duties_page.next_version"),
+                                      id: field_id, class: "FormControl-select FormControl-medium"
+                                    ) %>
+                              <% when "status_id" %>
+                                <%= select_tag(
+                                      "scope[status_id]",
+                                      options_for_select(statuses.map { [it.name, it.id] }, scope_value(duty, field)),
+                                      include_blank: t("assistant.duties_page.status_auto"),
+                                      id: field_id, class: "FormControl-select FormControl-medium",
+                                      "aria-describedby": "#{field_id}-caption"
+                                    ) %>
+                                <span id="<%= field_id %>-caption" class="FormControl-caption"><%= t("assistant.duties_page.status_auto_caption") %></span>
+                              <% when "title" %>
+                                <%= select_tag(
+                                      "scope[title]",
+                                      options_for_select(wiki_titles | [scope_value(duty, field)].compact, scope_value(duty, field)),
+                                      include_blank: t("assistant.duties_page.page_default"),
+                                      id: field_id, class: "FormControl-select FormControl-medium"
+                                    ) %>
+                              <% when "external_to" %>
+                                <%= text_field_tag(
+                                      "scope[external_to]", scope_value(duty, field), id: field_id, autocomplete: "off",
+                                      class: "FormControl-input FormControl-medium", "aria-describedby": "#{field_id}-caption"
+                                    ) %>
+                                <span id="<%= field_id %>-caption" class="FormControl-caption"><%= t("assistant.duties_page.external_to_caption") %></span>
+                              <% when "ceiling" %>
+                                <%= select_tag(
+                                      "scope[ceiling]",
+                                      options_for_select(
+                                        [[default_level(duty.kind), "direct"], [t("assistant.duties_page.level_draft"), "draft"]],
+                                        Assistant::DutyScope.ceiling(duty)
+                                      ),
+                                      id: field_id, class: "FormControl-select FormControl-medium"
+                                    ) %>
+                              <% end %>
+                            </div>
+                          <% end %>
+                          <%= render(Primer::Beta::Button.new(type: :submit, size: :small, scheme: :primary)) { t("assistant.duties_page.save") } %>
+                        <% end %>
+                      <% end %>
+                      <% unless duty.delegator_id == user.id %>
+                        <%= form_with(url: duty_path(duty), method: :patch, data: { turbo_stream: true }, class: "assistant-duty--form") do %>
+                          <%= hidden_field_tag(:take_over, "1", id: nil) %>
+                          <%= render(Primer::Beta::Button.new(type: :submit, size: :small, "aria-describedby": "#{dom_id(duty)}-take-over")) { t("assistant.duties_page.take_over") } %>
+                          <span id="<%= dom_id(duty) %>-take-over" class="FormControl-caption"><%= t("assistant.duties_page.take_over_hint") %></span>
+                        <% end %>
+                      <% end %>
+                    </details>
+                  <% end %>
+                </div>
+              <% end %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </section>
+
+  <section id="assistant-grants" class="assistant-duties--section" aria-labelledby="assistant-grants-title">
+    <h2 id="assistant-grants-title" class="assistant-section--title"><%= t("assistant.grants.title") %></h2>
+    <p class="assistant-duties--lead"><%= t("assistant.grants.lead") %></p>
+    <% if grants.empty? && grant_candidates.empty? %>
+      <p class="assistant-duties--quiet" data-test-selector="assistant-grants-empty"><%= t("assistant.grants.empty") %></p>
+    <% else %>
+      <ul class="assistant-duties--offers">
+        <% grants.each do |grant| %>
+          <li class="assistant-duty-offer assistant-duty-offer--granted" data-test-selector="assistant-grant">
+            <div class="assistant-duty-offer--text">
+              <h3 id="assistant-grant-<%= grant.id %>" class="assistant-duty-offer--title">
+                <%= render(Primer::Beta::Octicon.new(icon: :"check-circle", size: :small, color: :success, "aria-hidden": true)) %>
+                <%= kind_label(grant.action_kind) %>
+              </h3>
+              <p class="assistant-duty-offer--does"><%= granted_line(grant) %></p>
+            </div>
+            <% if manager? %>
+              <%= form_with(url: grant_path(grant), method: :delete, data: { turbo_stream: true }, class: "assistant-duty-offer--form") do %>
+                <%= render(
+                      Primer::Beta::Button.new(
+                        type: :submit, size: :small, "aria-describedby": "assistant-grant-#{grant.id}",
+                        test_selector: "assistant-grant-revoke"
+                      )
+                    ) { t("assistant.grants.revoke") } %>
+              <% end %>
+            <% end %>
+          </li>
+        <% end %>
+        <% grant_candidates.each do |kind| %>
+          <li class="assistant-duty-offer" data-test-selector="assistant-grant-candidate">
+            <div class="assistant-duty-offer--text">
+              <h3 id="assistant-grant-kind-<%= kind.dasherize %>" class="assistant-duty-offer--title"><%= kind_label(kind) %></h3>
+              <p class="assistant-duty-offer--does">
+                <%= t("assistant.grants.history", confirmed: confirmed(kind), declined: declined(kind)) %>
+                <% if example(kind) %>
+                  <span class="assistant-duty-offer--example"><%= t("assistant.grants.example", title: example(kind)) %></span>
+                <% end %>
+              </p>
+            </div>
+            <% if manager? %>
+              <%= form_with(url: grants_path, method: :post, data: { turbo_stream: true }, class: "assistant-duty-offer--form") do %>
+                <%= hidden_field_tag(:action_kind, kind, id: nil) %>
+                <%= render(
+                      Primer::Beta::Button.new(
+                        type: :submit, size: :small, "aria-describedby": "assistant-grant-kind-#{kind.dasherize}",
+                        test_selector: "assistant-grant-create"
+                      )
+                    ) { t("assistant.grants.grant") } %>
+              <% end %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+      <p class="assistant-duties--quiet"><%= t("assistant.grants.still_asked") %></p>
+    <% end %>
+  </section>
+<% end %>

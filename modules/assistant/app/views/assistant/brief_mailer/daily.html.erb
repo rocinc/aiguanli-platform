@@ -1,0 +1,27 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<% @digest.sections.each do |key, lines| %>
+  <h2><%= t("assistant.brief_mail.sections.#{key}") %></h2>
+  <ul>
+    <% lines.each do |line| %>
+      <li>
+        <% if line.project %><small><%= line.project %></small><br><% end %>
+        <%= line.url ? link_to(line.text, line.url) : line.text %>
+        <% if line.detail.present? %><br><small><%= line.detail %></small><% end %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+<% if @digest.deferred_count.positive? %>
+  <p><%= t("assistant.brief_mail.deferred", count: @digest.deferred_count) %></p>
+<% end %>
+<p><%= link_to(t("assistant.brief_mail.open"), my_page_url) %></p>
+<p><small><%= link_to(t("assistant.brief_mail.settings"), my_assistant_url) %></small></p>

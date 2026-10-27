@@ -1,0 +1,83 @@
+.upsell-actions
+  display: flex
+  flex-wrap: wrap
+  align-items: baseline
+
+  .openproject--static-link
+    margin-left: 1rem
+
+.upsell--information-container
+  margin-bottom: 40px
+
+.token-form textarea
+  font-family: "Lucida Console", Monaco, monospace
+  max-width: 560px
+
+.controller-homescreen .widget-boxes
+  .widget-box.upsell
+    padding: 0
+    flex-basis: 100%
+    border: var(--borderWidth-thin) solid var(--enterprise-upsell-color)
+    border-radius: var(--borderRadius-medium)
+    background: var(--body-background)
+    container-name: upsellContainer
+    container-type: inline-size
+
+.widget-box--upsell-block
+  margin-bottom: 1rem
+  border: var(--borderWidth-thin) solid var(--enterprise-upsell-color)
+  border-radius: var(--borderRadius-medium)
+  background: var(--body-background)
+  // Ensure the image does not overflow the container on the borders
+  position: relative
+  overflow: hidden
+
+.widget-box--blocks--upsell-container
+  position: relative
+  padding: 20px
+  height: 250px
+
+.upsell-colored
+  // 白标定制：隐藏界面上的企业版标记（原为橙色高亮图标）
+  display: none !important
+
+.upsell-colored-text
+  color: var(--enterprise-upsell-text-color) !important
+
+.upsell-colored-background
+  background: var(--enterprise-upsell-color) !important
+  color: white !important
+  border-color: var(--enterprise-upsell-color) !important
+
+.widget-box--blocks--upsell-title
+  font-weight: 400
+  font-size: 20px
+  margin-top: 10px
+  display: flex
+
+.widget-box--blocks--upsell-text
+  display: flex
+  flex-direction: column
+  height: 100%
+  width: 60%
+  position: relative
+  z-index: 1
+
+  @media screen and (max-width: $breakpoint-lg)
+    width: 100%
+
+.widget-box--blocks--upsell-image
+  @include upsell-image
+
+@container upsellContainer (max-width: 1000px)
+  .widget-box--blocks--upsell-container
+    height: auto
+  .widget-box--blocks--upsell-image
+    background-image: none !important
+
+@container upsellContainer (max-width: 1300px)
+  .widget-box--blocks--upsell-image
+    background-size: cover
+
+.widget-box--blocks--upsell-description
+  flex-grow: 1

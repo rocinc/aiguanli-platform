@@ -1,0 +1,7 @@
+---
+mn:
+  js:
+    work_packages:
+      default_queries:
+        milestones: Чухал үеүүд
+      label_gantt_chart_plural: Гант диаграм

@@ -1,0 +1,123 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { Component, Input } from '@angular/core';
+import { StateService } from '@uirouter/core';
+import { TestBed } from '@angular/core/testing';
+
+import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
+import { WorkPackageTabsService, } from 'core-app/features/work-packages/components/wp-tabs/services/wp-tabs/wp-tabs.service';
+import { TabComponent } from '../../components/wp-tab-wrapper/tab';
+
+describe('WpTabsService', () => {
+  let service:WorkPackageTabsService;
+  const workPackage:any = { id: 1234 };
+
+  @Component({
+    template: '',
+    standalone: false,
+  })
+  class TestComponent implements TabComponent {
+    @Input()
+    public workPackage:WorkPackageResource;
+  }
+
+  const displayableTab = {
+    component: TestComponent,
+    name: 'Displayable TestTab',
+    id: 'displayable-test-tab',
+    displayable: () => true,
+  };
+
+  const notDisplayableTab = {
+    component: TestComponent,
+    name: 'NotDisplayable TestTab',
+    id: 'not-displayable-test-tab',
+    displayable: () => false,
+  };
+
+  beforeEach(() => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [],
+      providers: [
+        { provide: StateService, useValue: { includes: () => false } },
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+      ]
+    });
+    service = TestBed.inject(WorkPackageTabsService);
+    (service as any).registeredTabs = [];
+    service.register({ ...displayableTab }, { ...notDisplayableTab });
+  });
+
+  describe('displayableTabs()', () => {
+    it('returns just the displayable tab', () => {
+      expect(service.getDisplayableTabs(workPackage)[0].id).toEqual(displayableTab.id);
+    });
+  });
+
+  describe('getTab()', () => {
+    it('returns the displayable tab with the correct identifier', () => {
+      expect(service.getTab('displayable-test-tab', workPackage)?.id).toEqual('displayable-test-tab');
+      expect(service.getTab('non-existing-tab', workPackage)).toEqual(undefined);
+      expect(service.getTab('non-displayable-test-tab', workPackage)).toEqual(undefined);
+    });
+  });
+
+  describe('patchTabDefinition()', () => {
+    it('must change the display condition and return accordingly', () => {
+      service.patchTabCondition('displayable-test-tab', () => false);
+      service.patchTabCondition('not-displayable-test-tab', () => true);
+
+      const displayableTabs = service.getDisplayableTabs(workPackage);
+
+      expect(displayableTabs).toHaveLength(1);
+      expect(displayableTabs[0].id).toEqual(notDisplayableTab.id);
+    });
+  });
+
+  describe('project_attributes tab', () => {
+    beforeEach(() => {
+      // Reset to default tabs so the built-in project_attributes tab is present
+      (service as any).registeredTabs = (service as any).buildDefaultTabs();
+    });
+
+    it('is hidden when hasProjectAttributes is false', () => {
+      const wp:any = { hasProjectAttributes: false };
+      const tabs = service.getDisplayableTabs(wp);
+      expect(tabs.find((t) => t.id === 'project_attributes')).toBeUndefined();
+    });
+
+    it('is visible when hasProjectAttributes is true', () => {
+      const wp:any = { hasProjectAttributes: true };
+      const tabs = service.getDisplayableTabs(wp);
+      expect(tabs.find((t) => t.id === 'project_attributes')).toBeDefined();
+    });
+  });
+});

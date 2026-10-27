@@ -1,0 +1,42 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= content_tag(:div, id: ID, class: "assistant-desk-ideas", data: { test_selector: "assistant-desk-ideas" }) do %>
+  <% if read_only? %>
+    <%= render(Primer::Alpha::Banner.new(scheme: :default, icon: :lock)) { t("assistant.project_pages.read_only") } %>
+  <% end %>
+
+  <% if entries.empty? %>
+    <p class="assistant-desk--quiet" data-test-selector="assistant-ideas-empty"><%= quiet("assistant.ideas.empty") %></p>
+  <% else %>
+    <h2 class="assistant-section--title" data-test-selector="assistant-ideas-lead"><%= lead %></h2>
+
+    <ul class="assistant-desk-ideas--list">
+      <% growing.each do |entry| %>
+        <li><%= render(idea_component(entry)) %></li>
+      <% end %>
+    </ul>
+
+    <% folded.each do |key| %>
+      <details class="assistant-desk-ideas--folded" <%= "open" if open_section?(key) %> data-test-selector="assistant-ideas-<%= key %>">
+        <summary class="assistant-card--basis-summary">
+          <%= render(Primer::Beta::Octicon.new(icon: :"chevron-right", size: :xsmall, classes: "assistant-card--chevron", "aria-hidden": true)) %>
+          <%= t("assistant.ideas.sections.#{key}") %>
+          <span class="assistant-desk--muted"><%= in_section(key).size %></span>
+        </summary>
+        <ul class="assistant-desk-ideas--list">
+          <% in_section(key).each do |entry| %>
+            <li><%= render(idea_component(entry)) %></li>
+          <% end %>
+        </ul>
+      </details>
+    <% end %>
+  <% end %>
+<% end %>

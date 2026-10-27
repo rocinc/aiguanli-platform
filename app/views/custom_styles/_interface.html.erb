@@ -1,0 +1,82 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+Copyright (C) 2006-2013 Jean-Philippe Lang
+Copyright (C) 2010-2013 the ChiliProject Team
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+See COPYRIGHT and LICENSE files for more details.
+
+++#%>
+
+<%= render(Primer::Beta::Subhead.new(mt: 4, mb: 3)) do |subhead| %>
+  <% subhead.with_heading(tag: :h2, size: :medium) { t(:label_interface_colors) } %>
+  <% subhead.with_description { t(:label_interface_colors_description) } %>
+<% end %>
+
+<% design_color_groups.each do |group_name, design_colors| %>
+  <%= render(
+        OpenProject::Common::BorderBoxListComponent.new(
+          container: "design-color-group-#{group_name}",
+          mb: 3,
+          test_selector: "design-color-group-#{group_name}"
+        )
+      ) do |list| %>
+    <% list.with_header(title: t("admin.custom_styles.color_groups.#{group_name}")) %>
+
+    <% design_colors.each do |design_color| %>
+      <% variable = design_color.variable %>
+      <% label = t("admin.custom_styles.colors.#{variable}") %>
+      <% instruction = t("admin.custom_styles.instructions.#{variable}", default: "") %>
+      <% hexcode = effective_design_color(design_color, current_theme: @current_theme) %>
+
+      <% list.with_item do %>
+        <%= flex_layout(
+              align_items: :center,
+              flex_wrap: :wrap,
+              justify_content: :space_between
+            ) do |row| %>
+          <% row.with_column(flex: 1, mr: 3) do %>
+            <%= render(Primer::Beta::Text.new(font_weight: :bold)) { label } %>
+            <% if instruction.present? %>
+              <%= render(Primer::Beta::Text.new(font_size: :small, color: :subtle, ml: 1)) { instruction } %>
+            <% end %>
+          <% end %>
+
+          <% row.with_column do %>
+            <%= render(Colors::SwatchComponent.new(hexcode:, show_value: true)) %>
+          <% end %>
+
+          <% row.with_column(ml: 2) do %>
+            <%= render(
+                  CustomStyles::DesignColorDialogComponent.new(
+                    design_color:,
+                    label:,
+                    instruction:,
+                    hexcode:
+                  )
+                ) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

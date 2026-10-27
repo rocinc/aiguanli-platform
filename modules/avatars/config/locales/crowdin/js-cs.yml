@@ -1,0 +1,11 @@
+---
+cs:
+  js:
+    avatars:
+      empty_file_error: Prosím nahrajte platný obrázek (jpg, png, gif)
+      error_image_too_large: Obrázek je příliš velký.
+      label_choose_avatar: Vyberte avatar ze souboru
+      uploading_avatar: Nahrávám váš avatar.
+      wrong_file_format: Povolené formáty jsou jpg, png, gif
+    button_update: Aktualizovat
+    label_preview: Náhled

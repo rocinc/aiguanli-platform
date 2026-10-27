@@ -1,0 +1,147 @@
+# frozen_string_literal: true
+
+# rubocop:disable Metrics/PerceivedComplexity
+def register_chrome(language, name: :"chrome_#{language}", headless: "new", override_time_zone: nil)
+  Capybara.register_driver name do |app|
+    options = Selenium::WebDriver::Chrome::Options.new
+
+    if ActiveRecord::Type::Boolean.new.cast(ENV.fetch("OPENPROJECT_TESTING_NO_HEADLESS", nil))
+      # Maximize the window however large the available space is
+      options.add_argument("--start-maximized")
+      # Open dev tools for quick access
+      if ActiveRecord::Type::Boolean.new.cast(ENV.fetch("OPENPROJECT_TESTING_AUTO_DEVTOOLS", nil))
+        options.add_argument("--auto-open-devtools-for-tabs")
+      end
+    else
+      options.add_argument("--window-size=1920,1080")
+      options.add_argument("--headless=#{headless}")
+    end
+
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-popup-blocking")
+    options.add_argument("--lang=#{language}")
+    options.add_preference("intl.accept_languages", language)
+    # This is REQUIRED for running in a docker container
+    # https://github.com/grosser/parallel_tests/issues/658
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-smooth-scrolling")
+    # Software GPU to avoid the dreaded "[ERROR] [Canvas '__0']: Failed to get a
+    # WebGL context" error for tests using xeokit. The automatic fallback to SwiftShader
+    # was disabled in January 2026, so that we now have to enable the fallback manually in
+    # the test environment.
+    # See https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/gpu/swiftshader.md
+    options.add_argument("--use-gl=angle")
+    options.add_argument("--use-angle=swiftshader-webgl")
+    options.add_argument("--enable-unsafe-swiftshader")
+    # Disable "Select your search engine screen"
+    options.add_argument("--disable-search-engine-choice-screen")
+
+    # Disable timers being throttled in background pages/tabs. Useful for
+    # parallel test runs.
+    options.add_argument("disable-background-timer-throttling")
+
+    # Normally, Chrome will treat a 'foreground' tab instead as backgrounded if
+    # the surrounding window is occluded (aka visually covered) by another
+    # window. This flag disables that. Useful for parallel test runs.
+    options.add_argument("disable-backgrounding-occluded-windows")
+
+    # This disables non-foreground tabs from getting a lower process priority.
+    # Useful for parallel test runs.
+    options.add_argument("disable-renderer-backgrounding")
+
+    options.add_preference(:download,
+                           directory_upgrade: true,
+                           prompt_for_download: false,
+                           default_directory: DownloadList::SHARED_PATH.to_s)
+
+    options.add_preference(:browser, set_download_behavior: { behavior: "allow" })
+
+    options.logging_prefs = { browser: "ALL" }
+
+    # axe-core audits and Capybara's own hint gathering run as scripts over the
+    # full DOM. On large pages (permissions matrix, Gantt header) the 30s W3C
+    # default is not enough on a loaded CI machine.
+    options.timeouts = { script: 60_000 }
+
+    yield(options) if block_given?
+
+    client = Selenium::WebDriver::Remote::Http::Default.new
+    client.read_timeout = 180
+    client.open_timeout = 180
+
+    is_grid = ENV["SELENIUM_GRID_URL"].present?
+
+    driver_opts = {
+      browser: is_grid ? :remote : :chrome,
+      options:,
+      http_client: client
+    }
+
+    if is_grid
+      driver_opts[:url] = ENV.fetch("SELENIUM_GRID_URL", nil)
+    else
+      driver_opts[:service] = Selenium::WebDriver::Service.chrome(
+        args: ["--verbose", "--log-path=/tmp/chromedriver.log"]
+      )
+    end
+
+    driver = Capybara::Selenium::Driver.new app, **driver_opts
+
+    if !is_grid
+      # Enable file downloads in headless mode
+      # https://bugs.chromium.org/p/chromium/issues/detail?id=696481
+      bridge = driver.browser.send :bridge
+
+      bridge.http.call :post,
+                       "/session/#{bridge.session_id}/chromium/send_command",
+                       cmd: "Page.setDownloadBehavior",
+                       params: { behavior: "allow", downloadPath: DownloadList::SHARED_PATH.to_s }
+
+      if override_time_zone
+        bridge.http.call :post,
+                         "/session/#{bridge.session_id}/chromium/send_command",
+                         cmd: "Emulation.setTimezoneOverride",
+                         params: { timezoneId: override_time_zone }
+      end
+    end
+
+    driver
+  end
+
+  Capybara::Screenshot.register_driver(name) do |driver, path|
+    driver.browser.save_screenshot(path)
+  end
+end
+# rubocop:enable Metrics/PerceivedComplexity
+
+register_chrome "en"
+# Register german locale for custom field decimal test
+register_chrome "de"
+
+Billy.configure do |c|
+  c.proxy_host = Capybara.server_host
+  if Capybara.server_port
+    c.proxy_port = Capybara.server_port + 1000
+  end
+end
+
+# Register mocking proxy driver
+register_chrome "en", name: :chrome_billy do |options|
+  options.add_argument("proxy-server=#{Billy.proxy.host}:#{Billy.proxy.port}")
+  options.add_argument("proxy-bypass-list=127.0.0.1;localhost;#{Capybara.server_host}")
+  # Reduce background Google service traffic that can crash puffing-billy's parser.
+  options.add_argument("--disable-background-networking")
+
+  options.accept_insecure_certs = true
+end
+
+# Register Revit add in
+register_chrome "en", name: :chrome_revit_add_in do |options|
+  options.add_argument("user-agent='foo bar Revit'")
+end
+
+register_chrome "en", name: :chrome_new_york_time_zone, override_time_zone: "America/New_York"
+
+register_chrome "en", name: :chrome_dark_mode do |options|
+  options.add_argument("--force-dark-mode")
+end

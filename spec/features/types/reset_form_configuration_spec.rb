@@ -1,0 +1,104 @@
+# frozen_string_literal: true
+
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License version 3.
+#
+# OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2010-2013 the ChiliProject Team
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+require "spec_helper"
+
+RSpec.describe "Reset form configuration",
+               :js,
+               :selenium do
+  shared_let(:admin) { create(:admin) }
+  let(:type) { create(:type) }
+
+  let(:project) { create(:project, types: [type]) }
+  let(:form) { Components::Admin::TypeConfigurationForm.new }
+
+  describe "with EE token and CFs", with_ee: %i[edit_attribute_groups] do
+    let(:custom_fields) { [custom_field] }
+    let(:custom_field) { create(:issue_custom_field, :integer, is_required: true, name: "MyNumber") }
+    let(:cf_identifier) { custom_field.attribute_name }
+    let(:cf_identifier_api) { cf_identifier.camelcase(:lower) }
+
+    before do
+      project
+      custom_field
+
+      login_as(admin)
+      visit edit_type_form_configuration_path(type)
+    end
+
+    it "resets the form properly after changes with CFs (Regression test #27487)" do
+      # Should be initially disabled
+      form.expect_inactive(cf_identifier)
+
+      # Add into new group
+      form.add_attribute_group("New Group")
+      form.move_to(cf_identifier, "New Group")
+      form.expect_attribute(key: cf_identifier)
+
+      SeleniumHubWaiter.wait
+      form.reset_button.click
+      expect(page).to have_test_selector("type-form-configuration-reset-dialog")
+      page.within_test_selector "type-form-configuration-reset-dialog" do
+        click_button I18n.t("button_reset")
+      end
+
+      wait_for do
+        type.reload.default_variant.attribute_groups.reject { |group| group.key == :__empty }.map(&:translated_key)
+      end.to eq([
+                  "People",
+                  "Estimates and progress",
+                  "Details",
+                  "Other",
+                  "Costs"
+                ])
+
+      visit edit_type_form_configuration_path(type)
+
+      expect(form.group_order).to eq(
+        [
+          "People",
+          "Estimates and progress",
+          "Details",
+          "Other",
+          "Costs"
+        ]
+      )
+
+      expect(type.default_variant.custom_field_ids).to be_empty
+
+      new_group = type.default_variant.attribute_groups.detect { |g| g.key == "New Group" }
+      expect(new_group).not_to be_present
+
+      other_group = type.default_variant.attribute_groups.detect { |g| g.key == :other }
+      expect(other_group).to be_present
+      expect(other_group.attributes).to eq(%w[position])
+    end
+  end
+end

@@ -1,0 +1,75 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= form_with(
+      url: approve_path, method: :post, data: form_data,
+      class: "assistant-draft", html: { "aria-labelledby": title_id, "aria-describedby": "#{id}-draft-lead" }
+    ) do %>
+  <% form_inputs.each do |input| %>
+    <%= hidden_field_tag(input[:name], input[:value], id: nil) %>
+  <% end %>
+  <p id="<%= id %>-draft-lead" class="assistant-draft--lead"><%= lead %></p>
+  <% if revised_by %>
+    <p class="assistant-draft--revised"><%= t("assistant.draft.revised_by", name: revised_by.name) %></p>
+  <% end %>
+
+  <% fields.each do |field| %>
+    <% if words?(field) %>
+      <%= render(Assistant::DraftBenchComponent.new(field:, label: label(field), refinement:, rows: rows(field))) %>
+      <% next %>
+    <% end %>
+    <div class="FormControl FormControl--fullWidth">
+      <label for="<%= field[:input_id] %>" class="FormControl-label"><%= label(field) %></label>
+      <% if field[:attribute] == "status_code" %>
+        <%= select_tag(field[:name], status_options(field[:value]), id: field[:input_id], class: "FormControl-select FormControl-medium") %>
+      <% else %>
+        <%= text_field_tag(
+              field[:name], field[:value], id: field[:input_id], maxlength: 255, required: true, autocomplete: "off",
+                                           class: "FormControl-input FormControl-medium"
+            ) %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if public? %>
+    <div class="FormControl-checkbox-wrap assistant-draft--acknowledge">
+      <%= check_box_tag(
+            :acknowledged, "1", false, id: acknowledge_id, required: true, class: "FormControl-checkbox",
+                                       "aria-describedby": "#{acknowledge_id}-caption"
+          ) %>
+      <div class="FormControl-checkbox-labelWrap">
+        <label for="<%= acknowledge_id %>" class="FormControl-label"><%= t("assistant.draft.acknowledge") %></label>
+        <span id="<%= acknowledge_id %>-caption" class="FormControl-caption"><%= t("assistant.draft.acknowledge_caption") %></span>
+      </div>
+    </div>
+    <p class="assistant-draft--reread" role="status" data-assistant--draft-refine-target="reread" hidden><%= reread %></p>
+  <% end %>
+
+  <div class="assistant-card--actions">
+    <%= render(
+          Primer::Beta::Button.new(
+            type: :submit, scheme: :primary, size: :small, data: { "assistant--draft-refine-target": "guard" },
+            test_selector: "assistant-action-approve"
+          )
+        ) { confirm_label } %>
+    <%= render(
+          Primer::Beta::Button.new(
+            type: :submit, scheme: :secondary, size: :small, formaction: revise_path,
+            formnovalidate: true, data: { "assistant--draft-refine-target": "guard" }, test_selector: "assistant-draft-save"
+          )
+        ) { t("assistant.draft.save") } %>
+    <%= render(
+          Primer::Beta::Button.new(
+            type: :submit, scheme: :invisible, size: :small, formaction: reject_path,
+            formnovalidate: true, test_selector: "assistant-action-reject"
+          )
+        ) { t("assistant.draft.discard") } %>
+  </div>
+<% end %>

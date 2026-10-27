@@ -1,0 +1,45 @@
+description: |-
+  A simple response example for an activity comment.
+value:
+  _type: Activity::Comment
+  id: 1478
+  comment:
+    format: markdown
+    raw: "I can give you a CR70 corvette, you have to make do, Leia..."
+    html: "<p class=\"op-uc-p\">I can give you a CR70 corvette, you have to make do, Leia...</p>"
+  details: [ ]
+  version: 4
+  internal: false
+  createdAt: "2025-04-17T13:54:40.737Z"
+  updatedAt: "2025-04-17T13:54:40.737Z"
+  _embedded:
+    attachments:
+      _type: Collection
+      total: 1
+      count: 1
+      _abbreviated: Attachments resource shortened for brevity.
+    workPackage:
+      id: 207
+      _type: WorkPackage
+      _abbreviated: Work package resource shortened for brevity.
+    emojiReactions:
+      _type: Collection
+      total: 1
+      count: 1
+      _abbreviated: Emoji reactions resource shortened for brevity.
+  _links:
+    attachments:
+      href: "/api/v3/activities/1478/attachments"
+    addAttachment:
+      href: "/api/v3/activities/1478/attachments"
+      method: post
+    self:
+      href: "/api/v3/activities/1478"
+    workPackage:
+      href: "/api/v3/work_packages/207"
+      title: Recover Death Star blueprints
+    user:
+      href: "/api/v3/users/33"
+    update:
+      href: "/api/v3/activities/1478"
+      method: patch

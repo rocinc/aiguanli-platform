@@ -1,0 +1,18 @@
+<div class="textarea-wrapper">
+  <div class="op-ckeditor--wrapper op-ckeditor-element">
+    <op-ckeditor [context]="ckEditorContext"
+      [content]="initialContent"
+      (contentChanged)="onContentChange($event)"
+      (initializationFailed)="initializationError = true"
+      (initializeDone)="onCkeditorSetup($event)"
+      (saveRequested)="handleUserSubmit()"
+       />
+  </div>
+  @if (!(handler.inEditMode || initializationError)) {
+    <edit-field-controls [fieldController]="field"
+      (onSave)="handleUserSubmit()"
+      (onCancel)="handleUserCancel()"
+      [saveTitle]="text.save"
+      [cancelTitle]="text.cancel" />
+  }
+</div>

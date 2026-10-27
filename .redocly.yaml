@@ -1,0 +1,12 @@
+apis:
+  main:
+    root: docs/api/apiv3/openapi-spec.yml
+
+extends:
+  - recommended
+
+plugins:
+    - '.redocly/plugins/custom-rules.js'
+
+rules:
+  custom-rules/skip-abbreviated-examples: error

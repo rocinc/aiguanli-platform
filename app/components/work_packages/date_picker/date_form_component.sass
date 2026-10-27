@@ -1,0 +1,24 @@
+.wp-datepicker-dialog-date-form
+  gap: 1rem
+
+  &--start-date,
+  &--due-date
+    flex: 1 1 100%
+
+  &--duration
+    flex: 1 0 170px
+
+  &--add-button
+    // The other fields have a 20px label on top + 4px space between label and field
+    margin-top: 24px
+    width: 100%
+    text-align: center
+
+  &--button-container
+    &:not(&_visible)
+      display: none
+    &_visible
+      + .wp-datepicker-dialog-date-form--text-field-container
+        display: none
+      ~ .wp-datepicker-dialog-set-today-link
+        display: none

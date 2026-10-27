@@ -1,0 +1,45 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://graph.microsoft.com/v1.0/drives/b!FeOZEMfQx0eGQKqVBLcP__BG8mq-4-9FuRqOyk3MXY87vnZ6fgfvQanZHX-XCAyw/items/01ANJ53W4MWZNYS4FOTNDI3UVTLEXUZ5TQ/content
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer <BEARER TOKEN>
+      User-Agent:
+      - httpx.rb/1.3.4
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Cache-Control:
+      - no-store, no-cache
+      Content-Type:
+      - application/octet-stream
+      Strict-Transport-Security:
+      - max-age=31536000
+      Request-Id:
+      - db3e2524-7065-473e-b60b-7ee87e84def9
+      Client-Request-Id:
+      - db3e2524-7065-473e-b60b-7ee87e84def9
+      X-Ms-Ags-Diagnostic:
+      - '{"ServerInfo":{"DataCenter":"Germany West Central","Slice":"E","Ring":"4","ScaleUnit":"003","RoleInstance":"FR1PEPF00001378"}}'
+      Splogid:
+      - e4c1b9a1-e04f-0000-7534-c9510299716f
+      Date:
+      - Fri, 08 Aug 2025 13:49:17 GMT
+      Content-Length:
+      - '0'
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Fri, 08 Aug 2025 13:49:17 GMT
+recorded_with: VCR 6.3.1

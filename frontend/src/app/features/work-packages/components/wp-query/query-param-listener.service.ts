@@ -1,0 +1,93 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+import { Injectable, Injector, inject } from '@angular/core';
+import {
+  WorkPackagesListChecksumService,
+  consumeSelfInitiatedUrlChangeFlag,
+} from 'core-app/features/work-packages/components/wp-list/wp-list-checksum.service';
+import { WorkPackagesListService } from 'core-app/features/work-packages/components/wp-list/wp-list.service';
+import { UrlParamsService } from 'core-app/core/navigation/url-params.service';
+import { Subject, Subscription } from 'rxjs';
+
+@Injectable()
+export class QueryParamListenerService {
+  readonly injector = inject(Injector);
+
+  readonly wpListChecksumService:WorkPackagesListChecksumService = this.injector.get(WorkPackagesListChecksumService);
+
+  readonly wpListService:WorkPackagesListService = this.injector.get(WorkPackagesListService);
+
+  readonly urlParams:UrlParamsService = this.injector.get(UrlParamsService);
+
+  public observe$ = new Subject<any>();
+
+  private queryChangeSubscription:Subscription;
+
+  constructor() {
+    this.listenForQueryParamsChanged();
+  }
+
+  public listenForQueryParamsChanged():void {
+    // Listen for param changes
+    this.queryChangeSubscription = this.urlParams.changed$.subscribe(() => {
+      // Skip self-initiated syncs (see WorkPackagesListChecksumService#maintainUrlQueryState) -
+      // the checksum they reflect into the URL is already up to date, reloading here would
+      // just be undoing the change that triggered them in the first place.
+      if (consumeSelfInitiatedUrlChangeFlag()) {
+        return;
+      }
+
+      // Skip while the initial query load for this page is still in flight - it will itself
+      // seed the checksum via WorkPackageStatesInitializationService#initialize once done.
+      // Reacting here too races that in-flight load with a second, redundant reload (#62847).
+      if (this.wpListChecksumService.isUninitialized()) {
+        return;
+      }
+
+      const params = {
+        query_id: this.urlParams.get('query_id'),
+        query_props: this.urlParams.get('query_props'),
+      };
+
+      const newChecksum = this.wpListService.getCurrentQueryProps(params);
+      const newId = params.query_id;
+
+      this.wpListChecksumService
+        .executeIfOutdated(newId,
+          newChecksum,
+          () => {
+            this.observe$.next(newChecksum);
+          });
+    });
+  }
+
+  public removeQueryChangeListener() {
+    this.queryChangeSubscription.unsubscribe();
+  }
+}

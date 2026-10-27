@@ -1,0 +1,11 @@
+---
+et:
+  js:
+    avatars:
+      empty_file_error: Palun laadige üles ainult lubatud formaadis (jpg, png, gif).
+      error_image_too_large: Image is too large.
+      label_choose_avatar: Vali profiilipilt failist
+      uploading_avatar: Uploading your avatar.
+      wrong_file_format: Lubatud vormingud on jpg, png, gif.
+    button_update: Uuenda
+    label_preview: Eelvaade

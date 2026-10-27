@@ -1,0 +1,72 @@
+<%#-- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 3.
+
+See COPYRIGHT and LICENSE files for more details.
+++#%>
+
+<%= content_tag(:div, class: "FormControl FormControl--fullWidth assistant-bench", data:) do %>
+  <div class="assistant-bench--head">
+    <label for="<%= field[:input_id] %>" class="FormControl-label"><%= label %></label>
+    <% if refinable? %>
+      <div class="assistant-bench--versions" role="group" aria-label='<%= t("assistant.draft_loop.versions") %>' data-role="versions" hidden>
+        <button type="button" class="assistant-bench--step" data-role="prev" aria-label='<%= t("assistant.draft_loop.prev_version") %>'>‹</button>
+        <span class="assistant-bench--position" data-role="position"></span>
+        <button type="button" class="assistant-bench--step" data-role="next" aria-label='<%= t("assistant.draft_loop.next_version") %>'>›</button>
+      </div>
+    <% end %>
+  </div>
+
+  <%= text_area_tag(
+        field[:name], field[:value], id: field[:input_id], rows:, spellcheck: false,
+                                     maxlength: Assistant::Actions::Revise::MAX_LENGTH,
+                                     class: "FormControl-input FormControl-textarea FormControl-medium assistant-bench--area",
+                                     data: { role: "area" }
+      ) %>
+
+  <% if refinable? %>
+    <div class="assistant-bench--preview" data-role="preview" hidden></div>
+
+    <div class="assistant-bench--bar" role="group" aria-label='<%= t("assistant.draft_loop.refine_label") %>' data-role="bar" hidden>
+      <div class="assistant-bench--bar-row">
+        <input type="text" maxlength="1000" autocomplete="off" data-role="bar-input"
+               class="FormControl-input FormControl-small assistant-bench--bar-input"
+               placeholder='<%= t("assistant.draft_loop.refine_placeholder") %>'
+               aria-label='<%= t("assistant.draft_loop.refine_placeholder") %>'>
+        <button type="button" class="Button Button--primary Button--small" data-role="bar-go">
+          <span class="Button-content"><span class="Button-label"><%= t("assistant.draft_loop.refine_start") %></span></span>
+        </button>
+      </div>
+      <div class="assistant-bench--bar-chips">
+        <% chips.each do |chip| %>
+          <button type="button" class="assistant-bench--chip" data-role="chip"><%= chip %></button>
+        <% end %>
+      </div>
+    </div>
+
+    <p class="assistant-bench--status" data-role="status" hidden>
+      <span class="assistant-bench--pulse" aria-hidden="true"></span>
+      <span data-role="status-text"></span>
+      <button type="button" class="assistant-bench--link" data-role="stop"><%= t("assistant.draft_loop.stop") %></button>
+    </p>
+    <p class="assistant-bench--note" data-role="hint"><%= t("assistant.draft_loop.hint") %></p>
+    <p class="assistant-bench--note" data-role="refined" hidden>
+      <%= t("assistant.draft_loop.refined_note") %>
+      <button type="button" class="assistant-bench--link" data-role="undo"><%= t("assistant.draft_loop.undo_refine") %></button>
+    </p>
+    <p class="assistant-bench--note assistant-bench--error" data-role="notice" role="status" hidden></p>
+
+    <div class="assistant-bench--revise">
+      <label class="sr-only" for="<%= revise_id %>"><%= t("assistant.draft_loop.revise_label") %></label>
+      <input type="text" id="<%= revise_id %>" maxlength="1000" autocomplete="off" data-role="revise-input"
+             class="FormControl-input FormControl-medium assistant-bench--revise-input"
+             placeholder='<%= t("assistant.draft_loop.revise_placeholder") %>'>
+      <button type="button" class="Button Button--secondary Button--small" data-role="revise-go">
+        <span class="Button-content"><span class="Button-label"><%= t("assistant.draft_loop.revise_start") %></span></span>
+      </button>
+    </div>
+    <p class="sr-only" role="status" aria-live="polite" data-role="live"></p>
+  <% end %>
+<% end %>

@@ -1,0 +1,55 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+fa:
+  js:
+    github_integration:
+      github_actions: اقدام‌ها
+      pull_requests:
+        merged_message: Pull Request شماره %{pr_number} %{pr_link} برای %{repository_link} توسط %{github_user_link} %{pr_state} شده است.
+        message: Pull Request شماره %{pr_number} %{pr_link} برای %{repository_link} که توسط %{github_user_link} ایجاد شده بود %{pr_state} شده است.
+        referenced_message: Pull Request شماره %{pr_number} %{pr_link} برای %{repository_link} که توسط %{github_user_link} ایجاد شده بود به این بسته کاری ارجاع داد.
+        states:
+          closed: بسته
+          draft: پیش‌نویس شد
+          merged: Merge شد
+          opened: باز شد
+          ready_for_review: آماده بازبینی علامت‌گذاری شد
+      tab_header:
+        copy_menu:
+          description: کپی تکه کد گیت در حافظه
+          label: تکه کد های گیت
+        git_actions:
+          branch_name: نام شاخه
+          cmd: ساخت شاخه خالی بدون کامیت کردن
+          commit_message: کامیت کردن پیام
+          copy_error: "❌ کپی ناموفق بود!"
+          copy_success: "✅ کپی شد!"
+          title: تکه کد های سریع برای گیت
+        title: درخواست‌های ادغام
+      tab_prs:
+        empty: هنوز Pull Requestی پیوند نشده است. با استفاده از کد <code>OP#%{wp_id}</code> در توضیحات PR، یک PR موجود را پیوند دهید یا PR جدید بسازید.
+      work_packages:
+        tab_name: GitHub
+    work_packages:
+      tabs:
+        github: GitHub

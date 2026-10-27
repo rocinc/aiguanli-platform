@@ -1,0 +1,22 @@
+@if (item) {
+  @if (item.gone) {
+    <span class="op-ian-assistant--muted" [textContent]="item.gone"></span>
+  } @else {
+    <span class="op-ian-assistant--headline" [attr.title]="item.headline" [textContent]="item.headline"></span>
+    @if (item.settled) {
+      <span class="op-ian-assistant--muted" role="status" [textContent]="item.settled"></span>
+    } @else if (item.url) {
+      <a
+        class="Button Button--secondary Button--small"
+        data-test-selector="op-ian-assistant-open"
+        [attr.href]="item.url"
+        (click)="stop($event)"
+      ><span class="Button-label" [textContent]="item.open_label"></span></a>
+    }
+    @if (item.why) {
+      <span class="op-ian-assistant--why" [textContent]="item.why"></span>
+    }
+  }
+} @else {
+  <span class="op-ian-assistant--headline" [textContent]="notification.subject"></span>
+}

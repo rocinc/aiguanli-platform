@@ -1,0 +1,68 @@
+# Schema: UserCreateModel
+---
+type: object
+required:
+  - admin
+  - email
+  - login
+  - firstName
+  - lastName
+  - language
+properties:
+  admin:
+    type: boolean
+  email:
+    type: string
+    maxLength: 60
+  login:
+    type: string
+    maxLength: 256
+  password:
+    type: string
+    description: |-
+      The user's password.
+
+      *Conditions:*
+
+      Writable on create.
+
+      Writable on update only when:
+      - the caller updates their own account
+      - `currentPassword` is provided and valid
+  currentPassword:
+    type: string
+    description: |-
+      The user's current password.
+
+      *Conditions:*
+
+      Required when changing `password` for a self update (`PATCH /api/v3/users/me` or `PATCH /api/v3/users/{id}` where `id` is the caller).
+
+      Ignored for non-self updates (for example, administrators updating other users).
+  firstName:
+    type: string
+    maxLength: 30
+  lastName:
+    type: string
+    maxLength: 30
+  status:
+    type: string
+    description: |-
+      The current activation status of the user.
+
+      *Conditions:*
+
+      Only writable on creation, not on update.
+  language:
+    type: string
+
+example:
+  login: j.sheppard
+  password: idestroyedsouvereign
+  currentPassword: iusedtobuildstarships
+  firstName: John
+  lastName: Sheppard
+  email: shep@mail.com
+  admin: true
+  status: active
+  language: en

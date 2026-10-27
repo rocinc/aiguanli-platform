@@ -1,0 +1,54 @@
+<spot-text-field
+  [ngModel]="searchString$ | async"
+  (ngModelChange)="searchString$.next($event)"
+  data-test-selector="op-add-existing-pane--search-input"
+  [placeholder]="text.placeholder"
+  >
+  <svg search-icon slot="before" size="small" />
+</spot-text-field>
+
+@if ((isLoading$ | async) === false) {
+  @if ((isEmpty$ | async) === false) {
+    <div
+      #container
+      class="op-add-existing-pane--results"
+      >
+      @for (wp of currentWorkPackages$ | async; track wp.href) {
+        <wp-single-card [workPackage]="wp"
+          [selectedWhenOpen]="true"
+          [showInfoButton]="true"
+          [disabledInfo]="showDisabledText(wp)"
+          [attr.data-drag-helper-id]="wp.id"
+          class="op-add-existing-pane--wp"
+          [attr.data-test-selector]="'op-add-existing-pane--wp-' + wp.id"
+          (stateLinkClicked)="openStateLink($event)"
+          (cardClicked)="workPackagesCalendar.onCardClicked($event)"
+          (cardDblClicked)="workPackagesCalendar.onCardDblClicked($event)"
+         />
+      }
+    </div>
+  } @else {
+    <div
+      class="op-add-existing-pane--empty-state"
+      data-test-selector="op-add-existing-pane--empty-state"
+      >
+      @if ((noResultsFound$ | async)?.showImage) {
+        <img
+          [src]="image.empty_state" class="op-add-existing-pane--empty-state-image" alt=""/>
+      }
+      <span
+        [innerHTML]="$safeNavigationMigration((noResultsFound$ | async)?.text)"
+        class="op-add-existing-pane--empty-state-text"
+      ></span>
+    </div>
+  }
+} @else {
+  <op-content-loader
+    class="op-add-existing-pane--loading"
+    viewBox="0 0 200 44"
+    >
+    <svg:rect x="0" y="0" width="50%" height="12" rx="1" />
+    <svg:rect x="0" y="16" width="100%" height="12" rx="1" />
+    <svg:rect x="0" y="32" width="100%" height="12" rx="1" />
+  </op-content-loader>
+}

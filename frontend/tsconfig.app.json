@@ -1,0 +1,35 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "rootDir": "..",
+    "jsx": "react-jsx",
+    "types": []
+  },
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts",
+    "src/app/core/setup/init-globals.ts",
+    "src/app/core/setup/init-vendors.ts",
+    "src/stimulus/setup.ts",
+    "src/turbo/setup.ts"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/test-setup.ts",
+    "src/test-providers.ts",
+    "src/test-browser-polyfills.ts"
+  ],
+  "angularCompilerOptions": {
+    "strictTemplates": false
+  },
+  "types": [
+    "node",
+    "react"
+  ]
+}

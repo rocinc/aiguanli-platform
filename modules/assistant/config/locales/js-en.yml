@@ -1,0 +1,16 @@
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+
+en:
+  js:
+    notifications:
+      reasons:
+        assistant: "AI assistant"
+    grid:
+      widgets:
+        assistant_today:
+          title: "Today"

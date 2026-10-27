@@ -1,0 +1,87 @@
+#-- copyright
+# OpenProject is an open source project management software.
+# Copyright (C) the OpenProject GmbH
+#
+# See COPYRIGHT and LICENSE files for more details.
+#++
+en:
+  assistant:
+    notice:
+      label: "Assistant notice"
+      guess: "This is a guess"
+      basis: "Basis (%{count})"
+      basis_kinds:
+        quote: "Quote"
+        chain: "Chain"
+        history: "Field history"
+        calculation: "Calculation"
+        external: "External event"
+        statistic: "Statistic"
+      options: "You can"
+      leave: "Leave it"
+      got_it: "Got it"
+      go_confirm: "Go and confirm…"
+      pairs_label: "The decision and the file side by side"
+      snooze: "Later"
+      snooze_choices:
+        afternoon: "This afternoon"
+        tomorrow: "Tomorrow morning"
+        monday: "Next Monday"
+        before_due: "The day before it is due"
+      mute: "Don't tell me about this"
+      mute_scopes:
+        project: "In this project"
+        all: "In all projects"
+      wrong: "This is wrong"
+      reasons:
+        wrong: "The fact is wrong"
+        known: "I already know"
+        not_mine: "Not mine"
+        bad_timing: "Bad timing"
+      why:
+        owns: "Because you own it"
+        awaits: "Because you are waiting for it"
+        awaited: "Because it is waiting for you"
+        leads: "Because you lead %{name}"
+        editing: "Because you are changing it"
+        duty: "Because you asked me to watch it"
+        watches: "Because you watch it"
+        returned: "Because you just came back"
+        hosts: "Because you run this meeting"
+        member: "Because you are on this project"
+      replies:
+        rejected: "OK, leaving it."
+        snoozed: "OK, I will remind you %{when}."
+        muted: "OK, I will no longer tell you about %{rule}. You can turn it back on in the assistant settings."
+        muted_in_project: "OK, in %{project} I will no longer tell you about %{rule}. You can turn it back on in the assistant settings."
+        wrong: "Thanks, I took that back."
+        known: "OK."
+        not_mine: "OK, I will ask %{name} instead."
+        not_mine_nobody: "OK. I found nobody better to ask, so I put this away."
+        timing: "When should I remind you?"
+        adopted: "Done, thanks."
+        edited: "Done as you changed it."
+        ignored: "This is no longer needed."
+        resolved: "This has been taken care of."
+        undone: "Undone."
+      stale: "No longer needed: %{reason}"
+      stale_subject: "%{ref} has been taken care of"
+      stale_generic: "this has been taken care of"
+      handled: "Handled: %{what}"
+      handled_in: "Handled in %{ref}"
+      handled_generic: "Handled"
+      stale_reasons:
+        change: "%{ref} has news since"
+        status: "%{ref} has moved on since"
+        done_as_said: "%{ref} was already changed by hand"
+      mistakes:
+        gone: "What I mentioned is gone."
+        closed: "%{ref} is closed and I still mentioned it."
+        moved: "When I said it, %{field} of %{ref} was %{was}; now it is %{now}."
+      handover:
+        label: "After an undo"
+        ask: "Undone. Should I ask you first for this kind of thing from now on?"
+        yes_button: "Yes"
+        no_button: "No, this was an exception"
+        "yes": "OK, I will ask you first from now on."
+        "no": "OK, this one was an exception."

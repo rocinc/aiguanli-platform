@@ -1,0 +1,11 @@
+---
+de:
+  js:
+    avatars:
+      empty_file_error: Bitte laden Sie ein gültiges Bild hoch (JPG, PNG, GIF)
+      error_image_too_large: Das Bild ist zu groß.
+      label_choose_avatar: Profilbild aus Datei auswählen
+      uploading_avatar: Laden Sie Ihr Profilbild hoch.
+      wrong_file_format: Erlaubte Formate sind JPG, PNG und GIF
+    button_update: Aktualisieren
+    label_preview: Vorschau

@@ -1,0 +1,11 @@
+# Schema: WorkPackagePatchModel
+---
+allOf:
+  - $ref: './work_package_write_model.yml'
+  - type: object
+    required:
+      - lockVersion
+    properties:
+      lockVersion:
+        type: integer
+        description: The version of the item as used for optimistic locking

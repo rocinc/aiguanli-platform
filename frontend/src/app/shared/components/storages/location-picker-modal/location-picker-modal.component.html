@@ -1,0 +1,102 @@
+<div
+  class="spot-modal op-file-picker"
+  data-test-selector="op-files-picker-modal"
+>
+  <div class="spot-modal--header">
+    <span id="spotModalTitle" class="spot-modal--header-title">{{ text.header }}</span>
+  </div>
+
+  <div class="spot-divider"></div>
+
+  <div class="spot-modal--body spot-container op-file-picker--modal-body">
+    @if ((showAlert | async) !== 'none') {
+      <div class="op-toast -warning">
+        <div class="op-toast--content">
+          <p>{{ alertText | async }}</p>
+          <button
+            class="spot-link op-toast--close"
+            (click)="closeAlert()"
+          >
+            <svg x-icon size="small"></svg>
+          </button>
+        </div>
+      </div>
+    }
+
+    <spot-breadcrumbs [content]="breadcrumbs" />
+
+    @switch (loading$ | async) {
+      @case ('success') {
+        @if ((listItems$ | async).length > 0) {
+          <ul
+            class="spot-list spot-list_compact op-file-list op-file-picker--scrollable-content"
+            data-test-selector="op-files-picker-modal--file-list"
+          >
+            @for (file of listItems$ | async; track file.storageFile.id) {
+              <li
+                class="spot-list--item op-file-list--item"
+                data-test-selector="op-file-list--item"
+                op-storage-file-list-item
+                [content]="file"
+              ></li>
+            }
+          </ul>
+        } @else {
+          <div class="spot-body-small spot-body-small_bold op-file-picker--info">
+            <svg file-directory-fill-icon size="small" class="op-file-picker--info-icon"></svg>
+            <span [textContent]="text.content.empty"></span>
+            <span class="spot-body-small op-file-picker--info-sub-text" [textContent]="text.content.emptyHint"></span>
+          </div>
+        }
+      }
+      @case ('error') {
+        <div class="spot-body-small spot-body-small_bold op-file-picker--info">
+          <svg x-circle-icon size="small" class="op-file-picker--info-icon"></svg>
+          <span [textContent]="text.content.noConnection(storageType)"></span>
+          <span
+            class="spot-body-small op-file-picker--info-sub-text"
+            [textContent]="text.content.noConnectionHint(storageType)"
+          ></span>
+        </div>
+      }
+      @case ('loading') {
+        <op-loading-file-list class="spot-body-small"
+          data-test-selector="op-file-list--loading-indicator"
+         />
+      }
+    }
+  </div>
+
+  <div class="spot-action-bar">
+    <div class="spot-action-bar--left">
+      <button
+        type="button"
+        class="button spot-action-bar--action"
+        [disabled]="!canCreateFolder"
+        (click)="createAndNavigateToFolder()"
+      >
+        <svg file-directory-fill-icon size="small" class="op-files-tab--icon op-files-tab--icon_forums"></svg>
+        <span [textContent]="text.buttons.newFolder"></span>
+      </button>
+    </div>
+    <div class="spot-action-bar--right">
+      <button
+        type="button"
+        class="button spot-action-bar--action"
+        (click)="closeMe()"
+      >
+        {{ text.buttons.cancel }}
+      </button>
+      <button
+        type="button"
+        class="button spot-action-bar--action -primary"
+        data-test-selector="op-files-picker-modal--confirm"
+        [disabled]="!canChooseLocation"
+        [textContent]="text.buttons.submit"
+        (click)="chooseLocation()"
+      >
+        {{ text.buttons.submit }}
+      </button>
+    </div>
+  </div>
+</div>
